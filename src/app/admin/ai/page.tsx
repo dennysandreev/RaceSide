@@ -33,7 +33,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { loadAdminAi } from "@/data/admin-repository";
+import { AdminFilters } from "@/components/admin/admin-filters";
+import { AdminPagination } from "@/components/admin/admin-ui";
+import { loadAdminAi, parseAdminTableQuery } from "@/data/admin-repository";
 import {
   getAdminAiPromptLabel,
   getAdminAiPurposeLabel,
@@ -43,16 +45,16 @@ import { loadOpenRouterModels } from "@/lib/openrouter-models";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import type { AdminAiUsageSummaryRow } from "@/types/admin";
 
-export default async function AdminAiPage() {
+export default async function AdminAiPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin();
   const admin = createSupabaseAdminClient();
   if (!admin) throw new Error("Серверный клиент админки недоступен");
+  const query = parseAdminTableQuery(await searchParams);
   const [data, models] = await Promise.all([
-    loadAdminAi(admin),
+    loadAdminAi(admin, query),
     loadOpenRouterModels().catch(() => []),
   ]);
-  const today = new Date().toISOString().slice(0, 10);
-  const todayCost = data.byDay.find((row) => row.bucket === today)?.cost_usd ?? 0;
+  const todayCost = Number(data.budgetUsage?.daily_spend_usd ?? 0);
   const totalTokens = data.totalInputTokens + data.totalOutputTokens;
   const promptVersionById = new Map(
     data.prompts.flatMap((item) =>
@@ -68,8 +70,8 @@ export default async function AdminAiPage() {
         title="AI и бюджет"
       />
       <section className="grid grid-cols-2 gap-y-5 border-b border-border pb-5 lg:grid-cols-5">
-        <AdminMetric label="Сегодня" tone={todayCost > Number(data.budget.daily_limit_usd) ? "danger" : "default"} value={`$${todayCost.toFixed(2)}`} />
-        <AdminMetric label="За 30 дней" tone={data.totalCost > Number(data.budget.monthly_limit_usd) ? "danger" : "default"} value={`$${data.totalCost.toFixed(2)}`} />
+        <AdminMetric label="Сегодня (UTC)" tone={todayCost >= Number(data.budget.daily_limit_usd) ? "danger" : "default"} value={`$${todayCost.toFixed(2)}`} />
+        <AdminMetric label="За 30 дней" tone={data.totalCost >= Number(data.budget.monthly_limit_usd) ? "danger" : "default"} value={`$${data.totalCost.toFixed(2)}`} />
         <AdminMetric label="Обращения к AI" value={formatInteger(data.totalRuns)} />
         <AdminMetric label="Токены" value={formatCompactInteger(totalTokens)} />
         <AdminMetric
@@ -79,19 +81,21 @@ export default async function AdminAiPage() {
           value={`$${data.xApiSpend30Days.toFixed(2)}`}
         />
       </section>
-      <AdminUrlTabs defaultValue="prompts" values={["prompts", "usage", "problems", "limits"]}>
+      <AdminUrlTabs defaultValue="prompts" values={["prompts", "history", "usage", "problems", "limits"]}>
         <TabsList variant="line">
           <TabsTrigger value="prompts">Промпты и задачи</TabsTrigger>
+          <TabsTrigger value="history">История инструкций</TabsTrigger>
           <TabsTrigger value="usage">Расходы</TabsTrigger>
           <TabsTrigger value="problems">Проблемные материалы</TabsTrigger>
           <TabsTrigger value="limits">Лимиты</TabsTrigger>
         </TabsList>
         <TabsContent value="prompts">
           <Alert>
-            <AlertTitle>Здесь собраны все обращения RaceSide к AI</AlertTitle>
+            <AlertTitle>Инструкции фоновых задач RaceSide</AlertTitle>
             <AlertDescription>
-              Редактируются инструкции, модель OpenRouter и лимит ответа для каждой
-              задачи. Ключи, исходные материалы и ответы AI здесь не показываются.
+              Можно менять инструкции и лимит ответа для задач из этого каталога.
+              Радио LIVE использует общий бюджет. Его перевод и распознавание настраиваются в коде и не входят в этот каталог.
+              Ключи, исходные материалы и ответы AI здесь не показываются.
               Защищённый формат ответа остаётся неизменным.
             </AlertDescription>
           </Alert>
@@ -101,6 +105,17 @@ export default async function AdminAiPage() {
             title="Инструкции для AI"
           >
             <AdminAiPromptRegistry items={data.prompts} models={models} />
+          </AdminSection>
+        </TabsContent>
+        <TabsContent value="history">
+          <AdminSection title="История выбранной инструкции" description={`${data.historyTotal} версий. История сохраняется отдельно для каждой инструкции.`}>
+            <AdminFilters hideSearch query={query} filters={[{ name: "promptKey", allowAll: false, label: "Инструкция", value: data.selectedPrompt.key, options: data.prompts.map(item => ({ value: item.definition.key, label: item.definition.title })) }]} />
+            <div className="divide-y divide-border">{data.history.map(version => <article className="grid gap-2 p-4" key={version.id}>
+              <div className="flex flex-wrap items-center gap-3"><strong>Версия {version.version}</strong><AdminStatusBadge status={version.status} /><span className="text-xs text-muted-foreground">{formatDate(version.publishedAt ?? version.createdAt)}</span></div>
+              <p className="text-sm text-muted-foreground">{version.changeNote || "Описание изменений не добавлено"}</p>
+              <p className="text-xs text-muted-foreground">{version.model} · до {version.maxTokens} токенов</p>
+            </article>)}</div>
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/ai" total={data.historyTotal} />
           </AdminSection>
         </TabsContent>
         <TabsContent value="usage">
@@ -147,7 +162,7 @@ export default async function AdminAiPage() {
         </TabsContent>
         <TabsContent value="problems">
           <div className="grid gap-5 xl:grid-cols-2">
-            <AdminSection description="Резервные тексты и материалы со сбоем обработки." title="Новости">
+            <AdminSection description="Последние 100 резервных текстов и материалов со сбоем обработки." title="Новости">
               {data.problemArticles.length ? (
                 <div className="grid">
                   {data.problemArticles.map((article) => (
@@ -168,7 +183,7 @@ export default async function AdminAiPage() {
                 </div>
               ) : <AdminEmpty description="Резервные тексты и ошибки появятся здесь." title="Проблемных новостей нет" />}
             </AdminSection>
-            <AdminSection description="Посты с последней ошибкой AI-обработки." title="Соцсети">
+            <AdminSection description="Последние 100 постов с ошибкой AI-обработки." title="Соцсети">
               {data.problemPosts.length ? (
                 <div className="grid">
                   {data.problemPosts.map((post) => (
@@ -196,12 +211,12 @@ export default async function AdminAiPage() {
               <input name="scope" type="hidden" value="default" />
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="ai-daily-limit">Дневной лимит, USD</FieldLabel>
+                  <FieldLabel htmlFor="ai-daily-limit">Лимит за сутки UTC, USD</FieldLabel>
                   <Input defaultValue={Number(data.budget.daily_limit_usd)} id="ai-daily-limit" min="0.01" name="dailyLimitUsd" step="0.01" type="number" />
-                  <FieldDescription>Текущий расход сегодня: ${todayCost.toFixed(2)}.</FieldDescription>
+                  <FieldDescription>Расход за текущие сутки UTC: ${todayCost.toFixed(2)}.</FieldDescription>
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="ai-monthly-limit">Месячный лимит, USD</FieldLabel>
+                  <FieldLabel htmlFor="ai-monthly-limit">Лимит за 30 дней, USD</FieldLabel>
                   <Input defaultValue={Number(data.budget.monthly_limit_usd)} id="ai-monthly-limit" min="0.01" name="monthlyLimitUsd" step="0.01" type="number" />
                   <FieldDescription>Расход за последние 30 дней: ${data.totalCost.toFixed(2)}.</FieldDescription>
                 </Field>

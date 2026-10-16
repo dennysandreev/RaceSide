@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useMemo, useState } from "react";
-import { Bitcoin, Check, LoaderCircle, LogIn, X } from "lucide-react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import { Check, CreditCard, LoaderCircle, LogIn, X } from "lucide-react";
 
 import {
   cancelCheckout,
@@ -24,37 +24,47 @@ const initialCancelState: CancelCheckoutState = {};
 
 export type CheckoutPaymentOption =
   | "russian_card"
-  | "international_card"
-  | "crypto";
+  | "international_card";
 
 export function PlusCheckout({
+  accountEmail,
   activeSubscription,
-  firstYearAvailable,
+  recurringSubscription,
   initialPaymentOption,
   initialPriceCode,
   pendingOrder,
   signedIn,
-  tribute,
-  yoomoney,
+  lava,
+  internationalPrices,
 }: {
+  accountEmail: string | null;
   activeSubscription: boolean;
-  firstYearAvailable: boolean;
+  recurringSubscription: boolean;
   initialPaymentOption?: CheckoutPaymentOption;
   initialPriceCode?: BillingPriceCode;
   pendingOrder: { orderNumber: string } | null;
   signedIn: boolean;
-  tribute: boolean;
-  yoomoney: boolean;
+  lava: boolean;
+  internationalPrices: Partial<Record<BillingPriceCode, { amountMinor: number; currency: "USD" | "EUR" }>>;
 }) {
   const router = useRouter();
-  const [state, action, pending] = useActionState(startCheckout, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
+  const [state, action, pending] = useActionState(
+    async (previous: CheckoutState, formData: FormData) => {
+      const next = await startCheckout(previous, formData);
+      if (next.emailRejected) setIdempotencyKey(crypto.randomUUID());
+      return next;
+    },
+    initialState,
+  );
   const [cancelState, cancelAction, cancelling] = useActionState(
     cancelCheckout,
     initialCancelState,
   );
   const [priceCode, setPriceCode] = useState<BillingPriceCode | undefined>(
     () => {
-      if (initialPriceCode === "plus_first_year" && firstYearAvailable) {
+      if (initialPriceCode === "plus_first_year") {
         return initialPriceCode;
       }
       if (initialPriceCode === "plus_monthly") return initialPriceCode;
@@ -66,40 +76,35 @@ export function PlusCheckout({
   >(() =>
     resolvePaymentOption({
       initialPaymentOption,
-      tribute,
-      yoomoney,
+      lava,
+      internationalAvailable: Boolean(internationalPrices.plus_monthly || internationalPrices.plus_first_year),
     }),
   );
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
-
   useEffect(() => {
     const checkout = state.checkout;
     if (!checkout) return;
-    if (checkout.kind === "redirect") {
-      window.location.assign(checkout.url);
-      return;
-    }
-    const form = document.createElement("form");
-    form.action = checkout.action;
-    form.method = "POST";
-    for (const [name, value] of Object.entries(checkout.fields)) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      form.append(input);
-    }
-    document.body.append(form);
-    form.submit();
+    window.location.assign(checkout.url);
   }, [state.checkout]);
 
   useEffect(() => {
     if (cancelState.cancelled || cancelState.paid) router.refresh();
   }, [cancelState.cancelled, cancelState.paid, router]);
 
-  const enabled = tribute || yoomoney;
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    // Preserve checkout choices when a resolved action returns a recoverable error.
+    const preserveValues = (event: Event) => {
+      if (event.target === form) event.preventDefault();
+    };
+    form.ownerDocument.addEventListener("reset", preserveValues, true);
+    return () => form.ownerDocument.removeEventListener("reset", preserveValues, true);
+  }, [pendingOrder, recurringSubscription]);
+
+  const enabled = lava;
   const paymentMethod = toBillingPaymentMethod(paymentOption);
-  const readyToCheckout = Boolean(priceCode && paymentMethod && enabled);
+  const internationalPrice = priceCode ? internationalPrices[priceCode] : undefined;
+  const readyToCheckout = Boolean(priceCode && paymentMethod && enabled && (paymentMethod !== "lava" || (lava && internationalPrice)));
   const authHref = useMemo(() => {
     if (!priceCode || !paymentOption) {
       return "/auth?next=%2Fplus%23checkout";
@@ -109,6 +114,7 @@ export function PlusCheckout({
   }, [paymentOption, priceCode]);
   const ctaLabel = getCheckoutLabel({
     activeSubscription,
+    internationalPrice,
     paymentOption,
     pending,
     priceCode,
@@ -169,8 +175,14 @@ export function PlusCheckout({
     );
   }
 
+  if (recurringSubscription) return <div className="rounded-lg border border-primary/35 bg-primary/8 p-4 text-sm">Подписка уже продлевается автоматически. <Link className="font-semibold underline" href="/account/subscription">Управлять подпиской</Link></div>;
+
   return (
-    <form action={signedIn ? action : undefined} className="grid gap-2.5">
+    <form
+      action={signedIn ? action : undefined}
+      className="grid gap-2.5"
+      ref={formRef}
+    >
       <input name="idempotencyKey" type="hidden" value={idempotencyKey} />
       {paymentMethod ? (
         <input name="paymentMethod" type="hidden" value={paymentMethod} />
@@ -181,8 +193,7 @@ export function PlusCheckout({
           Срок подписки
         </legend>
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          {firstYearAvailable ? (
-            <Choice checked={priceCode === "plus_first_year"}>
+          <Choice checked={priceCode === "plus_first_year"}>
               <span className="grid min-h-[5.25rem] grid-cols-1 content-between gap-1 sm:min-h-14 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-3">
                 <span className="min-w-0">
                   <strong className="block whitespace-nowrap font-telemetry text-[0.68rem] font-black uppercase tracking-[0.04em] text-foreground sm:text-sm sm:tracking-[0.06em]">
@@ -194,10 +205,10 @@ export function PlusCheckout({
                 </span>
                 <span className="flex items-baseline justify-between gap-1 font-telemetry sm:block sm:text-right">
                   <strong className="block whitespace-nowrap text-base font-black text-foreground sm:text-xl">
-                    1 990 ₽
+                    3 900 ₽
                   </strong>
                   <span className="mt-0.5 block whitespace-nowrap text-[0.52rem] font-bold text-success sm:text-[0.68rem]">
-                    ≈ 166 ₽/мес.
+                    325 ₽/мес.
                   </span>
                 </span>
               </span>
@@ -209,8 +220,7 @@ export function PlusCheckout({
                 type="radio"
                 value="plus_first_year"
               />
-            </Choice>
-          ) : null}
+          </Choice>
 
           <Choice checked={priceCode === "plus_monthly"}>
             <span className="grid min-h-[5.25rem] grid-cols-1 content-between gap-1 sm:min-h-14 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-3">
@@ -219,11 +229,11 @@ export function PlusCheckout({
                   Месяц
                 </strong>
                 <span className="mt-1 block text-[0.68rem] text-muted-foreground sm:text-xs">
-                  Продлите сами
+                  С продлением
                 </span>
               </span>
               <strong className="whitespace-nowrap font-telemetry text-base font-black text-foreground sm:text-right sm:text-xl">
-                249 ₽
+                390 ₽
               </strong>
             </span>
             <input
@@ -253,56 +263,33 @@ export function PlusCheckout({
               <legend className="mb-1.5 font-telemetry text-[0.58rem] font-bold uppercase tracking-[0.12em] text-muted-foreground sm:text-[0.62rem]">
                 Способ оплаты
               </legend>
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                {yoomoney ? (
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                {lava ? (
                   <PaymentChoice
                     checked={paymentOption === "russian_card"}
                     icon={
-                      <Image
-                        alt=""
-                        className="h-5 w-auto"
-                        height={120}
-                        src="/brand/payment-yoomoney.svg"
-                        width={169}
-                      />
+                      <span className="flex items-center gap-2">
+                        <CreditCard className="size-5 shrink-0" />
+                        <Image alt="" src="/brand/payment-mir.svg" width={44} height={14} className="h-3.5 w-11" />
+                      </span>
                     }
                     label="Российская карта"
-                    note="ЮMoney"
                     onChange={() => setPaymentOption("russian_card")}
                     value="russian_card"
                   />
                 ) : null}
-                {tribute ? (
+                {lava && (internationalPrices.plus_monthly || internationalPrices.plus_first_year) ? (
                   <PaymentChoice
                     checked={paymentOption === "international_card"}
                     icon={
-                      <Image
-                        alt=""
-                        className="size-6"
-                        height={30}
-                        src="/brand/payment-tribute.svg"
-                        width={30}
-                      />
+                      <span className="flex items-center gap-2">
+                        <Image alt="" src="/brand/payment-visa.svg" width={38} height={12} className="h-3 w-[2.375rem]" />
+                        <Image alt="" src="/brand/payment-mastercard.svg" width={26} height={18} className="h-[1.125rem] w-[1.625rem]" />
+                      </span>
                     }
-                    label="Visa и Mastercard"
-                    note="Tribute"
+                    label="Visa/Mastercard"
                     onChange={() => setPaymentOption("international_card")}
                     value="international_card"
-                  />
-                ) : null}
-                {tribute ? (
-                  <PaymentChoice
-                    checked={paymentOption === "crypto"}
-                    icon={
-                      <Bitcoin
-                        aria-hidden="true"
-                        className="size-5 text-[#f7931a] sm:size-6"
-                      />
-                    }
-                    label="USDT, TON"
-                    note="Через Tribute"
-                    onChange={() => setPaymentOption("crypto")}
-                    value="crypto"
                   />
                 ) : null}
               </div>
@@ -310,6 +297,12 @@ export function PlusCheckout({
           ) : null}
         </div>
       </div>
+
+      {signedIn && priceCode && (paymentMethod === "lava" || paymentMethod === "lava_rub") ? (
+        <label className="grid gap-1 text-sm font-medium">Email для оплаты
+          <input className="h-10 min-w-0 w-full rounded-md border border-border bg-card px-3 text-base sm:text-sm" name="email" type="email" autoComplete="email" defaultValue={accountEmail ?? ""} required placeholder="you@example.com" />
+        </label>
+      ) : null}
 
       {state.error ? (
         <p
@@ -401,7 +394,7 @@ function PaymentChoice({
   checked: boolean;
   icon: React.ReactNode;
   label: string;
-  note: string;
+  note?: string;
   onChange: () => void;
   value: CheckoutPaymentOption;
 }) {
@@ -424,10 +417,7 @@ function PaymentChoice({
       />
       <span
         aria-hidden="true"
-        className={cn(
-          "grid size-7 shrink-0 place-items-center rounded-sm bg-accent/80",
-          checked && "bg-primary/10",
-        )}
+        className="flex h-7 shrink-0 items-center justify-center rounded-sm bg-white px-1.5 text-neutral-800"
       >
         {icon}
       </span>
@@ -435,9 +425,9 @@ function PaymentChoice({
         <strong className="block text-[0.65rem] leading-tight text-foreground sm:text-sm">
           {label}
         </strong>
-        <span className="mt-0.5 block text-[0.58rem] leading-tight text-muted-foreground sm:text-xs">
+        {note ? <span className="mt-0.5 block text-[0.58rem] leading-tight text-muted-foreground sm:text-xs">
           {note}
-        </span>
+        </span> : null}
       </span>
     </label>
   );
@@ -445,20 +435,19 @@ function PaymentChoice({
 
 function resolvePaymentOption({
   initialPaymentOption,
-  tribute,
-  yoomoney,
+  lava,
+  internationalAvailable,
 }: {
   initialPaymentOption?: CheckoutPaymentOption;
-  tribute: boolean;
-  yoomoney: boolean;
+  lava: boolean;
+  internationalAvailable: boolean;
 }): CheckoutPaymentOption | undefined {
-  if (initialPaymentOption === "russian_card" && yoomoney) {
+  if (initialPaymentOption === "russian_card" && lava) {
     return initialPaymentOption;
   }
   if (
-    (initialPaymentOption === "international_card" ||
-      initialPaymentOption === "crypto") &&
-    tribute
+    initialPaymentOption === "international_card" &&
+    lava && internationalAvailable
   ) {
     return initialPaymentOption;
   }
@@ -468,21 +457,21 @@ function resolvePaymentOption({
 function toBillingPaymentMethod(
   option?: CheckoutPaymentOption,
 ): BillingPaymentMethod | undefined {
-  if (option === "russian_card") return "yoomoney_card";
-  if (option === "international_card" || option === "crypto") {
-    return "tribute";
-  }
+  if (option === "russian_card") return "lava_rub";
+  if (option === "international_card") return "lava";
   return undefined;
 }
 
 function getCheckoutLabel({
   activeSubscription,
+  internationalPrice,
   paymentOption,
   pending,
   priceCode,
   signedIn,
 }: {
   activeSubscription: boolean;
+  internationalPrice?: { amountMinor: number; currency: "USD" | "EUR" };
   paymentOption?: CheckoutPaymentOption;
   pending: boolean;
   priceCode?: BillingPriceCode;
@@ -492,5 +481,6 @@ function getCheckoutLabel({
   if (!priceCode) return "Сначала выберите срок";
   if (!paymentOption) return "Выберите способ оплаты";
   if (!signedIn) return "Войти и оформить";
+  if (paymentOption === "international_card" && !internationalPrice) return "Выберите другой срок";
   return activeSubscription ? "Продлить Plus" : "Перейти к оплате";
 }

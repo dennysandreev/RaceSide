@@ -1,0 +1,7516 @@
+{
+  "schemaVersion": 4,
+  "modelId": "shanghai",
+  "generatedWith": "Blender 5.2.0 LTS",
+  "coordinateReferenceSystem": "EPSG:32651",
+  "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+  "verticalExaggeration": 1,
+  "realWorldScale": "1 unit = 1 metre; no vertical exaggeration",
+  "originMeters": {
+    "x": 330750,
+    "y": 3468740
+  },
+  "boundsMeters": {
+    "width": 1740,
+    "depth": 1620
+  },
+  "lapLength": {
+    "geometryMeters": 5455.792597076465,
+    "officialFiaMeters": 5451,
+    "relativeErrorPercent": 0.08792142866383097
+  },
+  "elevationApproximate": true,
+  "elevationProfile": [
+    {
+      "distanceMeters": 0.0,
+      "elevationMeters": 4.813910007476807
+    },
+    {
+      "distanceMeters": 30.30995887264703,
+      "elevationMeters": 4.749031978183322
+    },
+    {
+      "distanceMeters": 60.61991774529406,
+      "elevationMeters": 4.702865876091852
+    },
+    {
+      "distanceMeters": 90.92987661794109,
+      "elevationMeters": 4.6312765121459964
+    },
+    {
+      "distanceMeters": 121.23983549058812,
+      "elevationMeters": 4.497554450564914
+    },
+    {
+      "distanceMeters": 151.54979436323515,
+      "elevationMeters": 4.291092872619629
+    },
+    {
+      "distanceMeters": 181.85975323588218,
+      "elevationMeters": 4.035644181569417
+    },
+    {
+      "distanceMeters": 212.16971210852924,
+      "elevationMeters": 3.7784045908186163
+    },
+    {
+      "distanceMeters": 242.47967098117624,
+      "elevationMeters": 3.5790733655293785
+    },
+    {
+      "distanceMeters": 272.78962985382327,
+      "elevationMeters": 3.4858304977416994
+    },
+    {
+      "distanceMeters": 303.0995887264703,
+      "elevationMeters": 3.5226565202077227
+    },
+    {
+      "distanceMeters": 333.40954759911733,
+      "elevationMeters": 3.6894948588477234
+    },
+    {
+      "distanceMeters": 363.71950647176436,
+      "elevationMeters": 3.9714067141215006
+    },
+    {
+      "distanceMeters": 394.02946534441134,
+      "elevationMeters": 4.346872234344482
+    },
+    {
+      "distanceMeters": 424.3394242170585,
+      "elevationMeters": 4.789292971293133
+    },
+    {
+      "distanceMeters": 454.64938308970545,
+      "elevationMeters": 5.261646111806234
+    },
+    {
+      "distanceMeters": 484.9593419623525,
+      "elevationMeters": 5.713288052876791
+    },
+    {
+      "distanceMeters": 515.2693008349995,
+      "elevationMeters": 6.079161410861545
+    },
+    {
+      "distanceMeters": 545.5792597076465,
+      "elevationMeters": 6.289991092681885
+    },
+    {
+      "distanceMeters": 575.8892185802936,
+      "elevationMeters": 6.292638683319092
+    },
+    {
+      "distanceMeters": 606.1991774529406,
+      "elevationMeters": 6.069319725036621
+    },
+    {
+      "distanceMeters": 636.5091363255876,
+      "elevationMeters": 5.647596581776938
+    },
+    {
+      "distanceMeters": 666.8190951982347,
+      "elevationMeters": 5.093381214141846
+    },
+    {
+      "distanceMeters": 697.1290540708817,
+      "elevationMeters": 4.495310189988878
+    },
+    {
+      "distanceMeters": 727.4390129435287,
+      "elevationMeters": 3.93865704536438
+    },
+    {
+      "distanceMeters": 757.7489718161758,
+      "elevationMeters": 3.485738197962443
+    },
+    {
+      "distanceMeters": 788.0589306888227,
+      "elevationMeters": 3.164375241597494
+    },
+    {
+      "distanceMeters": 818.3688895614698,
+      "elevationMeters": 2.9700176239013674
+    },
+    {
+      "distanceMeters": 848.678848434117,
+      "elevationMeters": 2.875543631447686
+    },
+    {
+      "distanceMeters": 878.9888073067639,
+      "elevationMeters": 2.844516309102376
+    },
+    {
+      "distanceMeters": 909.2987661794109,
+      "elevationMeters": 2.8431905905405683
+    },
+    {
+      "distanceMeters": 939.6087250520578,
+      "elevationMeters": 2.849686924616496
+    },
+    {
+      "distanceMeters": 969.918683924705,
+      "elevationMeters": 2.856681611802843
+    },
+    {
+      "distanceMeters": 1000.2286427973521,
+      "elevationMeters": 2.869449377059937
+    },
+    {
+      "distanceMeters": 1030.538601669999,
+      "elevationMeters": 2.899345874786377
+    },
+    {
+      "distanceMeters": 1060.848560542646,
+      "elevationMeters": 2.95540992418925
+    },
+    {
+      "distanceMeters": 1091.158519415293,
+      "elevationMeters": 3.0370248794555663
+    },
+    {
+      "distanceMeters": 1121.4684782879401,
+      "elevationMeters": 3.1318060821957054
+    },
+    {
+      "distanceMeters": 1151.7784371605871,
+      "elevationMeters": 3.2189615143669976
+    },
+    {
+      "distanceMeters": 1182.0883960332342,
+      "elevationMeters": 3.27752734820048
+    },
+    {
+      "distanceMeters": 1212.3983549058812,
+      "elevationMeters": 3.2941912810007734
+    },
+    {
+      "distanceMeters": 1242.7083137785282,
+      "elevationMeters": 3.2680068916744656
+    },
+    {
+      "distanceMeters": 1273.0182726511753,
+      "elevationMeters": 3.209569009145101
+    },
+    {
+      "distanceMeters": 1303.3282315238223,
+      "elevationMeters": 3.135890743467543
+    },
+    {
+      "distanceMeters": 1333.6381903964693,
+      "elevationMeters": 3.064874113930596
+    },
+    {
+      "distanceMeters": 1363.9481492691164,
+      "elevationMeters": 3.009420871734619
+    },
+    {
+      "distanceMeters": 1394.2581081417634,
+      "elevationMeters": 2.976818010542128
+    },
+    {
+      "distanceMeters": 1424.5680670144104,
+      "elevationMeters": 2.9682581954532195
+    },
+    {
+      "distanceMeters": 1454.8780258870574,
+      "elevationMeters": 2.9815390745798744
+    },
+    {
+      "distanceMeters": 1485.1879847597047,
+      "elevationMeters": 3.012561379538642
+    },
+    {
+      "distanceMeters": 1515.4979436323515,
+      "elevationMeters": 3.0558490488264294
+    },
+    {
+      "distanceMeters": 1545.8079025049985,
+      "elevationMeters": 3.1029663562774656
+    },
+    {
+      "distanceMeters": 1576.1178613776453,
+      "elevationMeters": 3.141892433166504
+    },
+    {
+      "distanceMeters": 1606.4278202502926,
+      "elevationMeters": 3.158850738737318
+    },
+    {
+      "distanceMeters": 1636.7377791229396,
+      "elevationMeters": 3.1419614791870116
+    },
+    {
+      "distanceMeters": 1667.0477379955867,
+      "elevationMeters": 3.0854640007019043
+    },
+    {
+      "distanceMeters": 1697.357696868234,
+      "elevationMeters": 2.9925306532118046
+    },
+    {
+      "distanceMeters": 1727.6676557408807,
+      "elevationMeters": 2.875890334447225
+    },
+    {
+      "distanceMeters": 1757.9776146135277,
+      "elevationMeters": 2.754464573330349
+    },
+    {
+      "distanceMeters": 1788.287573486175,
+      "elevationMeters": 2.648660813437567
+    },
+    {
+      "distanceMeters": 1818.5975323588218,
+      "elevationMeters": 2.575960397720337
+    },
+    {
+      "distanceMeters": 1848.9074912314688,
+      "elevationMeters": 2.548305892944336
+    },
+    {
+      "distanceMeters": 1879.2174501041156,
+      "elevationMeters": 2.5721774313184946
+    },
+    {
+      "distanceMeters": 1909.527408976763,
+      "elevationMeters": 2.6495150089263912
+    },
+    {
+      "distanceMeters": 1939.83736784941,
+      "elevationMeters": 2.778365034527248
+    },
+    {
+      "distanceMeters": 1970.147326722057,
+      "elevationMeters": 2.9513110584682893
+    },
+    {
+      "distanceMeters": 2000.4572855947042,
+      "elevationMeters": 3.1552746136983254
+    },
+    {
+      "distanceMeters": 2030.767244467351,
+      "elevationMeters": 3.3713841756184895
+    },
+    {
+      "distanceMeters": 2061.077203339998,
+      "elevationMeters": 3.575978761249118
+    },
+    {
+      "distanceMeters": 2091.387162212645,
+      "elevationMeters": 3.7436858177185037
+    },
+    {
+      "distanceMeters": 2121.697121085292,
+      "elevationMeters": 3.8519637319776745
+    },
+    {
+      "distanceMeters": 2152.007079957939,
+      "elevationMeters": 3.8871515009138315
+    },
+    {
+      "distanceMeters": 2182.317038830586,
+      "elevationMeters": 3.848430776596069
+    },
+    {
+      "distanceMeters": 2212.6269977032334,
+      "elevationMeters": 3.7474952220916746
+    },
+    {
+      "distanceMeters": 2242.9369565758802,
+      "elevationMeters": 3.6065352598826097
+    },
+    {
+      "distanceMeters": 2273.246915448527,
+      "elevationMeters": 3.449934959411623
+    },
+    {
+      "distanceMeters": 2303.5568743211743,
+      "elevationMeters": 3.298262543148465
+    },
+    {
+      "distanceMeters": 2333.8668331938215,
+      "elevationMeters": 3.1630877865685347
+    },
+    {
+      "distanceMeters": 2364.1767920664684,
+      "elevationMeters": 3.0445227464040125
+    },
+    {
+      "distanceMeters": 2394.486750939115,
+      "elevationMeters": 2.9348244084252264
+    },
+    {
+      "distanceMeters": 2424.7967098117624,
+      "elevationMeters": 2.8244726922776966
+    },
+    {
+      "distanceMeters": 2455.106668684409,
+      "elevationMeters": 2.7080016136169442
+    },
+    {
+      "distanceMeters": 2485.4166275570565,
+      "elevationMeters": 2.5869605912102593
+    },
+    {
+      "distanceMeters": 2515.7265864297037,
+      "elevationMeters": 2.4696813848283545
+    },
+    {
+      "distanceMeters": 2546.0365453023505,
+      "elevationMeters": 2.3680398782094323
+    },
+    {
+      "distanceMeters": 2576.3465041749973,
+      "elevationMeters": 2.293034262127347
+    },
+    {
+      "distanceMeters": 2606.6564630476446,
+      "elevationMeters": 2.251957172817654
+    },
+    {
+      "distanceMeters": 2636.966421920292,
+      "elevationMeters": 2.246451791127523
+    },
+    {
+      "distanceMeters": 2667.2763807929387,
+      "elevationMeters": 2.2733626577589243
+    },
+    {
+      "distanceMeters": 2697.5863396655855,
+      "elevationMeters": 2.325813786188761
+    },
+    {
+      "distanceMeters": 2727.8962985382327,
+      "elevationMeters": 2.3949546813964844
+    },
+    {
+      "distanceMeters": 2758.2062574108795,
+      "elevationMeters": 2.4719104766845694
+    },
+    {
+      "distanceMeters": 2788.516216283527,
+      "elevationMeters": 2.550536473592122
+    },
+    {
+      "distanceMeters": 2818.826175156174,
+      "elevationMeters": 2.6301028569539397
+    },
+    {
+      "distanceMeters": 2849.136134028821,
+      "elevationMeters": 2.715731287002564
+    },
+    {
+      "distanceMeters": 2879.4460929014676,
+      "elevationMeters": 2.8166756100124775
+    },
+    {
+      "distanceMeters": 2909.756051774115,
+      "elevationMeters": 2.9422333081563314
+    },
+    {
+      "distanceMeters": 2940.066010646762,
+      "elevationMeters": 3.0990157551235638
+    },
+    {
+      "distanceMeters": 2970.3759695194094,
+      "elevationMeters": 3.287350262535946
+    },
+    {
+      "distanceMeters": 3000.6859283920558,
+      "elevationMeters": 3.4998838901519758
+    },
+    {
+      "distanceMeters": 3030.995887264703,
+      "elevationMeters": 3.7224188645680742
+    },
+    {
+      "distanceMeters": 3061.30584613735,
+      "elevationMeters": 3.9361065175798196
+    },
+    {
+      "distanceMeters": 3091.615805009997,
+      "elevationMeters": 4.120749123891195
+    },
+    {
+      "distanceMeters": 3121.9257638826443,
+      "elevationMeters": 4.258025211758085
+    },
+    {
+      "distanceMeters": 3152.2357227552907,
+      "elevationMeters": 4.335211033291286
+    },
+    {
+      "distanceMeters": 3182.545681627938,
+      "elevationMeters": 4.348193486531575
+    },
+    {
+      "distanceMeters": 3212.855640500585,
+      "elevationMeters": 4.3020657433403855
+    },
+    {
+      "distanceMeters": 3243.165599373232,
+      "elevationMeters": 4.210195922851563
+    },
+    {
+      "distanceMeters": 3273.4755582458793,
+      "elevationMeters": 4.090152835845947
+    },
+    {
+      "distanceMeters": 3303.7855171185265,
+      "elevationMeters": 3.9599210368262376
+    },
+    {
+      "distanceMeters": 3334.0954759911733,
+      "elevationMeters": 3.8328923384348546
+    },
+    {
+      "distanceMeters": 3364.4054348638206,
+      "elevationMeters": 3.716899601618448
+    },
+    {
+      "distanceMeters": 3394.715393736468,
+      "elevationMeters": 3.612153111563787
+    },
+    {
+      "distanceMeters": 3425.025352609114,
+      "elevationMeters": 3.513280683093601
+    },
+    {
+      "distanceMeters": 3455.3353114817614,
+      "elevationMeters": 3.4126042842864983
+    },
+    {
+      "distanceMeters": 3485.6452703544087,
+      "elevationMeters": 3.3036820093790675
+    },
+    {
+      "distanceMeters": 3515.9552292270555,
+      "elevationMeters": 3.1837606271107988
+    },
+    {
+      "distanceMeters": 3546.2651880997028,
+      "elevationMeters": 3.056819581985472
+    },
+    {
+      "distanceMeters": 3576.57514697235,
+      "elevationMeters": 2.9325997087690547
+    },
+    {
+      "distanceMeters": 3606.8851058449964,
+      "elevationMeters": 2.824330960379707
+    },
+    {
+      "distanceMeters": 3637.1950647176436,
+      "elevationMeters": 2.7451264063517247
+    },
+    {
+      "distanceMeters": 3667.5050235902904,
+      "elevationMeters": 2.7050274742974176
+    },
+    {
+      "distanceMeters": 3697.8149824629377,
+      "elevationMeters": 2.7081867059071856
+    },
+    {
+      "distanceMeters": 3728.124941335585,
+      "elevationMeters": 2.751420640945435
+    },
+    {
+      "distanceMeters": 3758.4349002082313,
+      "elevationMeters": 2.824651898278129
+    },
+    {
+      "distanceMeters": 3788.7448590808785,
+      "elevationMeters": 2.9127122561136876
+    },
+    {
+      "distanceMeters": 3819.054817953526,
+      "elevationMeters": 2.998327875137329
+    },
+    {
+      "distanceMeters": 3849.3647768261726,
+      "elevationMeters": 3.066728454165988
+    },
+    {
+      "distanceMeters": 3879.67473569882,
+      "elevationMeters": 3.109172407786051
+    },
+    {
+      "distanceMeters": 3909.984694571467,
+      "elevationMeters": 3.1255211353302
+    },
+    {
+      "distanceMeters": 3940.294653444114,
+      "elevationMeters": 3.12187655766805
+    },
+    {
+      "distanceMeters": 3970.604612316761,
+      "elevationMeters": 3.107125451829698
+    },
+    {
+      "distanceMeters": 4000.9145711894084,
+      "elevationMeters": 3.091406313578288
+    },
+    {
+      "distanceMeters": 4031.224530062055,
+      "elevationMeters": 3.082884618971083
+    },
+    {
+      "distanceMeters": 4061.534488934702,
+      "elevationMeters": 3.088485288619995
+    },
+    {
+      "distanceMeters": 4091.8444478073493,
+      "elevationMeters": 3.115400791168213
+    },
+    {
+      "distanceMeters": 4122.154406679996,
+      "elevationMeters": 3.171064737108019
+    },
+    {
+      "distanceMeters": 4152.464365552643,
+      "elevationMeters": 3.2636298815409353
+    },
+    {
+      "distanceMeters": 4182.77432442529,
+      "elevationMeters": 3.4020274798075336
+    },
+    {
+      "distanceMeters": 4213.084283297937,
+      "elevationMeters": 3.5902829435136567
+    },
+    {
+      "distanceMeters": 4243.394242170584,
+      "elevationMeters": 3.8250787258148184
+    },
+    {
+      "distanceMeters": 4273.704201043231,
+      "elevationMeters": 4.093732198079419
+    },
+    {
+      "distanceMeters": 4304.014159915878,
+      "elevationMeters": 4.374427032470698
+    },
+    {
+      "distanceMeters": 4334.324118788525,
+      "elevationMeters": 4.641394127739798
+    },
+    {
+      "distanceMeters": 4364.634077661172,
+      "elevationMeters": 4.869708633422851
+    },
+    {
+      "distanceMeters": 4394.94403653382,
+      "elevationMeters": 5.043188942803278
+    },
+    {
+      "distanceMeters": 4425.253995406467,
+      "elevationMeters": 5.150456905364992
+    },
+    {
+      "distanceMeters": 4455.563954279113,
+      "elevationMeters": 5.18380397160848
+    },
+    {
+      "distanceMeters": 4485.8739131517605,
+      "elevationMeters": 5.134213860829671
+    },
+    {
+      "distanceMeters": 4516.183872024408,
+      "elevationMeters": 4.993717214796275
+    },
+    {
+      "distanceMeters": 4546.493830897054,
+      "elevationMeters": 4.761850833892825
+    },
+    {
+      "distanceMeters": 4576.803789769701,
+      "elevationMeters": 4.45224141014947
+    },
+    {
+      "distanceMeters": 4607.113748642349,
+      "elevationMeters": 4.096107599470351
+    },
+    {
+      "distanceMeters": 4637.423707514996,
+      "elevationMeters": 3.738070297241209
+    },
+    {
+      "distanceMeters": 4667.733666387643,
+      "elevationMeters": 3.4231983237796326
+    },
+    {
+      "distanceMeters": 4698.04362526029,
+      "elevationMeters": 3.182859871122569
+    },
+    {
+      "distanceMeters": 4728.353584132937,
+      "elevationMeters": 3.027571948369344
+    },
+    {
+      "distanceMeters": 4758.663543005584,
+      "elevationMeters": 2.9469586955176457
+    },
+    {
+      "distanceMeters": 4788.97350187823,
+      "elevationMeters": 2.918724775314331
+    },
+    {
+      "distanceMeters": 4819.283460750878,
+      "elevationMeters": 2.9198642253875735
+    },
+    {
+      "distanceMeters": 4849.593419623525,
+      "elevationMeters": 2.9338700241512723
+    },
+    {
+      "distanceMeters": 4879.903378496171,
+      "elevationMeters": 2.9542741563585064
+    },
+    {
+      "distanceMeters": 4910.213337368818,
+      "elevationMeters": 2.9839641094207763
+    },
+    {
+      "distanceMeters": 4940.523296241466,
+      "elevationMeters": 3.0294467820061577
+    },
+    {
+      "distanceMeters": 4970.833255114113,
+      "elevationMeters": 3.0968704382578536
+    },
+    {
+      "distanceMeters": 5001.14321398676,
+      "elevationMeters": 3.1911518573760995
+    },
+    {
+      "distanceMeters": 5031.4531728594075,
+      "elevationMeters": 3.3106356302897155
+    },
+    {
+      "distanceMeters": 5061.763131732054,
+      "elevationMeters": 3.460376675923664
+    },
+    {
+      "distanceMeters": 5092.073090604701,
+      "elevationMeters": 3.652052036921182
+    },
+    {
+      "distanceMeters": 5122.383049477348,
+      "elevationMeters": 3.899696090486315
+    },
+    {
+      "distanceMeters": 5152.693008349995,
+      "elevationMeters": 4.211363156636548
+    },
+    {
+      "distanceMeters": 5183.002967222642,
+      "elevationMeters": 4.575413894653313
+    },
+    {
+      "distanceMeters": 5213.312926095289,
+      "elevationMeters": 4.951959896087642
+    },
+    {
+      "distanceMeters": 5243.622884967936,
+      "elevationMeters": 5.277878199683293
+    },
+    {
+      "distanceMeters": 5273.932843840584,
+      "elevationMeters": 5.489492193857829
+    },
+    {
+      "distanceMeters": 5304.24280271323,
+      "elevationMeters": 5.551652484469944
+    },
+    {
+      "distanceMeters": 5334.552761585877,
+      "elevationMeters": 5.473147985670304
+    },
+    {
+      "distanceMeters": 5364.862720458525,
+      "elevationMeters": 5.301147270202634
+    },
+    {
+      "distanceMeters": 5395.172679331171,
+      "elevationMeters": 5.101129086812339
+    },
+    {
+      "distanceMeters": 5425.482638203818,
+      "elevationMeters": 4.929338720109728
+    },
+    {
+      "distanceMeters": 5455.792597076465,
+      "elevationMeters": 4.813910007476807
+    }
+  ],
+  "elevationsMeters": {
+    "low": 2.246451791127523,
+    "high": 6.292638683319092
+  },
+  "finishDistanceMeters": 0,
+  "raceStartDistanceMeters": 130,
+  "baseElevationMeters": 0,
+  "sectorBoundaryDistancesMeters": [
+    1430,
+    2999
+  ],
+  "objects": {
+    "turnAnchors": 16,
+    "pitGarageBoxes": 33,
+    "fiaGarageBays": 3,
+    "buildingsTotal": 83,
+    "grandstandFootprints": 17,
+    "overWaterPavilions": 26,
+    "raceMotorhomes": 0,
+    "mainComplex": {
+      "sourceOsmWayId": 107371135,
+      "roofHeightMeters": 35,
+      "heightMethod": "OSM height; reconstructed section",
+      "bridges": [
+        {
+          "distanceMeters": 163.76500373359445,
+          "roadToSoffitClearanceMeters": 15,
+          "heightEstimated": true
+        },
+        {
+          "distanceMeters": 5259.05649464397,
+          "roadToSoffitClearanceMeters": 15,
+          "heightEstimated": true
+        }
+      ],
+      "lanterns": 10,
+      "roofProfileEstimated": true
+    },
+    "mappedBarrierPanels": 385,
+    "trees": 16,
+    "method": "mapped individual trees and sampled canopies inside OSM forest polygons; canopy geometry estimated"
+  },
+  "layoutQuality": {
+    "surfaceClearance": {
+      "minimumTrackTerrainClearanceMeters": 0.533,
+      "startStraightMinimumClearanceMeters": 0.606,
+      "terrainBreakthroughSamples": 0
+    },
+    "pitLane": {
+      "pitGarageBoxes": 33,
+      "fiaGarageBays": 3,
+      "frontageDistancesMeters": [
+        349.51864429794665,
+        667.4687271028405
+      ],
+      "wall": {
+        "fenceHeightMeters": 2.05,
+        "lengthMeters": 347.95,
+        "panels": 116,
+        "wallHeightMeters": 1.15
+      },
+      "entryGapMeters": 0.0,
+      "exitGapMeters": 0.0,
+      "surfaceClearance": {
+        "minimumTrackTerrainClearanceMeters": 0.622,
+        "startStraightMinimumClearanceMeters": 0.622,
+        "terrainBreakthroughSamples": 0
+      }
+    },
+    "grandstands": {
+      "count": 17,
+      "rendered": [
+        {
+          "osmWayId": 107371135,
+          "name": "Section A",
+          "footprint": [
+            [
+              330575.430163708,
+              3468306.663876376
+            ],
+            [
+              330897.69939527905,
+              3468375.517462469
+            ],
+            [
+              330908.7068954717,
+              3468324.543635062
+            ],
+            [
+              330556.0176517171,
+              3468249.18470068
+            ]
+          ],
+          "rowsBuilt": 1234,
+          "seatsBuilt": 22212,
+          "minimumTrackClearanceMeters": 9.469107017336517,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156341844,
+          "name": "Section B1",
+          "footprint": [
+            [
+              330469.63283492066,
+              3468244.849295678
+            ],
+            [
+              330313.33078318415,
+              3468206.3631010815
+            ],
+            [
+              330305.44025772903,
+              3468238.0708864178
+            ],
+            [
+              330461.7508587853,
+              3468276.5235350067
+            ]
+          ],
+          "rowsBuilt": 596,
+          "seatsBuilt": 10132,
+          "minimumTrackClearanceMeters": 15.011625174975332,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156341848,
+          "name": "Section B2",
+          "footprint": [
+            [
+              330304.13201392314,
+              3468220.7607749514
+            ],
+            [
+              330308.0513342557,
+              3468205.3619291047
+            ],
+            [
+              330277.8426309076,
+              3468197.146742024
+            ],
+            [
+              330263.9521646686,
+              3468195.120784044
+            ],
+            [
+              330247.5279955829,
+              3468196.49570286
+            ],
+            [
+              330234.0993205728,
+              3468201.2373682396
+            ],
+            [
+              330221.1159255714,
+              3468209.963692244
+            ],
+            [
+              330211.79031899665,
+              3468220.6377778533
+            ],
+            [
+              330204.9975361852,
+              3468230.7940233867
+            ],
+            [
+              330218.56631189235,
+              3468239.400587616
+            ],
+            [
+              330224.86575811554,
+              3468229.9287425163
+            ],
+            [
+              330232.2337896662,
+              3468221.7923838915
+            ],
+            [
+              330240.6923173662,
+              3468216.3439543406
+            ],
+            [
+              330251.6806213107,
+              3468211.952308626
+            ],
+            [
+              330263.6895772877,
+              3468210.6378285787
+            ],
+            [
+              330274.69515109586,
+              3468212.5996298823
+            ]
+          ],
+          "rowsBuilt": 144,
+          "seatsBuilt": 2448,
+          "minimumTrackClearanceMeters": 79.07023340391083,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156341851,
+          "name": "Section B3",
+          "footprint": [
+            [
+              330223.48766390997,
+              3468248.8458561664
+            ],
+            [
+              330199.8682334424,
+              3468235.534310512
+            ],
+            [
+              330181.75357863924,
+              3468272.364461593
+            ],
+            [
+              330168.8987506899,
+              3468311.9147852436
+            ],
+            [
+              330164.14902459324,
+              3468352.9859352065
+            ],
+            [
+              330165.11073283677,
+              3468387.6551564303
+            ],
+            [
+              330173.63224182127,
+              3468429.5535111735
+            ],
+            [
+              330198.44544824597,
+              3468423.7623333074
+            ],
+            [
+              330191.1883118565,
+              3468385.2919937535
+            ],
+            [
+              330189.05764910456,
+              3468354.2454808396
+            ],
+            [
+              330194.2162780834,
+              3468314.90861417
+            ],
+            [
+              330204.47420524363,
+              3468283.0736452686
+            ]
+          ],
+          "rowsBuilt": 448,
+          "seatsBuilt": 8064,
+          "minimumTrackClearanceMeters": 92.69022185130594,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974483,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330499.9644778747,
+              3469154.1904205047
+            ],
+            [
+              330512.3316194015,
+              3469120.381103201
+            ],
+            [
+              330497.2065078715,
+              3469114.9041910055
+            ],
+            [
+              330484.84909988625,
+              3469148.724459358
+            ]
+          ],
+          "rowsBuilt": 72,
+          "seatsBuilt": 1224,
+          "minimumTrackClearanceMeters": 57.049915599396016,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974485,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330576.6189828132,
+              3469317.580970404
+            ],
+            [
+              330547.7573256025,
+              3469296.5362065607
+            ],
+            [
+              330537.2720449015,
+              3469310.77713555
+            ],
+            [
+              330566.1336878727,
+              3469331.8218701356
+            ]
+          ],
+          "rowsBuilt": 77,
+          "seatsBuilt": 1232,
+          "minimumTrackClearanceMeters": 62.545471934333236,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974487,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330651.2163299335,
+              3469335.047568675
+            ],
+            [
+              330615.1333139993,
+              3469331.750078212
+            ],
+            [
+              330613.5780415841,
+              3469348.563192164
+            ],
+            [
+              330649.66118010774,
+              3469351.87176043
+            ]
+          ],
+          "rowsBuilt": 72,
+          "seatsBuilt": 1224,
+          "minimumTrackClearanceMeters": 64.63064418210848,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974489,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330569.00276336016,
+              3469069.12257305
+            ],
+            [
+              330560.4236024938,
+              3469055.8997255126
+            ],
+            [
+              330530.113367112,
+              3469075.3624550477
+            ],
+            [
+              330538.68303934415,
+              3469088.5854330217
+            ]
+          ],
+          "rowsBuilt": 67,
+          "seatsBuilt": 1139,
+          "minimumTrackClearanceMeters": 44.59527057104048,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974491,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330504.81029163045,
+              3469230.755624291
+            ],
+            [
+              330497.76767807116,
+              3469194.865272887
+            ],
+            [
+              330482.41801152716,
+              3469197.852537483
+            ],
+            [
+              330489.45116285636,
+              3469233.7430348946
+            ]
+          ],
+          "rowsBuilt": 51,
+          "seatsBuilt": 867,
+          "minimumTrackClearanceMeters": 59.639219931959516,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974493,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330545.3355580977,
+              3469295.078441532
+            ],
+            [
+              330523.1082620736,
+              3469267.0626338585
+            ],
+            [
+              330509.5293161078,
+              3469277.7277126727
+            ],
+            [
+              330531.747294976,
+              3469305.7547320747
+            ]
+          ],
+          "rowsBuilt": 75,
+          "seatsBuilt": 1200,
+          "minimumTrackClearanceMeters": 61.07347371881829,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974496,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330513.789126795,
+              3469118.1176458574
+            ],
+            [
+              330536.0242100652,
+              3469090.7130827676
+            ],
+            [
+              330523.41252750054,
+              3469080.593747938
+            ],
+            [
+              330501.186787004,
+              3469107.987098364
+            ]
+          ],
+          "rowsBuilt": 53,
+          "seatsBuilt": 848,
+          "minimumTrackClearanceMeters": 51.93487047441853,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974497,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330497.73377278924,
+              3469192.770097539
+            ],
+            [
+              330498.954148137,
+              3469156.4466440305
+            ],
+            [
+              330483.3574472908,
+              3469155.9339393103
+            ],
+            [
+              330482.14663987677,
+              3469192.2572429846
+            ]
+          ],
+          "rowsBuilt": 51,
+          "seatsBuilt": 867,
+          "minimumTrackClearanceMeters": 59.6067593460908,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974499,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330612.4216358567,
+              3469331.1951541756
+            ],
+            [
+              330579.49024416984,
+              3469318.5879320004
+            ],
+            [
+              330573.4244782529,
+              3469334.243193836
+            ],
+            [
+              330606.356009932,
+              3469346.861480978
+            ]
+          ],
+          "rowsBuilt": 74,
+          "seatsBuilt": 1184,
+          "minimumTrackClearanceMeters": 64.41694029079146,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974500,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330689.1749729602,
+              3469333.6909670653
+            ],
+            [
+              330653.012158968,
+              3469334.8743823497
+            ],
+            [
+              330653.5746826733,
+              3469352.008076532
+            ],
+            [
+              330689.7374373642,
+              3469350.82466059
+            ]
+          ],
+          "rowsBuilt": 74,
+          "seatsBuilt": 1258,
+          "minimumTrackClearanceMeters": 64.89076965981026,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 156974506,
+          "name": "E terrace",
+          "footprint": [
+            [
+              330521.2810319203,
+              3469265.295864777
+            ],
+            [
+              330505.8859110052,
+              3469232.534553473
+            ],
+            [
+              330490.4802498058,
+              3469239.7030757116
+            ],
+            [
+              330505.8754114058,
+              3469272.4643663475
+            ]
+          ],
+          "rowsBuilt": 74,
+          "seatsBuilt": 1258,
+          "minimumTrackClearanceMeters": 60.13313963381461,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 1372223261,
+          "name": "Section H",
+          "footprint": [
+            [
+              331277.8712601555,
+              3468452.162024651
+            ],
+            [
+              331267.9713401593,
+              3468443.767084811
+            ],
+            [
+              331267.28305786574,
+              3468434.4660203555
+            ],
+            [
+              331270.3319219063,
+              3468430.1027740445
+            ],
+            [
+              331274.4450753471,
+              3468428.5615295954
+            ],
+            [
+              331279.8172199968,
+              3468421.264324061
+            ],
+            [
+              331278.803614503,
+              3468419.1625512303
+            ],
+            [
+              331280.9540761493,
+              3468414.1124142655
+            ],
+            [
+              331289.7379476202,
+              3468406.6666038805
+            ],
+            [
+              331291.61491955235,
+              3468398.0737396367
+            ],
+            [
+              331302.00625521905,
+              3468388.3247863436
+            ],
+            [
+              331304.303572933,
+              3468384.6463584593
+            ],
+            [
+              331304.7138029628,
+              3468378.955903478
+            ],
+            [
+              331311.01081112993,
+              3468370.7448754343
+            ],
+            [
+              331314.4254021214,
+              3468369.786265394
+            ],
+            [
+              331313.3366479174,
+              3468367.0317904735
+            ],
+            [
+              331319.5464903376,
+              3468356.604106899
+            ],
+            [
+              331327.0752069163,
+              3468350.9432494296
+            ],
+            [
+              331328.63275582436,
+              3468347.940456142
+            ],
+            [
+              331327.59698565333,
+              3468345.904954976
+            ],
+            [
+              331331.52063700714,
+              3468338.364920953
+            ],
+            [
+              331340.0596481717,
+              3468331.6537248157
+            ],
+            [
+              331338.9801773971,
+              3468328.911616437
+            ],
+            [
+              331346.41411513777,
+              3468316.396724764
+            ],
+            [
+              331350.81562206533,
+              3468312.854685245
+            ],
+            [
+              331350.7410697744,
+              3468311.41071299
+            ],
+            [
+              331355.256734641,
+              3468309.2550770226
+            ],
+            [
+              331354.19983751414,
+              3468306.49777735
+            ],
+            [
+              331358.5146684322,
+              3468298.440739947
+            ],
+            [
+              331366.7673586042,
+              3468291.7522960277
+            ],
+            [
+              331366.6698457294,
+              3468288.0351572153
+            ],
+            [
+              331370.3368613519,
+              3468280.531994324
+            ],
+            [
+              331375.08701767767,
+              3468274.1942376206
+            ],
+            [
+              331382.85318300873,
+              3468268.5792436455
+            ],
+            [
+              331385.8359941704,
+              3468263.9763745433
+            ],
+            [
+              331384.91591614153,
+              3468261.0649684328
+            ],
+            [
+              331386.9000282211,
+              3468259.7918728106
+            ],
+            [
+              331387.9949967616,
+              3468255.5688723703
+            ],
+            [
+              331401.3600812951,
+              3468241.658908631
+            ],
+            [
+              331406.1965741477,
+              3468227.222450275
+            ],
+            [
+              331413.54961551365,
+              3468219.5161836254
+            ],
+            [
+              331417.5449702234,
+              3468217.7084190915
+            ],
+            [
+              331416.75136578694,
+              3468215.4052491435
+            ],
+            [
+              331420.73976374394,
+              3468213.6365972483
+            ],
+            [
+              331421.06512094545,
+              3468209.4200782687
+            ],
+            [
+              331426.6611331499,
+              3468199.984382145
+            ],
+            [
+              331435.8164325631,
+              3468193.301534004
+            ],
+            [
+              331440.64800245553,
+              3468180.390129664
+            ],
+            [
+              331443.72068335017,
+              3468176.657320019
+            ],
+            [
+              331449.51233789243,
+              3468173.2598748277
+            ],
+            [
+              331457.9456860524,
+              3468171.0389765333
+            ],
+            [
+              331466.13904508326,
+              3468172.0832967646
+            ],
+            [
+              331473.9788573466,
+              3468178.7981397794
+            ],
+            [
+              331474.31378854514,
+              3468188.326892225
+            ],
+            [
+              331468.2586527374,
+              3468196.50932225
+            ],
+            [
+              331458.6464957447,
+              3468201.3271542606
+            ],
+            [
+              331459.0227290779,
+              3468209.371758458
+            ],
+            [
+              331456.7913525059,
+              3468214.647051483
+            ],
+            [
+              331450.7428354299,
+              3468220.6492361533
+            ],
+            [
+              331440.9804838284,
+              3468224.998540847
+            ],
+            [
+              331441.36041190923,
+              3468233.9756083298
+            ],
+            [
+              331435.08724066836,
+              3468243.5026789014
+            ],
+            [
+              331424.24298116926,
+              3468249.164413238
+            ],
+            [
+              331424.7637246128,
+              3468258.8205370656
+            ],
+            [
+              331422.6676165812,
+              3468263.3308142303
+            ],
+            [
+              331417.6921352741,
+              3468268.4549530344
+            ],
+            [
+              331406.9657568865,
+              3468274.0299868844
+            ],
+            [
+              331406.8038262127,
+              3468285.868436589
+            ],
+            [
+              331402.00424269604,
+              3468291.5416077883
+            ],
+            [
+              331392.50505373866,
+              3468296.5442993348
+            ],
+            [
+              331393.5092061953,
+              3468300.9354712814
+            ],
+            [
+              331398.24880026304,
+              3468300.7797706644
+            ],
+            [
+              331393.53115197894,
+              3468302.4583343193
+            ],
+            [
+              331391.756893411,
+              3468308.8801453877
+            ],
+            [
+              331386.2516428264,
+              3468314.4079313627
+            ],
+            [
+              331377.0255058245,
+              3468318.2406499637
+            ],
+            [
+              331378.2916657741,
+              3468326.957806867
+            ],
+            [
+              331373.07337838324,
+              3468334.425482753
+            ],
+            [
+              331363.20390574064,
+              3468338.779962817
+            ],
+            [
+              331363.84685511695,
+              3468350.383575754
+            ],
+            [
+              331357.8559897113,
+              3468356.229158783
+            ],
+            [
+              331349.0185817061,
+              3468358.701423567
+            ],
+            [
+              331351.17226690345,
+              3468364.2461100155
+            ],
+            [
+              331349.77495005325,
+              3468370.180622068
+            ],
+            [
+              331345.6434692823,
+              3468374.9330486837
+            ],
+            [
+              331337.04532196996,
+              3468378.622027966
+            ],
+            [
+              331338.5324128303,
+              3468387.118017839
+            ],
+            [
+              331336.2155500066,
+              3468391.6314456826
+            ],
+            [
+              331330.3742539006,
+              3468395.6898424802
+            ],
+            [
+              331323.5356608918,
+              3468397.6270667585
+            ],
+            [
+              331325.08926152793,
+              3468406.844384514
+            ],
+            [
+              331323.57061270153,
+              3468409.8201562245
+            ],
+            [
+              331318.71188778925,
+              3468414.4386266544
+            ],
+            [
+              331311.0815249223,
+              3468416.316066483
+            ],
+            [
+              331312.25966332416,
+              3468420.556612562
+            ],
+            [
+              331317.4652891349,
+              3468420.982920588
+            ],
+            [
+              331313.2764141468,
+              3468422.656896116
+            ],
+            [
+              331311.1778454809,
+              3468429.2444930677
+            ],
+            [
+              331307.9642858069,
+              3468432.2862189217
+            ],
+            [
+              331298.78733677627,
+              3468435.5815265374
+            ],
+            [
+              331300.26083634794,
+              3468444.1747318446
+            ],
+            [
+              331297.2137826318,
+              3468449.358786086
+            ],
+            [
+              331288.97589900985,
+              3468453.2728751698
+            ]
+          ],
+          "rowsBuilt": 925,
+          "seatsBuilt": 16650,
+          "minimumTrackClearanceMeters": 6.5584628664283695,
+          "dimensionsEstimated": true
+        },
+        {
+          "osmWayId": 1372223262,
+          "name": "Section K",
+          "footprint": [
+            [
+              331156.9708540757,
+              3468385.717540708
+            ],
+            [
+              331151.5453151724,
+              3468380.779474391
+            ],
+            [
+              331149.4845969792,
+              3468375.84777754
+            ],
+            [
+              331150.61953864543,
+              3468368.823135178
+            ],
+            [
+              331157.55050435616,
+              3468361.1483347453
+            ],
+            [
+              331156.5552646625,
+              3468359.0324613512
+            ],
+            [
+              331150.7119693738,
+              3468358.9784435504
+            ],
+            [
+              331152.17215206655,
+              3468356.1787319747
+            ],
+            [
+              331153.7883469799,
+              3468355.491601192
+            ],
+            [
+              331158.1172997551,
+              3468357.6418731213
+            ],
+            [
+              331159.11216812336,
+              3468359.757495117
+            ],
+            [
+              331163.17491463805,
+              3468358.3892544243
+            ],
+            [
+              331164.305596367,
+              3468351.3820486087
+            ],
+            [
+              331169.8130742086,
+              3468347.2262380766
+            ],
+            [
+              331171.2129186173,
+              3468343.73113807
+            ],
+            [
+              331170.22568077827,
+              3468341.613565739
+            ],
+            [
+              331167.73278526886,
+              3468341.585328911
+            ],
+            [
+              331167.0048086234,
+              3468342.982604648
+            ],
+            [
+              331165.2909146236,
+              3468342.259869153
+            ],
+            [
+              331165.0870017047,
+              3468339.4440607056
+            ],
+            [
+              331166.6976786837,
+              3468338.7603609287
+            ],
+            [
+              331171.10855252744,
+              3468342.3256641324
+            ],
+            [
+              331174.43250840064,
+              3468342.3606996117
+            ],
+            [
+              331178.6427080141,
+              3468331.8684953656
+            ],
+            [
+              331185.75669014786,
+              3468327.0215569455
+            ],
+            [
+              331184.77921263786,
+              3468324.899923687
+            ],
+            [
+              331188.14497894427,
+              3468325.6383291995
+            ],
+            [
+              331189.7043551676,
+              3468324.2460239176
+            ],
+            [
+              331189.41178268933,
+              3468320.017511684
+            ],
+            [
+              331196.3960769746,
+              3468313.0295239114
+            ],
+            [
+              331196.99480042,
+              3468309.5014075935
+            ],
+            [
+              331196.0317475297,
+              3468307.3693016856
+            ],
+            [
+              331193.6372209803,
+              3468308.760871371
+            ],
+            [
+              331191.0652120699,
+              3468307.3158915006
+            ],
+            [
+              331195.07154480985,
+              3468305.2340259003
+            ],
+            [
+              331196.81534210156,
+              3468306.6687571807
+            ],
+            [
+              331200.86799625086,
+              3468305.288265418
+            ],
+            [
+              331203.83566682064,
+              3468299.6377848345
+            ],
+            [
+              331209.3865069784,
+              3468295.409814193
+            ],
+            [
+              331209.2250486072,
+              3468292.5605676323
+            ],
+            [
+              331204.96635467303,
+              3468290.3895533597
+            ],
+            [
+              331208.9922307706,
+              3468288.276752944
+            ],
+            [
+              331212.46187801426,
+              3468291.1519277883
+            ],
+            [
+              331214.9504190237,
+              3468291.161560129
+            ],
+            [
+              331217.0236562394,
+              3468283.30661119
+            ],
+            [
+              331224.9514151816,
+              3468275.411984265
+            ],
+            [
+              331224.0248261058,
+              3468273.249273375
+            ],
+            [
+              331229.0148938481,
+              3468273.2398848208
+            ],
+            [
+              331228.7767139413,
+              3468267.454099996
+            ],
+            [
+              331230.3325018021,
+              3468264.5441147396
+            ],
+            [
+              331236.850910836,
+              3468260.1332321893
+            ],
+            [
+              331237.5948444204,
+              3468257.201917498
+            ],
+            [
+              331236.69712183945,
+              3468255.009611368
+            ],
+            [
+              331234.23591896414,
+              3468256.4942953107
+            ],
+            [
+              331231.6744450275,
+              3468254.3056526156
+            ],
+            [
+              331235.8042931616,
+              3468252.8111032452
+            ],
+            [
+              331239.2229248928,
+              3468255.7206907813
+            ],
+            [
+              331243.3844236017,
+              3468254.938019536
+            ],
+            [
+              331243.2729997367,
+              3468250.5238751546
+            ],
+            [
+              331252.31647160737,
+              3468238.467744022
+            ],
+            [
+              331251.4572729674,
+              3468236.2334038685
+            ],
+            [
+              331248.10388408136,
+              3468237.802407328
+            ],
+            [
+              331245.5784296066,
+              3468237.094898439
+            ],
+            [
+              331246.4029375985,
+              3468234.8250054778
+            ],
+            [
+              331253.1344444104,
+              3468234.689549151
+            ],
+            [
+              331256.5061480449,
+              3468233.0944814347
+            ],
+            [
+              331257.35765165626,
+              3468228.5174264926
+            ],
+            [
+              331264.1776016664,
+              3468224.46800779
+            ],
+            [
+              331267.6607722588,
+              3468219.6981389225
+            ],
+            [
+              331266.85346184403,
+              3468217.4036942017
+            ],
+            [
+              331262.5540063533,
+              3468219.1305730953
+            ],
+            [
+              331262.61680944666,
+              3468216.021989866
+            ],
+            [
+              331265.1973654259,
+              3468215.137186224
+            ],
+            [
+              331268.54823711654,
+              3468218.10598385
+            ],
+            [
+              331271.1202445158,
+              3468217.9845903753
+            ],
+            [
+              331272.8770524173,
+              3468216.335928573
+            ],
+            [
+              331274.85830569034,
+              3468208.3494750923
+            ],
+            [
+              331280.2505387848,
+              3468204.002984648
+            ],
+            [
+              331281.2903409826,
+              3468200.7037364985
+            ],
+            [
+              331276.2104954492,
+              3468197.843519822
+            ],
+            [
+              331277.26771361876,
+              3468194.5218419377
+            ],
+            [
+              331279.07347484404,
+              3468193.56786666
+            ],
+            [
+              331285.83482110145,
+              3468197.894844792
+            ],
+            [
+              331288.5475038352,
+              3468196.8299928564
+            ],
+            [
+              331289.000184664,
+              3468190.205589274
+            ],
+            [
+              331286.37757840933,
+              3468189.642042635
+            ],
+            [
+              331286.4965730951,
+              3468187.9778307183
+            ],
+            [
+              331298.7568078342,
+              3468180.699051958
+            ],
+            [
+              331298.1416640499,
+              3468177.4116155906
+            ],
+            [
+              331292.86397819157,
+              3468175.574130754
+            ],
+            [
+              331298.6127581419,
+              3468172.274498139
+            ],
+            [
+              331304.8035208209,
+              3468174.742837185
+            ],
+            [
+              331306.84998215473,
+              3468172.7170875617
+            ],
+            [
+              331309.6123572158,
+              3468163.733623529
+            ],
+            [
+              331316.8614610218,
+              3468157.285185846
+            ],
+            [
+              331317.22097025265,
+              3468153.802474449
+            ],
+            [
+              331310.7575880119,
+              3468152.4382200944
+            ],
+            [
+              331314.0714963585,
+              3468147.5707012056
+            ],
+            [
+              331318.54563093017,
+              3468150.134216405
+            ],
+            [
+              331321.4601199849,
+              3468149.5587101965
+            ],
+            [
+              331325.63206752145,
+              3468146.154478645
+            ],
+            [
+              331325.9789763852,
+              3468142.683431006
+            ],
+            [
+              331329.3427647717,
+              3468137.7430052543
+            ],
+            [
+              331336.63467545185,
+              3468131.968628034
+            ],
+            [
+              331343.6297686848,
+              3468129.5978314024
+            ],
+            [
+              331355.27650553524,
+              3468130.2865188676
+            ],
+            [
+              331360.8757512706,
+              3468133.933598058
+            ],
+            [
+              331363.36201982864,
+              3468139.9269528873
+            ],
+            [
+              331366.32213330886,
+              3468140.0218212153
+            ],
+            [
+              331363.2269087414,
+              3468141.6075400733
+            ],
+            [
+              331360.4763016333,
+              3468150.555879326
+            ],
+            [
+              331354.9708262623,
+              3468156.1268434986
+            ],
+            [
+              331343.49765517877,
+              3468161.5697421534
+            ],
+            [
+              331344.7891349801,
+              3468167.993716811
+            ],
+            [
+              331340.8710444943,
+              3468176.6142561226
+            ],
+            [
+              331336.4310086493,
+              3468181.1294053076
+            ],
+            [
+              331324.13878575386,
+              3468187.3642318714
+            ],
+            [
+              331323.0888564388,
+              3468197.734666226
+            ],
+            [
+              331315.7748756861,
+              3468206.5777945174
+            ],
+            [
+              331306.42151679413,
+              3468210.357900897
+            ],
+            [
+              331306.9261661981,
+              3468218.3001171025
+            ],
+            [
+              331304.06607831153,
+              3468224.10116285
+            ],
+            [
+              331300.4556468685,
+              3468227.5518145477
+            ],
+            [
+              331289.9003509387,
+              3468231.4931563074
+            ],
+            [
+              331290.76709019893,
+              3468237.479513413
+            ],
+            [
+              331287.37526510784,
+              3468245.182632567
+            ],
+            [
+              331282.2494519371,
+              3468248.465737585
+            ],
+            [
+              331275.4157060439,
+              3468250.3087163507
+            ],
+            [
+              331276.47398173553,
+              3468257.5863093426
+            ],
+            [
+              331274.9130138038,
+              3468262.029966221
+            ],
+            [
+              331269.9625541664,
+              3468266.601540258
+            ],
+            [
+              331260.71848295507,
+              3468269.109737091
+            ],
+            [
+              331261.85949786403,
+              3468275.547878095
+            ],
+            [
+              331257.1916183712,
+              3468283.560529515
+            ],
+            [
+              331247.2448856465,
+              3468286.6522219363
+            ],
+            [
+              331248.5855111128,
+              3468295.1474552983
+            ],
+            [
+              331246.33135139564,
+              3468299.4393176152
+            ],
+            [
+              331240.68795287696,
+              3468303.0705078444
+            ],
+            [
+              331233.25059631775,
+              3468304.5767275263
+            ],
+            [
+              331233.9244861203,
+              3468314.427044665
+            ],
+            [
+              331229.26345276495,
+              3468319.388277338
+            ],
+            [
+              331221.0748271874,
+              3468321.543983294
+            ],
+            [
+              331222.37681493175,
+              3468327.8453965588
+            ],
+            [
+              331219.5240206184,
+              3468334.155072358
+            ],
+            [
+              331213.96316968004,
+              3468337.666296227
+            ],
+            [
+              331207.3574717394,
+              3468338.367033369
+            ],
+            [
+              331208.0777132508,
+              3468347.4491891623
+            ],
+            [
+              331203.5340993595,
+              3468353.0298906094
+            ],
+            [
+              331194.60284039716,
+              3468355.799911576
+            ],
+            [
+              331195.9514647583,
+              3468362.086586235
+            ],
+            [
+              331193.91611207323,
+              3468367.6642074017
+            ],
+            [
+              331190.8151599782,
+              3468370.4474984985
+            ],
+            [
+              331181.0392805267,
+              3468373.2053735736
+            ],
+            [
+              331181.7976733959,
+              3468382.2958368817
+            ],
+            [
+              331177.1931770338,
+              3468387.179651417
+            ],
+            [
+              331168.15919507266,
+              3468389.257015302
+            ]
+          ],
+          "rowsBuilt": 911,
+          "seatsBuilt": 16398,
+          "minimumTrackClearanceMeters": 9.64687971051217,
+          "dimensionsEstimated": true
+        }
+      ],
+      "excluded": [],
+      "lotusCanopies": 36,
+      "seatColorMethod": "Tilke/FIA source photographs; red/gold/white permanent seating, simplified row pattern"
+    },
+    "buildings": {
+      "count": 83,
+      "rendered": [
+        {
+          "osmWayId": 156328694,
+          "name": null,
+          "heightMeters": 16,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330563.24241808965,
+              3468380.4883917235
+            ],
+            [
+              330565.78318103857,
+              3468368.693526596
+            ],
+            [
+              330567.1294226834,
+              3468362.4843905983
+            ],
+            [
+              330569.7678692326,
+              3468350.2554973615
+            ],
+            [
+              330885.18824457494,
+              3468417.644822628
+            ],
+            [
+              330882.50474653614,
+              3468430.0517592276
+            ],
+            [
+              330881.1588691506,
+              3468436.2941042264
+            ],
+            [
+              330878.66213164944,
+              3468447.888571208
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.75,
+            0.76,
+            0.72
+          ]
+        },
+        {
+          "osmWayId": 156346094,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330653.50503134256,
+              3468501.83290713
+            ],
+            [
+              330670.0280226169,
+              3468505.4246724243
+            ],
+            [
+              330674.3378456991,
+              3468485.894776051
+            ],
+            [
+              330657.8146468979,
+              3468482.2919172165
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346096,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330655.44788099994,
+              3468481.517514056
+            ],
+            [
+              330638.1049560671,
+              3468477.839227817
+            ],
+            [
+              330633.9194282287,
+              3468497.4003998307
+            ],
+            [
+              330651.26232322055,
+              3468501.0786778964
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346097,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330955.21122686076,
+              3468446.187485397
+            ],
+            [
+              330930.4054171174,
+              3468440.655428066
+            ],
+            [
+              330924.428214913,
+              3468467.1756544174
+            ],
+            [
+              330949.23396699503,
+              3468472.707695213
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156346157,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330626.4066097083,
+              3468519.0843023197
+            ],
+            [
+              330630.611695103,
+              3468498.968385134
+            ],
+            [
+              330614.7600866847,
+              3468495.6984863156
+            ],
+            [
+              330614.25644856936,
+              3468498.1017365227
+            ],
+            [
+              330610.55485031684,
+              3468515.8033254687
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346159,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330717.8912158071,
+              3468466.989502464
+            ],
+            [
+              330715.54492874723,
+              3468477.8719203994
+            ],
+            [
+              330733.94844549475,
+              3468481.810413646
+            ],
+            [
+              330738.39398350264,
+              3468461.247132867
+            ],
+            [
+              330719.98091853084,
+              3468457.308784139
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346161,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330575.01587239525,
+              3468435.8748686346
+            ],
+            [
+              330576.9386338102,
+              3468427.6494028615
+            ],
+            [
+              330558.59671275894,
+              3468423.410793845
+            ],
+            [
+              330557.64386718435,
+              3468427.462404119
+            ],
+            [
+              330553.8522402053,
+              3468443.7128811902
+            ],
+            [
+              330572.1941287924,
+              3468447.951480561
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346167,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330710.20304084057,
+              3468501.7696986776
+            ],
+            [
+              330710.93832671497,
+              3468498.3869277476
+            ],
+            [
+              330729.1890348468,
+              3468502.294617807
+            ],
+            [
+              330727.6832587347,
+              3468509.2381406184
+            ],
+            [
+              330724.8049442951,
+              3468522.5353467185
+            ],
+            [
+              330706.54457480944,
+              3468518.6167338016
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346169,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330563.91072374344,
+              3468463.4134107414
+            ],
+            [
+              330564.7432794998,
+              3468459.5744266603
+            ],
+            [
+              330582.8799443167,
+              3468463.483706267
+            ],
+            [
+              330579.86803879647,
+              3468477.3375462373
+            ],
+            [
+              330578.4420771443,
+              3468483.913886731
+            ],
+            [
+              330560.295930109,
+              3468480.0047700205
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346174,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330808.92829355964,
+              3468505.318082616
+            ],
+            [
+              330801.98345593916,
+              3468503.7225962672
+            ],
+            [
+              330797.24950731365,
+              3468524.1130855316
+            ],
+            [
+              330804.0415588087,
+              3468525.6777696847
+            ],
+            [
+              330812.61985558475,
+              3468527.646066855
+            ],
+            [
+              330817.3536525759,
+              3468507.2445001015
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346178,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330630.1170178254,
+              3468450.4401537217
+            ],
+            [
+              330632.13122432254,
+              3468441.392676312
+            ],
+            [
+              330650.3359260457,
+              3468445.3896848285
+            ],
+            [
+              330648.4549326994,
+              3468453.8473164174
+            ],
+            [
+              330645.7578783568,
+              3468465.988419134
+            ],
+            [
+              330627.55320956866,
+              3468461.9914199375
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346179,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330738.0194130671,
+              3468517.704626912
+            ],
+            [
+              330739.69740469445,
+              3468509.63838972
+            ],
+            [
+              330757.8979946486,
+              3468513.3916992303
+            ],
+            [
+              330755.16901663895,
+              3468526.5090675834
+            ],
+            [
+              330753.7028992522,
+              3468533.551741673
+            ],
+            [
+              330735.5023417923,
+              3468529.798440799
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346180,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330691.91650343244,
+              3468513.545222506
+            ],
+            [
+              330684.9255063998,
+              3468512.0392686315
+            ],
+            [
+              330680.44204412994,
+              3468532.60319447
+            ],
+            [
+              330684.62528892036,
+              3468533.5113828583
+            ],
+            [
+              330696.0955478627,
+              3468535.987276314
+            ],
+            [
+              330700.5885532823,
+              3468515.423204619
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346182,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330740.22121711704,
+              3468459.125374253
+            ],
+            [
+              330737.2040843121,
+              3468472.6687622857
+            ],
+            [
+              330757.7584637431,
+              3468477.193513445
+            ],
+            [
+              330758.65447109996,
+              3468473.153932321
+            ],
+            [
+              330761.1925618849,
+              3468461.769449388
+            ],
+            [
+              330740.63815461716,
+              3468457.244690338
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346183,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330765.0988323248,
+              3468506.150921651
+            ],
+            [
+              330762.06866444624,
+              3468521.834584412
+            ],
+            [
+              330782.66101681034,
+              3468525.7710807654
+            ],
+            [
+              330784.3911460703,
+              3468516.8058462986
+            ],
+            [
+              330785.6912135413,
+              3468510.087425164
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346184,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330679.7029814326,
+              3468455.4176217597
+            ],
+            [
+              330681.4461130964,
+              3468447.2616135194
+            ],
+            [
+              330699.27593763795,
+              3468451.031906726
+            ],
+            [
+              330695.9494562593,
+              3468466.631673275
+            ],
+            [
+              330694.9583020849,
+              3468471.2604870014
+            ],
+            [
+              330677.1285093863,
+              3468467.4902024646
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346185,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330784.47337435203,
+              3468483.844427594
+            ],
+            [
+              330782.08087920706,
+              3468494.816279968
+            ],
+            [
+              330802.9583366197,
+              3468499.3137223655
+            ],
+            [
+              330804.85435690463,
+              3468490.600848408
+            ],
+            [
+              330806.4226746231,
+              3468483.4012959977
+            ],
+            [
+              330785.5451879528,
+              3468478.9038454834
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346186,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330595.28547099466,
+              3468482.476773067
+            ],
+            [
+              330605.9179679998,
+              3468484.9328502263
+            ],
+            [
+              330610.7056085081,
+              3468464.3528804732
+            ],
+            [
+              330603.3499528121,
+              3468462.6643698076
+            ],
+            [
+              330594.83815669676,
+              3468460.6951666363
+            ],
+            [
+              330590.0410298249,
+              3468481.275298648
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346187,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330763.75474837644,
+              3468474.0786653897
+            ],
+            [
+              330765.73995669,
+              3468465.5861116275
+            ],
+            [
+              330783.96716028015,
+              3468469.804756343
+            ],
+            [
+              330780.97532523004,
+              3468482.560440027
+            ],
+            [
+              330779.1856507042,
+              3468490.196021812
+            ],
+            [
+              330760.9679943465,
+              3468485.9772330807
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346191,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330651.63214152656,
+              3468536.5852435236
+            ],
+            [
+              330660.26612288796,
+              3468538.463805888
+            ],
+            [
+              330667.0472444241,
+              3468539.939868006
+            ],
+            [
+              330671.54215940344,
+              3468519.4977217875
+            ],
+            [
+              330662.2204114949,
+              3468517.4639372607
+            ],
+            [
+              330656.12702878925,
+              3468516.143089542
+            ],
+            [
+              330653.4761310505,
+              3468528.1947389822
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346192,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330743.336645134,
+              3468545.5509995627
+            ],
+            [
+              330739.20392517315,
+              3468564.8562324373
+            ],
+            [
+              330755.27654229896,
+              3468568.2668980043
+            ],
+            [
+              330756.87892968836,
+              3468560.822838006
+            ],
+            [
+              330759.6843736804,
+              3468547.7264108094
+            ],
+            [
+              330743.6022126382,
+              3468544.3158909637
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346194,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330608.674427597,
+              3468438.9279481624
+            ],
+            [
+              330610.8024556527,
+              3468429.2687600954
+            ],
+            [
+              330628.69140372425,
+              3468433.1599509907
+            ],
+            [
+              330625.43775358464,
+              3468447.9601994622
+            ],
+            [
+              330624.1695860667,
+              3468453.7023458
+            ],
+            [
+              330606.2901851883,
+              3468449.811010154
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346195,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330717.52041116514,
+              3468558.9082826525
+            ],
+            [
+              330715.03232549253,
+              3468569.8484362955
+            ],
+            [
+              330694.76318539435,
+              3468565.2969957814
+            ],
+            [
+              330696.05129888986,
+              3468559.609978776
+            ],
+            [
+              330698.21940421726,
+              3468550.0721359495
+            ],
+            [
+              330709.3855266638,
+              3468552.575135693
+            ],
+            [
+              330718.4883922453,
+              3468554.6124987
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346197,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330656.4833034744,
+              3468447.348648458
+            ],
+            [
+              330655.24095609895,
+              3468453.511734193
+            ],
+            [
+              330675.67407315096,
+              3468457.594745499
+            ],
+            [
+              330676.3344865346,
+              3468454.29080083
+            ],
+            [
+              330678.76695439,
+              3468442.2648684666
+            ],
+            [
+              330658.33380948927,
+              3468438.1818499668
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346200,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330793.4110342731,
+              3468541.424284264
+            ],
+            [
+              330779.0853284496,
+              3468538.340176911
+            ],
+            [
+              330775.8165973119,
+              3468553.3956473325
+            ],
+            [
+              330774.6381410738,
+              3468558.803669285
+            ],
+            [
+              330790.58741783036,
+              3468562.23855842
+            ],
+            [
+              330795.02511916787,
+              3468541.775227651
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346202,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330812.60914608283,
+              3468488.32999688
+            ],
+            [
+              330815.7472212696,
+              3468474.0195783903
+            ],
+            [
+              330833.607271194,
+              3468477.9004873033
+            ],
+            [
+              330829.1750429736,
+              3468498.1197610945
+            ],
+            [
+              330815.03976801445,
+              3468495.043620232
+            ],
+            [
+              330811.31502481934,
+              3468494.238861053
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346204,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330555.28319364955,
+              3468429.0811764146
+            ],
+            [
+              330558.5757306387,
+              3468413.160334782
+            ],
+            [
+              330538.02613798954,
+              3468408.9463778236
+            ],
+            [
+              330534.7336299966,
+              3468424.8672271213
+            ],
+            [
+              330537.4265132085,
+              3468425.422453499
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156346205,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330594.5353894307,
+              3468442.602909872
+            ],
+            [
+              330579.73068258615,
+              3468439.338309946
+            ],
+            [
+              330581.0266550854,
+              3468433.5513532865
+            ],
+            [
+              330583.2185735048,
+              3468423.7247977545
+            ],
+            [
+              330603.8975424198,
+              3468428.2915863283
+            ],
+            [
+              330600.409623166,
+              3468443.9050904615
+            ]
+          ],
+          "pavilion": true,
+          "facadeColor": [
+            0.17,
+            0.34,
+            0.35
+          ]
+        },
+        {
+          "osmWayId": 156965158,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331619.3056560922,
+              3468244.5180786224
+            ],
+            [
+              331560.4074793031,
+              3468206.3781217528
+            ],
+            [
+              331547.3097262912,
+              3468226.403662047
+            ],
+            [
+              331575.1623307675,
+              3468244.4402837497
+            ],
+            [
+              331565.31591136486,
+              3468259.501377938
+            ],
+            [
+              331570.1631542541,
+              3468262.63909499
+            ],
+            [
+              331580.0095770602,
+              3468247.578005461
+            ],
+            [
+              331592.8778686973,
+              3468255.909239569
+            ],
+            [
+              331584.5548343928,
+              3468268.639442311
+            ],
+            [
+              331591.34476518724,
+              3468273.0321975085
+            ],
+            [
+              331602.90961467824,
+              3468255.3377361675
+            ],
+            [
+              331575.60532687226,
+              3468237.6581485784
+            ],
+            [
+              331579.0143071927,
+              3468232.436156608
+            ],
+            [
+              331612.868342572,
+              3468254.3682334446
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965161,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331586.1504675051,
+              3468279.092335747
+            ],
+            [
+              331562.1810623029,
+              3468263.421625341
+            ],
+            [
+              331557.5072878936,
+              3468270.482455449
+            ],
+            [
+              331581.4863785549,
+              3468286.1640875204
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965171,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331590.4332712318,
+              3468350.1445165696
+            ],
+            [
+              331586.2021564399,
+              3468347.440425098
+            ],
+            [
+              331579.4137116468,
+              3468357.939379107
+            ],
+            [
+              331583.6545174309,
+              3468360.654400364
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965173,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331448.82599233056,
+              3468359.1411739467
+            ],
+            [
+              331481.2302348132,
+              3468379.6990054087
+            ],
+            [
+              331529.1287169006,
+              3468304.969033105
+            ],
+            [
+              331525.263236193,
+              3468302.514118691
+            ],
+            [
+              331496.7243573784,
+              3468284.411049754
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965174,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331583.3140479183,
+              3468361.380619443
+            ],
+            [
+              331579.07342051296,
+              3468358.6766838683
+            ],
+            [
+              331573.19517660263,
+              3468367.7749611167
+            ],
+            [
+              331577.4358021646,
+              3468370.478894254
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965175,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331519.9666373661,
+              3468340.089193601
+            ],
+            [
+              331486.56298182043,
+              3468391.721779463
+            ],
+            [
+              331534.6641200762,
+              3468422.5280365245
+            ],
+            [
+              331538.56464652723,
+              3468416.5108445394
+            ],
+            [
+              331496.20432770415,
+              3468389.371210809
+            ],
+            [
+              331525.7076612583,
+              3468343.7669373816
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156965179,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331529.07884618023,
+              3468242.675166723
+            ],
+            [
+              331559.44711738185,
+              3468262.6782990047
+            ],
+            [
+              331571.65795092034,
+              3468244.3192004557
+            ],
+            [
+              331565.3862600326,
+              3468240.19533584
+            ],
+            [
+              331557.1991970616,
+              3468252.5020160717
+            ],
+            [
+              331533.10260499164,
+              3468236.622731482
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974480,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330499.259881313,
+              3469061.834739232
+            ],
+            [
+              330486.8158978153,
+              3469075.6084170896
+            ],
+            [
+              330496.20193705335,
+              3469083.9946613223
+            ],
+            [
+              330508.63622772775,
+              3469070.210062922
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974481,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330645.20334421156,
+              3469376.926186308
+            ],
+            [
+              330626.85336342367,
+              3469373.852014465
+            ],
+            [
+              330624.7600090861,
+              3469386.2273472766
+            ],
+            [
+              330643.10996932455,
+              3469389.3015145897
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974482,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330769.34807101416,
+              3469357.0116775543
+            ],
+            [
+              330752.3302505857,
+              3469364.5274312035
+            ],
+            [
+              330757.44499640487,
+              3469375.987882907
+            ],
+            [
+              330774.45346585,
+              3469368.4833760927
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974484,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331053.7786117669,
+              3468846.0879337834
+            ],
+            [
+              331043.6750039004,
+              3468861.6416487875
+            ],
+            [
+              331054.2629052852,
+              3468868.445519269
+            ],
+            [
+              331064.3665209213,
+              3468852.891814723
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974486,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331255.5101405763,
+              3468530.5973317144
+            ],
+            [
+              331243.2268470226,
+              3468550.3108143355
+            ],
+            [
+              331253.9450769832,
+              3468556.924291591
+            ],
+            [
+              331266.22820270644,
+              3468537.1997363376
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974488,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331430.72577337374,
+              3468023.8194202757
+            ],
+            [
+              331413.1691908125,
+              3468029.95654559
+            ],
+            [
+              331417.3476141484,
+              3468041.7982735643
+            ],
+            [
+              331434.9041783892,
+              3468035.6611543945
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974490,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330922.20592965645,
+              3469156.1925901906
+            ],
+            [
+              330913.4096599884,
+              3469172.5237336145
+            ],
+            [
+              330924.52552834724,
+              3469178.4429514706
+            ],
+            [
+              330933.31247381907,
+              3469162.1230569184
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974492,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331190.65477870597,
+              3468632.4803325455
+            ],
+            [
+              331180.6180630126,
+              3468648.077162213
+            ],
+            [
+              331191.2340804739,
+              3468654.8474579337
+            ],
+            [
+              331201.2803187843,
+              3468639.250485388
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974494,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330450.5964252259,
+              3469197.402888956
+            ],
+            [
+              330452.24639261665,
+              3469215.8496052623
+            ],
+            [
+              330464.7999185077,
+              3469214.737152496
+            ],
+            [
+              330463.1499732941,
+              3469196.290435198
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974495,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331526.22342998406,
+              3468117.7658401094
+            ],
+            [
+              331516.22410060506,
+              3468133.3838534174
+            ],
+            [
+              331526.85887236963,
+              3468140.1209348403
+            ],
+            [
+              331536.85820979415,
+              3468124.5029319413
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974498,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331121.90565201023,
+              3468739.516187018
+            ],
+            [
+              331112.1671392737,
+              3468755.296793186
+            ],
+            [
+              331122.9130891295,
+              3468761.8653304027
+            ],
+            [
+              331132.6516105874,
+              3468746.0847345153
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974501,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330525.7014410298,
+              3469327.3420435525
+            ],
+            [
+              330511.98533062486,
+              3469314.8233152577
+            ],
+            [
+              330503.46545419266,
+              3469324.075924038
+            ],
+            [
+              330517.17205010634,
+              3469336.59479521
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974502,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331036.5397165394,
+              3468348.3950831043
+            ],
+            [
+              331018.3815314291,
+              3468344.3301664707
+            ],
+            [
+              331015.60953612253,
+              3468356.5721578347
+            ],
+            [
+              331033.7677017608,
+              3468360.63706886
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974503,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330861.5131392784,
+              3469270.818129035
+            ],
+            [
+              330851.3526411184,
+              3469286.3397338847
+            ],
+            [
+              330861.9124448456,
+              3469293.1882040347
+            ],
+            [
+              330872.0729506154,
+              3469277.6666096686
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974504,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330983.7608214838,
+              3469045.9557071757
+            ],
+            [
+              330987.9607003849,
+              3469022.5467474232
+            ],
+            [
+              330975.5439065085,
+              3469020.3519911626
+            ],
+            [
+              330971.3438748957,
+              3469043.74987142
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 156974505,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330624.5379885793,
+              3469023.5046105683
+            ],
+            [
+              330605.9279125019,
+              3469023.805542314
+            ],
+            [
+              330606.13084388303,
+              3469036.354416989
+            ],
+            [
+              330624.74089764466,
+              3469036.053484628
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157211254,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330513.4966752458,
+              3468824.177803312
+            ],
+            [
+              330507.8660673484,
+              3468834.980373922
+            ],
+            [
+              330570.8425901657,
+              3468867.493185876
+            ],
+            [
+              330576.4732408924,
+              3468856.690650684
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157211255,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330488.52904009656,
+              3468731.56051926
+            ],
+            [
+              330481.1740653897,
+              3468745.1963886726
+            ],
+            [
+              330529.9998994436,
+              3468771.273805433
+            ],
+            [
+              330537.3549147019,
+              3468757.6379717644
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157211256,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330505.04664668767,
+              3468878.3597742883
+            ],
+            [
+              330495.56441918516,
+              3468896.387834368
+            ],
+            [
+              330513.800292384,
+              3468905.8839032943
+            ],
+            [
+              330515.64686769206,
+              3468902.372244014
+            ],
+            [
+              330552.02247817535,
+              3468921.3105909773
+            ],
+            [
+              330558.3194696962,
+              3468909.344061994
+            ],
+            [
+              330521.95316716714,
+              3468890.394452665
+            ],
+            [
+              330523.2825404111,
+              3468887.85586047
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157272733,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331190.9143982499,
+              3468070.2817025785
+            ],
+            [
+              331201.6498782673,
+              3468055.4831286864
+            ],
+            [
+              331187.4470681861,
+              3468045.288810885
+            ],
+            [
+              331189.5607688286,
+              3468042.3828571406
+            ],
+            [
+              331190.88282083673,
+              3468040.554145896
+            ],
+            [
+              331184.19062331703,
+              3468035.749786202
+            ],
+            [
+              331182.92423436075,
+              3468037.4888941506
+            ],
+            [
+              331180.7642084422,
+              3468040.473214572
+            ],
+            [
+              331166.29171558813,
+              3468030.08367635
+            ],
+            [
+              331155.55607594585,
+              3468044.8712014207
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875743,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330132.5042014064,
+              3468501.5525473515
+            ],
+            [
+              330112.5254733255,
+              3468490.289007991
+            ],
+            [
+              330104.26186006685,
+              3468504.8047928005
+            ],
+            [
+              330124.24057150964,
+              3468516.068315816
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875744,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330081.1002117458,
+              3468988.517292298
+            ],
+            [
+              330079.3552790602,
+              3469007.085586159
+            ],
+            [
+              330091.2217326244,
+              3469008.1904579517
+            ],
+            [
+              330092.96668587095,
+              3468989.6221669493
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875745,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330299.4055741487,
+              3468964.841699805
+            ],
+            [
+              330286.90660325415,
+              3468978.7384858965
+            ],
+            [
+              330295.79042260733,
+              3468986.6558957314
+            ],
+            [
+              330308.289394396,
+              3468972.759120185
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875749,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330200.1453307597,
+              3469040.654461869
+            ],
+            [
+              330182.6774512804,
+              3469047.424407064
+            ],
+            [
+              330187.0156538014,
+              3469058.486936226
+            ],
+            [
+              330204.47382263426,
+              3469051.7060661116
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875750,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330096.37215504097,
+              3468863.9563136585
+            ],
+            [
+              330092.55693686515,
+              3468882.2144335657
+            ],
+            [
+              330104.23542459635,
+              3468884.6308207456
+            ],
+            [
+              330108.0506616469,
+              3468866.3727058806
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875751,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330149.0731316154,
+              3468621.84916495
+            ],
+            [
+              330152.1976985594,
+              3468609.700955663
+            ],
+            [
+              330132.9600311556,
+              3468604.8012626288
+            ],
+            [
+              330129.8259695122,
+              3468616.9496327555
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875752,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330069.8202119122,
+              3468712.6185934623
+            ],
+            [
+              330097.9893845004,
+              3468728.949705362
+            ],
+            [
+              330123.8269915128,
+              3468684.8420024277
+            ],
+            [
+              330095.6577501212,
+              3468668.51081866
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875755,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330410.3515090498,
+              3468761.3010142827
+            ],
+            [
+              330402.8528438409,
+              3468778.398880294
+            ],
+            [
+              330413.77914896666,
+              3468783.145285059
+            ],
+            [
+              330421.2778275354,
+              3468766.0474273814
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875756,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330086.6371635592,
+              3468678.592417398
+            ],
+            [
+              330047.3873286839,
+              3468655.6549119703
+            ],
+            [
+              330034.3269698722,
+              3468677.7776817433
+            ],
+            [
+              330073.57657735195,
+              3468700.7040510033
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875758,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330366.8267612669,
+              3468864.5520462333
+            ],
+            [
+              330359.8073873827,
+              3468881.852874366
+            ],
+            [
+              330370.86196659756,
+              3468886.2977633965
+            ],
+            [
+              330377.8908692431,
+              3468868.9967891662
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875761,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330156.8488239859,
+              3468580.174499779
+            ],
+            [
+              330156.7312001454,
+              3468567.635315208
+            ],
+            [
+              330136.86216890335,
+              3468567.824378865
+            ],
+            [
+              330136.9798165269,
+              3468580.363564254
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875762,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330178.5227037815,
+              3468646.121281016
+            ],
+            [
+              330172.23124859075,
+              3468663.6987402854
+            ],
+            [
+              330183.45955390687,
+              3468667.686004302
+            ],
+            [
+              330189.7605393209,
+              3468650.108398171
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875772,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330130.67383592075,
+              3468660.4360742336
+            ],
+            [
+              330137.10377024475,
+              3468649.642503178
+            ],
+            [
+              330120.00920244487,
+              3468639.5630252026
+            ],
+            [
+              330113.5887928223,
+              3468650.356452801
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875774,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330198.06124956027,
+              3468537.469977454
+            ],
+            [
+              330200.4832753474,
+              3468555.959598099
+            ],
+            [
+              330212.3074570274,
+              3468554.426259387
+            ],
+            [
+              330209.89478726365,
+              3468535.9253971633
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 157875779,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330137.1248993096,
+              3468754.838774815
+            ],
+            [
+              330130.594288126,
+              3468772.33143977
+            ],
+            [
+              330141.76774787926,
+              3468776.463693657
+            ],
+            [
+              330148.29855391633,
+              3468758.982121855
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 158530849,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331032.16073054646,
+              3468185.4434890286
+            ],
+            [
+              331025.4802020004,
+              3468180.7721037553
+            ],
+            [
+              331023.18163681595,
+              3468184.0137298787
+            ],
+            [
+              331029.8718583827,
+              3468188.6960457736
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 158530851,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331039.34265192103,
+              3468190.517065323
+            ],
+            [
+              331032.6621299044,
+              3468185.8456757204
+            ],
+            [
+              331030.3730789235,
+              3468189.0871468023
+            ],
+            [
+              331037.0537788511,
+              3468193.769620475
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 158530852,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331024.97844457504,
+              3468180.3477462796
+            ],
+            [
+              331018.2977307038,
+              3468175.6652797833
+            ],
+            [
+              331016.0088602931,
+              3468178.917839605
+            ],
+            [
+              331022.6893945391,
+              3468183.5892190654
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 158530853,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331057.19643764023,
+              3468196.9376888704
+            ],
+            [
+              331088.0146696627,
+              3468153.8612556113
+            ],
+            [
+              331051.92099604115,
+              3468128.296629899
+            ],
+            [
+              331021.10282279446,
+              3468171.3731709267
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 164317393,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330637.9616291203,
+              3468927.2724660942
+            ],
+            [
+              330612.02056515985,
+              3468913.864575674
+            ],
+            [
+              330625.28542418114,
+              3468888.445989391
+            ],
+            [
+              330651.2265296121,
+              3468901.8539141743
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 164317417,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330664.9713368828,
+              3468907.8856193526
+            ],
+            [
+              330696.15721303446,
+              3468924.3025522423
+            ],
+            [
+              330687.97396337905,
+              3468939.692549182
+            ],
+            [
+              330684.90246984945,
+              3468938.078923388
+            ],
+            [
+              330677.6057542368,
+              3468951.7913303403
+            ],
+            [
+              330680.2070967585,
+              3468953.1686068876
+            ],
+            [
+              330671.24798116006,
+              3468970.012662681
+            ],
+            [
+              330640.64758979256,
+              3468953.896819912
+            ],
+            [
+              330649.36664620903,
+              3468937.511244614
+            ],
+            [
+              330652.4381459885,
+              3468939.1248602364
+            ],
+            [
+              330660.4091440126,
+              3468924.1485371175
+            ],
+            [
+              330657.21287837496,
+              3468922.4704051116
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 164317421,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330622.9105154864,
+              3468926.9724827334
+            ],
+            [
+              330634.0433356586,
+              3468932.7359031937
+            ],
+            [
+              330620.52790482994,
+              3468958.5466304184
+            ],
+            [
+              330609.3951026879,
+              3468952.783224979
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 164317423,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330603.64922232844,
+              3468908.788360519
+            ],
+            [
+              330584.4936016315,
+              3468898.907830033
+            ],
+            [
+              330601.79148373206,
+              3468865.706410164
+            ],
+            [
+              330620.94714449794,
+              3468875.586973745
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 325702227,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              329942.77088455844,
+              3468425.613772676
+            ],
+            [
+              329956.1875766249,
+              3468433.64586396
+            ],
+            [
+              330006.711439708,
+              3468350.0946572553
+            ],
+            [
+              329993.28517325607,
+              3468342.062653637
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 325702228,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              329909.65876158077,
+              3468515.8351572095
+            ],
+            [
+              329913.77484154503,
+              3468468.631068935
+            ],
+            [
+              329899.6026284965,
+              3468467.4085566276
+            ],
+            [
+              329895.4963059154,
+              3468514.6235842668
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 325702230,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              329943.1206307417,
+              3468031.3895314573
+            ],
+            [
+              330009.4926247969,
+              3468070.974129173
+            ],
+            [
+              330015.8135191676,
+              3468060.4816658953
+            ],
+            [
+              329949.44148801884,
+              3468020.8970268746
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 329189203,
+          "name": null,
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              330608.6718378548,
+              3468936.8940463522
+            ],
+            [
+              330607.08026842517,
+              3468943.2291256515
+            ],
+            [
+              330597.4501197265,
+              3468940.3466136362
+            ],
+            [
+              330601.51764910726,
+              3468923.5150603387
+            ],
+            [
+              330606.97317706497,
+              3468924.24738705
+            ],
+            [
+              330611.2748370564,
+              3468921.8936016792
+            ],
+            [
+              330614.8551228258,
+              3468922.6008132654
+            ],
+            [
+              330619.6496433186,
+              3468924.242001388
+            ],
+            [
+              330621.08083153423,
+              3468928.587719079
+            ],
+            [
+              330620.38006804336,
+              3468932.923555094
+            ],
+            [
+              330616.8738166825,
+              3468936.794684927
+            ],
+            [
+              330613.8264814521,
+              3468937.853011158
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        },
+        {
+          "osmWayId": 410741464,
+          "name": "F1 Accreditation Centre",
+          "heightMeters": 3.4,
+          "heightMethod": "OSM height/levels; 3.4 m reconstruction fallback",
+          "footprint": [
+            [
+              331496.7243573784,
+              3468284.411049754
+            ],
+            [
+              331501.7399789144,
+              3468276.712652915
+            ],
+            [
+              331530.815229896,
+              3468293.8424203605
+            ],
+            [
+              331525.263236193,
+              3468302.514118691
+            ]
+          ],
+          "pavilion": false,
+          "facadeColor": [
+            0.59,
+            0.61,
+            0.58
+          ]
+        }
+      ],
+      "excluded": [],
+      "overWaterPavilions": 26,
+      "remainingDrivingCorridorConflicts": 0,
+      "lod2Available": false
+    },
+    "curbs": [
+      {
+        "turn": 1,
+        "startMeters": 335.245682169789,
+        "endMeters": 431.245682169789,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 2,
+        "startMeters": 541.8994111909549,
+        "endMeters": 637.8994111909549,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 3,
+        "startMeters": 707.3999835854381,
+        "endMeters": 755.3999835854381,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 4,
+        "startMeters": 827.4168807810922,
+        "endMeters": 875.4168807810922,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 5,
+        "startMeters": 1130.770498429939,
+        "endMeters": 1178.770498429939,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 6,
+        "startMeters": 1392.6375058669055,
+        "endMeters": 1440.6375058669055,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 7,
+        "startMeters": 1811.40672133523,
+        "endMeters": 1907.40672133523,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 8,
+        "startMeters": 2133.5996665496823,
+        "endMeters": 2229.5996665496823,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 9,
+        "startMeters": 2344.2417069832095,
+        "endMeters": 2392.2417069832095,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 10,
+        "startMeters": 2467.061928754584,
+        "endMeters": 2515.061928754584,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 11,
+        "startMeters": 2947.9207828550184,
+        "endMeters": 2995.9207828550184,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 12,
+        "startMeters": 3037.0193364859792,
+        "endMeters": 3085.0193364859792,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 13,
+        "startMeters": 3234.1839868252882,
+        "endMeters": 3330.1839868252882,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 14,
+        "startMeters": 4575.6670536642205,
+        "endMeters": 4671.6670536642205,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 15,
+        "startMeters": 4703.476707850686,
+        "endMeters": 4751.476707850686,
+        "side": -1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      },
+      {
+        "turn": 16,
+        "startMeters": 4983.664660335775,
+        "endMeters": 5031.664660335775,
+        "side": 1,
+        "placementMethod": "source-reviewed apex intervals; exact survey unavailable"
+      }
+    ],
+    "terrainSurface": {
+      "source": "GEDTM30 native bare-earth estimate, 30 m",
+      "coordinateReferenceSystem": "EPSG:32651",
+      "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+      "nodataSamples": 0
+    },
+    "roadGrading": {
+      "maximumTerrainAdjustmentMeters": 7.6783037185668945,
+      "method": "90 m Gaussian road-profile smoothing; shared main-straight/pit platform and local terrain grading; no height exaggeration"
+    }
+  },
+  "materials": {
+    "physicalObjectsTextured": true,
+    "roofMethod": "embedded registered SkySat roof imagery with metric UV projection on pit, pavilion, building, main-grandstand and lotus-canopy roofs",
+    "colorSpace": "source sRGB converted once to linear vertex colors",
+    "facadeMethod": "source glass/concrete colors and authored mullion texture; no facade photogrammetry"
+  },
+  "controlPointReference": {
+    "referenceYear": 2026,
+    "currentEventVerified": true,
+    "officialLapMeters": 5451,
+    "sectorLengthsMeters": [
+      1430,
+      1569,
+      2452
+    ],
+    "sectorBoundaryDistancesMeters": [
+      1430,
+      2999
+    ],
+    "sectorReference": "150 m before T6; 145 m before T11; FIA v4 11.03.26",
+    "speedTrapDistanceMeters": 4383.6670536642205,
+    "speedTrapReference": "240 m before T14",
+    "pitBoxes": 33,
+    "fiaGarages": 3,
+    "raceStartDistanceMeters": 130
+  },
+  "sourceManifest": {
+    "schemaVersion": 1,
+    "modelId": "shanghai",
+    "bbox": [
+      121.207,
+      31.326,
+      121.236,
+      31.353
+    ],
+    "coordinateReferenceSystem": "EPSG:32651",
+    "sources": [
+      {
+        "file": "osm.xml",
+        "url": "https://www.openstreetmap.org/api/0.6/map?bbox=121.207,31.326,121.236,31.353",
+        "role": "raceway, pit, permanent buildings, grandstands, water, barriers and vegetation",
+        "license": "ODbL 1.0",
+        "crs": "EPSG:4326",
+        "resolution": "OSM vector snapshot",
+        "acquisitionDate": "2026-10-03",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "ODbL 1.0",
+        "redistributed": false,
+        "sha256": "91926cb39f07f4ba87dec04ef45091ef105effc13399e1c432d6df877104f94c",
+        "bytes": 3811823,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "skysat-2018.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Shanghai_International_Circuit%2C_April_7%2C_2018_SkySat.jpg",
+        "role": "licensed ground texture and permanent roof colors; historical capture",
+        "license": "CC BY-SA 4.0; Planet Labs, Inc.; georegistered and cropped",
+        "crs": "image pixels; registered separately",
+        "resolution": "3454 x 2591 SkySat image",
+        "acquisitionDate": "2018-04-07",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "CC BY-SA 4.0; Planet Labs, Inc.; georegistered and cropped",
+        "redistributed": true,
+        "sha256": "627c2d2f0ba8615ddcad3c8471519339b18d5c5f605dbe49af2f95aa50dcf422",
+        "bytes": 3497514,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "fia-2026-map.pdf",
+        "url": "https://www.fia.com/system/files/decision-document/2026_chinese_grand_prix_-_competition_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_battery_containment_area_and_red_zone.pdf",
+        "role": "2026 sporting controls, pit garages and event layout; reference only",
+        "license": "FIA/FOWC copyright; reference only, not embedded",
+        "crs": "diagram",
+        "resolution": "official vector map",
+        "acquisitionDate": "2026-03-12",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "FIA/FOWC copyright; reference only, not embedded",
+        "redistributed": false,
+        "sha256": "7fba64c20346a9055e92251359c44720410578b42545d62458c1609f20d2a331",
+        "bytes": 4304808,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "fia-2026-media-kit.pdf",
+        "url": "https://www.fia.com/sites/default/files/media_kit-formula_1_heineken_chinese_grand_prix_2026.pdf",
+        "role": "current permanent architecture and material reference",
+        "license": "FIA/Juss copyright; reference only, not embedded",
+        "crs": "document",
+        "resolution": "official media kit",
+        "acquisitionDate": "2026-03",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "FIA/Juss copyright; reference only, not embedded",
+        "redistributed": false,
+        "sha256": "ff851c539f606ce7e20545c0b4912c424a0c54aab15bf89a78bf1c07c6641cdc",
+        "bytes": 4114389,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "event-2026-stands.png",
+        "url": "https://english.shanghai.gov.cn/cmsres/59/596077c5ef8441e09eb5239fd740b25b/29a1050812c99e3abd007407e8a1b81a.png",
+        "role": "2026 promoter grandstand locations including upgraded E",
+        "license": "Shanghai government/Juss copyright; reference only, not embedded",
+        "crs": "diagram",
+        "resolution": "official event map",
+        "acquisitionDate": "2026-03-11",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "Shanghai government/Juss copyright; reference only, not embedded",
+        "redistributed": false,
+        "sha256": "3298d55793da732ec8a869a5b14e8861cacbfbce74f56397159b7db39ea3f535",
+        "bytes": 3369513,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "tilke-main-complex.jpg",
+        "url": "https://www.tilkeandpartners.com/Images/shanghaicircuit/99.jpg",
+        "role": "architect's main grandstand, bridges, roofs and colors",
+        "license": "Tilke & Partners copyright; reference only, not embedded",
+        "crs": "photograph",
+        "resolution": "architect photograph",
+        "acquisitionDate": "capture date unknown",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "verticalDatum": null,
+        "attribution": "Tilke & Partners copyright; reference only, not embedded",
+        "redistributed": false,
+        "sha256": "18b29c43aac31b5f00b1382f23ba2b164e866b6eaf6377af182f2c7d365829bb",
+        "bytes": 66172,
+        "retrievedAt": "2026-10-03"
+      },
+      {
+        "file": "gedtm30-native.tif",
+        "url": "https://s3.opengeohub.org/global/edtm/gedtm_rf_m_30m_s_20060101_20151231_go_epsg.4326.3855_v20250611.tif",
+        "role": "bare-earth height estimate, native unresampled COG window",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "OpenGeoHub / Ho et al. (2025), GEDTM30; cropped for RaceSide",
+        "crs": "EPSG:4326",
+        "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+        "resolution": "1 arc-second / approximately 30 m native DTM",
+        "bbox": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "cropBounds": [
+          121.207,
+          31.326,
+          121.236,
+          31.353
+        ],
+        "downloadMethod": "native-cog-window",
+        "redistributed": true,
+        "acquisitionDate": "2006-2015 composite; v20250611",
+        "sha256": "161df6c46eec410b73512b13d6e4dd8495c82212ee7e4f2bd7087b4457a528c7",
+        "bytes": 13466,
+        "retrievedAt": "2026-10-03"
+      }
+    ]
+  },
+  "rasterRegistration": {
+    "schemaVersion": 2,
+    "source": "Planet Labs SkySat, 2018-04-07; CC BY-SA 4.0",
+    "coordinateReferenceSystem": "EPSG:32651",
+    "originMeters": [
+      330700,
+      3468700
+    ],
+    "method": "Regularized thin-plate spline, normalized UTM metres; reviewed raceway ground controls, independent checkpoints and Jacobian coverage checks. The source JPEG has no survey orthorectification metadata.",
+    "regularization": 5e-05,
+    "groundControlPoints": [
+      {
+        "wayId": 156328670,
+        "vertex": 4,
+        "pixel": [
+          1272,
+          1710
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 12,
+        "pixel": [
+          1192,
+          1698
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 22,
+        "pixel": [
+          1116,
+          1604
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 32,
+        "pixel": [
+          1195,
+          1517
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 40,
+        "pixel": [
+          1240,
+          1559
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 48,
+        "pixel": [
+          1226,
+          1620
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 55,
+        "pixel": [
+          1278,
+          1648
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 64,
+        "pixel": [
+          1335,
+          1594
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 68,
+        "pixel": [
+          1338,
+          1541
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 72,
+        "pixel": [
+          1313,
+          1493
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 80,
+        "pixel": [
+          991,
+          979
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 84,
+        "pixel": [
+          997,
+          945
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 96,
+        "pixel": [
+          1135,
+          1063
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 104,
+        "pixel": [
+          1287,
+          1296
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 112,
+        "pixel": [
+          1382,
+          1323
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 124,
+        "pixel": [
+          1530,
+          1238
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 135,
+        "pixel": [
+          1667,
+          1081
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 148,
+        "pixel": [
+          1828,
+          1240
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 160,
+        "pixel": [
+          1918,
+          1144
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 176,
+        "pixel": [
+          1597,
+          641
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 190,
+        "pixel": [
+          1510,
+          691
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 200,
+        "pixel": [
+          1456,
+          592
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 211,
+        "pixel": [
+          1560,
+          498
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 220,
+        "pixel": [
+          1700,
+          554
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 224,
+        "pixel": [
+          2009,
+          1051
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 235,
+        "pixel": [
+          2496,
+          1845
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 248,
+        "pixel": [
+          2217,
+          1515
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 232,
+        "pixel": [
+          2498,
+          1833
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 244,
+        "pixel": [
+          2421,
+          1824
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 228,
+        "pixel": [
+          2211,
+          1355
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 230,
+        "pixel": [
+          2490,
+          1815
+        ]
+      }
+    ],
+    "independentCheckPoints": [
+      {
+        "wayId": 156328670,
+        "vertex": 16,
+        "pixel": [
+          1146,
+          1674
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 36,
+        "pixel": [
+          1229,
+          1533
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 92,
+        "pixel": [
+          1092,
+          1000
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 108,
+        "pixel": [
+          1337,
+          1319
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 140,
+        "pixel": [
+          1740,
+          1110
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 192,
+        "pixel": [
+          1490,
+          674
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 216,
+        "pixel": [
+          1644,
+          515
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 229,
+        "pixel": [
+          2299,
+          1492
+        ]
+      },
+      {
+        "wayId": 156328670,
+        "vertex": 240,
+        "pixel": [
+          2473,
+          1847
+        ]
+      }
+    ],
+    "buildingCorrections": [
+      {
+        "wayId": 156346094,
+        "roofCenterPixel": [
+          1609.25,
+          1458.54
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -25.456150247191545,
+          2.018339342903346
+        ],
+        "beforeResidualPixels": 32.94778542571119,
+        "afterResidualPixels": 4.568862272351811e-10
+      },
+      {
+        "wayId": 156346096,
+        "roofCenterPixel": [
+          1584.5,
+          1464.03
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -23.956146508280654,
+          2.0019918121397495
+        ],
+        "beforeResidualPixels": 31.092268114702748,
+        "afterResidualPixels": 4.923460755639323e-10
+      },
+      {
+        "wayId": 156346157,
+        "roofCenterPixel": [
+          1551.05,
+          1443.82
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -22.203082128893584,
+          4.009334709029645
+        ],
+        "beforeResidualPixels": 29.423842547780232,
+        "afterResidualPixels": 4.0361389266769426e-10
+      },
+      {
+        "wayId": 156346159,
+        "roofCenterPixel": [
+          1688.11,
+          1490.01
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -24.808669670834206,
+          3.621380152646452
+        ],
+        "beforeResidualPixels": 31.79975722154479,
+        "afterResidualPixels": 8.896438092456291e-10
+      },
+      {
+        "wayId": 156346161,
+        "roofCenterPixel": [
+          1483.57,
+          1532.31
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -23.46760086348513,
+          3.119776111561805
+        ],
+        "beforeResidualPixels": 30.57853902384216,
+        "afterResidualPixels": 3.0105545421498074e-10
+      },
+      {
+        "wayId": 156346167,
+        "roofCenterPixel": [
+          1678.82,
+          1439.43
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -26.967185251356568,
+          3.6497175632975996
+        ],
+        "beforeResidualPixels": 34.70737416813416,
+        "afterResidualPixels": 1.1631715670758967e-09
+      },
+      {
+        "wayId": 156346169,
+        "roofCenterPixel": [
+          1490.83,
+          1486.11
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -22.950947538251057,
+          1.8843310000374913
+        ],
+        "beforeResidualPixels": 29.717925941376055,
+        "afterResidualPixels": 9.840362285646086e-07
+      },
+      {
+        "wayId": 156346174,
+        "roofCenterPixel": [
+          1790.74,
+          1429.82
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -27.549405311176088,
+          1.0622740117833018
+        ],
+        "beforeResidualPixels": 33.948488514894564,
+        "afterResidualPixels": 6.027240589462601e-09
+      },
+      {
+        "wayId": 156346178,
+        "roofCenterPixel": [
+          1577.96,
+          1509.61
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -25.242927427811082,
+          2.9254300124011934
+        ],
+        "beforeResidualPixels": 32.715267012172504,
+        "afterResidualPixels": 3.329235916510442e-10
+      },
+      {
+        "wayId": 156346179,
+        "roofCenterPixel": [
+          1714.89,
+          1422.64
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -27.17370495229261,
+          1.0760742705315351
+        ],
+        "beforeResidualPixels": 34.38349671674122,
+        "afterResidualPixels": 2.946815904668255e-09
+      },
+      {
+        "wayId": 156346180,
+        "roofCenterPixel": [
+          1641.87,
+          1420.66
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -24.105012871325016,
+          1.9548086863942444
+        ],
+        "beforeResidualPixels": 31.192730357525033,
+        "afterResidualPixels": 5.75115587512905e-10
+      },
+      {
+        "wayId": 156346182,
+        "roofCenterPixel": [
+          1718.7,
+          1492.83
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -27.775543418014422,
+          2.8411438707262278
+        ],
+        "beforeResidualPixels": 35.13201386348779,
+        "afterResidualPixels": 1.678147519926632e-09
+      },
+      {
+        "wayId": 156346183,
+        "roofCenterPixel": [
+          1752.0,
+          1429.5
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -29.907716272166,
+          0.9814798147417605
+        ],
+        "beforeResidualPixels": 37.34322761767145,
+        "afterResidualPixels": 4.5625843784670576e-09
+      },
+      {
+        "wayId": 156346184,
+        "roofCenterPixel": [
+          1640.85,
+          1501.58
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -26.327201171254274,
+          2.024340046569705
+        ],
+        "beforeResidualPixels": 33.74789447507796,
+        "afterResidualPixels": 1.923614889357594e-10
+      },
+      {
+        "wayId": 156346185,
+        "roofCenterPixel": [
+          1775.21,
+          1464.92
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -28.049780737492256,
+          2.543013206217438
+        ],
+        "beforeResidualPixels": 34.880629116721494,
+        "afterResidualPixels": 3.932286807006584e-09
+      },
+      {
+        "wayId": 156346186,
+        "roofCenterPixel": [
+          1527.28,
+          1484.64
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -23.3678755259607,
+          1.8794787363149226
+        ],
+        "beforeResidualPixels": 30.30524215791886,
+        "afterResidualPixels": 1.697744590282993e-10
+      },
+      {
+        "wayId": 156346187,
+        "roofCenterPixel": [
+          1747.81,
+          1478.46
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -27.63638974830974,
+          2.426679801661521
+        ],
+        "beforeResidualPixels": 34.64484578269884,
+        "afterResidualPixels": 2.789668185604277e-09
+      },
+      {
+        "wayId": 156346191,
+        "roofCenterPixel": [
+          1603.53,
+          1415.65
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -22.839597680955194,
+          1.8581641940400004
+        ],
+        "beforeResidualPixels": 29.81268918831139,
+        "afterResidualPixels": 5.141608117144021e-10
+      },
+      {
+        "wayId": 156346192,
+        "roofCenterPixel": [
+          1718.09,
+          1379.91
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -26.829060105257668,
+          1.5366566362790763
+        ],
+        "beforeResidualPixels": 34.072582690187105,
+        "afterResidualPixels": 4.18110275882359e-09
+      },
+      {
+        "wayId": 156346194,
+        "roofCenterPixel": [
+          1550.11,
+          1523.24
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -24.560335710761137,
+          1.8446637000888586
+        ],
+        "beforeResidualPixels": 31.722974396791184,
+        "afterResidualPixels": 2.769890154310453e-10
+      },
+      {
+        "wayId": 156346195,
+        "roofCenterPixel": [
+          1663.24,
+          1376.44
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -25.947785650438163,
+          2.62018911074847
+        ],
+        "beforeResidualPixels": 33.64506037645046,
+        "afterResidualPixels": 1.5621338828887314e-09
+      },
+      {
+        "wayId": 156346197,
+        "roofCenterPixel": [
+          1613.66,
+          1515.33
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -25.50218893075362,
+          1.8498962167650461
+        ],
+        "beforeResidualPixels": 32.774326452992305,
+        "afterResidualPixels": 2.0441513063126965e-10
+      },
+      {
+        "wayId": 156346200,
+        "roofCenterPixel": [
+          1762.6,
+          1386.81
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -27.373451608465984,
+          1.1658968073315918
+        ],
+        "beforeResidualPixels": 34.14406439521425,
+        "afterResidualPixels": 7.360591951024062e-09
+      },
+      {
+        "wayId": 156346202,
+        "roofCenterPixel": [
+          1806.42,
+          1465.49
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -24.26464525499614,
+          0.21428408613428473
+        ],
+        "beforeResidualPixels": 29.75684458963809,
+        "afterResidualPixels": 4.398906923149191e-09
+      },
+      {
+        "wayId": 156346204,
+        "roofCenterPixel": [
+          1456.34,
+          1549.7
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -19.394491026585456,
+          0.6204850412905216
+        ],
+        "beforeResidualPixels": 25.191987554182717,
+        "afterResidualPixels": 1.9008463881054565e-09
+      },
+      {
+        "wayId": 156346205,
+        "roofCenterPixel": [
+          1515.52,
+          1531.54
+        ],
+        "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained",
+        "translationMeters": [
+          -22.651964351476636,
+          1.467946405056864
+        ],
+        "beforeResidualPixels": 29.270340286388617,
+        "afterResidualPixels": 8.83891039790881e-08
+      }
+    ],
+    "accuracy": "Visual registration of historical imagery; independent image checkpoints are reported separately from fitted residuals. OSM pavilion footprints corrected against observed roof centres; no engineering-survey accuracy is claimed.",
+    "roofFootprintCorrections": [
+      {
+        "wayId": 1372223262,
+        "roofFootprintPixels": [
+          [
+            2211,
+            1602
+          ],
+          [
+            2205,
+            1609
+          ],
+          [
+            2203,
+            1616
+          ],
+          [
+            2205,
+            1626
+          ],
+          [
+            2214,
+            1637
+          ],
+          [
+            2213,
+            1640
+          ],
+          [
+            2206,
+            1640
+          ],
+          [
+            2208,
+            1644
+          ],
+          [
+            2210,
+            1645
+          ],
+          [
+            2215,
+            1642
+          ],
+          [
+            2216,
+            1639
+          ],
+          [
+            2221,
+            1641
+          ],
+          [
+            2223,
+            1651
+          ],
+          [
+            2230,
+            1657
+          ],
+          [
+            2232,
+            1662
+          ],
+          [
+            2231,
+            1665
+          ],
+          [
+            2228,
+            1665
+          ],
+          [
+            2227,
+            1663
+          ],
+          [
+            2225,
+            1664
+          ],
+          [
+            2225,
+            1668
+          ],
+          [
+            2227,
+            1669
+          ],
+          [
+            2232,
+            1664
+          ],
+          [
+            2236,
+            1664
+          ],
+          [
+            2242,
+            1679
+          ],
+          [
+            2251,
+            1686
+          ],
+          [
+            2250,
+            1689
+          ],
+          [
+            2254,
+            1688
+          ],
+          [
+            2256,
+            1690
+          ],
+          [
+            2256,
+            1696
+          ],
+          [
+            2265,
+            1706
+          ],
+          [
+            2266,
+            1711
+          ],
+          [
+            2265,
+            1714
+          ],
+          [
+            2262,
+            1712
+          ],
+          [
+            2259,
+            1714
+          ],
+          [
+            2264,
+            1717
+          ],
+          [
+            2266,
+            1715
+          ],
+          [
+            2271,
+            1717
+          ],
+          [
+            2275,
+            1725
+          ],
+          [
+            2282,
+            1731
+          ],
+          [
+            2282,
+            1735
+          ],
+          [
+            2277,
+            1738
+          ],
+          [
+            2282,
+            1741
+          ],
+          [
+            2286,
+            1737
+          ],
+          [
+            2289,
+            1737
+          ],
+          [
+            2292,
+            1748
+          ],
+          [
+            2302,
+            1759
+          ],
+          [
+            2301,
+            1762
+          ],
+          [
+            2307,
+            1762
+          ],
+          [
+            2307,
+            1770
+          ],
+          [
+            2309,
+            1774
+          ],
+          [
+            2317,
+            1780
+          ],
+          [
+            2318,
+            1784
+          ],
+          [
+            2317,
+            1787
+          ],
+          [
+            2314,
+            1785
+          ],
+          [
+            2311,
+            1788
+          ],
+          [
+            2316,
+            1790
+          ],
+          [
+            2320,
+            1786
+          ],
+          [
+            2325,
+            1787
+          ],
+          [
+            2325,
+            1793
+          ],
+          [
+            2336,
+            1809
+          ],
+          [
+            2335,
+            1812
+          ],
+          [
+            2331,
+            1810
+          ],
+          [
+            2328,
+            1811
+          ],
+          [
+            2329,
+            1814
+          ],
+          [
+            2337,
+            1814
+          ],
+          [
+            2341,
+            1816
+          ],
+          [
+            2342,
+            1822
+          ],
+          [
+            2350,
+            1827
+          ],
+          [
+            2354,
+            1833
+          ],
+          [
+            2353,
+            1836
+          ],
+          [
+            2348,
+            1834
+          ],
+          [
+            2348,
+            1838
+          ],
+          [
+            2351,
+            1839
+          ],
+          [
+            2355,
+            1835
+          ],
+          [
+            2358,
+            1835
+          ],
+          [
+            2360,
+            1837
+          ],
+          [
+            2362,
+            1847
+          ],
+          [
+            2368,
+            1852
+          ],
+          [
+            2369,
+            1856
+          ],
+          [
+            2363,
+            1860
+          ],
+          [
+            2364,
+            1864
+          ],
+          [
+            2366,
+            1865
+          ],
+          [
+            2374,
+            1859
+          ],
+          [
+            2377,
+            1860
+          ],
+          [
+            2377,
+            1868
+          ],
+          [
+            2374,
+            1869
+          ],
+          [
+            2374,
+            1871
+          ],
+          [
+            2387,
+            1878
+          ],
+          [
+            2386,
+            1882
+          ],
+          [
+            2380,
+            1885
+          ],
+          [
+            2386,
+            1888
+          ],
+          [
+            2393,
+            1884
+          ],
+          [
+            2395,
+            1886
+          ],
+          [
+            2397,
+            1896
+          ],
+          [
+            2404,
+            1902
+          ],
+          [
+            2404,
+            1906
+          ],
+          [
+            2397,
+            1909
+          ],
+          [
+            2400,
+            1914
+          ],
+          [
+            2405,
+            1910
+          ],
+          [
+            2408,
+            1910
+          ],
+          [
+            2412,
+            1913
+          ],
+          [
+            2412,
+            1917
+          ],
+          [
+            2415,
+            1922
+          ],
+          [
+            2422,
+            1927
+          ],
+          [
+            2429,
+            1928
+          ],
+          [
+            2441,
+            1924
+          ],
+          [
+            2447,
+            1918
+          ],
+          [
+            2450,
+            1910
+          ],
+          [
+            2453,
+            1909
+          ],
+          [
+            2450,
+            1908
+          ],
+          [
+            2448,
+            1898
+          ],
+          [
+            2443,
+            1893
+          ],
+          [
+            2432,
+            1890
+          ],
+          [
+            2434,
+            1882
+          ],
+          [
+            2431,
+            1873
+          ],
+          [
+            2427,
+            1869
+          ],
+          [
+            2415,
+            1865
+          ],
+          [
+            2415,
+            1853
+          ],
+          [
+            2408,
+            1844
+          ],
+          [
+            2398,
+            1841
+          ],
+          [
+            2399,
+            1831
+          ],
+          [
+            2396,
+            1824
+          ],
+          [
+            2392,
+            1820
+          ],
+          [
+            2380,
+            1816
+          ],
+          [
+            2381,
+            1808
+          ],
+          [
+            2377,
+            1798
+          ],
+          [
+            2371,
+            1794
+          ],
+          [
+            2363,
+            1792
+          ],
+          [
+            2364,
+            1782
+          ],
+          [
+            2362,
+            1776
+          ],
+          [
+            2356,
+            1770
+          ],
+          [
+            2345,
+            1767
+          ],
+          [
+            2346,
+            1758
+          ],
+          [
+            2340,
+            1747
+          ],
+          [
+            2328,
+            1743
+          ],
+          [
+            2329,
+            1731
+          ],
+          [
+            2326,
+            1725
+          ],
+          [
+            2319,
+            1720
+          ],
+          [
+            2310,
+            1718
+          ],
+          [
+            2310,
+            1704
+          ],
+          [
+            2304,
+            1697
+          ],
+          [
+            2294,
+            1694
+          ],
+          [
+            2295,
+            1685
+          ],
+          [
+            2291,
+            1676
+          ],
+          [
+            2284,
+            1671
+          ],
+          [
+            2276,
+            1670
+          ],
+          [
+            2276,
+            1657
+          ],
+          [
+            2270,
+            1649
+          ],
+          [
+            2259,
+            1645
+          ],
+          [
+            2260,
+            1636
+          ],
+          [
+            2257,
+            1628
+          ],
+          [
+            2253,
+            1624
+          ],
+          [
+            2241,
+            1620
+          ],
+          [
+            2241,
+            1607
+          ],
+          [
+            2235,
+            1600
+          ],
+          [
+            2224,
+            1597
+          ],
+          [
+            2211,
+            1602
+          ]
+        ],
+        "method": "SkySat white lotus-canopy boundary, threshold 205, channel range <65, 3 px closing, 1.25 px contour simplification; manually reviewed against source",
+        "maximumReprojectionResidualPixels": 9.526215314215366e-07
+      },
+      {
+        "wayId": 1372223261,
+        "roofFootprintPixels": [
+          [
+            2349,
+            1507
+          ],
+          [
+            2338,
+            1519
+          ],
+          [
+            2338,
+            1532
+          ],
+          [
+            2342,
+            1538
+          ],
+          [
+            2347,
+            1540
+          ],
+          [
+            2354,
+            1550
+          ],
+          [
+            2353,
+            1553
+          ],
+          [
+            2356,
+            1560
+          ],
+          [
+            2367,
+            1570
+          ],
+          [
+            2370,
+            1582
+          ],
+          [
+            2383,
+            1595
+          ],
+          [
+            2386,
+            1600
+          ],
+          [
+            2387,
+            1608
+          ],
+          [
+            2395,
+            1619
+          ],
+          [
+            2399,
+            1620
+          ],
+          [
+            2398,
+            1624
+          ],
+          [
+            2406,
+            1638
+          ],
+          [
+            2415,
+            1645
+          ],
+          [
+            2417,
+            1649
+          ],
+          [
+            2416,
+            1652
+          ],
+          [
+            2421,
+            1662
+          ],
+          [
+            2431,
+            1670
+          ],
+          [
+            2430,
+            1674
+          ],
+          [
+            2439,
+            1690
+          ],
+          [
+            2444,
+            1694
+          ],
+          [
+            2444,
+            1696
+          ],
+          [
+            2449,
+            1698
+          ],
+          [
+            2448,
+            1702
+          ],
+          [
+            2453,
+            1712
+          ],
+          [
+            2462,
+            1719
+          ],
+          [
+            2462,
+            1724
+          ],
+          [
+            2466,
+            1733
+          ],
+          [
+            2471,
+            1740
+          ],
+          [
+            2479,
+            1745
+          ],
+          [
+            2482,
+            1750
+          ],
+          [
+            2481,
+            1754
+          ],
+          [
+            2483,
+            1755
+          ],
+          [
+            2484,
+            1760
+          ],
+          [
+            2497,
+            1773
+          ],
+          [
+            2501,
+            1789
+          ],
+          [
+            2508,
+            1796
+          ],
+          [
+            2512,
+            1797
+          ],
+          [
+            2511,
+            1800
+          ],
+          [
+            2515,
+            1801
+          ],
+          [
+            2515,
+            1806
+          ],
+          [
+            2520,
+            1816
+          ],
+          [
+            2529,
+            1822
+          ],
+          [
+            2533,
+            1837
+          ],
+          [
+            2536,
+            1841
+          ],
+          [
+            2542,
+            1844
+          ],
+          [
+            2551,
+            1845
+          ],
+          [
+            2560,
+            1842
+          ],
+          [
+            2569,
+            1832
+          ],
+          [
+            2570,
+            1820
+          ],
+          [
+            2564,
+            1811
+          ],
+          [
+            2554,
+            1807
+          ],
+          [
+            2555,
+            1797
+          ],
+          [
+            2553,
+            1791
+          ],
+          [
+            2547,
+            1785
+          ],
+          [
+            2537,
+            1782
+          ],
+          [
+            2538,
+            1771
+          ],
+          [
+            2532,
+            1761
+          ],
+          [
+            2521,
+            1757
+          ],
+          [
+            2522,
+            1745
+          ],
+          [
+            2520,
+            1740
+          ],
+          [
+            2515,
+            1735
+          ],
+          [
+            2504,
+            1731
+          ],
+          [
+            2504,
+            1716
+          ],
+          [
+            2499,
+            1710
+          ],
+          [
+            2489,
+            1706
+          ],
+          [
+            2490,
+            1700
+          ],
+          [
+            2495,
+            1699
+          ],
+          [
+            2490,
+            1698
+          ],
+          [
+            2488,
+            1690
+          ],
+          [
+            2482,
+            1684
+          ],
+          [
+            2472,
+            1681
+          ],
+          [
+            2473,
+            1669
+          ],
+          [
+            2467,
+            1660
+          ],
+          [
+            2456,
+            1656
+          ],
+          [
+            2456,
+            1640
+          ],
+          [
+            2449,
+            1633
+          ],
+          [
+            2439,
+            1631
+          ],
+          [
+            2441,
+            1623
+          ],
+          [
+            2439,
+            1615
+          ],
+          [
+            2434,
+            1609
+          ],
+          [
+            2424,
+            1605
+          ],
+          [
+            2425,
+            1593
+          ],
+          [
+            2422,
+            1587
+          ],
+          [
+            2415,
+            1582
+          ],
+          [
+            2407,
+            1580
+          ],
+          [
+            2408,
+            1567
+          ],
+          [
+            2406,
+            1563
+          ],
+          [
+            2400,
+            1557
+          ],
+          [
+            2391,
+            1555
+          ],
+          [
+            2392,
+            1549
+          ],
+          [
+            2398,
+            1548
+          ],
+          [
+            2393,
+            1546
+          ],
+          [
+            2390,
+            1537
+          ],
+          [
+            2386,
+            1533
+          ],
+          [
+            2375,
+            1529
+          ],
+          [
+            2376,
+            1517
+          ],
+          [
+            2372,
+            1510
+          ],
+          [
+            2362,
+            1505
+          ],
+          [
+            2349,
+            1507
+          ]
+        ],
+        "method": "SkySat white lotus-canopy boundary, threshold 205, channel range <65, 3 px closing, 1.25 px contour simplification; manually reviewed against source",
+        "maximumReprojectionResidualPixels": 9.446476570726576e-07
+      }
+    ],
+    "affineTailMatrix": [
+      [
+        1.2435197912247133,
+        -0.0011988600116116955
+      ],
+      [
+        0.0005644965107820505,
+        -1.2517709672725201
+      ],
+      [
+        1632.1012905416055,
+        1199.9309104815381
+      ]
+    ],
+    "tpsCoefficients": [
+      [
+        -702.1023555164365,
+        415.7521850670932
+      ],
+      [
+        703.3941112563725,
+        -341.64543686512707
+      ],
+      [
+        -394.896683895637,
+        432.5858183569455
+      ],
+      [
+        831.5679201099327,
+        -796.5324088028676
+      ],
+      [
+        -1514.900737367827,
+        824.8710388935857
+      ],
+      [
+        -409.5378186430102,
+        240.85268030313927
+      ],
+      [
+        690.1213770446168,
+        -966.3960182939874
+      ],
+      [
+        475.50901407832,
+        531.6518788541666
+      ],
+      [
+        -510.18453424446886,
+        -504.0884061722629
+      ],
+      [
+        1073.4122684184058,
+        99.27090120594967
+      ],
+      [
+        396.07774805489606,
+        263.81331062569745
+      ],
+      [
+        -379.06848554846704,
+        -273.33938489090946
+      ],
+      [
+        14.073073279587183,
+        24.955134259443913
+      ],
+      [
+        -204.7748413073578,
+        33.92252818589329
+      ],
+      [
+        -173.5640684862843,
+        -37.813820347835055
+      ],
+      [
+        70.54138348897986,
+        92.18473895967422
+      ],
+      [
+        -28.83612263676418,
+        -81.86756722193343
+      ],
+      [
+        92.89807774675,
+        -11.92986142863058
+      ],
+      [
+        4.3521501134924,
+        -53.16676684079988
+      ],
+      [
+        21.6966454719169,
+        -24.70863861771419
+      ],
+      [
+        42.863511592932866,
+        181.50859664425693
+      ],
+      [
+        -61.26697839126589,
+        -233.27517411135162
+      ],
+      [
+        -8.421735600780385,
+        178.77364751564073
+      ],
+      [
+        42.17510477314325,
+        -94.96096838983894
+      ],
+      [
+        -61.66236712210281,
+        114.24097427906682
+      ],
+      [
+        -974.4441561550033,
+        129.63647967525617
+      ],
+      [
+        -88.47205717200328,
+        -88.05661162727074
+      ],
+      [
+        978.8859796848712,
+        -474.7579140447774
+      ],
+      [
+        330.9327494388652,
+        492.5070831210959
+      ],
+      [
+        6.750479910256378,
+        -36.94550297256327
+      ],
+      [
+        -263.1186523759302,
+        -37.0425153190357
+      ],
+      [
+        1652.7052485336294,
+        1221.5260480503885
+      ],
+      [
+        1203.5677975041085,
+        -50.1290209057206
+      ],
+      [
+        -0.6177653293598674,
+        -1250.4712753096549
+      ]
+    ],
+    "residualPixels": [
+      0.04079821065419994,
+      0.039098749349363415,
+      0.02928625450572697,
+      0.05757536547893642,
+      0.08624581837542894,
+      0.02375559084250532,
+      0.0593756848221959,
+      0.035663796164004155,
+      0.0358606114083399,
+      0.053899643083293265,
+      0.023794697171005387,
+      0.023367035330187195,
+      0.0014324891951045643,
+      0.010378279427683063,
+      0.008881775002369922,
+      0.0058039023256944025,
+      0.004339879183613257,
+      0.004683047738798756,
+      0.0026672299807746127,
+      0.0016441268553759427,
+      0.009325053790805752,
+      0.012059327252535416,
+      0.008948595235665699,
+      0.005195268274901601,
+      0.006491002950921884,
+      0.04915147582538515,
+      0.0062412482207044135,
+      0.05439698608770131,
+      0.02966815260407392,
+      0.001877857270183711,
+      0.013285666445849834
+    ],
+    "rmsResidualPixels": 0.03242749206933674,
+    "maximumResidualPixels": 0.08624581837542894,
+    "outputPixels": [
+      3072,
+      2860
+    ],
+    "independentResidualPixels": [
+      3.197633898125868,
+      2.6093721392009246,
+      3.7491132416239576,
+      2.549993519260703,
+      2.7447078878524245,
+      2.38648401508319,
+      5.660386390799567,
+      5.315215558870525,
+      6.024396330197299
+    ],
+    "independentRmsResidualPixels": 4.047023207407626,
+    "independentMaximumResidualPixels": 6.024396330197299,
+    "jacobianDeterminantRange": [
+      -1.8944947394537004,
+      -1.1600308399669552
+    ],
+    "registrationSha256": "4a92a958271b773d85b7b24fc5fbc7db0b098cbc0e9bf6af8d8cd08b64c0a7eb",
+    "sourceSha256": "627c2d2f0ba8615ddcad3c8471519339b18d5c5f605dbe49af2f95aa50dcf422"
+  },
+  "assetLicense": "CC BY-SA 4.0",
+  "limitations": [
+    "Ground image is licensed Planet SkySat 7 April 2018, not an event-date 2026 orthophoto. Permanent features checked against FIA/Juss 2026; advertising is historical.",
+    "JPEG ground registration uses reviewed spline controls and independent checkpoints; pavilion offsets in OSM are corrected against observed roofs. This is a visual reconstruction, not an orthorectified engineering survey.",
+    "GEDTM30 is a 30 m bare-earth estimate. Road profile is smoothed and terrain graded locally; camber and engineering elevations are not surveyed.",
+    "No openly published national LoD2/DSM registry was found for this venue. OSM heights/footprints and architect/FIA photos supply reconstructed roof shapes and facade detail.",
+    "E uses observed permanent terrace sections corroborated by the 2026 promoter map; the exact upgraded 2026 seat/temporary hospitality survey is unavailable.",
+    "Unverified 2026 parked trucks, small tents and mobile team motorhomes are omitted; Shanghai's mapped permanent over-water hospitality pavilions are included."
+  ],
+  "publicationStatus": "validated"
+}

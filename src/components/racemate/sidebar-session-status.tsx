@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 import { IntentLink as Link } from "@/components/racemate/intent-link";
+import { getSidebarSessionDurationMs } from "@/lib/sidebar-session";
 
 type SidebarSessionStatusProps = {
   sessionName?: string | null;
@@ -29,9 +30,21 @@ export function SidebarSessionStatus({
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    const update = () => setNow(Date.now());
+    const start = Date.parse(startsAtIso ?? "");
+    const boundaryTimers = [start, start + getSidebarSessionDurationMs(sessionName)]
+      .filter((time) => Number.isFinite(time) && time > Date.now() && time - Date.now() < 2_147_483_647)
+      .map((time) => window.setTimeout(update, time - Date.now()));
+    window.addEventListener("focus", update);
+    document.addEventListener("visibilitychange", update);
 
-    return () => window.clearInterval(timer);
-  }, []);
+    return () => {
+      window.clearInterval(timer);
+      boundaryTimers.forEach((timer) => window.clearTimeout(timer));
+      window.removeEventListener("focus", update);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, [sessionName, startsAtIso]);
 
   if (state.live) {
     return (
@@ -98,7 +111,7 @@ function getRuntimeState({
     };
   }
 
-  if (!isCompleted && now < startMs + getSessionDurationMs(sessionName)) {
+  if (!isCompleted && now < startMs + getSidebarSessionDurationMs(sessionName)) {
     return {
       label: "Live сейчас",
       live: true,
@@ -109,20 +122,6 @@ function getRuntimeState({
     label: "Сессия завершена",
     live: false,
   };
-}
-
-function getSessionDurationMs(sessionName?: string | null) {
-  const normalizedName = (sessionName ?? "").toLowerCase();
-
-  if (normalizedName.includes("гонка") || normalizedName.includes("race")) {
-    return 3 * 60 * 60 * 1000;
-  }
-
-  if (normalizedName.includes("спринт") || normalizedName.includes("sprint")) {
-    return 75 * 60 * 1000;
-  }
-
-  return 90 * 60 * 1000;
 }
 
 function formatCountdown(diffMs: number) {

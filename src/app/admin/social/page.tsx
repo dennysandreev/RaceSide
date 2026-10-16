@@ -49,7 +49,7 @@ export default async function AdminSocialPage({ searchParams }: PageProps) {
         description="Источники X, Reddit и Telegram, ручные публикации и очередь модерации. Исходный текст показан без служебных данных."
         title="Социальные источники"
       />
-      <AdminUrlTabs defaultValue="moderation" values={["moderation", "sources", "manual"]}>
+      <AdminUrlTabs sourceIds={data.sources.map(source => source.id)} defaultValue="moderation" values={["moderation", "sources", "manual"]}>
         <TabsList variant="line">
           <TabsTrigger value="moderation">Модерация</TabsTrigger>
           <TabsTrigger value="sources">Источники</TabsTrigger>
@@ -58,7 +58,7 @@ export default async function AdminSocialPage({ searchParams }: PageProps) {
 
         <TabsContent value="moderation">
           <AdminSection description={`${data.total} публикаций по текущему запросу.`} title="Очередь модерации">
-            <AdminFilters
+            <AdminFilters query={query}
               search={query.search}
               status={query.status}
               statuses={[
@@ -147,7 +147,7 @@ export default async function AdminSocialPage({ searchParams }: PageProps) {
                     </div>
                   </article>
                 ))}
-                <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/social" search={query.search} status={query.status} total={data.total} />
+                <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/social" search={query.search} status={query.status} total={data.total} />
               </div>
             ) : (
               <AdminEmpty description="Измени фильтр или проверь активные источники." title="Публикаций по запросу нет" />
@@ -206,7 +206,7 @@ export default async function AdminSocialPage({ searchParams }: PageProps) {
             <AdminSection description="Проверка запускается только для выбранного источника." title="Подключённые источники">
               <div className="grid">
                 {data.sources.map((source) => (
-                  <div className="grid gap-3 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-start" key={source.id}>
+                  <div className="grid gap-3 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-start" id={`source-${source.id}`} key={source.id}>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-medium">{source.name}</p>

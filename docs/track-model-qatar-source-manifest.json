@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "modelId": "qatar",
+  "bbox": [
+    51.443,
+    25.477,
+    51.462,
+    25.503
+  ],
+  "coordinateReferenceSystem": "EPSG:32639",
+  "sources": [
+    {
+      "file": "osm.xml",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=51.443,25.477,51.462,25.503",
+      "role": "current raceway, buildings, landscaping, service roads and barriers",
+      "license": "ODbL 1.0",
+      "attribution": "ODbL 1.0",
+      "crs": "EPSG:4326",
+      "resolution": "OSM vector snapshot",
+      "acquisitionDate": "2026-10-05",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "verticalDatum": null,
+      "redistributed": false,
+      "sha256": "28de32cebec7314fe5c1303098594869b2af93251eb491a3c45e789677f4494e",
+      "bytes": 4268405,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "fia-2025-maps.pdf",
+      "url": "https://www.fia.com/system/files/decision-document/2025_qatar_grand_prix_-_event_notes_-_circuit_map._pit_lane_drawing_emergency_exits_map_ers_battery_containment_area_red_zones_map.pdf",
+      "role": "latest available FIA control points and 50 garage positions; reference only",
+      "license": "FIA/FOWC copyright; reference only",
+      "attribution": "FIA/FOWC copyright; reference only",
+      "crs": "diagram",
+      "resolution": "official vector map",
+      "acquisitionDate": "2025-11-27",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "verticalDatum": null,
+      "redistributed": false,
+      "sha256": "97cf896ba89c89c707357c948ccfb4b77e02a2347d5d7483febd75bb3ae418d7",
+      "bytes": 1954421,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "event-2026-map.webp",
+      "url": "https://www.lcsc.qa/sites/default/files/styles/avif_webp/public/2026-08/eventmap.png.webp?itok=SrVi--zB",
+      "role": "current promoter grandstand and hospitality locations; reference only",
+      "license": "Lusail International Circuit copyright; reference only",
+      "attribution": "Lusail International Circuit copyright; reference only",
+      "crs": "diagram",
+      "resolution": "2050 x 1368 event map",
+      "acquisitionDate": "2026-08",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "verticalDatum": null,
+      "redistributed": false,
+      "sha256": "b5036d632a00f01c31442838bc90b811b1b01e68f3dc45a6267a6e0ef87484f8",
+      "bytes": 57890,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "architect-pit.jpg",
+      "url": "https://cdn.prod.website-files.com/697e040e00eff1ea73b85774/6a3563aac783af210480ecba_Lusail-International-Circuit1.jpg",
+      "role": "post-2023 pit architecture and material colour reference",
+      "license": "Focus Design Partners / Lusail International Circuit copyright; reference only",
+      "attribution": "Focus Design Partners / Lusail International Circuit copyright; reference only",
+      "crs": "photograph",
+      "resolution": "architect photograph",
+      "acquisitionDate": "post-2023; exact capture date unknown",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "verticalDatum": null,
+      "redistributed": false,
+      "sha256": "f661f067fbfac795867447b3e4fb59ce787fefc39cbfb3a4481954d11ce32785",
+      "bytes": 1184020,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "main-grandstand.webp",
+      "url": "https://www.lcsc.qa/sites/default/files/styles/race_ticket_listing/public/2025-11/Grandstand%20main%20image_1.JPG.webp?itok=DNXEhYLn",
+      "role": "pit facade, grandstand canopy, run-off pattern and floodlights; reference only",
+      "license": "Lusail International Circuit copyright; reference only",
+      "attribution": "Lusail International Circuit copyright; reference only",
+      "crs": "photograph",
+      "resolution": "8192 x 5464 photograph",
+      "acquisitionDate": "2025-11 publication; capture date unknown",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "verticalDatum": null,
+      "redistributed": false,
+      "sha256": "c2807774888169119640c850ffd2d7809194985d2ae13de3b8c2b1fe7b554f61",
+      "bytes": 1975256,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "sentinel-20260930.tif",
+      "url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/39/R/WJ/2026/9/S2C_39RWJ_20260930_0_L2A/TCI.tif",
+      "role": "licensed current true-colour ground image; coarse detail complemented by mapped OSM surfaces",
+      "license": "Copernicus Sentinel data: free, full and open use",
+      "licenseUrl": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+      "attribution": "Contains modified Copernicus Sentinel data (2026), processed by ESA; COG hosted by Element 84",
+      "crs": "EPSG:32639",
+      "verticalDatum": null,
+      "resolution": "native 10 m RGB",
+      "acquisitionDate": "2026-09-30",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "cropBounds": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "downloadMethod": "native-rgb-cog-window",
+      "redistributed": true,
+      "sha256": "c030f4d1a5cd825844febf659c5d47849b6f24b74aa9a6aae506b95ab89ec0ad",
+      "bytes": 79834,
+      "retrievedAt": "2026-10-05"
+    },
+    {
+      "file": "gedtm30-native.tif",
+      "url": "https://s3.opengeohub.org/global/edtm/gedtm_rf_m_30m_s_20060101_20151231_go_epsg.4326.3855_v20250611.tif",
+      "role": "bare-earth terrain estimate; native unresampled COG crop",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "OpenGeoHub / Ho et al. (2025), GEDTM30; cropped for RaceSide",
+      "crs": "EPSG:4326",
+      "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+      "resolution": "1 arc-second / approximately 30 m",
+      "acquisitionDate": "2006-2015 composite; v20250611",
+      "bbox": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "cropBounds": [
+        51.443,
+        25.477,
+        51.462,
+        25.503
+      ],
+      "downloadMethod": "native-cog-window",
+      "redistributed": true,
+      "sha256": "55845f50c33a39f9778aaff95431a3e062f52f931b02cebbc9fddc0e4e9bd2c0",
+      "bytes": 5879,
+      "retrievedAt": "2026-10-05"
+    }
+  ]
+}

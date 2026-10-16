@@ -2,7 +2,7 @@ import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.j
 import { surfaceIndex } from "./audit-madring-surfaces.mjs";
 
 // Inspect decoded delivery geometry, including Meshopt rounding and pit openings.
-export async function auditSepangSurfaces(buffer) {
+export async function auditSepangSurfaces(buffer, appearance) {
   await MeshoptDecoder.ready;
   const length = buffer.readUInt32LE(12);
   const gltf = JSON.parse(buffer.toString("utf8", 20, 20 + length));
@@ -24,16 +24,44 @@ export async function auditSepangSurfaces(buffer) {
     if (!Type) throw new Error(`Unsupported Sepang accessor ${item.componentType}`);
     return new Type(output.buffer, output.byteOffset + (item.byteOffset ?? 0), item.count * (item.type === "VEC3" ? 3 : 1));
   }
-  const meshes = new Map();
+  const meshes = new Map(), colours = new Map();
   for (const mesh of gltf.meshes) {
     if (!mesh.name.startsWith("Sepang_") && !mesh.name.startsWith("FIA_Pit_Wall")) continue;
-    const triangles = [];
+    const triangles = [], palette = new Map();
     for (const primitive of mesh.primitives) {
       const positions = accessor(primitive.attributes.POSITION), indices = accessor(primitive.indices);
       for (let i = 0; i < indices.length; i += 3) triangles.push(Array.from(indices.subarray(i, i + 3), (j) => Array.from(positions.subarray(j * 3, j * 3 + 3))));
+      if (primitive.attributes.COLOR_0 !== undefined) {
+        const values = accessor(primitive.attributes.COLOR_0);
+        for (let i = 0; i < values.length; i += 3) {
+          const colour = Array.from(values.subarray(i, i + 3));
+          palette.set(colour.map((value) => value.toFixed(5)).join(","), colour);
+        }
+      }
     }
     meshes.set(mesh.name, triangles);
+    colours.set(mesh.name, [...palette.values()]);
   }
+  // glTF vertex colours are linear. Check the exported values, so accidentally
+  // passing encoded sRGB to Blender cannot wash the roofs out again.
+  function missingColours(hexColours, meshName) {
+    const delivered = colours.get(`Sepang_${meshName}_Mesh`) ?? [];
+    return [...new Set(hexColours)].filter((hex) => {
+      const expected = hex.slice(1).match(/../g).map((channel) => {
+        const value = parseInt(channel, 16) / 255;
+        return value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4;
+      });
+      return !delivered.some((colour) => colour.every((value, i) => Math.abs(value - expected[i]) < .003));
+    });
+  }
+  const appearanceAudit = appearance ? {
+    missingBuildingColours: missingColours(appearance.buildingGroups.flatMap((group) =>
+      [group.roof, group.wall, group.glazing, group.garageDoor].filter(Boolean)), "Current_Footprint_Buildings_33_Garages"),
+    missingGrandstandColours: missingColours(appearance.grandstands.flatMap((stand) =>
+      [stand.roof, stand.underside, stand.frame, stand.truss, stand.concrete, stand.seatGreen, stand.seatYellow, stand.seatGrey]), "Main_K1_F_Grandstands"),
+    buildingPaletteColours: colours.get("Sepang_Current_Footprint_Buildings_33_Garages_Mesh")?.length ?? 0,
+    grandstandPaletteColours: colours.get("Sepang_Main_K1_F_Grandstands_Mesh")?.length ?? 0,
+  } : null;
   const get = (name) => meshes.get(`Sepang_${name}_Mesh`) ?? [];
   const ground = surfaceIndex(get("Copernicus_Terrain"));
   const pit = surfaceIndex(get("Pit_Lane"));
@@ -71,5 +99,5 @@ export async function auditSepangSurfaces(buffer) {
       if (gap < 4.5) { structuralRoadConflicts++; if (conflicts.length < 12) conflicts.push({vertex,gap}); }
     }
   }
-  return { structuralRoadConflicts, conflicts, minimumOverhangClearanceMeters: Number.isFinite(minimumOverhangClearanceMeters) ? minimumOverhangClearanceMeters : null, road: clearance(road, ground), paint: clearance([...get("Track_Edge_Lines"), ...get("33_Pit_Marks_And_Fast_Lane")], roadFloor), roadBarrierTrianglesInsidePit, vegetationTrianglesAboveRoad };
+  return { structuralRoadConflicts, conflicts, minimumOverhangClearanceMeters: Number.isFinite(minimumOverhangClearanceMeters) ? minimumOverhangClearanceMeters : null, road: clearance(road, ground), paint: clearance([...get("Track_Edge_Lines"), ...get("33_Pit_Marks_And_Fast_Lane")], roadFloor), roadBarrierTrianglesInsidePit, vegetationTrianglesAboveRoad, appearance: appearanceAudit };
 }

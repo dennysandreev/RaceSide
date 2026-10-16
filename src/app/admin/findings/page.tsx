@@ -97,7 +97,7 @@ export default async function AdminFindingsPage({ searchParams }: PageProps) {
         description={`${data.total} записей по текущему запросу. Повторные срабатывания объединяются.`}
         title="Журнал"
       >
-        <AdminFilters
+        <AdminFilters query={query}
           search={query.search}
           status={query.status}
           statuses={[
@@ -113,7 +113,7 @@ export default async function AdminFindingsPage({ searchParams }: PageProps) {
             {data.items.map(({ finding, events }) => (
               <FindingRow events={events} finding={finding} key={finding.id} />
             ))}
-            <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/findings" search={query.search} status={query.status} total={data.total} />
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/findings" search={query.search} status={query.status} total={data.total} />
           </div>
         ) : (
           <AdminEmpty

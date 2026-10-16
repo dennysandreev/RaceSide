@@ -10,10 +10,34 @@ import {
   getSeasonGlobeMarkerScaleFactor,
   getSeasonGlobeMarkerViewportScale,
   getSeasonGlobeZoomSensitivity,
+  placeSeasonGlobeLabels,
   createGreatCircleArc,
   latLngToVector3,
   normalizeLongitude,
 } from "./season-globe-geometry.ts";
+
+test("globe labels prioritize the selected race and avoid collisions at viewport edges", () => {
+  const labels = placeSeasonGlobeLabels([
+    { round: 1, x: 285, y: 95, width: 60, height: 18, facing: 1, selected: false },
+    { round: 2, x: 275, y: 95, width: 162, height: 48, facing: 0.8, selected: true },
+    { round: 3, x: 90, y: 180, width: 60, height: 18, facing: 0.9, selected: false },
+  ], 320, 240);
+  assert.equal(labels[0].round, 2);
+  assert.equal(labels.length, 2);
+  for (const label of labels) {
+    assert.ok(label.left >= 6 && label.left + label.width <= 314);
+    assert.ok(label.top >= 6 && label.top + label.height <= 234);
+  }
+});
+
+test("globe labels stay bounded on small canvases and honor the visible-label limit", () => {
+  const candidates = Array.from({ length: 12 }, (_, round) => ({
+    round, x: (round % 4) * 80, y: Math.floor(round / 4) * 80,
+    width: 40, height: 18, facing: 1, selected: round === 11,
+  }));
+  assert.equal(placeSeasonGlobeLabels(candidates, 320, 240, 3).length, 3);
+  assert.deepEqual(placeSeasonGlobeLabels(candidates, 10, 10), []);
+});
 
 test("latLngToVector3 keeps points on the requested radius", () => {
   const point = latLngToVector3(35.6762, 139.6503, 2.4);
@@ -71,23 +95,36 @@ test("route skips only segments that touch an event without coordinates", () => 
   assert.equal(route[0].phase, "upcoming");
 });
 
-test("focused camera opens closer than the full-globe fit and keeps a deeper zoom range", () => {
+test("initial camera uses the framing margin for a closer view and preserves the zoom range", () => {
   const distances = getSeasonGlobeCameraDistances(4.2);
 
+  const sphereFit = (4.2 - 0.08) / 1.08;
+  assert.ok(distances.initial >= sphereFit);
   assert.ok(distances.initial < 4.2);
-  assert.ok(distances.initial >= 2.45);
-  assert.ok(distances.initial <= 2.85);
   assert.equal(distances.minimum, 1.45);
   assert.ok(distances.maximum > 4.2);
 });
 
-test("mobile globe opens slightly closer to the selected race", () => {
+test("mobile camera also fits the entire sphere without sacrificing zoom", () => {
   const desktop = getSeasonGlobeCameraDistances(4.2);
   const mobile = getSeasonGlobeCameraDistances(4.2, true);
 
-  assert.ok(mobile.initial < desktop.initial);
-  assert.ok(mobile.initial >= 2.25);
+  assert.ok(mobile.initial >= (4.2 - 0.08) / 1.08);
+  assert.ok(mobile.initial < 4.2);
+  assert.ok(mobile.initial >= desktop.initial);
+  assert.ok(mobile.initial <= desktop.initial * 1.1);
   assert.equal(mobile.minimum, desktop.minimum);
+});
+
+test("full-globe framing respects narrow canvases and invalid fit distances", () => {
+  for (const fit of [3.45, 4.8, 7.2, 12]) {
+    const distances = getSeasonGlobeCameraDistances(fit, true);
+    assert.ok(distances.initial >= (fit - 0.08) / 1.08);
+    assert.ok(distances.maximum > distances.initial);
+  }
+  const fallback = getSeasonGlobeCameraDistances(Number.NaN);
+  assert.ok(Number.isFinite(fallback.initial));
+  assert.ok(fallback.initial >= (3.45 - 0.08) / 1.08);
 });
 
 test("marker screen size stays constant throughout the zoom range", () => {

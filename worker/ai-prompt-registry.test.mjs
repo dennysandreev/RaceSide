@@ -59,8 +59,8 @@ test("worker uses a valid published version and exposes its id for usage account
   );
   assert.match(prompt.userPrompt, /Пилот/);
   assert.match(prompt.systemPrompt, /Верни только готовый текст/);
-  assert.equal(prompt.model, "openai/gpt-4.1-mini");
-  assert.equal(prompt.maxTokens, 640);
+  assert.equal(prompt.model, "openai/gpt-6-luna");
+  assert.equal(prompt.maxTokens, definition.maxTokens);
 });
 
 test("worker falls back when a published template loses a required variable", async () => {

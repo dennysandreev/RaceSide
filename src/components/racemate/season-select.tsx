@@ -9,6 +9,7 @@ type SeasonSelectProps = {
   className?: string;
   hrefBySeason: Record<number, string>;
   onNavigate?: (season: number) => void;
+  onSeasonChange?: (season: number) => void;
   seasons: number[];
 };
 
@@ -17,6 +18,7 @@ export function SeasonSelect({
   className,
   hrefBySeason,
   onNavigate,
+  onSeasonChange,
   seasons,
 }: SeasonSelectProps) {
   const router = useRouter();
@@ -32,7 +34,8 @@ export function SeasonSelect({
           const href = hrefBySeason[season];
           if (href) {
             onNavigate?.(season);
-            router.push(href);
+            if (onSeasonChange) onSeasonChange(season);
+            else router.push(href);
           }
         }}
         value={activeSeason}

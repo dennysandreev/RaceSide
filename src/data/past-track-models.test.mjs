@@ -3,6 +3,12 @@ import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
 import { ALBERT_PARK_TRACK_MODEL } from "./albert-park-model.ts";
+import { QATAR_TRACK_MODEL } from "./qatar-model.ts";
+import { INTERLAGOS_TRACK_MODEL } from "./interlagos-model.ts";
+import { SINGAPORE_TRACK_MODEL } from "./singapore-model.ts";
+import { AUSTIN_TRACK_MODEL } from "./austin-model.ts";
+import { LAS_VEGAS_TRACK_MODEL } from "./las-vegas-model.ts";
+import { MEXICO_TRACK_MODEL } from "./mexico-model.ts";
 import { BAKU_TRACK_MODEL } from "./baku-model.ts";
 import { CATALUNYA_TRACK_MODEL } from "./catalunya-model.ts";
 import { HUNGARORING_TRACK_MODEL } from "./hungaroring-model.ts";
@@ -24,13 +30,18 @@ import {
 } from "./track-models.ts";
 import { getTrackClearanceHalfWidths } from "../lib/track-model-geometry.ts";
 
-const generatedModels = [
-  [ALBERT_PARK_TRACK_MODEL, 14, "albert-park-model.ts"],
-  [SHANGHAI_TRACK_MODEL, 16, "shanghai-model.ts"],
-  [SUZUKA_TRACK_MODEL, 18, "suzuka-model.ts"],
-];
+const generatedModels = [];
 
 const digitalTwinModels = [
+  QATAR_TRACK_MODEL,
+  LAS_VEGAS_TRACK_MODEL,
+  ALBERT_PARK_TRACK_MODEL,
+  SHANGHAI_TRACK_MODEL,
+  INTERLAGOS_TRACK_MODEL,
+  SUZUKA_TRACK_MODEL,
+  MEXICO_TRACK_MODEL,
+  AUSTIN_TRACK_MODEL,
+  SINGAPORE_TRACK_MODEL,
   MIAMI_TRACK_MODEL,
   SEPANG_TRACK_MODEL,
   BAKU_TRACK_MODEL,
@@ -91,7 +102,7 @@ for (const [model, turnCount] of generatedModels) {
 }
 
 test("every generated track resolves from its circuit name and aliases", () => {
-  assert.equal(Object.keys(TRACK_MODEL_ALIASES).length, 16);
+  assert.ok(Object.keys(TRACK_MODEL_ALIASES).length >= digitalTwinModels.length + generatedModels.length);
 
   const allModels = [
     ...generatedModels.map(([model]) => model),

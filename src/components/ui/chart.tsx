@@ -85,6 +85,8 @@ function ChartTooltipContent({
   active,
   payload,
   label,
+  labelFormatter,
+  formatter,
   className,
 }: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<"div"> &
@@ -94,19 +96,25 @@ function ChartTooltipContent({
 
   return (
     <div className={cn("grid min-w-40 gap-2 rounded-lg border border-border/70 bg-background px-3 py-2 text-xs shadow-xl", className)}>
-      {label ? <p className="font-medium">{String(label)}</p> : null}
+      {label != null ? <p className="font-medium">{labelFormatter ? labelFormatter(label, payload) : String(label)}</p> : null}
       <div className="grid gap-1.5">
-        {payload.filter((item) => item.type !== "none").map((item) => {
+        {payload.filter((item) => item.type !== "none").map((item, index) => {
           const key = String(item.dataKey ?? item.name ?? "value");
           return (
             <div className="flex items-center justify-between gap-4" key={key}>
-              <span className="flex items-center gap-2 text-muted-foreground">
-                <span className="size-2 rounded-[2px]" style={{ backgroundColor: item.color }} />
-                {config[key]?.label ?? item.name}
-              </span>
-              <span className="font-mono font-medium tabular-nums">
-                ${Number(item.value ?? 0).toFixed(4)}
-              </span>
+              {formatter && item.value != null ? (
+                formatter(item.value, item.name ?? key, item, index, payload)
+              ) : (
+                <>
+                  <span className="flex items-center gap-2 text-muted-foreground">
+                    <span className="size-2 rounded-[2px]" style={{ backgroundColor: item.color }} />
+                    {config[key]?.label ?? item.name}
+                  </span>
+                  <span className="font-mono font-medium tabular-nums">
+                    ${Number(item.value ?? 0).toFixed(4)}
+                  </span>
+                </>
+              )}
             </div>
           );
         })}

@@ -807,6 +807,7 @@ export type ReplayDriverState = {
   lapNumber: number | null;
   compound: string | null;
   tyreAge: number | null;
+  tyreAgeEstimated?: boolean;
   pitStops: number;
   lastLapTime: string | null;
   lastLapDuration?: number | null;
@@ -833,6 +834,7 @@ export type ReplayPositionEvent = {
   lapNumber?: number | null;
   compound?: string | null;
   tyreAge?: number | null;
+  tyreAgeEstimated?: boolean;
   speedKph?: number | null;
   gear?: number | null;
   drs?: number | null;
@@ -949,12 +951,15 @@ export type GrandPrixReportStatus =
 
 export type GrandPrixReportResult = {
   position: number | null;
+  driverNumber?: number | null;
   driver: string;
   team: string;
   grid: number | null;
   positionDelta: number | null;
   points: number | null;
   status: string;
+  time?: string | null;
+  laps?: number | null;
   bestLap?: string | null;
   tyres?: TyreStint[];
   isWinner?: boolean;

@@ -8,12 +8,14 @@ import {
   sessionMode,
   sessionCapabilities,
   chooseSession,
+  chooseSessionWithControls,
   sessionStillOngoing,
+  sessionHistoryEnd,
 } from "./session-mode.mjs";
 import { LiveWriter, historyRow } from "./persistence.mjs";
 import { transcribeRadio, allowedRecording } from "./radio.mjs";
 import { normalizeMessage, hydrationMessages } from "./normalize.mjs";
-import { ReplaySimulationSource, replayRaceControlFlag } from "./sources.mjs";
+import { ReplaySimulationSource, replayRaceControlFlag, replayMessages } from "./sources.mjs";
 import { buildReplayFromHistory } from "./replay-adapter.mjs";
 const session = {
   session_key: 1,
@@ -34,6 +36,24 @@ const state = () => {
   s.setSession(session);
   return s;
 };
+test("session maximum survives slower, delayed and invalid samples and resets for a new session", () => {
+  const s = state();
+  s.apply("car_data", row({ speed: 280 }));
+  s.apply("car_data", row({ speed: 0, date: "2026-09-11T12:02:00Z" }));
+  assert.equal(s.state.drivers[44].maxSpeed, 280);
+  s.apply("car_data", row({ speed: 331, date: "2026-09-11T12:01:30Z" }));
+  assert.equal(s.state.drivers[44].maxSpeed, 331);
+  assert.equal(s.state.telemetry[44].speed, 0);
+  s.apply("car_data", row({ speed: null, date: "2026-09-11T12:03:00Z" }));
+  s.apply("car_data", row({ speed: -1, date: "2026-09-11T12:04:00Z" }));
+  s.apply("laps", row({ lap_number: 1, st_speed: 335, i1_speed: 301, i2_speed: null }));
+  assert.equal(s.state.drivers[44].maxSpeed, 335);
+  s.apply("car_data", row({ session_key: 2, speed: 400 }));
+  assert.equal(s.snapshot().drivers[44].maxSpeed, 335);
+  s.setSession({ ...session, session_key: 2 });
+  s.apply("drivers", row({ session_key: 2 }));
+  assert.equal(s.state.drivers[44].maxSpeed, null);
+});
 test("explicit retirement removes location and survives delayed laps and pit updates", () => {
   const s = state();
   s.apply("location", row({ svgX: 10, svgY: 20 }));
@@ -336,6 +356,92 @@ test("a session resumed after its scheduled end remains active after restart", (
     false,
   );
 });
+test("Malaysia remains ongoing after three hours until its actual Race Control finish", () => {
+  const malaysia = {
+    ...session, session_key: 11731,
+    date_start: "2026-10-04T07:00:00Z",
+    date_end: "2026-10-04T09:00:00Z",
+  };
+  const controls = [
+    { date: "2026-10-04T07:00:00Z", message: "SESSION STARTED" },
+    { date: "2026-10-04T08:00:00Z", message: "SESSION SUSPENDED" },
+    { date: "2026-10-04T08:30:00Z", message: "SESSION RESUMED" },
+    { date: "2026-10-04T10:13:59Z", message: "OVERTAKE ENABLED" },
+  ];
+  assert.equal(sessionStillOngoing(malaysia, controls, Date.parse("2026-10-04T10:15:00Z")), true);
+  controls.push({ date: "2026-10-04T10:20:15.170Z", message: "SESSION FINISHED" });
+  assert.equal(sessionStillOngoing(malaysia, controls, Date.parse("2026-10-04T10:21:00Z")), false);
+});
+test("cold start and reconnect retain an extended race instead of the next Grand Prix", async () => {
+  const malaysia = { ...session, session_key: 11731,
+    date_start: "2026-10-04T07:00:00Z", date_end: "2026-10-04T09:00:00Z" };
+  const singapore = { ...session, session_key: 11378,
+    date_start: "2026-10-09T08:30:00Z", date_end: "2026-10-09T09:30:00Z" };
+  const controls = [
+    { date: "2026-10-04T07:00:00Z", message: "SESSION STARTED" },
+    { date: "2026-10-04T10:20:15.170Z", message: "SESSION FINISHED" },
+  ];
+  for (const current of [{}, { currentSession: { ...malaysia }, currentStatus: "live" }]) {
+    const choice = await chooseSessionWithControls([malaysia, singapore], {
+      ...current, now: Date.parse("2026-10-04T10:15:00Z"),
+      loadControls: async () => controls,
+    });
+    assert.equal(choice.session.session_key, 11731);
+    assert.equal(choice.active, true);
+  }
+  const finished = await chooseSessionWithControls([malaysia, singapore], {
+    currentSession: { ...malaysia }, currentStatus: "live",
+    now: Date.parse("2026-10-04T10:21:00Z"), loadControls: async () => controls,
+  });
+  assert.equal(finished.session.session_key, 11378);
+  assert.equal(finished.active, false);
+});
+test("a paused extended race survives missing Race Control during reconnect", async () => {
+  const extended = { ...session, date_end: "2026-09-11T13:00:00Z" };
+  const next = { ...session, session_key: 2,
+    date_start: "2026-09-18T12:00:00Z", date_end: "2026-09-18T13:00:00Z" };
+  for (const loadControls of [async () => [], async () => { throw new Error("OpenF1 timeout"); }]) {
+    const choice = await chooseSessionWithControls([extended, next], {
+      currentSession: { ...extended }, currentStatus: "paused", loadControls,
+      now: Date.parse("2026-09-11T15:30:00Z"),
+    });
+    assert.equal(choice.session.session_key, 1);
+    assert.equal(choice.active, true);
+  }
+});
+test("a scheduled next session cannot replace an ongoing one before its actual start", async () => {
+  const extended = { ...session, date_end: "2026-09-11T13:00:00Z" };
+  const next = { ...session, session_key: 2,
+    date_start: "2026-09-11T13:05:00Z", date_end: "2026-09-11T14:00:00Z" };
+  let started = false;
+  const loadControls = async (key) => key === 1
+    ? [{ date: "2026-09-11T12:01:00Z", message: "SESSION STARTED" }]
+    : started ? [{ date: "2026-09-11T13:07:00Z", message: "SESSION STARTED" }] : [];
+  const options = { currentSession: extended, currentStatus: "live", loadControls,
+    now: Date.parse("2026-09-11T13:10:00Z") };
+  assert.equal((await chooseSessionWithControls([extended, next], options)).session.session_key, 1);
+  started = true;
+  assert.equal((await chooseSessionWithControls([extended, next], options)).session.session_key, 2);
+});
+test("recovery backfills an extended session through now or its actual finish", () => {
+  const extended = { ...session, date_start: "2026-10-04T07:00:00Z", date_end: "2026-10-04T09:00:00Z" };
+  const now = Date.parse("2026-10-04T10:15:00Z");
+  assert.equal(sessionHistoryEnd(extended, [], true, now), now);
+  const finished = [{ date: "2026-10-04T10:20:15.170Z", message: "SESSION FINISHED" }];
+  assert.equal(sessionHistoryEnd(extended, finished, false, Date.parse("2026-10-04T10:42:00Z")),
+    Date.parse("2026-10-04T10:22:15.170Z"));
+  assert.equal(sessionHistoryEnd(extended, [], false, Date.parse("2026-10-04T10:42:00Z")),
+    Date.parse("2026-10-04T09:02:00Z"));
+});
+test("future and foreign-session Race Control cannot finish a current race", () => {
+  const controls = [
+    { date: "2026-09-11T12:01:00Z", message: "SESSION STARTED" },
+    { date: "2026-09-11T13:00:00Z", message: "SESSION FINISHED", session_key: 2 },
+    { date: "2026-09-11T13:01:00Z", flag: "CHEQUERED", scope: "Driver" },
+    { date: "2026-09-11T15:30:00Z", message: "SESSION FINISHED" },
+  ];
+  assert.equal(sessionStillOngoing(session, controls, Date.parse("2026-09-11T15:00:00Z")), true);
+});
 test("an aborted session is not restored as ongoing", () => {
   const practice = {
     ...session,
@@ -349,6 +455,28 @@ test("an aborted session is not restored as ongoing", () => {
         { date: "2026-09-11T13:03:00Z", message: "SESSION ABORTED" },
       ],
       Date.parse("2026-09-11T13:05:00Z"),
+    ),
+    false,
+  );
+  assert.equal(
+    sessionStillOngoing(
+      practice,
+      [
+        { date: "2026-09-11T13:03:00Z", message: "SESSION ABORTED" },
+        { date: "2026-09-11T13:07:00Z", message: "SESSION STARTED" },
+      ],
+      Date.parse("2026-09-11T13:10:00Z"),
+    ),
+    true,
+  );
+  assert.equal(
+    sessionStillOngoing(
+      practice,
+      [
+        { date: "2026-09-11T13:07:00Z", message: "SESSION STARTED" },
+        { date: "2026-09-11T13:09:00Z", flag: "CHEQUERED" },
+      ],
+      Date.parse("2026-09-11T13:10:00Z"),
     ),
     false,
   );
@@ -450,6 +578,60 @@ test("tyre age includes prior use and pit messages do not increment twice", () =
   s.apply("pit", pit);
   s.apply("pit", pit);
   assert.equal(s.state.drivers[44].pitCount, 1);
+});
+test("a pit with delayed stint data replaces the old tyre age with an estimate", () => {
+  const s = state();
+  s.apply("stints", row({ stint_number: 4, compound: "SOFT", lap_start: 10, tyre_age_at_start: 0 }));
+  s.apply("laps", row({ lap_number: 28 }));
+  assert.equal(s.state.drivers[44].tyreAge, 18);
+  s.apply("pit", row({ lap_number: 28, lane_duration: 27.9, stop_duration: null }));
+  s.apply("laps", row({ lap_number: 29 }));
+  assert.equal(s.state.drivers[44].tyreAge, 0);
+  assert.equal(s.state.drivers[44].tyreAgeEstimated, true);
+  s.apply("laps", row({ lap_number: 36 }));
+  // OpenF1 can keep extending the previous stint after a same-compound stop.
+  s.apply("stints", row({ stint_number: 4, compound: "SOFT", lap_start: 10, lap_end: 35, tyre_age_at_start: 0 }));
+  assert.equal(s.state.drivers[44].tyreAge, 7);
+  assert.equal(s.state.drivers[44].tyreAgeEstimated, true);
+  const restored = new LiveState(s.snapshot());
+  restored.apply("stints", row({ stint_number: 5, compound: "SOFT", lap_start: 29, tyre_age_at_start: 2 }));
+  assert.equal(restored.state.drivers[44].tyreAge, 9);
+  assert.equal(restored.state.drivers[44].tyreAgeEstimated, false);
+  assert.equal(restored.state.events.filter((e) => e.type === "tyre_change").length, 1);
+  restored.apply("stints", row({ stint_number: 4, compound: "SOFT", lap_start: 10, lap_end: 36, tyre_age_at_start: 0 }));
+  assert.equal(restored.state.drivers[44].tyreAge, 9);
+});
+test("tyre estimates ignore older pits, drive-throughs and practice returns to the garage", () => {
+  const s = state();
+  s.apply("stints", row({ stint_number: 2, compound: "SOFT", lap_start: 10, tyre_age_at_start: 3 }));
+  s.apply("laps", row({ lap_number: 15 }));
+  s.apply("pit", row({ lap_number: 9, lane_duration: 28, stop_duration: 2.5 }));
+  s.apply("pit", row({ lap_number: 14, lane_duration: 20, stop_duration: 0, date: "2026-09-11T12:02:00Z" }));
+  assert.equal(s.state.drivers[44].tyreAge, 8);
+  assert.equal(s.state.drivers[44].tyreAgeEstimated, false);
+  s.setSession({ ...session, session_type: "Practice", session_name: "Practice 3" });
+  s.apply("stints", row({ stint_number: 1, compound: "SOFT", lap_start: 1, tyre_age_at_start: 3 }));
+  s.apply("laps", row({ lap_number: 8 }));
+  s.apply("pit", row({ lap_number: 7, lane_duration: 30, stop_duration: 10 }));
+  assert.equal(s.state.drivers[44].tyreAge, 10);
+  assert.equal(s.state.drivers[44].tyreAgeEstimated, false);
+});
+test("replay simulation detects same-compound tyre replacements from the age reset", () => {
+  const messages = replayMessages({
+    sourceSessionKey: 1, drivers: [], raceEvents: [],
+    positions: [
+      { driverNumber: 44, offsetMs: 0, compound: "SOFT", lapNumber: 28, tyreAge: 18 },
+      { driverNumber: 44, offsetMs: 1000, compound: "SOFT", lapNumber: 29, tyreAge: 0 },
+      { driverNumber: 44, offsetMs: 2000, compound: "SOFT", lapNumber: 30, tyreAge: 1 },
+    ],
+  });
+  const stints = messages.filter((m) => m.topic === "stints");
+  assert.equal(stints.length, 2);
+  assert.equal(stints[1].row.lap_start, 29);
+  const s = state();
+  for (const { topic, row: payload } of messages) s.apply(topic, payload);
+  assert.equal(s.state.drivers[44].tyreAge, 1);
+  assert.equal(s.state.drivers[44].tyreAgeEstimated, false);
 });
 test("qualifying phases follow source; Q1 finish is not session finish", () => {
   const s = state();
@@ -624,7 +806,7 @@ test("temporary session stop freezes the clock and resume extends it", () => {
   assert.equal(s.state.timerPausedAt, null);
   assert.equal(s.state.timerOffsetMs, 300000);
 });
-test("aborted session finishes instead of freezing the clock", () => {
+test("aborted practice pauses and a later SESSION STARTED resumes the same session", () => {
   const s = state();
   s.apply(
     "race_control",
@@ -633,10 +815,22 @@ test("aborted session finishes instead of freezing the clock", () => {
       message: "SESSION ABORTED",
     }),
   );
-  assert.equal(s.state.status, "finished");
+  assert.equal(s.state.status, "paused");
   assert.equal(s.state.flag, "RED");
-  assert.equal(s.state.timerPausedAt, null);
+  assert.equal(s.state.timerPausedAt, "2026-09-11T12:10:00Z");
   assert.equal(s.state.timerOffsetMs, 0);
+  assert.equal(s.state.events[0].message, "Сессия остановлена");
+  s.apply(
+    "race_control",
+    row({
+      date: "2026-09-11T12:20:00Z",
+      message: "SESSION STARTED",
+    }),
+  );
+  assert.equal(s.state.status, "live");
+  assert.equal(s.state.flag, "GREEN");
+  assert.equal(s.state.timerPausedAt, null);
+  assert.equal(s.state.timerOffsetMs, 600000);
 });
 test("session switch clears timing, locations and dedupe; other sessions ignored", () => {
   const s = state();
@@ -785,11 +979,63 @@ test("radio uses the requested transcription model, translates and records both 
   assert.equal(calls[0].body.model, "openai/gpt-transcribe");
   assert.equal(calls[0].body.input_audio.format, "mp3");
   assert.equal(calls[1].body.messages[1].content, "Box this lap");
+  assert.equal(calls[1].body.model, "openai/gpt-6-luna");
+  assert.equal(calls[1].body.reasoning.effort, "none");
   assert.equal(result.cost, 0.012);
   assert.equal(usage.length, 2);
   assert.ok(audio.every((x) => x === 0));
 });
-test("SC waits for green while VSC ending returns the track to green", () => {
+test("radio checks the shared budget before each paid request and stops translation when denied", async () => {
+  const audio = Buffer.from("temporary audio");
+  const stages = [];
+  let paidRequests = 0;
+  await assert.rejects(() => transcribeRadio("https://livetiming.formula1.com/a.mp3", {
+    fetchAudioImpl: async () => audio,
+    beforePaidRequest: async purpose => {
+      stages.push(purpose);
+      if (purpose === "live_radio_translation") throw new Error("AI_BUDGET_EXCEEDED");
+    },
+    fetchImpl: async () => {
+      paidRequests += 1;
+      return { ok: true, json: async () => ({ text: "Box this lap", usage: { cost: 0.01 } }) };
+    },
+    onUsage: async () => stages.push("usage_saved"),
+  }), /AI_BUDGET_EXCEEDED/);
+  assert.equal(paidRequests, 1);
+  assert.deepEqual(stages, ["live_radio_transcription", "usage_saved", "live_radio_translation"]);
+  assert.ok(audio.every(value => value === 0));
+});
+
+test("radio makes no paid request when the budget guard fails", async () => {
+  const audio = Buffer.from("temporary audio");
+  await assert.rejects(() => transcribeRadio("https://livetiming.formula1.com/a.mp3", {
+    fetchAudioImpl: async () => audio,
+    beforePaidRequest: async () => { throw new Error("Budget unavailable"); },
+    fetchImpl: async () => { assert.fail("Paid request must not run"); },
+  }), /Budget unavailable/);
+  assert.ok(audio.every(value => value === 0));
+});
+
+test("radio usage reaches the budget database before processing can continue", async () => {
+  let written;
+  const writer = new LiveWriter({ from: table => {
+    assert.equal(table, "ai_usage_logs");
+    return { insert: row => ({ abortSignal: async () => { written = row; return { error: null }; } }) };
+  } }, "unused-fixture-directory");
+  await writer.recordUsage({ usage: { cost: 0.03, input_tokens: 10 } }, "model", "live_radio_transcription");
+  assert.equal(written.estimated_cost_usd, 0.03);
+  assert.equal(written.purpose, "live_radio_transcription");
+  assert.equal(writer.pending.length, 0, "the persisted cost is not written twice by the spool");
+});
+
+test("failed radio accounting preserves the charge for the spool and rejects continuation", async () => {
+  const writer = new LiveWriter({ from: () => ({ insert: () => ({ abortSignal: async () => ({ error: new Error("accounting offline") }) }) }) }, "unused-fixture-directory");
+  await assert.rejects(writer.recordUsage({ usage: { cost: 0.03 } }, "model", "live_radio_transcription"), /accounting offline/);
+  assert.equal(writer.pending.length, 1);
+  assert.equal(writer.pending[0].table, "ai_usage_logs");
+  assert.equal(writer.pending[0].row.estimated_cost_usd, 0.03);
+});
+test("SC ending clears on a global TRACK CLEAR while deployed SC stays active", () => {
   const s = state();
   s.apply("race_control", row({ message: "SAFETY CAR DEPLOYED" }));
   s.apply(
@@ -797,6 +1043,16 @@ test("SC waits for green while VSC ending returns the track to green", () => {
     row({ message: "SAFETY CAR IN THIS LAP", date: "2026-09-11T12:02:00Z" }),
   );
   assert.equal(s.state.flag, "SC_ENDING");
+  s.apply(
+    "race_control",
+    row({
+      message: "TRACK CLEAR",
+      flag: "CLEAR",
+      scope: "Track",
+      date: "2026-09-11T12:02:30Z",
+    }),
+  );
+  assert.equal(s.state.flag, "GREEN");
   s.apply(
     "race_control",
     row({
@@ -1064,4 +1320,21 @@ test("durable batches survive DB outage and retry idempotently", async () => {
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("tyre set history preserves same-compound replacements, corrections and restarts", () => {
+  const s = state();
+  s.apply("stints", row({ stint_number: 1, lap_start: 1, lap_end: 18, compound: "SOFT", tyre_age_at_start: 3 }));
+  s.apply("stints", row({ stint_number: 2, lap_start: 19, compound: "SOFT", tyre_age_at_start: 0, date: "2026-09-11T12:30:00Z" }));
+  s.apply("stints", row({ stint_number: 1, lap_start: 1, lap_end: 19, compound: "SOFT", tyre_age_at_start: 3, date: "2026-09-11T12:31:00Z" }));
+  assert.equal(s.state.stints.length, 2);
+  assert.equal(s.state.stints.find((stint) => stint.stintNumber === 1).endLap, 19);
+  assert.equal(s.state.drivers[44].stintNumber, 2);
+  const restored = new LiveState(s.snapshot());
+  assert.deepEqual(restored.state.stints, s.state.stints);
+  restored.apply("stints", row({ stint_number: 1, lap_start: 1, lap_end: 18, date: "2026-09-11T12:00:00Z" }));
+  restored.retainDrivers([1]);
+  assert.equal(restored.state.stints.length, 0);
+  s.setSession({ ...session, session_key: 2 });
+  assert.equal(s.state.stints.length, 0);
 });

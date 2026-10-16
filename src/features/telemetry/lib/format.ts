@@ -76,6 +76,11 @@ export function number(value: number | null | undefined, digits = 1) {
 export function deltaTime(value: number | null | undefined) {
   return value == null ? "—" : `${value > 0 ? "+" : ""}${number(value, 3)}`;
 }
+// Comparison data stores opponent time minus reference time. On the graph a
+// negative value means the reference driver is ahead by that many seconds.
+export function displayedDelta(value: number | null | undefined) {
+  return value == null ? null : value === 0 ? 0 : -value;
+}
 export function sessionName(name: string) {
   return (
     (
@@ -127,10 +132,9 @@ export function sectorGapRows(comparison: Comparison) {
       opponentTime != null &&
       opponentTime > 0 &&
       Number.isFinite(opponentTime);
-    const storedDelta = comparison.sectorDelta[index]?.[opponent];
     const rawDelta = officialTimingAvailable
       ? opponentTime - referenceTime
-      : storedDelta;
+      : null;
     const delta =
       rawDelta == null || !Number.isFinite(rawDelta)
         ? null

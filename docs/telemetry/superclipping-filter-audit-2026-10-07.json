@@ -1,0 +1,5366 @@
+{
+  "date": "2026-10-07",
+  "status": "research_only_application_unchanged",
+  "application_analysis_sha256": "c713575b059efd539047b829da31d5cf031e5db7f233474b3e6ac3a043625209",
+  "recommendation": {
+    "variant": "gas98",
+    "minimum_throttle_percent": 98,
+    "all_samples_required": true,
+    "stop_interval_on_throttle_lift": true,
+    "existing_minimum_speed_kmh": 200,
+    "existing_minimum_drop_kmh": 8,
+    "existing_minimum_duration_seconds": 1,
+    "existing_minimum_distance_metres": 60,
+    "existing_brake_gear_aero_and_gap_checks_retained": true
+  },
+  "source": {
+    "normalized_laps_read_from_database": 41,
+    "additional_unique_laps_from_previous_read_only_research": 13,
+    "unique_laps": 54,
+    "circuits": 4,
+    "sessions": 15,
+    "averages_excluded": true,
+    "nearest_other_driver_supplies_shared_phase_corridors": true,
+    "same_lap_used_when_no_other_driver_cached": true
+  },
+  "summary": [
+    {
+      "circuit": "baku",
+      "laps": 19,
+      "events": {
+        "baseline": 14,
+        "gas95": 14,
+        "gas98": 14,
+        "gas100": 14,
+        "gas98lead1": 12,
+        "gas98lead2": 11,
+        "gas98long": 13,
+        "gas98long150": 13,
+        "gas98speed260": 13,
+        "gas98speed280": 13,
+        "gas98speed300": 13,
+        "gas98straight5": 13,
+        "gas98straight8": 13,
+        "gas98straight10": 13,
+        "gas98straight12": 13,
+        "gas98straight15": 14,
+        "gas98stable": 14,
+        "gas98straight10stable": 13
+      }
+    },
+    {
+      "circuit": "sepang",
+      "laps": 21,
+      "events": {
+        "baseline": 7,
+        "gas95": 1,
+        "gas98": 1,
+        "gas100": 1,
+        "gas98lead1": 0,
+        "gas98lead2": 0,
+        "gas98long": 1,
+        "gas98long150": 0,
+        "gas98speed260": 0,
+        "gas98speed280": 0,
+        "gas98speed300": 0,
+        "gas98straight5": 1,
+        "gas98straight8": 1,
+        "gas98straight10": 1,
+        "gas98straight12": 1,
+        "gas98straight15": 1,
+        "gas98stable": 1,
+        "gas98straight10stable": 1
+      }
+    },
+    {
+      "circuit": "monza",
+      "laps": 4,
+      "events": {
+        "baseline": 9,
+        "gas95": 8,
+        "gas98": 8,
+        "gas100": 8,
+        "gas98lead1": 7,
+        "gas98lead2": 7,
+        "gas98long": 4,
+        "gas98long150": 4,
+        "gas98speed260": 8,
+        "gas98speed280": 8,
+        "gas98speed300": 6,
+        "gas98straight5": 7,
+        "gas98straight8": 7,
+        "gas98straight10": 8,
+        "gas98straight12": 8,
+        "gas98straight15": 8,
+        "gas98stable": 6,
+        "gas98straight10stable": 6
+      }
+    },
+    {
+      "circuit": "madring",
+      "laps": 10,
+      "events": {
+        "baseline": 11,
+        "gas95": 8,
+        "gas98": 8,
+        "gas100": 7,
+        "gas98lead1": 8,
+        "gas98lead2": 6,
+        "gas98long": 0,
+        "gas98long150": 0,
+        "gas98speed260": 8,
+        "gas98speed280": 8,
+        "gas98speed300": 8,
+        "gas98straight5": 0,
+        "gas98straight8": 0,
+        "gas98straight10": 0,
+        "gas98straight12": 2,
+        "gas98straight15": 8,
+        "gas98stable": 7,
+        "gas98straight10stable": 0
+      }
+    }
+  ],
+  "screenshot": {
+    "session": 11730,
+    "driver": "VER",
+    "lap": 11,
+    "baseline_event": {
+      "from": 2061.564201,
+      "to": 2143.619591,
+      "duration": 1.16,
+      "speed": [
+        256,
+        248
+      ],
+      "gear": 6,
+      "throttle": {
+        "min": 44,
+        "mean": 59.5,
+        "max": 100
+      },
+      "lead": 7.08,
+      "maxHeadingChangeDegrees50m": 28.749532,
+      "nearestCorners": [
+        {
+          "corner": 6,
+          "apexDistance": 2210.315594,
+          "gap": 107.72369829222635
+        },
+        {
+          "corner": 5,
+          "apexDistance": 1981.999424,
+          "gap": 120.59247170777371
+        }
+      ],
+      "samples": [
+        {
+          "distance": 1967.834812,
+          "elapsed": 34.754,
+          "speed": 251,
+          "throttle": 67,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 1987.595136,
+          "elapsed": 35.034,
+          "speed": 251,
+          "throttle": 79,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2010.223349,
+          "elapsed": 35.354,
+          "speed": 252,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2032.941535,
+          "elapsed": 35.674,
+          "speed": 253,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2061.564201,
+          "elapsed": 36.074,
+          "speed": 256,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2078.77154,
+          "elapsed": 36.314,
+          "speed": 254,
+          "throttle": 44,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2093.02664,
+          "elapsed": 36.514,
+          "speed": 253,
+          "throttle": 48,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2110.031539,
+          "elapsed": 36.754,
+          "speed": 251,
+          "throttle": 50,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2129.673773,
+          "elapsed": 37.034,
+          "speed": 248,
+          "throttle": 51,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2143.619591,
+          "elapsed": 37.234,
+          "speed": 248,
+          "throttle": 64,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2166.067858,
+          "elapsed": 37.554,
+          "speed": 251,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2180.210491,
+          "elapsed": 37.754,
+          "speed": 252,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2205.819061,
+          "elapsed": 38.114,
+          "speed": 254,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2220.130394,
+          "elapsed": 38.314,
+          "speed": 255,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 6,
+          "drs": null
+        },
+        {
+          "distance": 2237.371473,
+          "elapsed": 38.554,
+          "speed": 256,
+          "throttle": 100,
+          "brake": 0,
+          "gear": 7,
+          "drs": null
+        }
+      ]
+    },
+    "proposed_events": []
+  },
+  "validation": {
+    "prototype_baseline_matches_application_on_all_54_laps": true,
+    "research_tests": 8,
+    "passed": 8,
+    "test_command": "node --test /private/tmp/raceside-superclipping-audit.test.mjs"
+  },
+  "rejected_as_default": [
+    {
+      "variant": "gas98long",
+      "reason": "Duration 1.5 s removes all four brief full-throttle straight events in Monza RUS lap 51. No ground truth establishes that these should be hidden."
+    },
+    {
+      "variant": "gas98straight10",
+      "reason": "Removes nine additional bend-associated events, but Monza and Madring use approximate track models. Shape-based exclusion is not reliable enough for a default across circuits."
+    },
+    {
+      "variant": "gas98stable",
+      "reason": "Median-of-three confirmation removes two additional Monza events, including RUS lap 16, without labelled proof of false positives."
+    }
+  ],
+  "limits": [
+    "Retained events are observational candidates; public channels do not verify electrical harvesting or battery state.",
+    "Counts measure filter coverage, not precision or recall; no labelled ground-truth set.",
+    "Some laps are pit/cooldown laps with distance scaling; no whole-lap flag or pit filter was applied.",
+    "Curvature test uses model geometry; Monza and Madring models are estimated."
+  ],
+  "official_definition_source": "https://www.formula1.com/en/latest/article/explained-the-new-key-terms-for-formula-1s-new-for-2026-rules.3T5BU6TC9quGcIpGzoWkY0.",
+  "lap_results": [
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "RUS",
+      "lap": 21,
+      "id": "11373:63:21",
+      "companion": "11373:3:19",
+      "samples": 372,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5214.826069,
+            "to": 6003,
+            "duration": 8.913,
+            "speed": [
+              327,
+              308.0331950207469
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.96,
+            "maxHeadingChangeDegrees50m": 0.86808,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 527.3675316047002
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 876.0757986046992
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5214.826069,
+            "to": 6003,
+            "duration": 8.913,
+            "speed": [
+              327,
+              308.0331950207469
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.96,
+            "maxHeadingChangeDegrees50m": 0.86808,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 527.3675316047002
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 876.0757986046992
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5214.826069,
+            "to": 6003,
+            "duration": 8.913,
+            "speed": [
+              327,
+              308.0331950207469
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.96,
+            "maxHeadingChangeDegrees50m": 0.86808,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 527.3675316047002
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 876.0757986046992
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5214.826069,
+            "to": 6003,
+            "duration": 8.913,
+            "speed": [
+              327,
+              308.0331950207469
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.96,
+            "maxHeadingChangeDegrees50m": 0.86808,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 527.3675316047002
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 876.0757986046992
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5214.826069,
+            "to": 6003,
+            "duration": 8.913,
+            "speed": [
+              327,
+              308.0331950207469
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.96,
+            "maxHeadingChangeDegrees50m": 0.86808,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 527.3675316047002
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 876.0757986046992
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "RUS",
+      "lap": 22,
+      "id": "11373:63:22",
+      "companion": "11373:3:20",
+      "samples": 431,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "RUS",
+      "lap": 24,
+      "id": "11373:63:24",
+      "companion": "11373:3:21",
+      "samples": 487,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 19,
+      "id": "11373:3:19",
+      "companion": "11373:63:21",
+      "samples": 380,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5108.872432,
+            "to": 6003,
+            "duration": 10.377,
+            "speed": [
+              319,
+              300
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 91.3,
+              "mean": 99.792857,
+              "max": 100
+            },
+            "lead": 12.68,
+            "maxHeadingChangeDegrees50m": 4.824967,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 474.390712868264
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 823.0989798682631
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5108.872432,
+            "to": 6001.657041,
+            "duration": 10.361,
+            "speed": [
+              319,
+              300
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.48,
+            "maxHeadingChangeDegrees50m": 4.824967,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 473.71923325210264
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 822.4275002521017
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5108.872432,
+            "to": 6001.657041,
+            "duration": 10.361,
+            "speed": [
+              319,
+              300
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.48,
+            "maxHeadingChangeDegrees50m": 4.824967,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 473.71923325210264
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 822.4275002521017
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5108.872432,
+            "to": 6001.657041,
+            "duration": 10.361,
+            "speed": [
+              319,
+              300
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.48,
+            "maxHeadingChangeDegrees50m": 4.824967,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 473.71923325210264
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 822.4275002521017
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5108.872432,
+            "to": 6001.657041,
+            "duration": 10.361,
+            "speed": [
+              319,
+              300
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.48,
+            "maxHeadingChangeDegrees50m": 4.824967,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 473.71923325210264
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 822.4275002521017
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 20,
+      "id": "11373:3:20",
+      "companion": "11373:63:22",
+      "samples": 486,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 21,
+      "id": "11373:3:21",
+      "companion": "11373:63:23",
+      "samples": 458,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 22,
+      "id": "11373:3:22",
+      "companion": "11373:63:25",
+      "samples": 458,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "VER",
+      "lap": 8,
+      "id": "11730:3:8",
+      "companion": "11730:44:11",
+      "samples": 365,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "HAM",
+      "lap": 11,
+      "id": "11730:44:11",
+      "companion": "11730:3:8",
+      "samples": 365,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "VER",
+      "lap": 52,
+      "id": "11731:3:52",
+      "companion": "11731:12:52",
+      "samples": 376,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "ANT",
+      "lap": 52,
+      "id": "11731:12:52",
+      "companion": "11731:3:52",
+      "samples": 375,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "VER",
+      "lap": 53,
+      "id": "11731:3:53",
+      "companion": "11731:12:53",
+      "samples": 361,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "ANT",
+      "lap": 53,
+      "id": "11731:12:53",
+      "companion": "11731:3:53",
+      "samples": 364,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "VER",
+      "lap": 54,
+      "id": "11731:3:54",
+      "companion": "11731:12:54",
+      "samples": 366,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "ANT",
+      "lap": 54,
+      "id": "11731:12:54",
+      "companion": "11731:3:54",
+      "samples": 366,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "VER",
+      "lap": 55,
+      "id": "11731:3:55",
+      "companion": "11731:12:55",
+      "samples": 361,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11731,
+      "driver": "ANT",
+      "lap": 55,
+      "id": "11731:12:55",
+      "companion": "11731:3:55",
+      "samples": 365,
+      "variants": {
+        "baseline": [
+          {
+            "from": 2068.844162,
+            "to": 2143.806972,
+            "duration": 1.12,
+            "speed": [
+              242,
+              231
+            ],
+            "gear": 6,
+            "throttle": {
+              "min": 47,
+              "mean": 56,
+              "max": 69
+            },
+            "lead": 4.039,
+            "maxHeadingChangeDegrees50m": 28.612029,
+            "nearestCorners": [
+              {
+                "corner": 6,
+                "apexDistance": 2210.315594,
+                "gap": 103.9900272199443
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1981.999424,
+                "gap": 124.32614278005576
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "monza",
+      "session": 11357,
+      "driver": "GAS",
+      "lap": 17,
+      "id": "11357:10:17",
+      "companion": "11357:63:16",
+      "samples": 308,
+      "variants": {
+        "baseline": [
+          {
+            "from": 434.76739,
+            "to": 722.624486,
+            "duration": 3.12,
+            "speed": [
+              342,
+              333
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.827,
+            "maxHeadingChangeDegrees50m": 1.906917,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 354.8807697442883
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 389.8646967442884
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 434.76739,
+            "to": 722.624486,
+            "duration": 3.12,
+            "speed": [
+              342,
+              333
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.827,
+            "maxHeadingChangeDegrees50m": 1.906917,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 354.8807697442883
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 389.8646967442884
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 434.76739,
+            "to": 722.624486,
+            "duration": 3.12,
+            "speed": [
+              342,
+              333
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.827,
+            "maxHeadingChangeDegrees50m": 1.906917,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 354.8807697442883
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 389.8646967442884
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 434.76739,
+            "to": 722.624486,
+            "duration": 3.12,
+            "speed": [
+              342,
+              333
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.827,
+            "maxHeadingChangeDegrees50m": 1.906917,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 354.8807697442883
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 389.8646967442884
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 434.76739,
+            "to": 722.624486,
+            "duration": 3.12,
+            "speed": [
+              342,
+              333
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.827,
+            "maxHeadingChangeDegrees50m": 1.906917,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 354.8807697442883
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 389.8646967442884
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "monza",
+      "session": 11357,
+      "driver": "RUS",
+      "lap": 16,
+      "id": "11357:63:16",
+      "companion": "11357:10:17",
+      "samples": 306,
+      "variants": {
+        "baseline": [
+          {
+            "from": 3545.348985,
+            "to": 3823.466113,
+            "duration": 3.04,
+            "speed": [
+              330,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.68,
+            "maxHeadingChangeDegrees50m": 0.00343,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 273.7929399208815
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 399.7385529208814
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 3545.348985,
+            "to": 3823.466113,
+            "duration": 3.04,
+            "speed": [
+              330,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.08,
+            "maxHeadingChangeDegrees50m": 0.00343,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 273.7929399208815
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 399.7385529208814
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 3545.348985,
+            "to": 3823.466113,
+            "duration": 3.04,
+            "speed": [
+              330,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.08,
+            "maxHeadingChangeDegrees50m": 0.00343,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 273.7929399208815
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 399.7385529208814
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 3545.348985,
+            "to": 3823.466113,
+            "duration": 3.04,
+            "speed": [
+              330,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.08,
+            "maxHeadingChangeDegrees50m": 0.00343,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 273.7929399208815
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 399.7385529208814
+              }
+            ]
+          }
+        ],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "monza",
+      "session": 11361,
+      "driver": "ANT",
+      "lap": 53,
+      "id": "11361:12:53",
+      "companion": "11361:63:51",
+      "samples": 306,
+      "variants": {
+        "baseline": [
+          {
+            "from": 333.464807,
+            "to": 735.386841,
+            "duration": 4.44,
+            "speed": [
+              330,
+              307
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.677,
+            "maxHeadingChangeDegrees50m": 1.907392,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 399.15088378831035
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 434.13481078831046
+              }
+            ]
+          },
+          {
+            "from": 1552.080496,
+            "to": 1976.411268,
+            "duration": 5.12,
+            "speed": [
+              301,
+              283
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 55,
+              "mean": 97.75,
+              "max": 100
+            },
+            "lead": 0.64,
+            "maxHeadingChangeDegrees50m": 9.845583,
+            "nearestCorners": [
+              {
+                "corner": 3,
+                "apexDistance": 1419.354516,
+                "gap": 344.89136594287993
+              },
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 386.77612005711967
+              }
+            ]
+          },
+          {
+            "from": 4847.846682,
+            "to": 4970.947959,
+            "duration": 1.4,
+            "speed": [
+              318,
+              304
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 86,
+              "mean": 97.2,
+              "max": 100
+            },
+            "lead": 12.16,
+            "maxHeadingChangeDegrees50m": 0.013575,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 5237.619297,
+                "gap": 328.22197654691354
+              },
+              {
+                "corner": 10,
+                "apexDistance": 4148.118201,
+                "gap": 761.2791194530864
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 333.464807,
+            "to": 735.386841,
+            "duration": 4.44,
+            "speed": [
+              330,
+              307
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.677,
+            "maxHeadingChangeDegrees50m": 1.907392,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 399.15088378831035
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 434.13481078831046
+              }
+            ]
+          },
+          {
+            "from": 1552.080496,
+            "to": 1957.254104,
+            "duration": 4.88,
+            "speed": [
+              301,
+              288
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.64,
+            "maxHeadingChangeDegrees50m": 9.845583,
+            "nearestCorners": [
+              {
+                "corner": 3,
+                "apexDistance": 1419.354516,
+                "gap": 335.31278374675935
+              },
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 396.35470225324025
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 333.464807,
+            "to": 735.386841,
+            "duration": 4.44,
+            "speed": [
+              330,
+              307
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.677,
+            "maxHeadingChangeDegrees50m": 1.907392,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 399.15088378831035
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 434.13481078831046
+              }
+            ]
+          },
+          {
+            "from": 1552.080496,
+            "to": 1957.254104,
+            "duration": 4.88,
+            "speed": [
+              301,
+              288
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.64,
+            "maxHeadingChangeDegrees50m": 9.845583,
+            "nearestCorners": [
+              {
+                "corner": 3,
+                "apexDistance": 1419.354516,
+                "gap": 335.31278374675935
+              },
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 396.35470225324025
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 333.464807,
+            "to": 735.386841,
+            "duration": 4.44,
+            "speed": [
+              330,
+              307
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.677,
+            "maxHeadingChangeDegrees50m": 1.907392,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 399.15088378831035
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 434.13481078831046
+              }
+            ]
+          },
+          {
+            "from": 1552.080496,
+            "to": 1957.254104,
+            "duration": 4.88,
+            "speed": [
+              301,
+              288
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.64,
+            "maxHeadingChangeDegrees50m": 9.845583,
+            "nearestCorners": [
+              {
+                "corner": 3,
+                "apexDistance": 1419.354516,
+                "gap": 335.31278374675935
+              },
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 396.35470225324025
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 333.464807,
+            "to": 735.386841,
+            "duration": 4.44,
+            "speed": [
+              330,
+              307
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.677,
+            "maxHeadingChangeDegrees50m": 1.907392,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 399.15088378831035
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 434.13481078831046
+              }
+            ]
+          },
+          {
+            "from": 1552.080496,
+            "to": 1957.254104,
+            "duration": 4.88,
+            "speed": [
+              301,
+              288
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.64,
+            "maxHeadingChangeDegrees50m": 9.845583,
+            "nearestCorners": [
+              {
+                "corner": 3,
+                "apexDistance": 1419.354516,
+                "gap": 335.31278374675935
+              },
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 396.35470225324025
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "monza",
+      "session": 11361,
+      "driver": "RUS",
+      "lap": 51,
+      "id": "11361:63:51",
+      "companion": "11361:12:53",
+      "samples": 314,
+      "variants": {
+        "baseline": [
+          {
+            "from": 594.894376,
+            "to": 710.11341,
+            "duration": 1.28,
+            "speed": [
+              327,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 6.591,
+            "maxHeadingChangeDegrees50m": 0.009956,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 281.07281481855773
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 316.05674181855784
+              }
+            ]
+          },
+          {
+            "from": 1842.877231,
+            "to": 1936.662375,
+            "duration": 1.08,
+            "speed": [
+              313,
+              305
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.28,
+            "maxHeadingChangeDegrees50m": 2.444859,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 261.2521991025683
+              },
+              {
+                "corner": 5,
+                "apexDistance": 2195.002458,
+                "gap": 305.2326551025685
+              }
+            ]
+          },
+          {
+            "from": 3678.660945,
+            "to": 3781.755894,
+            "duration": 1.161,
+            "speed": [
+              324,
+              308
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 10.559,
+            "maxHeadingChangeDegrees50m": 0.003686,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 227.9920697673997
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 353.93768276739956
+              }
+            ]
+          },
+          {
+            "from": 4892.577627,
+            "to": 5010.293651,
+            "duration": 1.36,
+            "speed": [
+              320,
+              297
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.641,
+            "maxHeadingChangeDegrees50m": 0.001451,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 5237.619297,
+                "gap": 286.18365762715894
+              },
+              {
+                "corner": 10,
+                "apexDistance": 4148.118201,
+                "gap": 803.317438372841
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 594.894376,
+            "to": 710.11341,
+            "duration": 1.28,
+            "speed": [
+              327,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 6.591,
+            "maxHeadingChangeDegrees50m": 0.009956,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 281.07281481855773
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 316.05674181855784
+              }
+            ]
+          },
+          {
+            "from": 1842.877231,
+            "to": 1936.662375,
+            "duration": 1.08,
+            "speed": [
+              313,
+              305
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 10.04,
+            "maxHeadingChangeDegrees50m": 2.444859,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 261.2521991025683
+              },
+              {
+                "corner": 5,
+                "apexDistance": 2195.002458,
+                "gap": 305.2326551025685
+              }
+            ]
+          },
+          {
+            "from": 3678.660945,
+            "to": 3781.755894,
+            "duration": 1.161,
+            "speed": [
+              324,
+              308
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 9.519,
+            "maxHeadingChangeDegrees50m": 0.003686,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 227.9920697673997
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 353.93768276739956
+              }
+            ]
+          },
+          {
+            "from": 4892.577627,
+            "to": 5010.293651,
+            "duration": 1.36,
+            "speed": [
+              320,
+              297
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.641,
+            "maxHeadingChangeDegrees50m": 0.001451,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 5237.619297,
+                "gap": 286.18365762715894
+              },
+              {
+                "corner": 10,
+                "apexDistance": 4148.118201,
+                "gap": 803.317438372841
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [
+          {
+            "from": 594.894376,
+            "to": 710.11341,
+            "duration": 1.28,
+            "speed": [
+              327,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 6.591,
+            "maxHeadingChangeDegrees50m": 0.009956,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 281.07281481855773
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 316.05674181855784
+              }
+            ]
+          },
+          {
+            "from": 1842.877231,
+            "to": 1936.662375,
+            "duration": 1.08,
+            "speed": [
+              313,
+              305
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 10.04,
+            "maxHeadingChangeDegrees50m": 2.444859,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 2151.0220019999997,
+                "gap": 261.2521991025683
+              },
+              {
+                "corner": 5,
+                "apexDistance": 2195.002458,
+                "gap": 305.2326551025685
+              }
+            ]
+          },
+          {
+            "from": 3678.660945,
+            "to": 3781.755894,
+            "duration": 1.161,
+            "speed": [
+              324,
+              308
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 9.519,
+            "maxHeadingChangeDegrees50m": 0.003686,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 227.9920697673997
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 353.93768276739956
+              }
+            ]
+          },
+          {
+            "from": 4892.577627,
+            "to": 5010.293651,
+            "duration": 1.36,
+            "speed": [
+              320,
+              297
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.641,
+            "maxHeadingChangeDegrees50m": 0.001451,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 5237.619297,
+                "gap": 286.18365762715894
+              },
+              {
+                "corner": 10,
+                "apexDistance": 4148.118201,
+                "gap": 803.317438372841
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 594.894376,
+            "to": 710.11341,
+            "duration": 1.28,
+            "speed": [
+              327,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 6.591,
+            "maxHeadingChangeDegrees50m": 0.009956,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 933.5767079999999,
+                "gap": 281.07281481855773
+              },
+              {
+                "corner": 2,
+                "apexDistance": 968.560635,
+                "gap": 316.05674181855784
+              }
+            ]
+          },
+          {
+            "from": 3678.660945,
+            "to": 3781.755894,
+            "duration": 1.161,
+            "speed": [
+              324,
+              308
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 9.519,
+            "maxHeadingChangeDegrees50m": 0.003686,
+            "nearestCorners": [
+              {
+                "corner": 8,
+                "apexDistance": 3958.2004890000003,
+                "gap": 227.9920697673997
+              },
+              {
+                "corner": 9,
+                "apexDistance": 4084.146102,
+                "gap": 353.93768276739956
+              }
+            ]
+          },
+          {
+            "from": 4892.577627,
+            "to": 5010.293651,
+            "duration": 1.36,
+            "speed": [
+              320,
+              297
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 3.641,
+            "maxHeadingChangeDegrees50m": 0.001451,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 5237.619297,
+                "gap": 286.18365762715894
+              },
+              {
+                "corner": 10,
+                "apexDistance": 4148.118201,
+                "gap": 803.317438372841
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11362,
+      "driver": "NOR",
+      "lap": 17,
+      "id": "11362:1:17",
+      "companion": "11362:1:17",
+      "samples": 357,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1193.311357,
+            "to": 1285.963373,
+            "duration": 1.04,
+            "speed": [
+              324,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.48,
+            "maxHeadingChangeDegrees50m": 12.906209,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 113.26860309418134
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 117.71296490581858
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1193.311357,
+            "to": 1285.963373,
+            "duration": 1.04,
+            "speed": [
+              324,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.48,
+            "maxHeadingChangeDegrees50m": 12.906209,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 113.26860309418134
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 117.71296490581858
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1193.311357,
+            "to": 1285.963373,
+            "duration": 1.04,
+            "speed": [
+              324,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.48,
+            "maxHeadingChangeDegrees50m": 12.906209,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 113.26860309418134
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 117.71296490581858
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11364,
+      "driver": "NOR",
+      "lap": 9,
+      "id": "11364:1:9",
+      "companion": "11364:16:8",
+      "samples": 345,
+      "variants": {
+        "baseline": [
+          {
+            "from": 4343.134394,
+            "to": 4449.06294,
+            "duration": 1.68,
+            "speed": [
+              232,
+              223
+            ],
+            "gear": 6,
+            "throttle": {
+              "min": 16,
+              "mean": 40,
+              "max": 85
+            },
+            "lead": 2.279,
+            "maxHeadingChangeDegrees50m": 0.448224,
+            "nearestCorners": [
+              {
+                "corner": 19,
+                "apexDistance": 4271.70752,
+                "gap": 124.39114732722192
+              },
+              {
+                "corner": 20,
+                "apexDistance": 4610.684128,
+                "gap": 214.58546067277803
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11364,
+      "driver": "ANT",
+      "lap": 10,
+      "id": "11364:12:10",
+      "companion": "11364:1:9",
+      "samples": 352,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1183.06294,
+            "to": 1288.888566,
+            "duration": 1.16,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 9.84,
+            "maxHeadingChangeDegrees50m": 12.262622,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 114.05135281382968
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 116.93021518617024
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1183.06294,
+            "to": 1288.888566,
+            "duration": 1.16,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.281,
+            "maxHeadingChangeDegrees50m": 12.262622,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 114.05135281382968
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 116.93021518617024
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1183.06294,
+            "to": 1288.888566,
+            "duration": 1.16,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.281,
+            "maxHeadingChangeDegrees50m": 12.262622,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 114.05135281382968
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 116.93021518617024
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11364,
+      "driver": "LEC",
+      "lap": 8,
+      "id": "11364:16:8",
+      "companion": "11364:1:9",
+      "samples": 350,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1192.649631,
+            "to": 1292.10236,
+            "duration": 1.081,
+            "speed": [
+              333,
+              321
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.36,
+            "maxHeadingChangeDegrees50m": 13.883035,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 110.52997246256291
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 120.45159553743702
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1192.649631,
+            "to": 1292.10236,
+            "duration": 1.081,
+            "speed": [
+              333,
+              321
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.36,
+            "maxHeadingChangeDegrees50m": 13.883035,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 110.52997246256291
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 120.45159553743702
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1192.649631,
+            "to": 1292.10236,
+            "duration": 1.081,
+            "speed": [
+              333,
+              321
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.36,
+            "maxHeadingChangeDegrees50m": 13.883035,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 110.52997246256291
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 120.45159553743702
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11365,
+      "driver": "NOR",
+      "lap": 18,
+      "id": "11365:1:18",
+      "companion": "11365:81:21",
+      "samples": 336,
+      "variants": {
+        "baseline": [
+          {
+            "from": 2295.05783,
+            "to": 2408.35037,
+            "duration": 1.84,
+            "speed": [
+              229,
+              221
+            ],
+            "gear": 6,
+            "throttle": {
+              "min": 9,
+              "mean": 39.5,
+              "max": 82
+            },
+            "lead": 7.2,
+            "maxHeadingChangeDegrees50m": 35.508444,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 2207.848648,
+                "gap": 143.85545215885577
+              },
+              {
+                "corner": 12,
+                "apexDistance": 2499.8306239999997,
+                "gap": 148.1265238411438
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11365,
+      "driver": "ANT",
+      "lap": 19,
+      "id": "11365:12:19",
+      "companion": "11365:1:18",
+      "samples": 340,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1185.075019,
+            "to": 1285.270194,
+            "duration": 1.12,
+            "speed": [
+              324,
+              311
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 9.92,
+            "maxHeadingChangeDegrees50m": 13.058685,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 113.2482065372194
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 117.73336146278052
+              }
+            ]
+          },
+          {
+            "from": 2289.688522,
+            "to": 2407.13969,
+            "duration": 1.92,
+            "speed": [
+              230,
+              220
+            ],
+            "gear": 5,
+            "throttle": {
+              "min": 20,
+              "mean": 52.555556,
+              "max": 87
+            },
+            "lead": 4.161,
+            "maxHeadingChangeDegrees50m": 33.425435,
+            "nearestCorners": [
+              {
+                "corner": 11,
+                "apexDistance": 2207.848648,
+                "gap": 140.5654577656669
+              },
+              {
+                "corner": 12,
+                "apexDistance": 2499.8306239999997,
+                "gap": 151.41651823433267
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1185.075019,
+            "to": 1285.270194,
+            "duration": 1.12,
+            "speed": [
+              324,
+              311
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.24,
+            "maxHeadingChangeDegrees50m": 13.058685,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 113.2482065372194
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 117.73336146278052
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1185.075019,
+            "to": 1285.270194,
+            "duration": 1.12,
+            "speed": [
+              324,
+              311
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.24,
+            "maxHeadingChangeDegrees50m": 13.058685,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 113.2482065372194
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 117.73336146278052
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11365,
+      "driver": "VER",
+      "lap": 17,
+      "id": "11365:3:17",
+      "companion": "11365:81:21",
+      "samples": 343,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1180.949494,
+            "to": 1288.813387,
+            "duration": 1.2,
+            "speed": [
+              326,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.561,
+            "maxHeadingChangeDegrees50m": 12.279164,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 112.95704036139546
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 118.02452763860447
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1180.949494,
+            "to": 1288.813387,
+            "duration": 1.2,
+            "speed": [
+              326,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.561,
+            "maxHeadingChangeDegrees50m": 12.279164,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 112.95704036139546
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 118.02452763860447
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1180.949494,
+            "to": 1288.813387,
+            "duration": 1.2,
+            "speed": [
+              326,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.561,
+            "maxHeadingChangeDegrees50m": 12.279164,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 112.95704036139546
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 118.02452763860447
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11365,
+      "driver": "PIA",
+      "lap": 21,
+      "id": "11365:81:21",
+      "companion": "11365:3:17",
+      "samples": 341,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1192.812339,
+            "to": 1289.451005,
+            "duration": 1.04,
+            "speed": [
+              335,
+              324
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98,
+              "mean": 98,
+              "max": 98
+            },
+            "lead": 9.88,
+            "maxHeadingChangeDegrees50m": 12.019006,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 111.77429586602148
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 119.20727213397845
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1192.812339,
+            "to": 1289.451005,
+            "duration": 1.04,
+            "speed": [
+              335,
+              324
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98,
+              "mean": 98,
+              "max": 98
+            },
+            "lead": 7.959,
+            "maxHeadingChangeDegrees50m": 12.019006,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 111.77429586602148
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 119.20727213397845
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11369,
+      "driver": "ANT",
+      "lap": 57,
+      "id": "11369:12:57",
+      "companion": "11369:3:52",
+      "samples": 353,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1160.852788,
+            "to": 1292.707083,
+            "duration": 1.441,
+            "speed": [
+              329,
+              317
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.679,
+            "maxHeadingChangeDegrees50m": 10.613145,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 104.85553540282581
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 126.12603259717412
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1160.852788,
+            "to": 1292.707083,
+            "duration": 1.441,
+            "speed": [
+              329,
+              317
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.679,
+            "maxHeadingChangeDegrees50m": 10.613145,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 104.85553540282581
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 126.12603259717412
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1160.852788,
+            "to": 1292.707083,
+            "duration": 1.441,
+            "speed": [
+              329,
+              317
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.679,
+            "maxHeadingChangeDegrees50m": 10.613145,
+            "nearestCorners": [
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 104.85553540282581
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 126.12603259717412
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "madring",
+      "session": 11369,
+      "driver": "VER",
+      "lap": 52,
+      "id": "11369:3:52",
+      "companion": "11369:12:57",
+      "samples": 371,
+      "variants": {
+        "baseline": [
+          {
+            "from": 1187.522962,
+            "to": 1292.444664,
+            "duration": 1.16,
+            "speed": [
+              327,
+              315
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 10.119,
+            "maxHeadingChangeDegrees50m": 10.692011,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 112.9221548058033
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 118.05941319419662
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 1187.522962,
+            "to": 1292.444664,
+            "duration": 1.16,
+            "speed": [
+              327,
+              315
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 7.4,
+            "maxHeadingChangeDegrees50m": 10.692011,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 112.9221548058033
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 118.05941319419662
+              }
+            ]
+          }
+        ],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": [
+          {
+            "from": 1187.522962,
+            "to": 1292.444664,
+            "duration": 1.16,
+            "speed": [
+              327,
+              315
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 7.4,
+            "maxHeadingChangeDegrees50m": 10.692011,
+            "nearestCorners": [
+              {
+                "corner": 5,
+                "apexDistance": 1352.905968,
+                "gap": 112.9221548058033
+              },
+              {
+                "corner": 4,
+                "apexDistance": 1121.9244,
+                "gap": 118.05941319419662
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11370,
+      "driver": "VER",
+      "lap": 6,
+      "id": "11370:3:6",
+      "companion": "11370:63:14",
+      "samples": 391,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5229.53659,
+            "to": 6003,
+            "duration": 8.829,
+            "speed": [
+              319,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 99.275,
+              "mean": 99.980921,
+              "max": 100
+            },
+            "lead": 13.92,
+            "maxHeadingChangeDegrees50m": 0.770538,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 534.7227920224832
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 883.4310590224823
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5229.53659,
+            "to": 6003,
+            "duration": 8.829,
+            "speed": [
+              319,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 99.275,
+              "mean": 99.980921,
+              "max": 100
+            },
+            "lead": 13.92,
+            "maxHeadingChangeDegrees50m": 0.770538,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 534.7227920224832
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 883.4310590224823
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5229.53659,
+            "to": 6003,
+            "duration": 8.829,
+            "speed": [
+              319,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 99.275,
+              "mean": 99.980921,
+              "max": 100
+            },
+            "lead": 13.92,
+            "maxHeadingChangeDegrees50m": 0.770538,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 534.7227920224832
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 883.4310590224823
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5229.53659,
+            "to": 6003,
+            "duration": 8.829,
+            "speed": [
+              319,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 99.275,
+              "mean": 99.980921,
+              "max": 100
+            },
+            "lead": 13.92,
+            "maxHeadingChangeDegrees50m": 0.770538,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 534.7227920224832
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 883.4310590224823
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5229.53659,
+            "to": 6003,
+            "duration": 8.829,
+            "speed": [
+              319,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 99.275,
+              "mean": 99.980921,
+              "max": 100
+            },
+            "lead": 13.92,
+            "maxHeadingChangeDegrees50m": 0.770538,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 534.7227920224832
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 883.4310590224823
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11370,
+      "driver": "RUS",
+      "lap": 14,
+      "id": "11370:63:14",
+      "companion": "11370:3:6",
+      "samples": 396,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11371,
+      "driver": "ANT",
+      "lap": 7,
+      "id": "11371:12:7",
+      "companion": "11371:3:11",
+      "samples": 399,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5132.719392,
+            "to": 6003,
+            "duration": 9.606,
+            "speed": [
+              334,
+              315.109375
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.919,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 486.31419314689356
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 835.0224601468926
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5132.719392,
+            "to": 6003,
+            "duration": 9.606,
+            "speed": [
+              334,
+              315.109375
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.4,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 486.31419314689356
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 835.0224601468926
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5132.719392,
+            "to": 6003,
+            "duration": 9.606,
+            "speed": [
+              334,
+              315.109375
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.4,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 486.31419314689356
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 835.0224601468926
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5132.719392,
+            "to": 6003,
+            "duration": 9.606,
+            "speed": [
+              334,
+              315.109375
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.4,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 486.31419314689356
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 835.0224601468926
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5132.719392,
+            "to": 6003,
+            "duration": 9.606,
+            "speed": [
+              334,
+              315.109375
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.4,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 486.31419314689356
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 835.0224601468926
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11371,
+      "driver": "VER",
+      "lap": 11,
+      "id": "11371:3:11",
+      "companion": "11371:63:11",
+      "samples": 385,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5365.237814,
+            "to": 6003,
+            "duration": 7.088,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.32,
+            "maxHeadingChangeDegrees50m": 0.723057,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 602.5734038823539
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 951.281670882353
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5365.237814,
+            "to": 6003,
+            "duration": 7.088,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.32,
+            "maxHeadingChangeDegrees50m": 0.723057,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 602.5734038823539
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 951.281670882353
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5365.237814,
+            "to": 6003,
+            "duration": 7.088,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.32,
+            "maxHeadingChangeDegrees50m": 0.723057,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 602.5734038823539
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 951.281670882353
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5365.237814,
+            "to": 6003,
+            "duration": 7.088,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.32,
+            "maxHeadingChangeDegrees50m": 0.723057,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 602.5734038823539
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 951.281670882353
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5365.237814,
+            "to": 6003,
+            "duration": 7.088,
+            "speed": [
+              330,
+              316
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.32,
+            "maxHeadingChangeDegrees50m": 0.723057,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 602.5734038823539
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 951.281670882353
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11371,
+      "driver": "RUS",
+      "lap": 11,
+      "id": "11371:63:11",
+      "companion": "11371:3:11",
+      "samples": 400,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5195.404684,
+            "to": 6003,
+            "duration": 8.816,
+            "speed": [
+              336,
+              321.7964285714286
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 79.64285714285714,
+              "mean": 99.449807,
+              "max": 100
+            },
+            "lead": 4.921,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.6568390465382
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 866.3651060465372
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5195.404684,
+            "to": 5997.860351,
+            "duration": 8.759,
+            "speed": [
+              336,
+              322
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.921,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 515.0870147375372
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 863.7952817375362
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5195.404684,
+            "to": 5997.860351,
+            "duration": 8.759,
+            "speed": [
+              336,
+              322
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.921,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 515.0870147375372
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 863.7952817375362
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5195.404684,
+            "to": 5997.860351,
+            "duration": 8.759,
+            "speed": [
+              336,
+              322
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.921,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 515.0870147375372
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 863.7952817375362
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5195.404684,
+            "to": 5997.860351,
+            "duration": 8.759,
+            "speed": [
+              336,
+              322
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 4.921,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 515.0870147375372
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 863.7952817375362
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "LEC",
+      "lap": 12,
+      "id": "11373:16:12",
+      "companion": "11373:3:7",
+      "samples": 392,
+      "variants": {
+        "baseline": [
+          {
+            "from": 3560.768899,
+            "to": 3631.911793,
+            "duration": 1,
+            "speed": [
+              263,
+              245
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.4,
+            "maxHeadingChangeDegrees50m": 14.822695,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 3548.049138,
+                "gap": 48.29120759476791
+              },
+              {
+                "corner": 15,
+                "apexDistance": 3782.988549,
+                "gap": 186.64820340523238
+              }
+            ]
+          },
+          {
+            "from": 5207.583978,
+            "to": 6003,
+            "duration": 8.969,
+            "speed": [
+              326,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 15.04,
+            "maxHeadingChangeDegrees50m": 1.376916,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 523.7464859936399
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 872.454752993639
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 3560.768899,
+            "to": 3631.911793,
+            "duration": 1,
+            "speed": [
+              263,
+              245
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.961,
+            "maxHeadingChangeDegrees50m": 14.822695,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 3548.049138,
+                "gap": 48.29120759476791
+              },
+              {
+                "corner": 15,
+                "apexDistance": 3782.988549,
+                "gap": 186.64820340523238
+              }
+            ]
+          },
+          {
+            "from": 5207.583978,
+            "to": 6003,
+            "duration": 8.969,
+            "speed": [
+              326,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.679,
+            "maxHeadingChangeDegrees50m": 1.376916,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 523.7464859936399
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 872.454752993639
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5207.583978,
+            "to": 6003,
+            "duration": 8.969,
+            "speed": [
+              326,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.679,
+            "maxHeadingChangeDegrees50m": 1.376916,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 523.7464859936399
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 872.454752993639
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5207.583978,
+            "to": 6003,
+            "duration": 8.969,
+            "speed": [
+              326,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.679,
+            "maxHeadingChangeDegrees50m": 1.376916,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 523.7464859936399
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 872.454752993639
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 3560.768899,
+            "to": 3631.911793,
+            "duration": 1,
+            "speed": [
+              263,
+              245
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 8.961,
+            "maxHeadingChangeDegrees50m": 14.822695,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 3548.049138,
+                "gap": 48.29120759476791
+              },
+              {
+                "corner": 15,
+                "apexDistance": 3782.988549,
+                "gap": 186.64820340523238
+              }
+            ]
+          },
+          {
+            "from": 5207.583978,
+            "to": 6003,
+            "duration": 8.969,
+            "speed": [
+              326,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.679,
+            "maxHeadingChangeDegrees50m": 1.376916,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 523.7464859936399
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 872.454752993639
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 23,
+      "id": "11373:3:23",
+      "companion": "11373:63:25",
+      "samples": 397,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5103.883263,
+            "to": 6003,
+            "duration": 10.46,
+            "speed": [
+              317,
+              299
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.8,
+            "maxHeadingChangeDegrees50m": 6.00219,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 471.8961285340474
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 820.6043955340465
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5103.883263,
+            "to": 6003,
+            "duration": 10.46,
+            "speed": [
+              317,
+              299
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.361,
+            "maxHeadingChangeDegrees50m": 6.00219,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 471.8961285340474
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 820.6043955340465
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5103.883263,
+            "to": 6003,
+            "duration": 10.46,
+            "speed": [
+              317,
+              299
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.361,
+            "maxHeadingChangeDegrees50m": 6.00219,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 471.8961285340474
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 820.6043955340465
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5103.883263,
+            "to": 6003,
+            "duration": 10.46,
+            "speed": [
+              317,
+              299
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.361,
+            "maxHeadingChangeDegrees50m": 6.00219,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 471.8961285340474
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 820.6043955340465
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5103.883263,
+            "to": 6003,
+            "duration": 10.46,
+            "speed": [
+              317,
+              299
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12.361,
+            "maxHeadingChangeDegrees50m": 6.00219,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 471.8961285340474
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 820.6043955340465
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "VER",
+      "lap": 7,
+      "id": "11373:3:7",
+      "companion": "11373:16:12",
+      "samples": 401,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5151.969182,
+            "to": 5494.242499,
+            "duration": 3.84,
+            "speed": [
+              322,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 14.001,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 241.56033757944442
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 590.2686045794435
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5151.969182,
+            "to": 5494.242499,
+            "duration": 3.84,
+            "speed": [
+              322,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.04,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 241.56033757944442
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 590.2686045794435
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5151.969182,
+            "to": 5494.242499,
+            "duration": 3.84,
+            "speed": [
+              322,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.04,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 241.56033757944442
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 590.2686045794435
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5151.969182,
+            "to": 5494.242499,
+            "duration": 3.84,
+            "speed": [
+              322,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.04,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 241.56033757944442
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 590.2686045794435
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5151.969182,
+            "to": 5494.242499,
+            "duration": 3.84,
+            "speed": [
+              322,
+              313
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 13.04,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 241.56033757944442
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 590.2686045794435
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "RUS",
+      "lap": 23,
+      "id": "11373:63:23",
+      "companion": "11373:3:21",
+      "samples": 380,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5194.644521,
+            "to": 6003,
+            "duration": 9.102,
+            "speed": [
+              328,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.081,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.2767576027891
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 865.9850246027881
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5194.644521,
+            "to": 6003,
+            "duration": 9.102,
+            "speed": [
+              328,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.081,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.2767576027891
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 865.9850246027881
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5194.644521,
+            "to": 6003,
+            "duration": 9.102,
+            "speed": [
+              328,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.081,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.2767576027891
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 865.9850246027881
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5194.644521,
+            "to": 6003,
+            "duration": 9.102,
+            "speed": [
+              328,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.081,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.2767576027891
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 865.9850246027881
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5194.644521,
+            "to": 6003,
+            "duration": 9.102,
+            "speed": [
+              328,
+              310
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 1.081,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 517.2767576027891
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 865.9850246027881
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11373,
+      "driver": "RUS",
+      "lap": 25,
+      "id": "11373:63:25",
+      "companion": "11373:3:23",
+      "samples": 390,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5437.473432,
+            "to": 6003,
+            "duration": 6.338,
+            "speed": [
+              324,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98.875,
+              "mean": 99.958333,
+              "max": 100
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.724484,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 638.6912131774989
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 987.3994801774979
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5437.473432,
+            "to": 6003,
+            "duration": 6.338,
+            "speed": [
+              324,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98.875,
+              "mean": 99.958333,
+              "max": 100
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.724484,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 638.6912131774989
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 987.3994801774979
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5437.473432,
+            "to": 6003,
+            "duration": 6.338,
+            "speed": [
+              324,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98.875,
+              "mean": 99.958333,
+              "max": 100
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.724484,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 638.6912131774989
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 987.3994801774979
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5437.473432,
+            "to": 6003,
+            "duration": 6.338,
+            "speed": [
+              324,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98.875,
+              "mean": 99.958333,
+              "max": 100
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.724484,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 638.6912131774989
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 987.3994801774979
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5437.473432,
+            "to": 6003,
+            "duration": 6.338,
+            "speed": [
+              324,
+              314
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 98.875,
+              "mean": 99.958333,
+              "max": 100
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.724484,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 638.6912131774989
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 987.3994801774979
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11377,
+      "driver": "VER",
+      "lap": 48,
+      "id": "11377:3:48",
+      "companion": "11377:63:49",
+      "samples": 384,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5252.683803,
+            "to": 6003,
+            "duration": 8.25,
+            "speed": [
+              332,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12,
+            "maxHeadingChangeDegrees50m": 0.806498,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 546.2963985925089
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 895.004665592508
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5252.683803,
+            "to": 6003,
+            "duration": 8.25,
+            "speed": [
+              332,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12,
+            "maxHeadingChangeDegrees50m": 0.806498,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 546.2963985925089
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 895.004665592508
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5252.683803,
+            "to": 6003,
+            "duration": 8.25,
+            "speed": [
+              332,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12,
+            "maxHeadingChangeDegrees50m": 0.806498,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 546.2963985925089
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 895.004665592508
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5252.683803,
+            "to": 6003,
+            "duration": 8.25,
+            "speed": [
+              332,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12,
+            "maxHeadingChangeDegrees50m": 0.806498,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 546.2963985925089
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 895.004665592508
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5252.683803,
+            "to": 6003,
+            "duration": 8.25,
+            "speed": [
+              332,
+              320
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 12,
+            "maxHeadingChangeDegrees50m": 0.806498,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 546.2963985925089
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 895.004665592508
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "baku",
+      "session": 11377,
+      "driver": "RUS",
+      "lap": 49,
+      "id": "11377:63:49",
+      "companion": "11377:3:48",
+      "samples": 395,
+      "variants": {
+        "baseline": [
+          {
+            "from": 5158.522826,
+            "to": 6003,
+            "duration": 9.555,
+            "speed": [
+              326,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.64,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 499.21591009533313
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 847.9241770953322
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 5158.522826,
+            "to": 6003,
+            "duration": 9.555,
+            "speed": [
+              326,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.64,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 499.21591009533313
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 847.9241770953322
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 5158.522826,
+            "to": 6003,
+            "duration": 9.555,
+            "speed": [
+              326,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.64,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 499.21591009533313
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 847.9241770953322
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 5158.522826,
+            "to": 6003,
+            "duration": 9.555,
+            "speed": [
+              326,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.64,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 499.21591009533313
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 847.9241770953322
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 5158.522826,
+            "to": 6003,
+            "duration": 9.555,
+            "speed": [
+              326,
+              309
+            ],
+            "gear": 8,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 5.64,
+            "maxHeadingChangeDegrees50m": 1.405242,
+            "nearestCorners": [
+              {
+                "corner": 20,
+                "apexDistance": 5081.545502999999,
+                "gap": 499.21591009533313
+              },
+              {
+                "corner": 19,
+                "apexDistance": 4732.837236,
+                "gap": 847.9241770953322
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11727,
+      "driver": "VER",
+      "lap": 9,
+      "id": "11727:3:9",
+      "companion": "11727:3:9",
+      "samples": 371,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11728,
+      "driver": "VER",
+      "lap": 2,
+      "id": "11728:3:2",
+      "companion": "11728:3:2",
+      "samples": 373,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11729,
+      "driver": "VER",
+      "lap": 8,
+      "id": "11729:3:8",
+      "companion": "11729:3:8",
+      "samples": 364,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "VER",
+      "lap": 10,
+      "id": "11730:3:10",
+      "companion": "11730:44:13",
+      "samples": 916,
+      "variants": {
+        "baseline": [
+          {
+            "from": 3383.808576,
+            "to": 3479.217655,
+            "duration": 2.799,
+            "speed": [
+              262,
+              254
+            ],
+            "gear": 6,
+            "throttle": {
+              "min": 43,
+              "mean": 67.272727,
+              "max": 100
+            },
+            "lead": 4.521,
+            "maxHeadingChangeDegrees50m": 16.614593,
+            "nearestCorners": [
+              {
+                "corner": 10,
+                "apexDistance": 3325.012894,
+                "gap": 106.50022157042213
+              },
+              {
+                "corner": 11,
+                "apexDistance": 3544.055625,
+                "gap": 112.54250942957788
+              }
+            ]
+          },
+          {
+            "from": 4301.647746,
+            "to": 4411.148401,
+            "duration": 3.119,
+            "speed": [
+              267,
+              259
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.36,
+            "maxHeadingChangeDegrees50m": 3.934149,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 118.40873521089452
+              },
+              {
+                "corner": 13,
+                "apexDistance": 4088.821665,
+                "gap": 267.576408210894
+              }
+            ]
+          }
+        ],
+        "gas98": [
+          {
+            "from": 4301.647746,
+            "to": 4411.148401,
+            "duration": 3.119,
+            "speed": [
+              267,
+              259
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.36,
+            "maxHeadingChangeDegrees50m": 3.934149,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 118.40873521089452
+              },
+              {
+                "corner": 13,
+                "apexDistance": 4088.821665,
+                "gap": 267.576408210894
+              }
+            ]
+          }
+        ],
+        "gas98long": [
+          {
+            "from": 4301.647746,
+            "to": 4411.148401,
+            "duration": 3.119,
+            "speed": [
+              267,
+              259
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.36,
+            "maxHeadingChangeDegrees50m": 3.934149,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 118.40873521089452
+              },
+              {
+                "corner": 13,
+                "apexDistance": 4088.821665,
+                "gap": 267.576408210894
+              }
+            ]
+          }
+        ],
+        "gas98straight10": [
+          {
+            "from": 4301.647746,
+            "to": 4411.148401,
+            "duration": 3.119,
+            "speed": [
+              267,
+              259
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.36,
+            "maxHeadingChangeDegrees50m": 3.934149,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 118.40873521089452
+              },
+              {
+                "corner": 13,
+                "apexDistance": 4088.821665,
+                "gap": 267.576408210894
+              }
+            ]
+          }
+        ],
+        "gas98stable": [
+          {
+            "from": 4301.647746,
+            "to": 4411.148401,
+            "duration": 3.119,
+            "speed": [
+              267,
+              259
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 100,
+              "mean": 100,
+              "max": 100
+            },
+            "lead": 0.36,
+            "maxHeadingChangeDegrees50m": 3.934149,
+            "nearestCorners": [
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 118.40873521089452
+              },
+              {
+                "corner": 13,
+                "apexDistance": 4088.821665,
+                "gap": 267.576408210894
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "VER",
+      "lap": 11,
+      "id": "11730:3:11",
+      "companion": "11730:44:14",
+      "samples": 354,
+      "variants": {
+        "baseline": [
+          {
+            "from": 2061.564201,
+            "to": 2143.619591,
+            "duration": 1.16,
+            "speed": [
+              256,
+              248
+            ],
+            "gear": 6,
+            "throttle": {
+              "min": 44,
+              "mean": 59.5,
+              "max": 100
+            },
+            "lead": 7.08,
+            "maxHeadingChangeDegrees50m": 28.749532,
+            "nearestCorners": [
+              {
+                "corner": 6,
+                "apexDistance": 2210.315594,
+                "gap": 107.72369829222635
+              },
+              {
+                "corner": 5,
+                "apexDistance": 1981.999424,
+                "gap": 120.59247170777371
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "VER",
+      "lap": 12,
+      "id": "11730:3:12",
+      "companion": "11730:44:15",
+      "samples": 512,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "VER",
+      "lap": 9,
+      "id": "11730:3:9",
+      "companion": "11730:44:12",
+      "samples": 428,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "HAM",
+      "lap": 12,
+      "id": "11730:44:12",
+      "companion": "11730:3:9",
+      "samples": 431,
+      "variants": {
+        "baseline": [
+          {
+            "from": 229.180741,
+            "to": 402.889828,
+            "duration": 2.68,
+            "speed": [
+              244,
+              226
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 6,
+              "mean": 31.181818,
+              "max": 45
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.165806,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 661.7621409999999,
+                "gap": 345.72685651858296
+              },
+              {
+                "corner": 2,
+                "apexDistance": 805.2149810000001,
+                "gap": 489.1796965185831
+              }
+            ]
+          },
+          {
+            "from": 4830.513483,
+            "to": 4939.91005,
+            "duration": 1.72,
+            "speed": [
+              237,
+              220
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 14,
+              "mean": 16.625,
+              "max": 17
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.843978,
+            "nearestCorners": [
+              {
+                "corner": 15,
+                "apexDistance": 5158.193854,
+                "gap": 272.982087052751
+              },
+              {
+                "corner": 14,
+                "apexDistance": 4237.989337999999,
+                "gap": 647.2224289472497
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "HAM",
+      "lap": 13,
+      "id": "11730:44:13",
+      "companion": "11730:3:10",
+      "samples": 1106,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "HAM",
+      "lap": 14,
+      "id": "11730:44:14",
+      "companion": "11730:3:11",
+      "samples": 360,
+      "variants": {
+        "baseline": [],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    },
+    {
+      "circuit": "sepang",
+      "session": 11730,
+      "driver": "HAM",
+      "lap": 15,
+      "id": "11730:44:15",
+      "companion": "11730:3:12",
+      "samples": 509,
+      "variants": {
+        "baseline": [
+          {
+            "from": 226.549609,
+            "to": 358.943053,
+            "duration": 2.081,
+            "speed": [
+              240,
+              217
+            ],
+            "gear": 7,
+            "throttle": {
+              "min": 13,
+              "mean": 16.8,
+              "max": 19
+            },
+            "lead": 0,
+            "maxHeadingChangeDegrees50m": 0.207118,
+            "nearestCorners": [
+              {
+                "corner": 1,
+                "apexDistance": 661.7621409999999,
+                "gap": 369.0158098317553
+              },
+              {
+                "corner": 2,
+                "apexDistance": 805.2149810000001,
+                "gap": 512.4686498317554
+              }
+            ]
+          }
+        ],
+        "gas98": [],
+        "gas98long": [],
+        "gas98straight10": [],
+        "gas98stable": []
+      }
+    }
+  ]
+}

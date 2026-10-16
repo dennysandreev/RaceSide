@@ -40,6 +40,15 @@ test("rejects unknown services and malformed release identifiers", () => {
     /Invalid heartbeat service name/,
   );
 });
+test("runner reports only the presence of legacy adapters and never their secrets", () => {
+  const row = buildServiceHeartbeat({
+    serviceName: "admin-job-runner",
+    env: { TRIBUTE_API_KEY: "private-tribute-value", YOOMONEY_RECONCILE_SECRET: " " },
+  });
+  assert.deepEqual(row.summary.legacy_adapters, { tribute: true, yoomoney: false });
+  assert.doesNotMatch(JSON.stringify(row), /private-tribute-value|TRIBUTE_API_KEY|YOOMONEY_RECONCILE_SECRET/);
+  assert.deepEqual(buildServiceHeartbeat({ serviceName: "worker", env: {} }).summary.legacy_adapters, { tribute: false, yoomoney: false });
+});
 
 test("upserts on the stable service and instance identity", async () => {
   let receivedRow;
@@ -48,10 +57,16 @@ test("upserts on the stable service and instance identity", async () => {
     from(table) {
       assert.equal(table, "ops_service_heartbeats");
       return {
-        async upsert(row, options) {
+        upsert(row, options) {
           receivedRow = row;
           receivedOptions = options;
-          return { error: null };
+          return {
+            async abortSignal(signal) {
+              assert.ok(signal instanceof AbortSignal);
+              assert.equal(signal.aborted, false);
+              return { error: null };
+            },
+          };
         },
       };
     },
@@ -66,4 +81,58 @@ test("upserts on the stable service and instance identity", async () => {
 
   assert.equal(receivedRow.instance_id, "worker-1:worker");
   assert.deepEqual(receivedOptions, { onConflict: "service_name,instance_id" });
+});
+
+test("coalesces overlapping heartbeats and retries after an unsuccessful write", async () => {
+  let writes = 0;
+  let finish;
+  const client = {
+    from() {
+      return {
+        upsert() {
+          writes += 1;
+          return {
+            abortSignal() {
+              return new Promise((resolve) => { finish = resolve; });
+            },
+          };
+        },
+      };
+    },
+  };
+  const input = { serviceName: "live", env: {}, host: "live-1" };
+  const first = upsertServiceHeartbeat(client, input);
+  const second = upsertServiceHeartbeat(client, input);
+  assert.equal(writes, 1);
+  finish({ error: new Error("database unavailable") });
+  const failed = await Promise.allSettled([first, second]);
+  assert.deepEqual(failed.map((result) => result.status), ["rejected", "rejected"]);
+
+  const next = upsertServiceHeartbeat(client, input);
+  assert.equal(writes, 2);
+  finish({ error: null });
+  assert.equal((await next).service_name, "live");
+});
+
+test("does not combine heartbeats from different services", async () => {
+  const resolvers = [];
+  const client = {
+    from() {
+      return {
+        upsert() {
+          return {
+            abortSignal() {
+              return new Promise((resolve) => { resolvers.push(resolve); });
+            },
+          };
+        },
+      };
+    },
+  };
+  const pending = ["live", "cron"].map((serviceName) =>
+    upsertServiceHeartbeat(client, { serviceName }),
+  );
+  assert.equal(resolvers.length, 2);
+  resolvers.forEach((resolve) => resolve({ error: null }));
+  assert.deepEqual((await Promise.all(pending)).map((row) => row.service_name), ["live", "cron"]);
 });

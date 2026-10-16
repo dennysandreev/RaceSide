@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { loadAdminReports, parseAdminTableQuery } from "@/data/admin-repository";
+import { normalizeDailyDigestBody } from "@/lib/daily-digest-content";
 import { requireAdmin } from "@/lib/auth";
 import { formatGrandPrixNameRu } from "@/lib/race-display";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
@@ -59,7 +60,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps) {
         </TabsList>
         <TabsContent value="reports">
           <AdminSection description={`${data.total} отчётов по текущему запросу.`} title="Отчёты">
-            <AdminFilters
+            <AdminFilters query={query}
               search={query.search}
               status={query.status}
               statuses={[
@@ -127,7 +128,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps) {
                     </div>
                   </article>
                 ))}
-                <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/reports" search={query.search} status={query.status} total={data.total} />
+                <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/reports" search={query.search} status={query.status} total={data.total} />
               </div>
             ) : (
               <AdminEmpty description="Измени фильтр или проверь данные завершённых гонок." title="Отчётов по запросу нет" />
@@ -136,6 +137,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps) {
         </TabsContent>
         <TabsContent value="digests">
           <AdminSection description="Те же дневные сводки доступны из раздела новостей." title="Сводки дня">
+            <AdminFilters query={query} search={query.search} status={query.status} statuses={[{ value: "draft", label: "Черновики" }, { value: "published", label: "Опубликованы" }, { value: "hidden", label: "Скрыты" }]} />
             {data.digests.length ? (
               <div className="grid gap-4 p-4">
                 {data.digests.map((digest) => (
@@ -149,7 +151,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps) {
                       </Field>
                       <Field>
                         <FieldLabel htmlFor={`digest-body-${digest.id}`}>Текст</FieldLabel>
-                        <Textarea defaultValue={digest.body_md} id={`digest-body-${digest.id}`} name="body" rows={8} />
+                        <Textarea defaultValue={normalizeDailyDigestBody(digest.body_md)} id={`digest-body-${digest.id}`} name="body" rows={8} />
                       </Field>
                       <Field>
                         <FieldLabel htmlFor={`digest-status-${digest.id}`}>Публикация</FieldLabel>
@@ -164,6 +166,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps) {
                 ))}
               </div>
             ) : <AdminEmpty description="Сводка появится после первой AI-генерации." title="Сводок пока нет" />}
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/reports" total={data.digestsTotal} />
           </AdminSection>
         </TabsContent>
       </AdminUrlTabs>

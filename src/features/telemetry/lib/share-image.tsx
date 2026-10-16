@@ -1,11 +1,14 @@
-import { createElement, type CSSProperties, type ReactNode } from "react";
+import { cloneElement, createElement, isValidElement, type CSSProperties, type ReactNode } from "react";
 import { RaceSideShareLogo } from "@/components/racemate/driver-comparison-share-image";
 import { formatGrandPrixNameRu } from "@/lib/race-display";
 import type { Comparison, Channel } from "./types";
+import { speedAtDistance, speedAnnotations } from "./share-chart";
+import chartFont from "./share-chart-font.json";
 import {
   lapTime,
   number,
   getTraceColors,
+  displayedDelta,
   sessionName,
   lapAnalysisRows,
   sectorGapRows,
@@ -14,8 +17,43 @@ export const shareFormats = {
   horizontal: [1600, 900],
   vertical: [1080, 1920],
 } as const;
+export const shareImageScale = 2;
 export type ShareFormat = keyof typeof shareFormats;
 type GraphicChannel = Channel | "delta";
+
+const unitlessStyles = new Set([
+  "flex", "flexGrow", "flexShrink", "fontWeight", "lineHeight", "opacity", "zIndex",
+]);
+type ShareElementProps = { children?: ReactNode; style?: CSSProperties; width?: number | string; height?: number | string };
+
+// Scale layout before rasterization. A root CSS transform clips nested SVGs in
+// ImageResponse; scaling their image boxes instead preserves vector sharpness.
+export function renderAtExportScale(node: ReactNode, insideSvg = false): ReactNode {
+  if (Array.isArray(node)) return node.map((child) => renderAtExportScale(child, insideSvg));
+  if (!isValidElement<ShareElementProps>(node))
+    return node;
+  if (typeof node.type === "function") {
+    const render = node.type as (props: ShareElementProps) => ReactNode;
+    return renderAtExportScale(render(node.props), insideSvg);
+  }
+  const props = { ...node.props };
+  if (props.style) {
+    props.style = Object.fromEntries(Object.entries(props.style).map(([key, value]) => [key,
+      typeof value === "number" && !unitlessStyles.has(key)
+        ? value * shareImageScale
+        : typeof value === "string"
+          ? value.replace(/(-?\d*\.?\d+)px\b/g, (_, pixels) => `${Number(pixels) * shareImageScale}px`)
+          : value,
+    ]));
+  }
+  if (!insideSvg) {
+    for (const dimension of ["width", "height"] as const) {
+      const value = props[dimension];
+      if (value != null && Number.isFinite(Number(value))) props[dimension] = Number(value) * shareImageScale;
+    }
+  }
+  return cloneElement(node, props, renderAtExportScale(props.children, insideSvg || node.type === "svg"));
+}
 
 function xml(s: string) {
   return s.replace(
@@ -31,39 +69,16 @@ function xml(s: string) {
   );
 }
 
-const chartSegments: Record<string, string> = {
-  a: "M1 0.5H4",
-  b: "M4.5 1V3",
-  c: "M4.5 4V6",
-  d: "M1 6.5H4",
-  e: "M0.5 4V6",
-  f: "M0.5 1V3",
-  g: "M1 3.5H4",
-};
+// Filled outlines from the site's Geist Sans font avoid missing-glyph squares
+// in nested SVGs. The generated subset includes tabular digits for data labels.
+const chartGlyphs: Record<string, { advance: number; path: string }> = chartFont.glyphs;
 
-const chartSegmentGlyphs: Record<string, string> = {
-  "0": "abcdef",
-  "1": "bc",
-  "2": "abdeg",
-  "3": "abcdg",
-  "4": "bcfg",
-  "5": "acdfg",
-  "6": "acdefg",
-  "7": "abc",
-  "8": "abcdefg",
-  "9": "abcdfg",
-  S: "acdfg",
-};
+export function chartTextWidth(text: string, size: number) {
+  return [...text].reduce((width, character) =>
+    width + (chartGlyphs[character] ?? chartGlyphs[" "]).advance * size / chartFont.capHeight, 0);
+}
 
-const chartPathGlyphs: Record<string, string> = {
-  м: "M0.5 6V1M0.5 1L2.5 3.6L4.5 1M4.5 1V6",
-  T: "M0.5 0.5H4.5M2.5 0.5V6.5",
-  "+": "M2.5 1.5V5.5M0.5 3.5H4.5",
-  "-": "M0.7 3.5H4.3",
-  ",": "M2.8 5.6L2.2 7",
-};
-
-function chartText(
+export function chartText(
   text: string,
   x: number,
   y: number,
@@ -71,35 +86,18 @@ function chartText(
   color: string,
   anchor: "start" | "middle" | "end" = "start",
 ) {
-  const cell = size / 7;
-  const gap = cell * 1.25;
-  const glyphWidth = cell * 5;
-  const advances = [...text].map((character) =>
-    character === " " ? cell * 3 : glyphWidth + gap,
-  );
-  const width = Math.max(
-    0,
-    advances.reduce((total, advance) => total + advance, 0) - gap,
-  );
-  const startX =
-    anchor === "middle" ? x - width / 2 : anchor === "end" ? x - width : x;
-  let cursor = startX;
-  let shapes = "";
-
-  [...text].forEach((character, characterIndex) => {
-    const segmentNames = chartSegmentGlyphs[character];
-    const paths = segmentNames
-      ? [...segmentNames].map((segment) => chartSegments[segment])
-      : chartPathGlyphs[character]
-        ? [chartPathGlyphs[character]]
-        : [];
-    if (paths.length) {
-      shapes += `<g transform="translate(${cursor.toFixed(2)} ${y.toFixed(2)}) scale(${cell.toFixed(4)})">${paths.map((path) => `<path d="${path}"/>`).join("")}</g>`;
-    }
-    cursor += advances[characterIndex];
-  });
-
-  return `<g fill="none" stroke="${color}" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round">${shapes}</g>`;
+  const scale = size / chartFont.capHeight;
+  const characters = [...text].map((character) => chartGlyphs[character] ?? chartGlyphs[" "]);
+  const width = chartTextWidth(text, size);
+  let cursor = anchor === "middle" ? x - width / 2 : anchor === "end" ? x - width : x;
+  const shapes = characters.map((glyph) => {
+    const path = glyph.path
+      ? `<path d="${glyph.path}" transform="translate(${cursor.toFixed(2)} ${(y + size).toFixed(2)}) scale(${scale.toFixed(5)} ${(-scale).toFixed(5)})"/>`
+      : "";
+    cursor += glyph.advance * scale;
+    return path;
+  }).join("");
+  return `<g fill="${color}">${shapes}</g>`;
 }
 
 function chartNumber(value: number, digits: number) {
@@ -139,42 +137,18 @@ export function telemetryGraphic(
   kind: GraphicChannel | "map",
   canvasHeight = 430,
   renderedWidth = 900,
-  rotation: number | "fit" = "fit",
 ) {
   const traceColors = getTraceColors(c);
   const W = 900,
     H = canvasHeight,
     showMap = kind === "map",
     channel: GraphicChannel = kind === "map" ? "delta" : kind;
-  const labelSize = Math.min(22, Math.max(12, (12 * W) / renderedWidth));
+  const labelSize = Math.min(18, Math.max(10, (10 * W) / renderedWidth));
   let content = "";
   if (showMap && c.track.points.length) {
-    let angle = typeof rotation === "number" ? (rotation * Math.PI) / 180 : 0;
-    if (rotation === "fit") {
-      let bestScale = 0;
-      for (let degrees = 0; degrees < 180; degrees += 5) {
-        const candidate = (degrees * Math.PI) / 180;
-        const xs = c.track.points.map(
-          (p) => p.x * Math.cos(candidate) - p.y * Math.sin(candidate),
-        );
-        const ys = c.track.points.map(
-          (p) => p.x * Math.sin(candidate) + p.y * Math.cos(candidate),
-        );
-        const scale = Math.min(
-          (W - 120) / (Math.max(...xs) - Math.min(...xs) || 1),
-          (H - 70) / (Math.max(...ys) - Math.min(...ys) || 1),
-        );
-        if (scale > bestScale) {
-          bestScale = scale;
-          angle = candidate;
-        }
-      }
-    }
-    const p = c.track.points.map((point) => ({
-        ...point,
-        x: point.x * Math.cos(angle) - point.y * Math.sin(angle),
-        y: point.x * Math.sin(angle) + point.y * Math.cos(angle),
-      })),
+    const trackPoints = c.track.points;
+    const mapSectors = c.track.sectors;
+    const p = trackPoints,
       xs = p.map((p) => p.x),
       ys = p.map((p) => p.y),
       minX = Math.min(...xs),
@@ -221,7 +195,7 @@ export function telemetryGraphic(
       content += `<polyline points="${line}" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round"/>`;
     }
     const tangentDistance = Math.max(20, c.track.length * 0.004);
-    for (const sector of c.track.sectors.filter(
+    for (const sector of mapSectors.filter(
       (distance) => distance > 0 && distance < c.track.length,
     )) {
       const center = pointCoordinates(sector);
@@ -241,50 +215,6 @@ export function telemetryGraphic(
       const coordinates = `x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"`;
       content += `<line ${coordinates} stroke="#090909" stroke-width="8" stroke-linecap="butt"/><line ${coordinates} stroke="#f5f4f2" stroke-width="3" stroke-linecap="butt"/>`;
     }
-    const trackCenter = {
-      x: offsetX + ((Math.max(...xs) - minX) * scale) / 2,
-      y: offsetY + ((Math.max(...ys) - minY) * scale) / 2,
-    };
-    const labels: { x: number; y: number }[] = [];
-    c.track.corners.forEach((corner, index) => {
-      const apex = pointCoordinates(corner.apex);
-      const dx = apex.x - trackCenter.x;
-      const dy = apex.y - trackCenter.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const radius = Math.max(13, labelSize * 0.72);
-      let distance = radius * (index % 2 ? 1.7 : 1.3);
-      let label = {
-        x: apex.x + (dx / length) * distance,
-        y: apex.y + (dy / length) * distance,
-      };
-      for (let attempt = 0; attempt < 4; attempt++) {
-        if (
-          labels.every(
-            (other) =>
-              Math.hypot(other.x - label.x, other.y - label.y) > radius * 2.1,
-          )
-        )
-          break;
-        distance += radius * 1.35;
-        label = {
-          x: apex.x + (dx / length) * distance,
-          y: apex.y + (dy / length) * distance,
-        };
-      }
-      label.x = Math.max(radius + 2, Math.min(W - radius - 2, label.x));
-      label.y = Math.max(radius + 2, Math.min(H - radius - 2, label.y));
-      labels.push(label);
-      content += `<line x1="${apex.x.toFixed(1)}" y1="${apex.y.toFixed(1)}" x2="${label.x.toFixed(1)}" y2="${label.y.toFixed(1)}" stroke="#707782" stroke-width="1"/>`;
-      content += `<circle cx="${label.x.toFixed(1)}" cy="${label.y.toFixed(1)}" r="${radius.toFixed(1)}" fill="#0d1014" stroke="#606873" stroke-width="1.5"/>`;
-      content += chartText(
-        String(corner.number),
-        label.x,
-        label.y - labelSize * 0.5,
-        labelSize,
-        "#f5f4f2",
-        "middle",
-      );
-    });
   } else {
     const from = 0,
       to = c.track.length;
@@ -296,7 +226,7 @@ export function telemetryGraphic(
       channel === "delta"
         ? c.distance.map((distance, pointIndex) => ({
             distance,
-            value: c.delta[traceIndex]?.[pointIndex],
+            value: displayedDelta(c.delta[traceIndex]?.[pointIndex]),
           }))
         : trace.points.map((point) => ({
             distance: point.distance,
@@ -329,33 +259,52 @@ export function telemetryGraphic(
               : deltaScale;
     const min = fixedScale.min;
     const max = fixedScale.max;
-    const plotLeft = 94;
+    const gridValues = channel === "delta"
+      ? deltaScale.ticks
+      : Array.from({ length: 5 }, (_, index) => max - index * ((max - min) / 4));
+    const axisLabelSize = labelSize * 0.72;
+    const axisLabel = (value: number) => channel === "delta"
+      ? Math.abs(value) < 0.0005
+        ? "0,00"
+        : `${value > 0 ? "+" : "-"}${chartNumber(value, 2)}`
+      : String(Math.round(value));
+    // Fit the actual labels instead of reserving a fixed wide left gutter.
+    // The common minimum keeps axes aligned; long gaps expand it only as needed.
+    const plotLeft = Math.max(chartTextWidth("-0,00", axisLabelSize),
+      ...gridValues.map((value) => chartTextWidth(axisLabel(value), axisLabelSize))) + 16;
     const plotRight = 878;
-    const plotTop = labelSize * 2.6;
-    const plotBottom = H - labelSize * 2.15;
-    const gridValues =
-      channel === "delta"
-        ? deltaScale.ticks
-        : Array.from(
-            { length: 5 },
-            (_, index) => max - index * ((max - min) / 4),
-          );
+    const sectorLabelTop = labelSize * 0.95;
+    const sectorLabelSize = labelSize * 0.82;
+    const annotationTop = sectorLabelTop + sectorLabelSize + labelSize * 0.45;
+    const plotTop = labelSize * (channel === "speed" ? 5.3 : 3.8);
+    const plotBottom = H - labelSize * 4.8;
+    const xAt = (distance: number) => plotLeft + (distance / (to || 1)) * (plotRight - plotLeft);
+    const yAt = (value: number) => plotBottom - ((value - min) / (max - min || 1)) * (plotBottom - plotTop);
+    const distanceStep = Math.max(500, Math.ceil(to / 5 / 500) * 500);
+    const distanceTicks = [0];
+    for (let distance = distanceStep; distance < to - distanceStep * 0.4; distance += distanceStep)
+      distanceTicks.push(distance);
+    distanceTicks.push(to);
+    distanceTicks.forEach((distance, index) => {
+      const x = xAt(distance);
+      content += `<line x1="${x.toFixed(1)}" y1="${plotTop}" x2="${x.toFixed(1)}" y2="${plotBottom}" stroke="#343943" stroke-opacity="0.55" stroke-width="1"/>`;
+      content += `<line x1="${x.toFixed(1)}" y1="${plotBottom}" x2="${x.toFixed(1)}" y2="${plotBottom + labelSize * 0.25}" stroke="#9299a3" stroke-width="1"/>`;
+      content += chartText(
+        `${Math.round(distance).toLocaleString("ru-RU").replace(/\s/g, " ")} м`,
+        x, H - labelSize * 0.95, labelSize * 0.72, "#b6beca",
+        index === 0 ? "start" : index === distanceTicks.length - 1 ? "end" : "middle",
+      );
+    });
     gridValues.forEach((value) => {
       const y =
         plotBottom -
         ((value - min) / (max - min || 1)) * (plotBottom - plotTop);
       content += `<line x1="${plotLeft}" y1="${y.toFixed(1)}" x2="${plotRight}" y2="${y.toFixed(1)}" stroke="#343943" stroke-width="1"/>`;
-      const tick =
-        channel === "delta"
-          ? Math.abs(value) < 0.0005
-            ? "0,00"
-            : `${value > 0 ? "+" : "-"}${chartNumber(value, 2)}`
-          : String(Math.round(value));
       content += chartText(
-        tick,
+        axisLabel(value),
         plotLeft - 12,
-        y - labelSize * 0.5,
-        labelSize,
+        y - axisLabelSize * 0.5,
+        axisLabelSize,
         "#b6beca",
         "end",
       );
@@ -384,8 +333,52 @@ export function telemetryGraphic(
         path += `${broken ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)} `;
         broken = false;
       }
-      content += `<path d="${path}" fill="none" stroke="${traceColors[traceIndex]}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+      let stroke = traceColors[traceIndex];
+      if (channel === "delta") {
+        const values = series[traceIndex]
+          .map((point) => point.value)
+          .filter((value): value is number => value != null && Number.isFinite(value));
+        const lowest = Math.min(...values);
+        const highest = Math.max(...values);
+        if (lowest < 0 && highest > 0) {
+          const offset = ((highest / (highest - lowest)) * 100).toFixed(2);
+          const id = `delta-lead-${traceIndex}`;
+          content += `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="${offset}%" stop-color="${traceColors[traceIndex]}"/><stop offset="${offset}%" stop-color="${traceColors[c.config.reference]}"/></linearGradient></defs>`;
+          stroke = `url(#${id})`;
+        } else if (highest <= 0) {
+          stroke = traceColors[c.config.reference];
+        }
+      }
+      content += `<path d="${path}" fill="none" stroke="${stroke}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
     });
+    if (channel === "speed") {
+      const reference = c.traces[c.config.reference];
+      const annotationSize = labelSize * 0.82;
+      const boxWidth = annotationSize * 7.5;
+      const placed: { x: number; y: number; height: number }[] = [];
+      for (const extremum of speedAnnotations(reference.points)) {
+        const values = c.traces.map((trace, index) => ({
+          code: trace.driver.code,
+          value: speedAtDistance(trace.points, extremum.distance),
+          color: traceColors[index],
+        })).filter((entry) => entry.value != null);
+        if (!values.length) continue;
+        const boxHeight = values.length * annotationSize * 1.4;
+        const x = Math.max(plotLeft + boxWidth / 2, Math.min(plotRight - boxWidth / 2, xAt(extremum.distance)));
+        const curveY = yAt(extremum.value);
+        const preferred = extremum.kind === "peak" ? curveY - boxHeight - annotationSize : curveY + annotationSize;
+        const candidateYs = [preferred, preferred + (extremum.kind === "peak" ? -1 : 1) * annotationSize];
+        const y = candidateYs.map((candidate) => Math.max(annotationTop, Math.min(plotBottom - boxHeight, candidate)))
+          .find((candidate) => placed.every((box) => Math.abs(box.x - x) >= boxWidth + 8 || candidate >= box.y + box.height + 6 || candidate + boxHeight + 6 <= box.y));
+        if (y == null) continue;
+        placed.push({ x, y, height: boxHeight });
+        content += `<path d="M${xAt(extremum.distance).toFixed(1)},${curveY.toFixed(1)}L${x.toFixed(1)},${(y > curveY ? y - 3 : y + boxHeight + 3).toFixed(1)}" fill="none" stroke="#9299a3" stroke-opacity="0.5" stroke-width="1"/>`;
+        content += `<rect x="${(x - boxWidth / 2 - 4).toFixed(1)}" y="${(y - 4).toFixed(1)}" width="${boxWidth + 8}" height="${boxHeight + 6}" rx="3" fill="#0d1115" fill-opacity="0.9"/>`;
+        values.forEach((entry, index) => {
+          content += chartText(`${entry.code} ${Math.round(entry.value!)}`, x, y + index * annotationSize * 1.4, annotationSize, entry.color, "middle");
+        });
+      }
+    }
     const boundaries = [0, ...c.track.sectors, c.track.length];
     for (let index = 0; index + 1 < boundaries.length; index++) {
       const center =
@@ -396,8 +389,8 @@ export function telemetryGraphic(
       content += chartText(
         `S${index + 1}`,
         center,
-        labelSize * 0.08,
-        labelSize * 0.82,
+        sectorLabelTop,
+        sectorLabelSize,
         "#e10600",
         "middle",
       );
@@ -408,20 +401,21 @@ export function telemetryGraphic(
       const x =
         plotLeft +
         ((sector - from) / (to - from || 1)) * (plotRight - plotLeft);
-      content += `<line x1="${x.toFixed(1)}" y1="${plotTop.toFixed(1)}" x2="${x.toFixed(1)}" y2="${plotBottom.toFixed(1)}" stroke="#e10600" stroke-opacity="0.45" stroke-width="1.2"/>`;
+      content += `<line x1="${x.toFixed(1)}" y1="${plotTop.toFixed(1)}" x2="${x.toFixed(1)}" y2="${plotBottom.toFixed(1)}" stroke="#9299a3" stroke-opacity="0.45" stroke-width="1.2"/>`;
     }
     const cornerLanes: number[] = [];
     c.track.corners.forEach((corner) => {
       const position = (corner.apex - from) / (to - from || 1);
-      let lane = cornerLanes.findIndex((last) => position - last >= 0.075);
+      let lane = cornerLanes.findIndex((last) => position - last >= 0.032);
       if (lane < 0) lane = cornerLanes.length;
       if (lane > 1) return;
       cornerLanes[lane] = position;
       const x = plotLeft + position * (plotRight - plotLeft);
+      content += `<line x1="${x.toFixed(1)}" y1="${plotBottom}" x2="${x.toFixed(1)}" y2="${plotBottom + labelSize * (0.55 + lane * 0.9)}" stroke="#9299a3" stroke-opacity="0.65" stroke-width="1"/>`;
       content += chartText(
         String(corner.number),
         x,
-        plotBottom + labelSize * (0.38 + lane * 0.78),
+        plotBottom + labelSize * (0.75 + lane * 0.9),
         labelSize * 0.72,
         "#9299a3",
         "middle",
@@ -549,129 +543,142 @@ function DriverSummary({
   const difference =
     times[0] != null && times[1] != null ? times[0] - times[1] : null;
   const winner = difference != null && difference > 0 ? 1 : 0;
+  const driver = (index: number) => {
+    const trace = comparison.traces[index];
+    return (
+      <div
+        key={trace.lap.id}
+        style={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+          flexDirection: index === 0 ? "row" : "row-reverse",
+          justifyContent: vertical ? "center" : "flex-end",
+          gap: vertical ? 12 : 10,
+          padding: vertical ? "10px 12px" : "6px 12px",
+        }}
+      >
+        {portraits[index] &&
+          createElement("img", {
+            src: portraits[index],
+            width: vertical ? 60 : 46,
+            height: vertical ? 60 : 46,
+            style: {
+              objectFit: "contain",
+              borderRadius: 999,
+              background: "#1a1e24",
+              border: `2px solid ${colors[index]}`,
+            },
+            alt: "",
+          })}
+        <div
+          style={{
+            display: "flex",
+            minWidth: 0,
+            flexDirection: "column",
+            alignItems: index === 0 ? "flex-start" : "flex-end",
+          }}
+        >
+          <span
+            style={{
+              display: "flex",
+              fontSize: vertical ? 20 : 16,
+              fontWeight: 900,
+            }}
+          >
+            {driverName(trace.driver.name)}
+          </span>
+          <span
+            style={{
+              display: "flex",
+              marginTop: 3,
+              fontFamily: "Geist Mono",
+              color: colors[index],
+              fontSize: vertical ? 13 : 11,
+              fontWeight: 800,
+            }}
+          >
+            {trace.driver.code} ·{" "}
+            {trace.lap.kind === "race_average"
+              ? `СРЕДНИЙ · ${trace.lap.sampleCount ?? 0} КР.`
+              : `КРУГ ${trace.lap.number}`}
+          </span>
+          <span
+            style={{
+              display: "flex",
+              marginTop: vertical ? 6 : 3,
+              fontFamily: "Geist Mono",
+              fontSize: vertical ? 26 : 22,
+              fontWeight: 900,
+            }}
+          >
+            {lapTime(trace.lap.time)}
+          </span>
+        </div>
+      </div>
+    );
+  };
   return (
     <Panel
       style={{
-        height: vertical ? 130 : 92,
+        height: vertical ? 120 : 74,
         width: "100%",
         flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         flexShrink: 0,
-        borderLeft: `3px solid ${colors[0]}`,
-        borderRight: `3px solid ${colors[1]}`,
       }}
     >
-      {comparison.traces.slice(0, 2).map((trace, index) => (
-        <div
-          key={trace.lap.id}
-          style={{
-            display: "flex",
-            flex: 1,
-            alignItems: "center",
-            flexDirection: index === 0 ? "row" : "row-reverse",
-            gap: vertical ? 16 : 12,
-            padding: vertical ? "14px 18px" : "10px 18px",
-            order: index === 0 ? 0 : 2,
-          }}
-        >
-          {portraits[index] &&
-            createElement("img", {
-              src: portraits[index],
-              width: vertical ? 68 : 54,
-              height: vertical ? 68 : 54,
-              style: {
-                objectFit: "contain",
-                borderRadius: 999,
-                background: "#1a1e24",
-                border: `2px solid ${colors[index]}`,
-              },
-              alt: "",
-            })}
-          <div
-            style={{
-              display: "flex",
-              flex: 1,
-              minWidth: 0,
-              flexDirection: "column",
-              alignItems: index === 0 ? "flex-start" : "flex-end",
-            }}
-          >
-            <span
-              style={{
-                display: "flex",
-                fontSize: vertical ? 22 : 18,
-                fontWeight: 900,
-              }}
-            >
-              {driverName(trace.driver.name)}
-            </span>
-            <span
-              style={{
-                display: "flex",
-                marginTop: 3,
-                fontFamily: "Geist Mono",
-                color: colors[index],
-                fontSize: vertical ? 15 : 13,
-                fontWeight: 800,
-              }}
-            >
-              {trace.driver.code} ·{" "}
-              {trace.lap.kind === "race_average"
-                ? `СРЕДНИЙ · ${trace.lap.sampleCount ?? 0} КР.`
-                : `КРУГ ${trace.lap.number}`}
-            </span>
-            <span
-              style={{
-                display: "flex",
-                marginTop: vertical ? 7 : 4,
-                fontFamily: "Geist Mono",
-                fontSize: vertical ? 28 : 25,
-                fontWeight: 900,
-              }}
-            >
-              {lapTime(trace.lap.time)}
-            </span>
-          </div>
-        </div>
-      ))}
       <div
         style={{
           display: "flex",
-          width: vertical ? 250 : 245,
-          flexShrink: 0,
-          flexDirection: "column",
+          width: vertical ? 920 : 1190,
+          height: "100%",
           alignItems: "center",
-          justifyContent: "center",
-          order: 1,
-          borderLeft: "1px solid rgba(255,255,255,0.13)",
-          borderRight: "1px solid rgba(255,255,255,0.13)",
-          background: "rgba(255,255,255,0.025)",
         }}
       >
-        <span
+        {driver(0)}
+        <div
           style={{
             display: "flex",
-            color: shareTheme.muted,
-            fontSize: vertical ? 13 : 11,
+            width: vertical ? 210 : 220,
+            height: vertical ? 96 : 58,
+            flexShrink: 0,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            borderLeft: "1px solid rgba(255,255,255,0.13)",
+            borderRight: "1px solid rgba(255,255,255,0.13)",
+            background: "rgba(255,255,255,0.025)",
           }}
         >
-          Разница на финише
-        </span>
-        <span
-          style={{
-            display: "flex",
-            marginTop: 4,
-            color: difference == null ? shareTheme.ink : colors[winner],
-            fontFamily: "Geist Mono",
-            fontSize: vertical ? 26 : 23,
-            fontWeight: 900,
-          }}
-        >
-          {difference == null
-            ? "Нет данных"
-            : Math.abs(difference) < 0.0005
-              ? "Равное время"
-              : `${comparison.traces[winner].driver.code} −${number(Math.abs(difference), 3)} с`}
-        </span>
+          <span
+            style={{
+              display: "flex",
+              color: shareTheme.muted,
+              fontSize: vertical ? 12 : 10,
+            }}
+          >
+            Разница на финише
+          </span>
+          <span
+            style={{
+              display: "flex",
+              marginTop: 4,
+              color: difference == null ? shareTheme.ink : colors[winner],
+              fontFamily: "Geist Mono",
+              fontSize: vertical ? 23 : 20,
+              fontWeight: 900,
+            }}
+          >
+            {difference == null
+              ? "Нет данных"
+              : Math.abs(difference) < 0.0005
+                ? "Равное время"
+                : `${comparison.traces[winner].driver.code} −${number(Math.abs(difference), 3)} с`}
+          </span>
+        </div>
+        {driver(1)}
       </div>
     </Panel>
   );
@@ -708,7 +715,7 @@ function ChartPanel({
       }}
     >
       <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-        <span style={{ display: "flex", fontSize: 14, fontWeight: 800 }}>
+        <span style={{ display: "flex", fontSize: 13, fontWeight: 800 }}>
           {label}
         </span>
         {unit && (
@@ -717,7 +724,7 @@ function ChartPanel({
               display: "flex",
               color: shareTheme.muted,
               fontFamily: "Geist Mono",
-              fontSize: 10,
+              fontSize: 9,
             }}
           >
             {unit}
@@ -959,7 +966,7 @@ function AnalysisPanel({
   );
 }
 
-function ShareFooter({ vertical }: { vertical: boolean }) {
+export function ShareFooter({ vertical }: { vertical: boolean }) {
   return (
     <div
       style={{
@@ -968,8 +975,8 @@ function ShareFooter({ vertical }: { vertical: boolean }) {
         left: 0,
         right: 0,
         bottom: 0,
-        height: vertical ? 138 : 76,
-        padding: vertical ? "0 42px" : "0 44px",
+        height: vertical ? 69 : 38,
+        padding: vertical ? "0 36px" : "0 24px",
         alignItems: "center",
         justifyContent: "space-between",
         background: shareTheme.red,
@@ -979,7 +986,7 @@ function ShareFooter({ vertical }: { vertical: boolean }) {
         <span
           style={{
             display: "flex",
-            fontSize: vertical ? 38 : 29,
+            fontSize: vertical ? 25 : 20,
             fontWeight: 900,
             letterSpacing: "-0.04em",
             lineHeight: 1,
@@ -990,8 +997,8 @@ function ShareFooter({ vertical }: { vertical: boolean }) {
         <span
           style={{
             display: "flex",
-            marginTop: vertical ? 9 : 5,
-            fontSize: vertical ? 17 : 13,
+            marginTop: 3,
+            fontSize: vertical ? 12 : 9,
             fontWeight: 700,
           }}
         >
@@ -1009,7 +1016,7 @@ function ShareFooter({ vertical }: { vertical: boolean }) {
           style={{
             display: "flex",
             fontFamily: "Geist Mono",
-            fontSize: vertical ? 19 : 15,
+            fontSize: vertical ? 17 : 13,
             fontWeight: 900,
           }}
         >
@@ -1018,9 +1025,9 @@ function ShareFooter({ vertical }: { vertical: boolean }) {
         <span
           style={{
             display: "flex",
-            marginTop: 5,
+            marginTop: 3,
             fontFamily: "Geist Mono",
-            fontSize: vertical ? 10 : 8,
+            fontSize: vertical ? 9 : 6,
             fontWeight: 700,
             letterSpacing: 1.5,
             opacity: 0.78,
@@ -1121,18 +1128,21 @@ export function TelemetryShareImage({
   const [width, height] = shareFormats[format];
   const vertical = format === "vertical";
   const pad = vertical ? 36 : 24;
-  const footerHeight = vertical ? 138 : 76;
+  const footerHeight = vertical ? 69 : 38;
   const title =
-    comparison.track.id === "madring"
+    comparison.track.id === "sepang"
+      ? "Гран-при Малайзии"
+      : comparison.track.id === "madring"
       ? "Гран-при Испании"
       : meetingName
         ? formatGrandPrixNameRu(meetingName)
         : comparison.track.name;
   const innerWidth = width - pad * 2;
   const horizontalColumn = (innerWidth - 440 - 20) / 2;
-  const horizontalChartHeight = 192;
+  const contentHeight = height - (vertical ? 26 + 176 + 120 : 16 + 70 + 74) - footerHeight - 32;
+  const horizontalChartHeight = (contentHeight - 8) / 2;
   const verticalChartWidth = innerWidth - 26;
-  return (
+  return renderAtExportScale(
     <div
       style={{
         display: "flex",
@@ -1169,51 +1179,37 @@ export function TelemetryShareImage({
         >
           <ChartPanel
             comparison={comparison}
-            channel="delta"
-            height={220}
+            channel="speed"
+            height={430}
             imageWidth={verticalChartWidth}
           />
           <ChartPanel
             comparison={comparison}
-            channel="speed"
-            height={220}
+            channel="delta"
+            height={320}
             imageWidth={verticalChartWidth}
           />
           <div style={{ display: "flex", gap: 10 }}>
             <ChartPanel
               comparison={comparison}
               channel="throttle"
-              height={190}
+              height={240}
               imageWidth={(innerWidth - 10) / 2 - 26}
             />
-            <ChartPanel
-              comparison={comparison}
-              channel="brake"
-              height={190}
-              imageWidth={(innerWidth - 10) / 2 - 26}
-            />
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
             <ChartPanel
               comparison={comparison}
               channel="gear"
-              height={190}
-              imageWidth={(innerWidth - 10) / 2 - 26}
-            />
-            <ChartPanel
-              comparison={comparison}
-              channel="rpm"
-              height={190}
+              height={240}
               imageWidth={(innerWidth - 10) / 2 - 26}
             />
           </div>
           <div style={{ display: "flex", flex: 1, minHeight: 0, gap: 10 }}>
             <TrackPanel
               comparison={comparison}
-              height={560}
+              height={contentHeight - 430 - 320 - 240 - 30}
               imageWidth={(innerWidth - 10) / 2 - 26}
             />
-            <AnalysisPanel comparison={comparison} height={560} large />
+            <AnalysisPanel comparison={comparison} height={contentHeight - 430 - 320 - 240 - 30} large />
           </div>
         </div>
       ) : (
@@ -1236,19 +1232,13 @@ export function TelemetryShareImage({
           >
             <ChartPanel
               comparison={comparison}
-              channel="delta"
+              channel="speed"
               height={horizontalChartHeight}
               imageWidth={horizontalColumn - 26}
             />
             <ChartPanel
               comparison={comparison}
               channel="throttle"
-              height={horizontalChartHeight}
-              imageWidth={horizontalColumn - 26}
-            />
-            <ChartPanel
-              comparison={comparison}
-              channel="brake"
               height={horizontalChartHeight}
               imageWidth={horizontalColumn - 26}
             />
@@ -1263,19 +1253,13 @@ export function TelemetryShareImage({
           >
             <ChartPanel
               comparison={comparison}
-              channel="speed"
+              channel="delta"
               height={horizontalChartHeight}
               imageWidth={horizontalColumn - 26}
             />
             <ChartPanel
               comparison={comparison}
               channel="gear"
-              height={horizontalChartHeight}
-              imageWidth={horizontalColumn - 26}
-            />
-            <ChartPanel
-              comparison={comparison}
-              channel="rpm"
               height={horizontalChartHeight}
               imageWidth={horizontalColumn - 26}
             />
@@ -1288,8 +1272,8 @@ export function TelemetryShareImage({
               gap: 8,
             }}
           >
-            <TrackPanel comparison={comparison} height={340} imageWidth={414} />
-            <AnalysisPanel comparison={comparison} height={244} />
+            <TrackPanel comparison={comparison} height={250} imageWidth={414} />
+            <AnalysisPanel comparison={comparison} height={contentHeight - 258} />
           </div>
         </div>
       )}

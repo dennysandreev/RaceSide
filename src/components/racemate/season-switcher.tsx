@@ -16,6 +16,7 @@ type SeasonSwitcherProps = {
   expandDirection?: "left" | "right";
   label?: string;
   loadingLabel?: string;
+  onSeasonChange?: (season: number) => void;
   pathname: string;
   query?: SeasonSearchParams;
   seasons: number[];
@@ -27,6 +28,7 @@ export function SeasonSwitcher({
   expandDirection = "right",
   label = "Сезон",
   loadingLabel,
+  onSeasonChange,
   pathname,
   query = {},
   seasons,
@@ -67,6 +69,7 @@ export function SeasonSwitcher({
             setPendingSeason(season);
           }
         }}
+        onSeasonChange={onSeasonChange}
         seasons={normalizedSeasons}
       />
 
@@ -100,22 +103,37 @@ export function SeasonSwitcher({
               aria-label="Выбрать сезон"
               className="flex w-max items-center gap-1 rounded-md border border-border/80 bg-background/75 p-1 shadow-sm backdrop-blur-sm"
             >
-              {otherSeasons.map((season) => (
-                <Link
-                  className="font-telemetry inline-flex h-9 min-w-12 items-center justify-center rounded-sm px-2.5 text-[0.68rem] font-extrabold text-muted-foreground outline-none transition-colors duration-200 hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
-                  href={hrefBySeason[season]}
-                  key={season}
-                  onClick={() => {
-                    setOpen(false);
-                    if (loadingLabel) {
-                      setPendingSeason(season);
-                    }
-                  }}
-                  prefetch={false}
-                >
-                  {season}
-                </Link>
-              ))}
+              {otherSeasons.map((season) => {
+                const className =
+                  "font-telemetry inline-flex h-9 min-w-12 items-center justify-center rounded-sm px-2.5 text-[0.68rem] font-extrabold text-muted-foreground outline-none transition-colors duration-200 hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none";
+                const selectSeason = () => {
+                  setOpen(false);
+                  if (loadingLabel) setPendingSeason(season);
+                };
+                return onSeasonChange ? (
+                  <button
+                    className={className}
+                    key={season}
+                    onClick={() => {
+                      selectSeason();
+                      onSeasonChange(season);
+                    }}
+                    type="button"
+                  >
+                    {season}
+                  </button>
+                ) : (
+                  <Link
+                    className={className}
+                    href={hrefBySeason[season]}
+                    key={season}
+                    onClick={selectSeason}
+                    prefetch={false}
+                  >
+                    {season}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
         ) : null}

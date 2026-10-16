@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "modelId": "austin",
+  "sources": [
+    {
+      "file": "osm.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-97.65,30.12,-97.615,30.15",
+      "role": "circuit, pit lane, current building and grandstand footprints",
+      "license": "ODbL 1.0",
+      "attribution": "\u00a9 OpenStreetMap contributors",
+      "retrievedAt": "2026-09-29T06:38:24.687961+00:00",
+      "bbox": [
+        -97.65,
+        30.12,
+        -97.615,
+        30.15
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "bytes": 4121170,
+      "sha256": "d5e09604ebb41df3738ce71ae146c00e758932c34c9835f2b55bce874b43dfd6"
+    },
+    {
+      "file": "ortho.jpg",
+      "url": "https://imagery.geographic.texas.gov/server/rest/services/NAIP/NAIP22_NCCIR_60cm/ImageServer/exportImage?bbox=630350%2C3333600%2C632750%2C3335300&bboxSR=32614&imageSR=32614&size=3900%2C2763&format=jpg&f=image",
+      "role": "actual terrain colour and roof reference",
+      "license": "USDA NAIP public domain; TxGIO service attribution",
+      "attribution": "Texas Geographic Information Office / USDA FSA",
+      "retrievedAt": "2026-09-29T06:42:15.647454+00:00",
+      "bbox": [
+        630350,
+        3333600,
+        632750,
+        3335300
+      ],
+      "crs": "EPSG:32614",
+      "verticalDatum": null,
+      "resolution": "0.6 m source; 0.615 m/px export",
+      "bytes": 1104614,
+      "sha256": "13f5a764cf2e75d9c966e2ff6b1ecb9d51889744441f2fed57b2b172e45ab446"
+    },
+    {
+      "file": "usgs-dtm.tif",
+      "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox=630350%2C3333600%2C632750%2C3335300&bboxSR=32614&imageSR=32614&size=2400%2C1700&format=tiff&pixelType=F32&interpolation=RSP_BilinearInterpolation&renderingRule=%7B%22rasterFunction%22%3A%22None%22%7D&f=image",
+      "role": "bare-earth terrain",
+      "license": "USGS public domain",
+      "attribution": "USGS 3DEP",
+      "retrievedAt": "2026-09-29T06:42:38.531564+00:00",
+      "bbox": [
+        630350,
+        3333600,
+        632750,
+        3335300
+      ],
+      "crs": "EPSG:32614",
+      "verticalDatum": "NAVD88 orthometric metres (3DEP 1 m collection)",
+      "resolution": "1 m export",
+      "bytes": 17435824,
+      "sha256": "e874619af407e4c6fbe71c2c46effa853864e23e91ec9782a60defdd0da47420"
+    },
+    {
+      "file": "naip-service.json",
+      "url": "https://imagery.geographic.texas.gov/server/rest/services/NAIP/NAIP22_NCCIR_60cm/ImageServer?f=pjson",
+      "role": "NAIP acquisition and service metadata",
+      "license": "public metadata",
+      "attribution": "Texas Geographic Information Office / USDA FSA",
+      "retrievedAt": "2026-09-29T06:49:14.259837+00:00",
+      "bbox": null,
+      "crs": null,
+      "verticalDatum": null,
+      "resolution": "service metadata",
+      "bytes": 9143,
+      "sha256": "113e6c85f5115847918ddb9c56051b3908c369bf24aea54520d7a9e9dbb65c17"
+    },
+    {
+      "file": "usgs-service.json",
+      "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer?f=pjson",
+      "role": "3DEP provenance and service metadata",
+      "license": "public metadata",
+      "attribution": "USGS 3DEP",
+      "retrievedAt": "2026-09-29T06:40:59.653412+00:00",
+      "bbox": null,
+      "crs": null,
+      "verticalDatum": null,
+      "resolution": "service metadata",
+      "bytes": 12981,
+      "sha256": "a300a739a6e47627d1cd6921fca368004d88a8ac62d6d32c64571c669e4349bb"
+    }
+  ],
+  "references": [
+    {
+      "url": "https://www.fia.com/system/files/decision-document/2025_united_states_grand_prix_-_event_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_quarantine_zone_map_red_zones_map.pdf",
+      "role": "FIA 2025 circuit and pit lane control map; reference only, not embedded",
+      "license": "FIA/FOM copyright"
+    },
+    {
+      "url": "https://circuitoftheamericas.com/ticket/grandstands-and-reserved-seating-f1/",
+      "role": "official 2026 grandstand inventory; reference only, not embedded",
+      "license": "Circuit of The Americas copyright"
+    },
+    {
+      "url": "https://circuitoftheamericas.com/wp-content/uploads/2024-USGP-Map.pdf",
+      "role": "official historical event map for visual placement comparison; reference only, not embedded",
+      "license": "Circuit of The Americas copyright"
+    }
+  ]
+}

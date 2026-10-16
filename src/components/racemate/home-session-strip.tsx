@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { getLocalDriverAvatarSrc } from "@/components/racemate/driver-avatar-badge";
 import { SessionResultsDialog, type SessionWithResults } from "@/components/racemate/session-results-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { formatSessionName } from "@/lib/session-display";
 
@@ -17,30 +18,29 @@ type HomeSessionStripProps = {
 export function HomeSessionStrip({ activeSessionName, embedded = false, sessions }: HomeSessionStripProps) {
   const [selected, setSelected] = useState<SessionWithResults | null>(null);
   const stripRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const strip = stripRef.current;
-    const activeIndex = sessions.findIndex((item) => item.session.name === activeSessionName);
-
-    if (!strip || activeIndex <= 0 || !window.matchMedia("(max-width: 639px)").matches) {
+    if (!strip || !isMobile) {
       return;
     }
 
     const frame = window.requestAnimationFrame(() => {
       const activeCard = strip.querySelector<HTMLElement>("[data-active='true']");
-
-      if (!activeCard) {
-        return;
-      }
+      const left = activeCard
+        ? activeCard.getBoundingClientRect().left - strip.getBoundingClientRect().left + strip.scrollLeft
+          - (strip.clientWidth - activeCard.clientWidth) / 2
+        : 0;
 
       strip.scrollTo({
         behavior: "auto",
-        left: activeCard.offsetLeft - (strip.clientWidth - activeCard.clientWidth) / 2,
+        left,
       });
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activeSessionName, sessions]);
+  }, [activeSessionName, isMobile, sessions]);
 
   return (
     <>

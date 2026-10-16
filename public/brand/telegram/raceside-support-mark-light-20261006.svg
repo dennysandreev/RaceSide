@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="114" height="116" viewBox="-4 -4 114 116" role="img" aria-label="RaceSide — Поддержка"><title>RaceSide — Поддержка</title><defs>
+    <mask id="support-clear-light" maskUnits="userSpaceOnUse" x="-4" y="-4" width="114" height="116">
+      <rect x="-4" y="-4" width="114" height="116" fill="white"/>
+      <path d="M686 628H808Q860 628 860 680V747Q860 799 808 799H714L660 839V777Q634 762 634 727V680Q634 628 686 628Z" transform="translate(-30 -23.125) scale(0.15625)" fill="black" stroke="black" stroke-width="26" stroke-linejoin="round"/>
+    </mask>
+    <mask id="support-dots-light" maskUnits="userSpaceOnUse" x="-4" y="-4" width="114" height="116">
+      <rect x="-4" y="-4" width="114" height="116" fill="white"/>
+      <g fill="black" transform="translate(-30 -23.125) scale(0.15625)">
+        <circle cx="700" cy="714" r="13"/><circle cx="747" cy="714" r="13"/><circle cx="794" cy="714" r="13"/>
+      </g>
+    </mask>
+  </defs>
+  <g fill="#E10600" mask="url(#support-clear-light)"><path d="M52 0H100L65 24C63 26 61 27 58 27H40C29 27 22 31 22 37C22 44 39 49 53 56L62 61C66 63 65 67 60 67L29 61C9 57 1 50 1 39C1 27 15 19 32 9L46 1C48 0 50 0 52 0Z"/><path d="M48 100H0L35 76C37 74 39 73 42 73H60C71 73 78 69 78 63C78 56 61 51 47 44L38 39C34 37 35 33 40 33L71 39C91 43 99 50 99 61C99 73 85 81 68 91L54 99C52 100 50 100 48 100Z"/></g>
+  <g mask="url(#support-dots-light)"><path d="M686 628H808Q860 628 860 680V747Q860 799 808 799H714L660 839V777Q634 762 634 727V680Q634 628 686 628Z" transform="translate(-30 -23.125) scale(0.15625)" fill="#191313"/></g></svg>

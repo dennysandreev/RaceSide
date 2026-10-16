@@ -12,6 +12,7 @@ import { PageTitle } from "@/components/racemate/page-title";
 import { RaceFlag } from "@/components/racemate/race-flag";
 import { SeasonSwitcher } from "@/components/racemate/season-switcher";
 import { TeamLogo } from "@/components/racemate/team-logo";
+import { Button } from "@/components/ui/button";
 import { getPublishedSeasons, getTeamProfiles } from "@/data/racemate-repository";
 import {
   CURRENT_F1_SEASON,
@@ -99,9 +100,18 @@ async function TeamsContent({ query, season, publishedSeasons }: {
         }}
       />
       <div className="grid gap-5 pb-6 sm:pb-8">
-        <header className="stitch-panel relative overflow-hidden p-4 sm:p-5 lg:h-40">
+        <header className="stitch-panel relative min-h-[11.5rem] overflow-hidden p-4 sm:p-5 lg:h-40 lg:min-h-0">
+          <Image
+            alt=""
+            className="object-cover object-right opacity-80 lg:object-center"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 72rem"
+            src="/stitch/teams-hero.webp"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/76 to-background/18" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgb(225_6_0_/_0.2),transparent_22rem),linear-gradient(135deg,rgb(255_255_255_/_0.04),transparent_48%)]" />
-          <div className="relative z-10 grid gap-3 lg:h-full lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+          <div className="relative z-10 grid gap-3 lg:h-full lg:grid-cols-[minmax(0,1fr)_auto] lg:grid-rows-[1fr_auto] lg:items-center">
             <div className="min-w-0">
               <p className="stitch-label flex items-center gap-2 text-primary">
                 <Flag aria-hidden="true" className="size-4" />
@@ -110,20 +120,26 @@ async function TeamsContent({ query, season, publishedSeasons }: {
               <PageTitle className="mt-2">
                 Команды Формулы-1
               </PageTitle>
-              <SeasonSwitcher
-                activeSeason={season}
-                className="mt-3"
-                pathname="/teams"
-                query={query}
-                seasons={publishedSeasons}
-              />
             </div>
-            <div className="hidden items-center gap-3 rounded-md border border-border bg-background/35 px-4 py-2 lg:flex">
+            <div className="hidden items-center gap-3 justify-self-end rounded-md border border-border bg-background/35 px-4 py-2 lg:flex">
               <Trophy aria-hidden="true" className="size-5 text-primary" />
-              <div>
-                <p className="font-telemetry text-xl font-extrabold">{teams.length}</p>
-                <p className="text-xs font-semibold text-muted-foreground">команд</p>
+              <p className="whitespace-nowrap font-telemetry text-lg font-extrabold">{teams.length} команд</p>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 lg:col-span-2">
+              <div className="min-w-32 max-w-full flex-1">
+                <SeasonSwitcher
+                  activeSeason={season}
+                  pathname="/teams"
+                  query={query}
+                  seasons={publishedSeasons}
+                />
               </div>
+              <Button asChild size="lg" className="[&_svg]:size-3.5">
+                <NavigationLoadingLink href="/anatomy" loadingLabel="Загружаем болид">
+                  Устройство болида
+                  <ChevronRight aria-hidden="true" data-icon="inline-end" />
+                </NavigationLoadingLink>
+              </Button>
             </div>
           </div>
         </header>

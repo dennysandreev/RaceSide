@@ -12,10 +12,9 @@ import { getSessionUser } from "@/lib/auth";
 import { getSubscriptionAccess } from "@/lib/billing/access";
 import {
   billingFlags,
-  getTributeConfig,
-  getYooMoneyConfig,
+  getLavaConfig,
 } from "@/lib/billing/config";
-import { canUseFirstYearPrice, getPendingUserOrder } from "@/lib/billing/repository";
+import { getInternationalPrices, getPendingUserOrder, getUserActiveLavaSubscription } from "@/lib/billing/repository";
 import type { BillingPriceCode } from "@/lib/billing/types";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -36,19 +35,13 @@ export default async function PlusPage({
     searchParams,
     getSessionUser(),
   ]);
-  const [access, firstYearAvailable, pendingOrder] = await Promise.all([
+  const [access, recurringSubscription, pendingOrder, internationalPrices] = await Promise.all([
     getSubscriptionAccess(user?.id ?? null),
-    user ? canUseFirstYearPrice(user.id) : true,
+    user ? getUserActiveLavaSubscription(user.id) : null,
     user ? getPendingUserOrder(user.id) : null,
+    getInternationalPrices(),
   ]);
-  const tributeAvailable =
-    billingFlags.checkout &&
-    billingFlags.tribute &&
-    Boolean(getTributeConfig());
-  const yoomoneyAvailable =
-    billingFlags.checkout &&
-    billingFlags.yoomoney &&
-    Boolean(getYooMoneyConfig());
+  const lavaAvailable = billingFlags.checkout && billingFlags.lava && Boolean(getLavaConfig());
 
   return (
     <AppShell immersive>
@@ -110,20 +103,21 @@ export default async function PlusPage({
                 </p>
               ) : (
                 <p className="hidden font-telemetry text-[0.62rem] font-bold uppercase tracking-[0.08em] text-muted-foreground sm:block">
-                  Без автосписаний
+                  Карты продлеваются автоматически
                 </p>
               )}
             </div>
 
             <PlusCheckout
               activeSubscription={access.active}
-              firstYearAvailable={firstYearAvailable}
+              recurringSubscription={Boolean(recurringSubscription)}
               initialPaymentOption={parsePaymentOption(payment)}
               initialPriceCode={parsePriceCode(plan)}
               signedIn={Boolean(user)}
               pendingOrder={pendingOrder ? { orderNumber: pendingOrder.orderNumber } : null}
-              tribute={tributeAvailable}
-              yoomoney={yoomoneyAvailable}
+              lava={lavaAvailable}
+              internationalPrices={internationalPrices}
+              accountEmail={user?.email ?? null}
             />
             {access.active ? (
               <Button asChild className="mt-2" size="sm" variant="secondary">
@@ -148,7 +142,7 @@ function ProductPreview() {
           height={720}
           priority
           sizes="(min-width: 1280px) 35rem, (min-width: 1024px) 46vw, (min-width: 640px) 36rem, 17rem"
-          src="/plus/live-dark.png"
+          src="/plus/live-dark-trajectory-20261005.png"
           width={1280}
         />
         <Image
@@ -158,7 +152,7 @@ function ProductPreview() {
           height={720}
           priority
           sizes="(min-width: 1280px) 35rem, (min-width: 1024px) 46vw, (min-width: 640px) 36rem, 17rem"
-          src="/plus/live-light.png"
+          src="/plus/live-light-trajectory-20261005.png"
           width={1280}
         />
       </div>
@@ -169,7 +163,7 @@ function ProductPreview() {
           data-theme-image="dark"
           height={900}
           sizes="(min-width: 1280px) 18rem, (min-width: 1024px) 27vw, 58vw"
-          src="/plus/telemetry-dark.png"
+          src="/plus/telemetry-dark-trajectory-20261005.png"
           width={1440}
         />
         <Image
@@ -178,7 +172,7 @@ function ProductPreview() {
           data-theme-image="light"
           height={900}
           sizes="(min-width: 1280px) 18rem, (min-width: 1024px) 27vw, 58vw"
-          src="/plus/telemetry-light.png"
+          src="/plus/telemetry-light-trajectory-20261005.png"
           width={1440}
         />
       </div>
@@ -219,14 +213,9 @@ function parsePriceCode(value?: string): BillingPriceCode | undefined {
 function parsePaymentOption(value?: string): CheckoutPaymentOption | undefined {
   if (
     value === "russian_card" ||
-    value === "international_card" ||
-    value === "crypto"
+    value === "international_card"
   ) {
     return value;
   }
-  if (value === "yoomoney_card" || value === "yoomoney_wallet") {
-    return "russian_card";
-  }
-  if (value === "tribute") return "international_card";
   return undefined;
 }

@@ -1,4 +1,14 @@
 import type { Json } from "@/types/supabase";
+import type { Database } from "@/types/supabase";
+
+export type AdminOperationsSnapshot = {
+  latestJobs: Database["public"]["Tables"]["job_runs"]["Row"][];
+  scheduleJobs: Array<{ scheduleKey: string; job: Database["public"]["Tables"]["job_runs"]["Row"] | null; lastSuccessAt: string | null }>;
+  queuedJobs: number;
+  runningJobs: number;
+  failedJobs24h: number;
+  telemetry: { failed24h: number; queuedErrors: number; queued: number; staleQueued: number; ready24h: number; lastRequestAt: string | null; lastReadyAt: string | null; cacheUpdatedAt: string | null };
+};
 
 export type AdminActionResult<T = unknown> = {
   ok: boolean;
@@ -13,6 +23,9 @@ export type AdminTableQuery = {
   search: string;
   status?: string;
   sort?: string;
+  from?: string;
+  to?: string;
+  params?: Record<string, string>;
 };
 
 export type AdminJobParameter = {
@@ -29,7 +42,7 @@ export type AdminJobDefinition = {
   name: string;
   title: string;
   description: string;
-  group: "ai" | "archive" | "community" | "news" | "notifications" | "reports" | "social" | "sport";
+  group: "ai" | "archive" | "community" | "news" | "notifications" | "reports" | "social" | "sport" | "legacy";
   expectedIntervalMinutes: number;
   adaptiveSchedule?: {
     activeLabel: string;
@@ -38,6 +51,7 @@ export type AdminJobDefinition = {
   maxAttempts: number;
   danger?: boolean;
   confirmation?: string;
+  availability?: { available: boolean | null; detail: string };
   parameters: AdminJobParameter[];
 };
 
@@ -64,7 +78,7 @@ export type AdminJobRun = {
 export type AdminSystemSignal = {
   id: string;
   label: string;
-  status: "healthy" | "stale" | "warning" | "failed" | "unknown";
+  status: "healthy" | "stale" | "warning" | "failed" | "unknown" | "paused";
   detail: string;
   checkedAt: string | null;
   href?: string;
@@ -80,6 +94,7 @@ export type AdminSystemStatus = AdminSystemSignal & {
 };
 
 export type AdminSchedule = {
+  availability?: { available: boolean | null; detail: string };
   id: string;
   scheduleKey: string;
   jobName: string;
@@ -201,9 +216,11 @@ export type AdminCostTimelineRow = {
 
 export type AdminUserErrorReport = {
   id: string;
+  kind: "news_error" | "feedback";
+  contact: string | null;
   articleId: string;
-  articleSlug: string;
-  articleTitle: string;
+  articleSlug: string | null;
+  articleTitle: string | null;
   sourceName: string | null;
   message: string;
   status: "new" | "in_progress" | "resolved" | "dismissed";

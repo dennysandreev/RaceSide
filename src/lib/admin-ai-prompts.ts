@@ -14,6 +14,7 @@ export const adminAiPromptCatalog = Object.freeze(
 const definitionsByKey = new Map(
   adminAiPromptCatalog.map((definition) => [definition.key, definition]),
 );
+export const adminTextAiModel = adminAiPromptCatalog[0].modelFallback;
 
 export function getAdminAiPromptDefinition(promptKey: string) {
   return definitionsByKey.get(promptKey) ?? null;
@@ -120,6 +121,7 @@ export function validateAdminAiRuntime(
     id: string;
     maxCompletionTokens: number | null;
   }>,
+  maxAllowedTokens = 32_768,
 ):
   | { ok: true; model: string; maxTokens: number }
   | { ok: false; message: string; fieldErrors: Record<string, string[]> } {
@@ -131,10 +133,12 @@ export function validateAdminAiRuntime(
     normalizedModel.length > 160 ||
     !MODEL_PATTERN.test(normalizedModel)
   ) {
-    fieldErrors.model = ["Выбери модель из каталога OpenRouter."];
+    fieldErrors.model = ["Для всех текстовых задач используется GPT-6 Luna."];
+  } else if (normalizedModel !== adminTextAiModel) {
+    fieldErrors.model = ["Для всех текстовых задач используется GPT-6 Luna."];
   }
-  if (!Number.isInteger(maxTokens) || maxTokens < 16 || maxTokens > 32_768) {
-    fieldErrors.maxTokens = ["Укажи целое число от 16 до 32 768."];
+  if (!Number.isInteger(maxTokens) || maxTokens < 16 || maxTokens > maxAllowedTokens) {
+    fieldErrors.maxTokens = [`Ответ может занимать от 16 до ${maxAllowedTokens.toLocaleString("ru-RU")} токенов.`];
   }
 
   if (availableModels?.length && !fieldErrors.model) {

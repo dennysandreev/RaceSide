@@ -1,7 +1,38 @@
 export const TRACK_MODEL_ALIASES = {
+  "yas-marina": [
+    "yas marina circuit", "yas marina", "yas_marina", "яс-марина", "яс марина",
+    "abu dhabi", "abu-dhabi", "абу-даби", "абу даби", "abu dhabi grand prix", "гран-при абу-даби",
+  ],
+  qatar: [
+    "lusail international circuit", "losail international circuit", "lusail", "losail",
+    "qatar", "катар", "лусаил", "лусайл", "лосайл", "qatar grand prix", "гран-при катара",
+  ],
+  "las-vegas": [
+    "las vegas strip circuit", "las vegas", "las-vegas", "лас-вегас", "лас вегас",
+    "las vegas grand prix", "гран-при лас-вегаса",
+  ],
+  interlagos: [
+    "interlagos", "интерлагос", "autódromo josé carlos pace", "autodromo jose carlos pace",
+    "jose carlos pace", "josé carlos pace", "жозе карлос пасе",
+    "são paulo", "sao paulo", "сан-паулу", "сан паулу", "brazil", "бразилия",
+    "brazilian grand prix", "гран-при бразилии", "гран-при сан-паулу",
+  ],
+  mexico: [
+    "autódromo hermanos rodríguez", "autodromo hermanos rodriguez", "hermanos rodríguez", "hermanos rodriguez",
+    "rodriguez", "mexico city", "mexico", "мехико", "мексика", "эрманос родригес",
+    "mexico city grand prix", "mexican grand prix", "гран-при мехико", "гран-при мексики",
+  ],
+  singapore: [
+    "marina bay street circuit", "marina bay", "singapore", "сингапур", "марина-бэй",
+    "singapore grand prix", "гран-при сингапура",
+  ],
+  austin: [
+    "circuit of the americas", "cota", "austin", "остин", "united states grand prix",
+    "гран-при сша", "гран-при соединенных штатов",
+  ],
   sepang: [
     "sepang international circuit", "sepang", "сепанг", "malaysian grand prix",
-    "гран-при малайзии", "bahrain grand prix in malaysia",
+    "гран-при малайзии", "bahrain grand prix in malaysia", "kuala lumpur", "куала лумпур",
   ],
   baku: [
     "baku city circuit", "baku", "baki", "баку", "azerbaijan grand prix", "гран-при азербайджана",

@@ -4,12 +4,12 @@ import { RaceMateLogo } from "@/components/racemate/racemate-logo";
 
 const primaryFooterLinks = [
   { href: "/plus", label: "RaceSide Plus" },
-  { href: "/legal/disclaimer", label: "Отказ от ответственности" },
+  { href: "/feedback", label: "Обратная связь" },
   { href: "/contacts", label: "Контакты" },
 ];
 
 const secondaryFooterLinks = [
-  { href: "/data-sources", label: "Источники данных" },
+  { href: "/legal/disclaimer", label: "Отказ от ответственности" },
   { href: "/legal/terms", label: "Соглашение" },
   { href: "/legal/privacy", label: "Конфиденциальность" },
   { href: "/legal/cookies", label: "Cookies" },
@@ -27,7 +27,7 @@ export function SiteFooter() {
             className="group flex w-fit shrink-0 items-center"
             href="/"
           >
-            <RaceMateLogo size="footer" />
+            <RaceMateLogo size="footer" variant="signature" />
           </Link>
 
           <nav

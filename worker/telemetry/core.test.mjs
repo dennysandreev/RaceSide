@@ -14,7 +14,24 @@ import {
   parseConfig,
   resampleComparison,
 } from "./core.mjs";
-import { mapLaps } from "./provider.mjs";
+import { mapLaps, OpenF1Provider } from "./provider.mjs";
+test("pit timestamps after the control line do not mark the out-lap as another entry", () => {
+  const raw = [9, 10, 11].map((number) => ({
+    session_key: 1,
+    driver_number: 3,
+    lap_number: number,
+    date_start: new Date(Date.parse("2024-01-01T12:00:00Z") + (number - 9) * 90000).toISOString(),
+    lap_duration: 90,
+    is_pit_out_lap: number === 10,
+  }));
+  const laps = mapLaps(raw, { pits: [{
+    driver_number: 3, lap_number: 9,
+    date: "2024-01-01T12:01:45Z",
+  }] });
+  assert.deepEqual(laps.map((lap) => [lap.pitIn, lap.pitOut]), [
+    [true, false], [false, true], [false, false],
+  ]);
+});
 const start = Date.parse("2026-09-05T14:00:00Z");
 const track = {
   id: "test",
@@ -122,6 +139,15 @@ test("sector deltas use official lap timing rather than distance interpolation",
     [0, 0.15],
   ]);
 });
+
+test("missing official sector timing cannot become an estimated sector win", () => {
+  const a = normalizeLap(fixture()), b = normalizeLap(fixture(60.25, 2));
+  a.lap.sectors[1] = null;
+  const c = buildComparison([a, b], track, config);
+  assert.deepEqual(c.sectorDelta[1], [null, null]);
+  const reversed = buildComparison([a, b], track, { ...config, reference: 1 });
+  assert.deepEqual(reversed.sectorDelta[1], [null, 0]);
+});
 test("missing channels stay null; unknown DRS is not off", () => {
   assert.equal(drsValue(2), null);
   assert.equal(drsValue(10), 1);
@@ -179,7 +205,7 @@ test("missing boundaries cannot create an invented finish", () => {
   f.samples = f.samples.filter((s) => Date.parse(s.date) > start + 500);
   assert.equal(normalizeLap(f).quality.comparable, false);
 });
-test("best lap excludes pit, deleted, incomplete and flag-affected laps", () => {
+test("best lap keeps yellow-flag times unless deleted, but excludes neutralized laps", () => {
   const base = fixture().lap;
   assert.equal(
     bestLap([
@@ -193,9 +219,109 @@ test("best lap excludes pit, deleted, incomplete and flag-affected laps", () => 
       { ...base, time: 57, complete: false },
       base,
     ]).time,
-    60,
+    56,
   );
   assert.equal(bestLap([{ ...base, validityKnown: false }]), null);
+});
+test("an official qualifying best lap survives a local yellow flag", () => {
+  const raw = [
+    {
+      session_key: 11373,
+      driver_number: 63,
+      lap_number: 23,
+      date_start: "2026-09-25T12:58:23.884Z",
+      lap_duration: 103.037,
+      is_pit_out_lap: false,
+    },
+    {
+      session_key: 11373,
+      driver_number: 63,
+      lap_number: 25,
+      date_start: "2026-09-25T13:02:17.911Z",
+      lap_duration: 102.526,
+      is_pit_out_lap: false,
+    },
+  ];
+  const control = [
+    { date: "2026-09-25T12:00:00Z", flag: "GREEN" },
+    {
+      date: "2026-09-25T13:03:35Z",
+      flag: "YELLOW",
+      scope: "Sector",
+      sector: 5,
+    },
+    { date: "2026-09-25T13:04:01Z", flag: "GREEN" },
+  ];
+  const laps = mapLaps(raw, {
+    control,
+    controlKnown: true,
+    sessionType: "Qualifying",
+    classification: [
+      { driver_number: 63, duration: [103.615, 103.462, 102.526] },
+    ],
+  });
+  assert.ok(laps[1].status.includes("YELLOW"));
+  assert.equal(bestLap(laps)?.number, 25);
+  assert.deepEqual(raceAverageLaps(laps).map((lap) => lap.number), [23]);
+});
+test("official timing wins over an unconfirmed faster raw qualifying lap", () => {
+  const base = fixture().lap;
+  assert.equal(
+    bestLap([
+      { ...base, number: 1, time: 102.525, officialBestTime: 102.526 },
+      {
+        ...base,
+        number: 2,
+        time: 102.526,
+        officialBestTime: 102.526,
+        officialBest: true,
+        status: ["YELLOW"],
+      },
+    ])?.number,
+    2,
+  );
+});
+test("OpenF1 catalog attaches official qualifying times to its laps", async () => {
+  const provider = new OpenF1Provider({
+    fetchRows: async (topic) =>
+      ({
+        sessions: [{
+          session_key: 11373,
+          meeting_key: 1295,
+          year: 2024,
+          session_name: "Qualifying",
+          session_type: "Qualifying",
+          circuit_short_name: "Baku",
+          date_start: "2024-09-25T12:00:00Z",
+          date_end: "2024-09-25T13:00:00Z",
+        }],
+        drivers: [{
+          driver_number: 63,
+          name_acronym: "RUS",
+          full_name: "George Russell",
+        }],
+        laps: [{
+          session_key: 11373,
+          driver_number: 63,
+          lap_number: 25,
+          date_start: "2024-09-25T13:02:17Z",
+          lap_duration: 102.526,
+          is_pit_out_lap: false,
+        }],
+        race_control: [{
+          date: "2024-09-25T13:03:35Z",
+          flag: "YELLOW",
+          scope: "Sector",
+        }],
+        session_result: [{
+          driver_number: 63,
+          duration: [103.615, 103.462, 102.526],
+        }],
+      })[topic] ?? [],
+  });
+  const catalog = await provider.getCatalog(11373);
+  assert.equal(catalog.laps[0].officialBest, true);
+  assert.equal(bestLap(catalog.laps)?.time, 102.526);
 });
 test("race average excludes pit entry, pit exit and invalid race laps", () => {
   const base = fixture().lap,
@@ -215,7 +341,7 @@ test("race average excludes pit entry, pit exit and invalid race laps", () => {
       lap(6, { deleted: true }),
       lap(7, { status: ["YELLOW"] }),
     ]).map((item) => item.number),
-    [1, 4],
+    [4],
   );
 });
 test("race average builds one distance-normalized telemetry trace", () => {

@@ -41,6 +41,39 @@ test('telemetry bootstrap loads the initial setup in one request', async () => {
   }
 });
 
+test('telemetry bootstrap reports partial data and stops polling when selection changes', async () => {
+  const originalFetch = globalThis.fetch;
+  const controller = new AbortController();
+  const progress = [];
+  let requests = 0;
+  globalThis.fetch = async () => {
+    requests += 1;
+    return new Response(JSON.stringify({
+      status: 202,
+      data: {
+        seasons: [2026], season: 2026, meetings: [], meeting: null,
+        sessions: [], session: null, catalog: null, stage: 'meetings',
+      },
+    }), { status: 202, headers: { 'Retry-After': '3' } });
+  };
+  try {
+    await assert.rejects(
+      telemetryBootstrapRequest({}, {
+        signal: controller.signal,
+        onProgress: (data) => {
+          progress.push(data.stage);
+          controller.abort();
+        },
+      }),
+      { name: 'AbortError' },
+    );
+    assert.deepEqual(progress, ['meetings']);
+    assert.equal(requests, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('cursor resumes notifications after cleanup cancels a pending frame', () => {
   const originalRequest = globalThis.requestAnimationFrame;
   const originalCancel = globalThis.cancelAnimationFrame;

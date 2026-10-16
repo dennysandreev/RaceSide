@@ -8,7 +8,7 @@ import sharp from "sharp";
 import { SEPANG_TRACK_MODEL as model } from "./sepang-model.ts";
 import { getThreeDimensionalTrackModelId } from "./track-models.ts";
 import { validateTrackAsset } from "../../scripts/track-model-blender/validate-track.mjs";
-import { verifySepangSources } from "../../scripts/track-model-blender/download-sepang-data.mjs";
+import { loadSepangBuildingColours, verifySepangSources } from "../../scripts/track-model-blender/download-sepang-data.mjs";
 import { assembleWays, cumulativeDistances, parseOsmXml, rotateClosedLine, utm47nFromWgs84 } from "../../scripts/track-model-blender/sepang-geometry.mjs";
 
 const root = new URL("../../", import.meta.url);
@@ -25,6 +25,28 @@ test("Sepang delivery asset keeps its texture, anchors, scale and clear driving 
   const metrics = await validateTrackAsset({ modelId: "sepang", glbPath: new URL("public/f1/tracks/3d/sepang.glb", root), metadataPath: new URL("public/f1/tracks/3d/sepang-metadata.json", root), previewPath: new URL("public/f1/tracks/3d/sepang-preview.webp", root) });
   assert.equal(metrics.decodedSurfaceAudit.structuralRoadConflicts, 0);
   assert.ok(metrics.decodedSurfaceAudit.paint.minimumClearanceMeters > .01);
+  assert.deepEqual(metrics.decodedSurfaceAudit.appearance.missingBuildingColours, []);
+  assert.deepEqual(metrics.decodedSurfaceAudit.appearance.missingGrandstandColours, []);
+});
+
+test("Sepang roofs retain photographed material families and disclose satellite estimates", async () => {
+  const appearance = await loadSepangBuildingColours();
+  assert.equal(metadata.buildingAppearance.auditSha256, appearance.auditSha256);
+  assert.equal(metadata.buildingAppearance.sourceColorSpace, "sRGB");
+  assert.equal(metadata.buildingAppearance.vertexColorSpace, "linear");
+  assert.equal(metadata.buildingAppearance.photographsEmbedded, false);
+  const buildings = metadata.layoutQuality.buildings.rendered;
+  const find = (id) => buildings.find((building) => building.id === id).appearance;
+  assert.equal(find(144362328).roofSrgbHex, "#494e4b", "chalets have dark metal roofs in the exterior photograph");
+  assert.equal(find(1105232836).roofSrgbHex, "#4a504d", "south paddock roof is dark in the venue photograph");
+  assert.equal(find(107364040).roofSrgbHex, "#a26557", "welcome roofs are reddish in Sentinel");
+  assert.ok(buildings.every((building) => building.appearance.method.includes("interior")));
+  assert.equal(buildings.filter((building) => building.appearance.group === "satellite-roof-proxy").length, 102);
+  for (const reference of appearance.references) {
+    const source = metadata.sourceManifest.sources.find((source) => source.file === reference.file);
+    assert.equal(source.sha256, reference.sha256, reference.id);
+    assert.equal(source.bytes, reference.bytes, reference.id);
+  }
 });
 
 test("Sepang UI uses a closed, clockwise metre path and all fifteen ordered turns", () => {

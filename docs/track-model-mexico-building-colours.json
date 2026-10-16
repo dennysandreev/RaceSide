@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "method": "Median of filtered material-body pixels inside reviewed regions; shaded photographic colours, not calibrated reflectance or exact paint specification",
+  "sources": [
+    {
+      "id": "stadiumRoofSouth",
+      "file": "official-stadium-south-2025-photo.jpg",
+      "sha256": "797944f0a4457f98b62cc71331c1a4c2b06a9bfea9845be117f0cd881afe113b",
+      "reviewedPixelRegion": [
+        1280,
+        40,
+        1620,
+        230
+      ],
+      "selectedPixels": 2701,
+      "sampledSrgb": [
+        159,
+        68,
+        43
+      ],
+      "observedMaterial": "orange/copper canopy underside on dark steel"
+    },
+    {
+      "id": "stadiumRoofNorth",
+      "file": "official-stadium-north-2025-photo.jpg",
+      "sha256": "766e6e7250658ce5cd3fca807e080c3a19b44fedf093df3e36939216e4641026",
+      "reviewedPixelRegion": [
+        920,
+        320,
+        1620,
+        390
+      ],
+      "selectedPixels": 590,
+      "sampledSrgb": [
+        86,
+        59,
+        50
+      ],
+      "observedMaterial": "orange/copper canopy underside on dark steel"
+    },
+    {
+      "id": "mainCanopy",
+      "file": "official-main-grandstand-balcony-photo.jpg",
+      "sha256": "1a5f142e5bc7025e6f6cecc8e4c1a20accbff422266dd863504f2641d377aaf3",
+      "reviewedPixelRegion": [
+        160,
+        0,
+        490,
+        75
+      ],
+      "selectedPixels": 23831,
+      "sampledSrgb": [
+        154,
+        154,
+        140
+      ],
+      "observedMaterial": "pale warm fabric canopy with white trusses"
+    },
+    {
+      "id": "baseballField",
+      "file": "official-baseball-stadium-field-photo.jpg",
+      "sha256": "3fd569a6c4356ff23e0971040fc911fadb4abc53a83a0d2927ddfa9546e3d448",
+      "reviewedPixelRegion": [
+        300,
+        250,
+        460,
+        350
+      ],
+      "selectedPixels": 16000,
+      "sampledSrgb": [
+        64,
+        128,
+        36
+      ],
+      "pixelSelection": "green body: g > 1.25*r and g > 1.25*b, 60 < g < 190",
+      "observedMaterial": "artificial baseball turf under stadium lighting; photographic RGB, not calibrated daylight reflectance"
+    },
+    {
+      "id": "stadiumRoofTop",
+      "file": "official-gnp-day-aerial-photo.jpg",
+      "sha256": "a4ec2398940d34315dd95ce8b89047bfb897b5db993ddd8fd601a8d20819dbf7",
+      "reviewedPixelRegion": [
+        470,
+        720,
+        610,
+        780
+      ],
+      "selectedPixels": 8400,
+      "sampledSrgb": [
+        223,
+        144,
+        100
+      ],
+      "pixelSelection": "orange membrane body: r > 140, r > 1.15*g and g > 1.15*b; reviewed region contains no sponsor lettering",
+      "observedMaterial": "continuous GNP2024 orange/copper textile roof top in daylight; photographic colour, not calibrated reflectance"
+    },
+    {
+      "id": "stadiumSteelDay",
+      "file": "official-gnp-truss-detail-photo.jpg",
+      "sha256": "4d2accc6414745d2fbeea1d3089460b36badc47b98b6791c9c0abd2aa4eabfc5",
+      "reviewedPixelRegion": [
+        810,
+        110,
+        870,
+        125
+      ],
+      "selectedPixels": 535,
+      "sampledSrgb": [
+        212,
+        216,
+        226
+      ],
+      "pixelSelection": "sunlit grey tubular top beam: 80 < r < 230, abs(r-g) < 15, abs(g-b) < 18",
+      "observedMaterial": "grey painted tubular steel under direct daylight; appears much darker in shade; photographic colour, not calibrated reflectance"
+    }
+  ]
+}

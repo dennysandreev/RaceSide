@@ -1,8 +1,8 @@
-import { readFile } from "node:fs/promises";
 import {
   VERSION,
   parseConfig,
   bestLap,
+  bestLapCandidates,
   raceAverageLaps,
   normalizeLap,
   averageNormalizedLaps,
@@ -10,12 +10,26 @@ import {
   cleanSamples,
 } from "./core.mjs";
 import { hash, TelemetryStore } from "./store.mjs";
-import { OpenF1Provider, slugify } from "./provider.mjs";
-export const resultKey = (task) => `${VERSION}:${hash(task)}`;
+import { OpenF1Provider } from "./provider.mjs";
+import { orientEstimatedTrack, verifiedTrack } from "./track-geometry.mjs";
+import { buildRacePace, raceControlLaps, raceTyreLaps, isRaceSession, RACE_PACE_VERSION } from "./race-pace.mjs";
+import { ANALYSIS_VERSION, buildTelemetryAnalysis, repeatableLap } from "./analysis.mjs";
+import { REPORT_TIMING_VERSION, buildReportTiming, reportTimingTtl } from "./report-timing.mjs";
+export const resultKey = (task) =>
+  `${task.kind === "report-timing" ? REPORT_TIMING_VERSION : task.kind === "race-pace" ? RACE_PACE_VERSION : VERSION}:${hash(
+    ["catalog", "compare"].includes(task.kind)
+      ? { ...task, raceAnalysisVersion: RACE_PACE_VERSION,
+          ...(task.kind === "compare" ? { trackAnalysisVersion: ANALYSIS_VERSION } : {}) }
+      : task,
+  )}`;
+const catalogTtl = (catalog) =>
+  Date.now() - Date.parse(catalog.session.end) < 24 * 3600000
+    ? 15 * 60000
+    : 24 * 3600000;
 export function validateTask(task) {
   if (
     !task ||
-    !["seasons", "meetings", "sessions", "catalog", "compare"].includes(
+    !["seasons", "meetings", "sessions", "catalog", "compare", "race-pace", "report-timing"].includes(
       task.kind,
     )
   )
@@ -49,15 +63,17 @@ export class TelemetryService {
     const old = await this.store.get(key);
     if (old) return old;
     const data = await fn();
-    await this.store.put(key, data, ttl);
+    await this.store.put(key, data, typeof ttl === "function" ? ttl(data) : ttl);
     return data;
   }
   async catalog(id) {
-    return this.cached(
-      `catalog:${id}`,
+    const catalog = await this.cached(
+      `catalog:${VERSION}:${id}`,
       () => this.provider.getCatalog(id),
-      24 * 3600000,
+      catalogTtl,
     );
+    if (!isRaceSession(catalog.session)) return catalog;
+    return { ...catalog, laps: raceTyreLaps({ ...catalog, laps: raceControlLaps(catalog) }) };
   }
   async raw(lap) {
     return this.cached(
@@ -128,21 +144,14 @@ export class TelemetryService {
     );
   }
   async track(catalog, lap) {
-    return this.cached(
+    const existing = verifiedTrack(
+      catalog.session.circuit,
+      catalog.session.season,
+    );
+    if (existing) return existing;
+    const fallback = await this.cached(
       `track:${VERSION}:${catalog.session.meetingId}`,
       async () => {
-        const tracks = JSON.parse(
-          await readFile(new URL("./tracks.json", import.meta.url), "utf8"),
-        );
-        const name = slugify(catalog.session.circuit);
-        const existing = tracks.find(
-          (t) =>
-            t.seasons.includes(catalog.session.season) &&
-            (slugify(t.name) === name ||
-              name.includes(t.id) ||
-              t.id.includes(name)),
-        );
-        if (existing) return existing;
         const reference = bestLap(catalog.laps) ?? lap,
           raw = await this.raw(reference),
           samples = cleanSamples(raw.samples).filter(
@@ -212,6 +221,7 @@ export class TelemetryService {
         };
       },
     );
+    return orientEstimatedTrack(fallback);
   }
   async normalize(catalog, lap, track) {
     return this.cached(
@@ -238,7 +248,7 @@ export class TelemetryService {
     )
       throw new Error("RACE_AVERAGE_ONLY");
     const candidates = raceAverageLaps(
-      catalog.laps.filter((lap) => lap.driverNumber === driverNumber),
+      raceControlLaps(catalog).filter((lap) => lap.driverNumber === driverNumber),
     );
     if (candidates.length < 2) throw new Error("RACE_AVERAGE_UNAVAILABLE");
     const averageKey = `race-average:${VERSION}:${catalog.session.id}:${driverNumber}:${hash(
@@ -290,10 +300,7 @@ export class TelemetryService {
         : laps.find((l) => l.number === selection.lap);
     if (!chosen) throw new Error("NO_VALID_LAP");
     if (selection.lap !== "best") return this.normalize(catalog, chosen, track);
-    const candidates = laps
-      .filter((l) => bestLap([l]))
-      .sort((a, b) => a.time - b.time)
-      .slice(0, 4);
+    const candidates = bestLapCandidates(laps).slice(0, 4);
     for (const lap of candidates) {
       try {
         const result = await this.normalize(catalog, lap, track);
@@ -308,6 +315,23 @@ export class TelemetryService {
       }
     }
     throw new Error("NO_COMPARABLE_LAP");
+  }
+  async analysisCandidates(catalogs, traces, track) {
+    if (traces.length !== 2 || traces[0].session.id !== traces[1].session.id ||
+      traces[0].driver.number === traces[1].driver.number || !traces.every(repeatableLap)) return [];
+    const candidates = [];
+    for (let i = 0; i < traces.length; i++) {
+      const selected = traces[i];
+      const laps = catalogs[i].laps.filter((lap) => lap.driverNumber === selected.driver.number && lap.id !== selected.lap.id &&
+        repeatableLap({ ...selected, lap }))
+        .sort((a, b) => Math.abs(Date.parse(a.start) - Date.parse(selected.lap.start)) - Math.abs(Date.parse(b.start) - Date.parse(selected.lap.start)))
+        .slice(0, 4);
+      for (const lap of laps) {
+        try { candidates.push(await this.normalize(catalogs[i], lap, track)); }
+        catch { /* Optional repetition data must not invalidate the selected laps. */ }
+      }
+    }
+    return candidates;
   }
   async compare(input) {
     const config = parseConfig(input);
@@ -419,6 +443,7 @@ export class TelemetryService {
         }
       }
     }
+    result.analysis = buildTelemetryAnalysis(result, await this.analysisCandidates(catalogs, traces, track));
     return result;
   }
   async prepare(input) {
@@ -452,28 +477,49 @@ export class TelemetryService {
             3600000,
           );
         if (task.kind === "catalog") return this.catalog(task.session);
+        if (task.kind === "race-pace")
+          return buildRacePace(await this.catalog(task.session));
+        if (task.kind === "report-timing") {
+          const catalog = await this.catalog(task.session);
+          if (String(catalog.session.name).toLowerCase() !== "race") throw new Error("REPORT_TIMING_ONLY");
+          const [positions, intervals] = await Promise.all([
+            this.provider.fetchRows("position", { session_key: task.session }),
+            this.provider.fetchRows("intervals", { session_key: task.session }),
+          ]);
+          return buildReportTiming(catalog, positions, intervals);
+        }
         return this.compare(task.config);
       },
-      task.kind === "compare" ? null : 3600000,
+      task.kind === "compare"
+        ? null
+        : task.kind === "report-timing"
+          ? reportTimingTtl
+        : task.kind === "race-pace"
+          ? (data) => Date.now() - Date.parse(data.session.end) < 24 * 3600000
+            ? 15 * 60000 : null
+          : task.kind === "catalog" ? catalogTtl : 3600000,
     );
   }
 }
-export async function runTelemetryTask({ db, taskId, fetchRows }) {
+export async function runTelemetryTask({ db, taskId, jobId, fetchRows }) {
   const store = new TelemetryStore(db),
     task = await store.task(taskId);
   if (!task) throw new Error("TASK_NOT_FOUND");
+  if (jobId && task.job_id !== jobId) return { itemsProcessed: 0, metadata: { skipped: "superseded_attempt" } };
+  const attemptJobId = jobId ?? task.job_id;
   try {
     const service = new TelemetryService({
       store,
       provider: new OpenF1Provider({ fetchRows }),
     });
     await service.prepare(task.task);
-    await store.finish(taskId, resultKey(validateTask(task.task)));
+    await store.finish(taskId, resultKey(validateTask(task.task)), attemptJobId);
     return { itemsProcessed: 1 };
   } catch (e) {
     await store.fail(
       taskId,
       /^[A-Z_]+$/.test(e.message) ? e.message : "PROVIDER_UNAVAILABLE",
+      attemptJobId,
     );
     throw e;
   }

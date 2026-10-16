@@ -15,3 +15,9 @@ test("standings context identifies season and round, without presenting a race r
   assert.match(newsReviewIssueLabel("driver_team_conflict"), /Команда пилота/);
   assert.equal(newsReviewIssueLabel("internal_unknown_error"), "Требуется сверка с оригиналом.");
 });
+
+test("historical technical holds do not claim that the source lacks a fact", () => {
+  assert.doesNotMatch(newsReviewIssueLabel("invented_number:250"), /не найдено/);
+  assert.match(newsReviewIssueLabel("invented_number:250"), /единицы/);
+  assert.match(newsReviewIssueLabel("unknown_source_fact"), /служебных данных/);
+});

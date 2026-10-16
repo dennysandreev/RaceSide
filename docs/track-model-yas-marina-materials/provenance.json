@@ -1,0 +1,16 @@
+{
+  "tool": "image_gen.imagegen",
+  "prompt": "Use case: compositing. Asset type: seamless water-only albedo texture for the Yas Marina 3D circuit terrain. The supplied image is the earlier licensed Planet satellite photograph and is a COLOR/TEXTURE REFERENCE only. Create a square flat top-down seamless texture of the calm Yas Marina water, matching the beautiful blue-green teal seawater in this reference. Fill the entire square edge-to-edge with water only. Natural muted turquoise/teal, depth variations, small soft ripples, diffuse daylight. Main median sRGB around #256571, shallow tonal variation between #235761 and #347A80; never black. Subtle realistic texture rather than a flat solid fill. No dramatic waves, no white foam, no caustics grid, no large white highlights. No land, shoreline, boats, piers, buildings, shadows, text, or objects; geography and shoreline will be applied separately through exact masks in Blender. No vignette or dark corners. All edges must seamlessly tile. This is a water material derived from the supplied reference, not a satellite map and not a request to move or invent geographic objects.",
+  "reference": {
+    "author": "Planet Labs, Inc.",
+    "url": "https://commons.wikimedia.org/wiki/File:Yas_Marina_Circuit,_October_12,_2018_SkySat.jpg",
+    "date": "2018-10-12",
+    "license": "CC BY-SA 4.0",
+    "sha256": "b800a2089d14b32d7cf525a39fee2028825943a2b8d4ca395c6816a399b572fa",
+    "use": "colour reference only; no reference geography embedded"
+  },
+  "output": "water-albedo.png",
+  "sha256": "61fca4f9d3d9f9ab3e3616c337a2a0cdf5cdc31f82e78cdaea567a04a6f8adf2",
+  "license": "CC BY-SA 4.0",
+  "geography": "separate current OSM water mask, not generated"
+}

@@ -1,0 +1,32 @@
+{
+  "modelId": "interlagos",
+  "circuitName": "Autódromo José Carlos Pace",
+  "coordinateReferenceSystem": "EPSG:31983",
+  "bounds": { "minX": 326450, "minY": 7377100, "maxX": 327650, "maxY": 7378600 },
+  "sourceOrthoBounds": { "minX": 325600, "minY": 7377000, "maxX": 327750, "maxY": 7379100 },
+  "officialLengthMeters": 4309,
+  "circuitRelationId": 6781071,
+  "pitWayId": 33779109,
+  "finishNodeId": 13826424126,
+  "raceStartNodeId": 13826424125,
+  "trackWidthMeters": 12,
+  "pitWidthMeters": 8,
+  "officialControlPoints": {
+    "referenceYear": 2025,
+    "currentEventVerified": false,
+    "url": "https://www.fia.com/system/files/decision-document/2025_sao_paulo_grand_prix_-_event_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_quarantine_zone_and_red_zones_map.pdf",
+    "sector1BeforeTurn4Meters": 168,
+    "sector2BeforeTurn12Meters": 85,
+    "speedTrapBeforeTurn1Meters": 90,
+    "pitBoxes": 24,
+    "grandstandEventYear": 2026,
+    "eventMapUrl": "https://f1saopaulo.com.br/arquibancadas/"
+  },
+  "limitations": [
+    "FIA timing and 24 garage bays use the published 2025 circuit/pit drawing; the 2026 FIA event drawing is not available on the acquisition date.",
+    "GeoSampa orthophoto is the 2020 survey; bare-earth terrain and building height checks use the classified PMSP 2017 LiDAR. Surface paint may differ at the 2026 event.",
+    "The PMSP EPT header marks its vertical datum unknown; OpenTopography describes the same 2017 survey as SIRGAS 2000 ellipsoidal heights. Absolute heights retain the original survey values and that uncertainty; no datum conversion or vertical exaggeration is applied.",
+    "No LoD2 registry is available. Buildings use mapped footprints, measured LiDAR heights and aerial roof textures; facade details and canopy cross-sections are photographic reconstructions, not photogrammetry.",
+    "The 2026 organizer map locates spectator zones but explicitly warns that its photographs show earlier events. Exact temporary 2026 grandstand footprints and motorhome positions are unverified and are omitted instead of invented. Permanent seating and mapped hospitality buildings are modeled."
+  ]
+}

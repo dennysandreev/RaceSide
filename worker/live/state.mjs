@@ -76,21 +76,72 @@ function qualifyingPhaseDurationMs(mode, phase) {
   const minutes = mode === "sprint_qualifying" ? [12, 10, 8] : [18, 15, 12];
   return (minutes[phase - 1] ?? 0) * 60000;
 }
-function markQualifyingEliminations(state, phase) {
+function qualifyingPhaseName(state, phase) {
+  return `${sessionCapabilities(state.session).mode === "sprint_qualifying" ? "SQ" : "Q"}${phase}`;
+}
+function lapQualifyingPhase(state, row, driver) {
+  if (!sessionCapabilities(state.session).showQualifyingPhase) return null;
+  const start = Date.parse(row.date_start);
+  const phases = Object.entries(state.qualifyingPhases ?? {})
+    .filter(([, phase]) => Date.parse(phase.startedAt) <= start)
+    .sort((a, b) => Date.parse(b[1].startedAt) - Date.parse(a[1].startedAt));
+  // A delayed lap belongs to the segment in which it started, even if its
+  // final time arrives after the flag or after the next segment has started.
+  return (
+    phases[0]?.[0] ??
+    driver.lapHistory?.find((lap) => lap.lap === number(row.lap_number))?.phase ??
+    state.phase
+  );
+}
+function markQualifyingEliminations(state, phase, time) {
   if (![1, 2].includes(phase)) return;
-  const eligible = Object.values(state.drivers)
-    .filter((driver) => !driver.eliminatedIn)
-    .sort(
-      (a, b) =>
-        (a.bestLap ?? Infinity) - (b.bestLap ?? Infinity) ||
-        (a.position ?? 99) - (b.position ?? 99),
+  const label = qualifyingPhaseName(state, phase);
+  state.qualifyingPhases ??= {};
+  state.qualifyingPhases[label] ??= {};
+  state.qualifyingPhases[label].finishedAt ??= time;
+}
+function refreshQualifyingEliminations(state) {
+  if (!sessionCapabilities(state.session).showQualifyingPhase) return;
+  let eligible = Object.values(state.drivers);
+  for (const driver of eligible) driver.eliminatedIn = null;
+  for (const phase of [1, 2]) {
+    const label = qualifyingPhaseName(state, phase);
+    if (!state.qualifyingPhases?.[label]?.finishedAt) break;
+    const finishedAt = Date.parse(state.qualifyingPhases[label].finishedAt);
+    // The clock stops before the last flying laps finish. Do not label those
+    // drivers as eliminated while their in-progress lap can still count.
+    if (state.phase === label && eligible.some((driver) => {
+      const lap = driver.qualifyingLap;
+      return !isOut(driver) && driver.status !== "PIT" && lap?.phase === label &&
+        !lap.outLap && !lap.completed && Date.parse(lap.startedAt) <= finishedAt;
+    })) break;
+    const phaseTime = (driver) => driver.bestByPhase?.[label] ?? Infinity;
+    if (!eligible.some((driver) => Number.isFinite(phaseTime(driver)))) break;
+    eligible.sort(
+      (a, b) => phaseTime(a) - phaseTime(b) || (a.position ?? 99) - (b.position ?? 99),
     );
-  const advancing =
-    phase === 1
-      ? Math.max(10, eligible.length - Math.ceil((eligible.length - 10) / 2))
-      : Math.min(10, eligible.length);
-  for (const driver of eligible.slice(advancing))
-    driver.eliminatedIn = `${state.phase?.startsWith("SQ") ? "SQ" : "Q"}${phase}`;
+    const advancing =
+      phase === 1
+        ? Math.max(10, eligible.length - Math.ceil((eligible.length - 10) / 2))
+        : Math.min(10, eligible.length);
+    for (const driver of eligible.slice(advancing))
+      driver.eliminatedIn = label;
+    eligible = eligible.slice(0, advancing);
+  }
+  // The display follows the active segment for advancing drivers, and the
+  // segment in which an eliminated driver set their last qualifying time.
+  for (const driver of Object.values(state.drivers)) {
+    const label = driver.eliminatedIn ?? state.phase;
+    if (!label) continue;
+    const best = driver.bestByPhase?.[label] ?? null;
+    if (best !== driver.bestLap) {
+      driver.bestLap = best;
+      driver.bestLapSectors =
+        driver.lapHistory?.find(
+          (lap) => lap.phase === label && !lap.deleted && !lap.outLap && lap.duration === best,
+        )?.sectors ?? [null, null, null];
+    }
+  }
 }
 export const eventKey = (topic, row) =>
   row._eventKey ??
@@ -108,12 +159,14 @@ export const eventKey = (topic, row) =>
 export function emptyState() {
   return {
     session: null,
+    championship: null,
     drivers: {},
     locations: {},
     telemetry: {},
     events: [],
     radio: [],
     pits: [],
+    stints: [],
     weather: null,
     track: null,
     trackSectorCount: null,
@@ -125,6 +178,7 @@ export function emptyState() {
     phase: null,
     phaseEndsAt: null,
     phaseStartedAt: null,
+    qualifyingPhases: {},
     timerPausedAt: null,
     timerOffsetMs: 0,
     replayReady: false,
@@ -143,10 +197,12 @@ export function newDriver(n) {
     interval: null,
     compound: null,
     tyreAge: null,
+    tyreAgeEstimated: false,
     stintNumber: null,
     lap: 0,
     lastLap: null,
     bestLap: null,
+    maxSpeed: null,
     bestLapSectors: [null, null, null],
     sectors: [null, null, null],
     bestSectors: [null, null, null],
@@ -159,6 +215,7 @@ export function newDriver(n) {
     pitUntil: null,
     bestByPhase: {},
     eliminatedIn: null,
+    qualifyingLap: null,
   };
 }
 // Project onto the segment itself: vertex snapping makes a moving car freeze
@@ -230,7 +287,7 @@ export function translateControl(row) {
   if (/TRACK CLEAR/i.test(m)) return "Трасса свободна";
   if (/SESSION STARTED/i.test(m)) return "Сессия началась";
   if (/SESSION FINISHED/i.test(m)) return "Сессия завершена";
-  if (/SESSION ABORTED/i.test(m)) return "Сессия завершена";
+  if (/SESSION ABORTED/i.test(m)) return "Сессия остановлена";
   if (/SESSION (?:WILL BE TEMPORARILY STOPPED|SUSPENDED)/i.test(m))
     return "Сессия приостановлена";
   if (/OVERTAKE ENABLED/i.test(m)) return "Режим обгона доступен";
@@ -248,6 +305,32 @@ export class LiveState {
     this.seen = new Map();
     this.clocks = new Map();
     this.locationMotion = new Map();
+    for (const driver of Object.values(this.state.drivers))
+      if (driver.stintStart != null) this.updateTyreAge(driver);
+  }
+  updateTyreAge(driver) {
+    // A new pit can arrive while OpenF1 still extends the previous stint.
+    // Until that stint is replaced, count laps since the stop as an estimate.
+    // Garage visits in timed sessions and explicit drive-throughs are excluded.
+    const pit = sessionCapabilities(this.state.session).showRaceGap
+      ? this.state.pits
+          .filter(
+            (p) =>
+              p.driverNumber === driver.driverNumber &&
+              p.duration !== 0 &&
+              p.lap != null &&
+              p.lap < driver.lap &&
+              driver.stintStart != null &&
+              p.lap >= driver.stintStart,
+          )
+          .sort((a, b) => b.lap - a.lap)[0]
+      : null;
+    driver.tyreAgeEstimated = Boolean(pit);
+    driver.tyreAge = pit
+      ? Math.max(0, driver.lap - pit.lap - 1)
+      : driver.stintStart == null
+        ? null
+        : Math.max(0, driver.lap - driver.stintStart + (driver.stintAge ?? 0));
   }
   setSession(session, track = null) {
     this.state = emptyState();
@@ -278,8 +361,40 @@ export class LiveState {
       item.driverNumber === undefined ||
       roster.has(Number(item.driverNumber));
     this.state.pits = this.state.pits.filter(belongsToRoster);
+    this.state.stints = this.state.stints.filter(belongsToRoster);
     this.state.radio = this.state.radio.filter(belongsToRoster);
     this.state.events = this.state.events.filter(belongsToRoster);
+  }
+  resetQualifying() {
+    if (!sessionCapabilities(this.state.session).showQualifyingPhase) return;
+    // REST loads the complete control/lap history. Rebuild these derived
+    // fields instead of feeding Q1 history into a saved Q2/Q3 classification.
+    Object.assign(this.state, {
+      phase: null,
+      phaseStartedAt: null,
+      phaseEndsAt: null,
+      qualifyingPhases: {},
+      timerPausedAt: null,
+      timerOffsetMs: 0,
+      status: "live",
+      flag: null,
+      yellowSectors: [],
+    });
+    for (const driver of Object.values(this.state.drivers))
+      Object.assign(driver, {
+        eliminatedIn: null,
+        bestByPhase: {},
+        bestLap: null,
+        bestLapSectors: [null, null, null],
+        bestSectors: [null, null, null],
+        lapHistory: [],
+        lapDecisions: [],
+        qualifyingLap: null,
+      });
+    this.seen.clear();
+    for (const key of this.clocks.keys())
+      if (/^(?:laps|race_control|session_result):/.test(key))
+        this.clocks.delete(key);
   }
   feed(type, row, message, extra = {}) {
     const event = {
@@ -324,6 +439,17 @@ export class LiveState {
     if (!Number.isFinite(Date.parse(time))) return false;
     const n = number(row.driver_number);
     const d = n === null ? null : (s.drivers[n] ??= newDriver(n));
+    // Delayed samples can contain an earlier session maximum even when their
+    // current telemetry must not replace a newer sample.
+    if (d && (topic === "car_data" || topic === "laps")) {
+      for (const value of topic === "car_data"
+        ? [row.speed]
+        : [row.st_speed, row.i1_speed, row.i2_speed]) {
+        const speed = number(value);
+        if (speed !== null && speed >= 0)
+          d.maxSpeed = Math.max(d.maxSpeed ?? 0, speed);
+      }
+    }
     const clockKey = `${topic}:${n}:${topic === "laps" ? row.lap_number : topic === "stints" ? row.stint_number : ""}`;
     const stale = Date.parse(time) < (this.clocks.get(clockKey) ?? 0);
     if (!stale) this.clocks.set(clockKey, Date.parse(time));
@@ -449,6 +575,16 @@ export class LiveState {
               row.duration_sector_2,
               row.duration_sector_3,
             ].map(number);
+          const lapPhase = lapQualifyingPhase(s, row, d);
+          if (lapPhase && Number.isFinite(Date.parse(row.date_start)) &&
+              (lap > (d.qualifyingLap?.lap ?? 0) || (lap === d.qualifyingLap?.lap && !stale)))
+            d.qualifyingLap = {
+              lap,
+              phase: lapPhase,
+              startedAt: row.date_start,
+              outLap: Boolean(row.is_pit_out_lap),
+              completed: Boolean(duration) || (d.qualifyingLap?.lap === lap && d.qualifyingLap.completed),
+            };
           if (duration && lap > 0 && !stale)
             d.lapHistory = [
               ...(d.lapHistory ?? []).filter((p) => p.lap !== lap),
@@ -456,7 +592,7 @@ export class LiveState {
                 lap,
                 duration,
                 completedAt: time,
-                phase: s.phase,
+                phase: lapPhase,
                 outLap: Boolean(row.is_pit_out_lap),
                 deleted:
                   Boolean(row.deleted) ||
@@ -496,8 +632,7 @@ export class LiveState {
             if (duration) d.lastLap = duration;
             if (!isOut(d))
               d.status = row.is_pit_out_lap ? "OUT LAP" : "RUNNING";
-            if (d.stintStart != null)
-              d.tyreAge = Math.max(0, lap - d.stintStart + (d.stintAge ?? 0));
+            this.updateTyreAge(d);
           }
           if (
             duration &&
@@ -506,14 +641,16 @@ export class LiveState {
             !d.lapHistory?.find((p) => p.lap === lap)?.deleted &&
             duration > 20
           ) {
-            if (s.phase) {
+            if (lapPhase) {
               d.bestByPhase ??= {};
-              d.bestByPhase[s.phase] = Math.min(
-                d.bestByPhase[s.phase] ?? Infinity,
+              d.bestByPhase[lapPhase] = Math.min(
+                d.bestByPhase[lapPhase] ?? Infinity,
                 duration,
               );
             }
-            const personal = !d.bestLap || duration < d.bestLap;
+            const personal =
+              (!lapPhase || lapPhase === s.phase) &&
+              (!d.bestLap || duration < d.bestLap);
             if (personal) {
               d.bestLap = duration;
               d.bestLapSectors = lapSectors;
@@ -543,16 +680,30 @@ export class LiveState {
         }
         break;
       case "stints":
-        if (d && (number(row.stint_number) ?? 0) >= (d.stintNumber ?? 0)) {
+        if (d && !stale && number(row.stint_number) !== null && number(row.lap_start) !== null) {
+          const stint = {
+            driverNumber: n,
+            stintNumber: number(row.stint_number),
+            compound: row.compound ?? null,
+            startLap: number(row.lap_start),
+            endLap: number(row.lap_end),
+            ageAtStart: number(row.tyre_age_at_start),
+          };
+          s.stints = [...s.stints.filter((item) => item.driverNumber !== n || item.stintNumber !== stint.stintNumber), stint];
+        }
+        if (d && !stale && (number(row.stint_number) ?? 0) >= (d.stintNumber ?? 0)) {
           const before = d.compound;
+          const newStint =
+            d.stintNumber != null &&
+            number(row.stint_number) > d.stintNumber;
           Object.assign(d, {
             compound: row.compound ?? null,
             stintNumber: number(row.stint_number),
             stintStart: number(row.lap_start),
             stintAge: number(row.tyre_age_at_start) ?? 0,
           });
-          d.tyreAge = Math.max(0, d.lap - (d.stintStart ?? d.lap) + d.stintAge);
-          if (before && before !== d.compound)
+          this.updateTyreAge(d);
+          if (before && (newStint || before !== d.compound))
             this.feed(
               "tyre_change",
               row,
@@ -575,6 +726,7 @@ export class LiveState {
           };
           s.pits = [pit, ...s.pits.filter((p) => p.id !== pitId)].slice(0, 150);
           d.pitCount = s.pits.filter((p) => p.driverNumber === n).length;
+          this.updateTyreAge(d);
           d.pitEnteredAt = time;
           d.pitUntil = Date.parse(time) + (pit.laneDuration ?? 30) * 1000;
           if (!isOut(d) && Date.parse(time) + 60000 > Date.now())
@@ -632,7 +784,9 @@ export class LiveState {
                 .at(-1);
               if (lap) {
                 lap.deleted = deleted;
-                recalculateBest(driver, s.phase);
+                recalculateBest(driver, lap.phase);
+                if (s.phase && lap.phase !== s.phase)
+                  recalculateBest(driver, s.phase);
               }
             }
           }
@@ -694,21 +848,18 @@ export class LiveState {
             else if (
               /^(?:SESSION STARTED|RACE START|STANDING START|ROLLING START|SESSION RESUMED|RACE RESUMED|RACE RESTARTED|GREEN FLAG|RED FLAG CLEARED)\b/i.test(
                 m.trim(),
-              ) && row.scope !== "Sector"
+              ) &&
+              row.scope !== "Sector"
             ) {
               s.flag = "GREEN";
               activeYellowSectors.clear();
-            }
-            else if (/VIRTUAL SAFETY CAR DEPLOYED|VSC DEPLOYED/i.test(m))
+            } else if (/VIRTUAL SAFETY CAR DEPLOYED|VSC DEPLOYED/i.test(m))
               s.flag = "VSC";
             else if (/SAFETY CAR DEPLOYED/i.test(m)) s.flag = "SC";
-            else if (
-              /(?:VIRTUAL SAFETY CAR|VSC) (?:ENDING|ENDED)/i.test(m)
-            ) {
+            else if (/(?:VIRTUAL SAFETY CAR|VSC) (?:ENDING|ENDED)/i.test(m)) {
               s.flag = "GREEN";
               activeYellowSectors.clear();
-            }
-            else if (/SAFETY CAR (?:IN THIS LAP|ENDING)/i.test(m))
+            } else if (/SAFETY CAR (?:IN THIS LAP|ENDING)/i.test(m))
               s.flag = "SC_ENDING";
             else if (row.flag === "GREEN" && row.scope !== "Sector") {
               s.flag = "GREEN";
@@ -716,7 +867,7 @@ export class LiveState {
             } else if (
               /TRACK CLEAR/i.test(m) &&
               row.scope !== "Sector" &&
-              s.flag === "YELLOW"
+              (s.flag === "YELLOW" || s.flag === "SC_ENDING")
             ) {
               s.flag = "GREEN";
               activeYellowSectors.clear();
@@ -757,11 +908,18 @@ export class LiveState {
               s.flag = "CHEQUERED";
               s.status = "finished";
             }
-            if (phaseNumber && capabilities.showQualifyingPhase) {
+            if (
+              phaseNumber >= 1 && phaseNumber <= 3 &&
+              capabilities.showQualifyingPhase &&
+              phaseNumber >= (qualifyingPhaseNumber(s, {}) ?? 0)
+            ) {
               const next = `${phasePrefix}${phaseNumber}`;
               if (next !== s.phase) {
                 const previousPhase = qualifyingPhaseNumber(s, {});
-                if (previousPhase) markQualifyingEliminations(s, previousPhase);
+                if (previousPhase)
+                  markQualifyingEliminations(s, previousPhase, time);
+                s.qualifyingPhases ??= {};
+                s.qualifyingPhases[next] = { startedAt: time };
                 for (const driver of Object.values(s.drivers)) {
                   if (driver.eliminatedIn) continue;
                   recalculateBest(driver, next);
@@ -789,7 +947,7 @@ export class LiveState {
               completedPhase &&
               completedPhase < 3
             )
-              markQualifyingEliminations(s, completedPhase);
+              markQualifyingEliminations(s, completedPhase, time);
             if (
               /SESSION FINISHED/i.test(m) &&
               (!capabilities.showQualifyingPhase || completedPhase === 3)
@@ -798,7 +956,9 @@ export class LiveState {
               s.flag = "CHEQUERED";
             }
             const pausesSession =
-              /SESSION (?:WILL BE TEMPORARILY STOPPED|SUSPENDED)/i.test(m);
+              /SESSION (?:WILL BE TEMPORARILY STOPPED|SUSPENDED|ABORTED)/i.test(
+                m,
+              );
             if (pausesSession && !sessionAlreadyFinished) {
               s.flag = "RED";
               // The stop command can arrive well after the red flag. Its own
@@ -815,11 +975,6 @@ export class LiveState {
                     : "PIT";
                   if (driver.status === "PIT") driver.pitEnteredAt ??= time;
                 }
-            }
-            if (/SESSION ABORTED/i.test(m) && !sessionAlreadyFinished) {
-              s.status = "finished";
-              s.flag = "RED";
-              s.timerPausedAt = null;
             }
             const total = m.match(/(?:RACE|SPRINT).*?(\d+) LAPS/i);
             if (total) s.totalLaps = Number(total[1]);
@@ -842,12 +997,23 @@ export class LiveState {
         break;
       case "session_result":
         if (d) {
+          if (sessionCapabilities(s.session).showRaceGap) {
+            if (s.status === "finished") d.position = number(row.position) ?? d.position;
+          }
           if (sessionCapabilities(s.session).rankByLapTime) {
             const times = Array.isArray(row.duration)
               ? row.duration
               : [row.duration];
             const part = Number(s.phase?.replace(/\D/g, "")) || times.length;
             const value = number(times[part - 1]);
+            if (sessionCapabilities(s.session).showQualifyingPhase) {
+              d.bestByPhase ??= {};
+              times.slice(0, 3).forEach((duration, i) => {
+                const result = number(duration);
+                if (result > 20)
+                  d.bestByPhase[qualifyingPhaseName(s, i + 1)] = result;
+              });
+            }
             if (value) d.bestLap = value;
             d.lap = number(row.number_of_laps) ?? d.lap;
             d.position = number(row.position) ?? d.position;
@@ -895,9 +1061,12 @@ export class LiveState {
         break;
       }
     }
+    if (["drivers", "laps", "race_control", "session_result"].includes(topic))
+      refreshQualifyingEliminations(s);
     return true;
   }
   snapshot() {
+    refreshQualifyingEliminations(this.state);
     return structuredClone(this.state);
   }
 }

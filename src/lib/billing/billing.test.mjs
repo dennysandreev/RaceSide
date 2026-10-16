@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
+import { billingPriceCatalog, formatProvider } from "./catalog.ts";
 import { addCalendarMonthsUtc, minorUnitsToDecimal, parseMinorUnits } from "./money.ts";
 import { isYooMoneyTestNotification, makeYooMoneyCanonicalString, signYooMoneyNotification, verifyRawBodyHmac, verifyYooMoneySignature } from "./signatures.ts";
 
@@ -84,8 +85,35 @@ test("admin subscription grant validates targets without reading the protected a
   assert.match(sql, /grant execute on function public\.billing_admin_grant[\s\S]+to service_role/);
 });
 
-test("security policy permits only the trusted YooMoney checkout form", () => {
+test("security policy submits forms only to this site", () => {
   const config = readFileSync(new URL("../../../next.config.ts", import.meta.url), "utf8");
   const directive = config.match(/"form-action ([^"]+)"/)?.[1];
-  assert.equal(directive, "'self' https://yoomoney.ru");
+  assert.equal(directive, "'self'");
+});
+
+test("failed Lava checkouts do not block a new recurring subscription", () => {
+  const directory = new URL("../../../supabase/migrations/", import.meta.url);
+  const definitions = readdirSync(directory).filter((name) => name.endsWith(".sql")).sort()
+    .flatMap((name) => [...readFileSync(new URL(name, directory), "utf8").matchAll(
+      /create unique index billing_orders_one_recurring_lava_per_user\b([\s\S]*?);/gi,
+    )]);
+  const predicate = definitions.at(-1)?.[1];
+  assert.ok(predicate, "recurring subscription uniqueness must remain enforced");
+  assert.match(predicate, /provider\s*=\s*'lava'/i);
+  assert.match(predicate, /lava_auto_renew/i);
+  assert.match(predicate, /lava_parent_contract_id is null/i);
+  assert.match(predicate, /status\s+in\s*\('pending',\s*'paid',\s*'partially_refunded',\s*'refunded'\)/i);
+  assert.doesNotMatch(predicate, /'failed'/i);
+});
+
+test("current prices and provider labels distinguish Lava cards from historical payments", () => {
+  assert.equal(billingPriceCatalog.plus_monthly.amountMinor, 39000);
+  assert.equal(billingPriceCatalog.plus_first_year.amountMinor, 390000);
+  assert.equal(billingPriceCatalog.plus_first_year.firstPurchaseOnly, false);
+  assert.equal(formatProvider("lava", "lava_rub"), "Российская карта через Lava.top");
+  assert.equal(formatProvider("lava", "lava"), "Зарубежная карта через Lava.top");
+  assert.equal(formatProvider("lava"), "Lava.top");
+  assert.equal(formatProvider("tribute"), "Tribute");
+  assert.equal(formatProvider("yoomoney", "yoomoney_card"), "Банковская карта через ЮMoney");
+  assert.equal(formatProvider("unknown"), "Способ оплаты неизвестен");
 });

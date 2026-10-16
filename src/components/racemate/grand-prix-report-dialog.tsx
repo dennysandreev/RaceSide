@@ -1,626 +1,1188 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect } from "react";
 import {
-  AlertTriangle,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import {
+  ArrowRight,
+  ChevronDown,
   Flag,
   Gauge,
-  Newspaper,
-  Sparkles,
   Timer,
-  Trophy,
-  TrendingDown,
   TrendingUp,
-  Users,
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { TeamColorBar } from "@/components/racemate/team-color";
-import { TyreSequence } from "@/components/racemate/tyre-sequence";
+import { DriverAvatarBadge } from "@/components/racemate/driver-avatar-badge";
+import { GrandPrixRecapShare } from "@/components/racemate/grand-prix-recap-share";
+import { ReportTimingCharts } from "@/components/racemate/grand-prix-report-charts";
+import { TeamColorDot } from "@/components/racemate/team-color";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getTeamAsset, getTeamAssetForDriver } from "@/data/f1-assets";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getTeamAsset } from "@/data/f1-assets";
+import {
+  getReportPitStops,
+  reportNews,
+  reportNumber,
+  reportObject,
+  reportParagraphs,
+  reportText,
+  type GrandPrixReportAnalytics,
+  type ReportStandingChange,
+} from "@/lib/grand-prix-report";
 import { cn } from "@/lib/utils";
-import type { GrandPrixReport } from "@/types/racemate";
+import { formatGrandPrixNameRu } from "@/lib/race-display";
+import type {
+  GrandPrixReport,
+  GrandPrixReportResult,
+  TyreStint,
+} from "@/types/racemate";
+import "./grand-prix-report.css";
 
-type GrandPrixReportDialogProps = {
-  driverSlugByName?: Record<string, string>;
-  open: boolean;
-  report: GrandPrixReport | null;
-};
+const sections = [
+  { id: "overview", label: "Обзор" },
+  { id: "positions", label: "Позиции и отрывы" },
+  { id: "strategy", label: "Темп и стратегия" },
+  { id: "results", label: "Итоги" },
+] as const;
+type SectionId = (typeof sections)[number]["id"];
+const numberFormat = new Intl.NumberFormat("ru-RU", {
+  maximumFractionDigits: 3,
+});
+const numberText = (value: unknown) =>
+  reportNumber(value) === null
+    ? "—"
+    : numberFormat.format(reportNumber(value)!);
+const signed = (value: number) => (value > 0 ? "+" : "") + numberText(value);
+const surname = (name: string) => name.split(" ").slice(-1).join(" ");
+const teamColor = (team: string) =>
+  getTeamAsset(team)?.color ?? "var(--muted-foreground)";
+const slugFor = (name: string, slugs: Record<string, string>) =>
+  slugs[name] ??
+  slugs[name.toLowerCase()] ??
+  Object.entries(slugs).find(
+    ([key]) => key.toLowerCase() === name.toLowerCase(),
+  )?.[1];
 
 export function GrandPrixReportDialog({
+  analytics,
   driverSlugByName = {},
   open,
   report,
-}: GrandPrixReportDialogProps) {
+}: {
+  analytics?: GrandPrixReportAnalytics | null;
+  driverSlugByName?: Record<string, string>;
+  open: boolean;
+  report: GrandPrixReport | null;
+}) {
   const router = useRouter();
+  const contentRoot = useRef<HTMLDivElement>(null);
+  const scrollRoot = useRef<HTMLDivElement>(null);
+  const [activeSection, setActiveSection] = useState<SectionId>("overview");
   const closeReport = useCallback(() => {
     const url = new URL(window.location.href);
     url.searchParams.delete("raceReport");
-    router.replace(`${url.pathname}${url.search}${url.hash}`, { scroll: false });
+    router.replace(url.pathname + url.search + url.hash, { scroll: false });
   }, [router]);
-
   useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeReport();
-      }
+    if (!open || !analytics?.timingPending) return;
+    const refresh = () => {
+      if (!document.hidden) router.refresh();
     };
-
-    window.addEventListener("keydown", onKeyDown);
-
+    const interval = window.setInterval(refresh, 30_000);
+    document.addEventListener("visibilitychange", refresh);
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", refresh);
     };
-  }, [closeReport, open]);
-
-  if (!open || !report) {
-    return null;
-  }
-
-  const podium = asStringArray(report.highlights.podium);
-  const winner = asText(report.highlights.winner) ?? report.results[0]?.driver ?? "Победитель уточняется";
-  const bestGain = asHighlight(report.highlights.bestGain);
-  const biggestDrop = asHighlight(report.highlights.biggestDrop);
-  const bestTeam = asHighlight(report.highlights.bestTeam, "team", "points");
-  const fastestLap = asHighlight(report.highlights.fastestLap);
-  const fastestPitStop = asPitStopHighlight(report.highlights.fastestPitStop);
-  const safetyCarSummary = asText(report.highlights.safetyCarSummary);
-  const mostCommonStrategy = asHighlight(report.highlights.mostCommonStrategy, "sequence", "drivers");
-  const biggestDropTeam = getTeamVisualFromHighlight(report.highlights.biggestDrop, report.results);
-  const bestTeamVisual = getTeamVisualFromHighlight(report.highlights.bestTeam, report.results, "team");
-  const fastestPitStopTeam = getFastestPitStopTeamVisual(report.highlights.fastestPitStop, report.results);
-  const newsSummary = getNewsSummary(report.newsSummary);
-  const summaryParagraphs = getSummaryParagraphs(report.aiSummary);
-
+  }, [open, analytics?.timingPending, report?.id, router]);
+  useEffect(() => {
+    if (!open) return;
+    let root: HTMLDivElement | null = null;
+    const onScroll = () => {
+      if (!root) return;
+      const top = root.getBoundingClientRect().top + 110;
+      const current = [...sections]
+        .reverse()
+        .find(
+          (section) =>
+            root!
+              .querySelector("#report-" + section.id)!
+              .getBoundingClientRect().top <= top,
+        );
+      setActiveSection(current?.id ?? "overview");
+    };
+    const frame = requestAnimationFrame(() => {
+      root = scrollRoot.current;
+      root?.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      root?.removeEventListener("scroll", onScroll);
+    };
+  }, [open, report?.id]);
+  const goTo = (id: SectionId) => {
+    setActiveSection(id);
+    const root = scrollRoot.current;
+    const section = root?.querySelector("#report-" + id);
+    if (!root || !section) return;
+    root.scrollTo({
+      top:
+        section.getBoundingClientRect().top -
+        root.getBoundingClientRect().top +
+        root.scrollTop -
+        18,
+      behavior: "instant",
+    });
+  };
+  if (!report) return null;
+  const podium = report.results
+    .filter((row) => row.position !== null && row.position <= 3)
+    .sort((a, b) => a.position! - b.position!);
+  const fastest = report.results.find((row) => row.isFastestLap);
+  const fastestHighlight = reportObject(report.highlights.fastestLap);
+  const pitHighlight = reportObject(report.highlights.fastestPitStop);
+  const bestGain = [...report.results]
+    .filter((row) => (row.positionDelta ?? 0) > 0)
+    .sort((a, b) => b.positionDelta! - a.positionDelta!)[0];
+  const paragraphs = reportParagraphs(report.aiSummary);
+  const news = reportNews(report.newsSummary).filter(
+    (text) => !paragraphs.some((paragraph) => paragraph.includes(text)),
+  );
+  const totalLaps =
+    analytics?.totalLaps ??
+    reportNumber(report.raceStatistics.laps) ??
+    Math.max(0, ...report.results.map((row) => row.laps ?? 0));
+  const finishers = reportNumber(report.raceStatistics.finishers);
+  const retirements = reportNumber(report.raceStatistics.retirements);
+  const dateLabel = report.raceDate;
   return (
-    <div
-      aria-labelledby="grand-prix-report-title"
-      aria-modal="true"
-      className="fixed inset-0 z-50 grid place-items-center bg-background/84 p-3 backdrop-blur-md sm:p-6"
-      onMouseDown={closeReport}
-      role="dialog"
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) closeReport();
+      }}
     >
-      <div
-        className="flex max-h-[92dvh] w-full max-w-6xl flex-col overflow-hidden rounded-xl border border-border bg-background shadow-[0_24px_90px_rgb(0_0_0_/_0.55)]"
-        onMouseDown={(event) => event.stopPropagation()}
+      <DialogContent
+        ref={contentRoot}
+        className="race-report-dialog"
+        showCloseButton={false}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          contentRoot.current?.focus({ preventScroll: true });
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          const trigger = Array.from(
+            document.querySelectorAll<HTMLAnchorElement>("a[href]"),
+          ).find((link) => link.href.includes("raceReport=" + report.raceSlug));
+          trigger?.focus({ preventScroll: true });
+        }}
       >
-        <header className="shrink-0 border-b border-border bg-card/85 px-4 py-3 backdrop-blur sm:px-6 sm:py-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant={report.status === "ready" ? "success" : "warning"}>
-                  {report.status === "ready" ? "Отчет готов" : "Частичный отчет"}
-                </Badge>
-                <Badge variant="outline">
-                  {report.season}, раунд {report.round}
-                </Badge>
-              </div>
-              <h2
-                className="mt-3 text-balance font-display text-xl font-extrabold leading-tight tracking-[-0.04em] text-foreground sm:mt-4 sm:text-4xl"
-                id="grand-prix-report-title"
-              >
-                {report.raceName}
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {report.circuitName} · {report.country} · {report.raceDate}
-              </p>
+        <header className="rr-header">
+          <div className="min-w-0">
+            <div className="rr-eyebrow">
+              Отчёт о Гран-при{" "}
+              <span>
+                Этап {report.round} / {report.season}
+              </span>
             </div>
-            <Button
-              aria-label="Закрыть отчет"
-              onClick={closeReport}
-              size="icon"
-              type="button"
-              variant="ghost"
-            >
-              <X aria-hidden="true" data-icon="inline-start" />
-            </Button>
+            <DialogTitle className="rr-title">
+              {formatGrandPrixNameRu(report.raceName)}
+            </DialogTitle>
+            <DialogDescription className="rr-description">
+              {[
+                report.circuitName,
+                dateLabel,
+                totalLaps > 0 ? numberText(totalLaps) + " кругов" : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </DialogDescription>
+          </div>
+          <div className="rr-header-actions">
+            <GrandPrixRecapShare
+              compact
+              raceName={report.raceName}
+              season={report.season}
+              round={report.round}
+            />
+            <DialogClose asChild>
+              <Button variant="ghost" size="icon" aria-label="Закрыть отчёт">
+                <X />
+              </Button>
+            </DialogClose>
           </div>
         </header>
-
-        <div className="min-h-0 overflow-y-auto">
-          <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-            <main className="contents lg:grid lg:min-w-0 lg:gap-6">
-              <section className="order-1 relative overflow-hidden rounded-xl border border-border bg-card p-4 sm:p-5">
-                <div className="absolute left-0 top-0 h-full w-1 bg-primary" />
-                <div className="mb-4 flex items-center gap-2">
-                  <Sparkles aria-hidden="true" className="size-5 text-primary" />
-                  <h3 className="font-telemetry text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                    AI-разбор гонки
-                  </h3>
-                </div>
-                {summaryParagraphs.length ? (
-                  <div className="grid gap-3 text-sm leading-6 text-foreground/90 sm:gap-4 sm:text-base sm:leading-7">
-                    {summaryParagraphs.map((paragraph, index) => (
-                      <p className={cn(index === 0 && "font-semibold text-foreground")} key={paragraph}>
-                        {paragraph}
-                      </p>
+        <nav className="rr-nav" aria-label="Разделы отчёта">
+          <div className="rr-nav-links">
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                aria-current={
+                  activeSection === section.id ? "location" : undefined
+                }
+                onClick={() => goTo(section.id)}
+              >
+                {section.label}
+              </button>
+            ))}
+          </div>
+          <div className="rr-mobile-nav">
+            <label className="sr-only" htmlFor="report-section-select">
+              Раздел отчёта
+            </label>
+            <select
+              id="report-section-select"
+              value={activeSection}
+              onChange={(event) => goTo(event.target.value as SectionId)}
+            >
+              {sections.map((section) => (
+                <option key={section.id} value={section.id}>
+                  {section.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={16} aria-hidden="true" />
+            <span>4 раздела</span>
+          </div>
+        </nav>
+        <div ref={scrollRoot} className="rr-scroll">
+          <section
+            id="report-overview"
+            className="rr-section rr-overview"
+            aria-label="Обзор гонки"
+          >
+            {podium.length ? (
+              <div className="rr-podium">
+                {podium.map((row) => (
+                  <article
+                    className={cn(
+                      "rr-podium-driver",
+                      row.position === 1 && "rr-winner",
+                    )}
+                    key={row.driver}
+                  >
+                    <div
+                      className="rr-podium-place"
+                      style={{
+                        color:
+                          row.position === 1 ? teamColor(row.team) : undefined,
+                      }}
+                    >
+                      P{row.position}
+                      <span>
+                        {row.position === 1 ? "Победитель" : "Подиум"}
+                      </span>
+                    </div>
+                    <DriverAvatarBadge
+                      name={row.driver}
+                      slug={slugFor(row.driver, driverSlugByName)}
+                      season={report.season}
+                      color={teamColor(row.team)}
+                      className="rr-podium-avatar"
+                      sizes="80px"
+                    />
+                    <div className="min-w-0">
+                      <DriverName
+                        row={row}
+                        slugs={driverSlugByName}
+                        className="rr-podium-name"
+                      />
+                      <div className="rr-team">
+                        <TeamColorDot color={teamColor(row.team)} />
+                        {row.team}
+                      </div>
+                      <div className="rr-podium-time">
+                        {row.time ?? "—"}
+                        <span>{numberText(row.points)} очков</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <MissingData
+                title="Результаты ещё готовятся"
+                detail="Подиум появится, когда будут опубликованы результаты гонки."
+              />
+            )}
+            <div className="rr-stat-grid">
+              <Stat
+                icon={<Gauge />}
+                label="Лучший круг"
+                value={
+                  fastest?.bestLap ?? reportText(fastestHighlight.time) ?? "—"
+                }
+                detail={
+                  fastest?.driver ??
+                  reportText(fastestHighlight.driver) ??
+                  "Время пока недоступно"
+                }
+              />
+              <Stat
+                icon={<Timer />}
+                label="Быстрейший пит-стоп"
+                value={
+                  reportNumber(pitHighlight.duration) !== null
+                    ? numberText(pitHighlight.duration) + " с"
+                    : "—"
+                }
+                detail={
+                  reportText(pitHighlight.team) ??
+                  reportText(pitHighlight.driver) ??
+                  "Время пока недоступно"
+                }
+              />
+              <Stat
+                icon={<TrendingUp />}
+                label="Больше всего позиций"
+                value={bestGain ? signed(bestGain.positionDelta!) : "—"}
+                detail={bestGain?.driver ?? "Нет данных о старте"}
+              />
+              <Stat
+                icon={<Flag />}
+                label="На финише"
+                value={numberText(finishers)}
+                detail={
+                  retirements !== null
+                    ? "Сходов: " + numberText(retirements)
+                    : "Число сходов уточняется"
+                }
+              />
+            </div>
+            <div className="rr-news">
+              <div>
+                <span className="rr-eyebrow">Вокруг Гран-при</span>
+                <h2>Что обсуждали вокруг этапа</h2>
+                <p className="rr-caption">Обзор новостей и обсуждений от AI</p>
+              </div>
+              <div className="rr-news-copy">
+                {paragraphs.length || news.length ? (
+                  <>
+                    {paragraphs.map((text, index) => (
+                      <p key={index}>{text}</p>
                     ))}
-                  </div>
+                    {news.length > 0 && (
+                      <ul>
+                        {news.map((text, index) => (
+                          <li key={index}>{text}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
                 ) : (
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    Структурированный отчет готов. Короткое саммари появится после повторной обработки.
+                  <p className="text-muted-foreground">
+                    Обзор новостей ещё готовится. Результаты и статистику можно
+                    посмотреть ниже.
                   </p>
                 )}
-              </section>
-
-              {newsSummary.length ? (
-                <section className="order-2 rounded-xl border border-border bg-card p-4 sm:p-5">
-                  <div className="mb-4 flex items-center gap-2">
-                    <Newspaper aria-hidden="true" className="size-5 text-primary" />
-                    <h3 className="font-telemetry text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                      Что обсуждали вокруг этапа
-                    </h3>
-                  </div>
-                  <div className="grid gap-3">
-                    {newsSummary.map((item) => (
-                      <p className="rounded-md border border-border bg-background/35 p-3 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6" key={item}>
-                        {item}
-                      </p>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-
-              <section className="order-4 grid gap-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <Trophy aria-hidden="true" className="size-5 text-primary" />
-                    <h3 className="font-telemetry text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-                      Итоги гонки
-                    </h3>
-                  </div>
-                  <span className="font-telemetry text-[0.68rem] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                    {report.results.length} пилотов
-                  </span>
-                </div>
-                <div className="overflow-hidden rounded-xl border border-border bg-card">
-                  <div
-                    className="hidden grid-cols-[2.75rem_minmax(11rem,1fr)_3.5rem_3.5rem_minmax(7rem,auto)_5.5rem] gap-3 border-b border-border bg-muted/35 px-4 py-2.5 font-telemetry text-[0.62rem] font-bold uppercase tracking-[0.08em] text-muted-foreground sm:grid"
-                    role="row"
-                  >
-                    <span>Поз.</span>
-                    <span>Пилот</span>
-                    <span>Старт</span>
-                    <span>+/-</span>
-                    <span>Шины</span>
-                    <span>ЛК</span>
-                  </div>
-                  <div className="divide-y divide-border" role="rowgroup">
-                    {report.results.map((result) => {
-                      const teamVisual = getTeamAsset(result.team);
-                      const driverSlug = getDriverSlug(driverSlugByName, result.driver);
-
-                      return (
-                        <div
-                          className="grid grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-3 py-3 transition-colors hover:bg-accent/50 sm:grid-cols-[2.75rem_minmax(11rem,1fr)_3.5rem_3.5rem_minmax(7rem,auto)_5.5rem] sm:px-4"
-                          key={`${result.position}-${result.driver}`}
-                          role="row"
-                        >
-                          <span className="flex items-center gap-2 font-telemetry text-base font-extrabold text-muted-foreground">
-                            <TeamColorBar className="h-8 w-1" color={teamVisual?.color} />
-                            {result.position ?? "-"}
-                          </span>
-                          <div className="min-w-0">
-                            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                              {driverSlug ? (
-                                <Link
-                                  className="truncate text-sm font-semibold transition-colors hover:text-primary sm:text-base"
-                                  href={`/drivers/${driverSlug}`}
-                                  onClick={(event) => event.stopPropagation()}
-                                >
-                                  {result.driver}
-                                </Link>
-                              ) : (
-                                <span className="truncate text-sm font-semibold sm:text-base">{result.driver}</span>
-                              )}
-                              {result.isWinner ? <Badge variant="success">Победа</Badge> : null}
-                              {result.isFastestLap ? <Badge variant="outline">ЛК</Badge> : null}
-                            </div>
-                            <p className="mt-0.5 truncate text-xs text-muted-foreground">{result.team}</p>
-                            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.65rem] font-semibold text-muted-foreground sm:hidden">
-                              <span>Старт P{result.grid ?? "—"}</span>
-                              <span>{formatDelta(result.positionDelta)}</span>
-                              <TyreSequence tyres={result.tyres} />
-                            </div>
-                          </div>
-                          <span className="hidden font-telemetry text-muted-foreground sm:block">{result.grid ?? "-"}</span>
-                          <span className="hidden font-telemetry text-muted-foreground sm:block">
-                            {formatDelta(result.positionDelta)}
-                          </span>
-                          <div className="hidden sm:block">
-                            <TyreSequence tyres={result.tyres} />
-                          </div>
-                          <span className="justify-self-end font-telemetry text-xs font-bold text-muted-foreground sm:justify-self-auto">
-                            {result.bestLap ?? "-"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </section>
-
-              <section className="order-5 grid gap-4">
-                <div className="flex items-center gap-2">
-                  <Flag aria-hidden="true" className="size-5 text-primary" />
-                  <h3 className="font-telemetry text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                    Ключевые события
-                  </h3>
-                </div>
-                <ol className="relative grid gap-4 before:absolute before:bottom-4 before:left-4 before:top-4 before:w-px before:bg-border">
-                  {report.keyEvents.length ? report.keyEvents.map((event, index) => (
-                    <li className="relative grid gap-1 pl-11" key={`${index}-${event.type}-${event.lap}-${event.title}`}>
-                      <span className="absolute left-0 top-0 grid size-8 place-items-center rounded-full border border-border bg-card">
-                        <span className={cn("size-2 rounded-full", index === 0 ? "bg-success" : "bg-primary")} />
-                      </span>
-                      <p className="font-telemetry text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                        {event.lap ? `Круг ${event.lap}` : "Событие"}
-                      </p>
-                      <p className="text-sm font-semibold sm:text-base">{event.title}</p>
-                      {event.detail ? (
-                        <p className="text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">{event.detail}</p>
-                      ) : null}
-                    </li>
-                  )) : (
-                    <li className="rounded-md border border-border p-4 text-sm text-muted-foreground">
-                      Значимые события пока не найдены.
-                    </li>
-                  )}
-                </ol>
-              </section>
-
-              {Object.keys(report.sourceErrors).length ? (
-                <section className="order-6 rounded-xl border border-warning/35 bg-warning/10 p-4">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle aria-hidden="true" className="mt-0.5 size-5 text-warning" />
-                    <div>
-                      <h3 className="font-semibold text-warning">Часть источников не ответила</h3>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        Отчет доступен по имеющимся данным. RaceSide попробует обновить его позже.
-                      </p>
-                    </div>
-                  </div>
-                </section>
-              ) : null}
-            </main>
-
-            <aside className="order-3 grid content-start gap-4 lg:order-none">
-              <PodiumCard
-                driverSlugByName={driverSlugByName}
-                podium={podium}
-                results={report.results}
-                winner={winner}
-              />
-              <ReportStat
-                icon={Timer}
-                label="Лучший круг"
-                value={fastestLap ?? "Нет данных"}
-              />
-              <ReportStat
-                icon={TrendingUp}
-                label="Прорыв дня"
-                value={bestGain ?? "Нет данных"}
-              />
-              <ReportStat
-                color={bestTeamVisual?.color}
-                icon={Users}
-                label="Сильнейшая команда"
-                value={bestTeam ?? "Нет данных"}
-              />
-              <ReportStat
-                color={biggestDropTeam?.color}
-                icon={TrendingDown}
-                label="Главная потеря"
-                value={biggestDrop ?? "Нет данных"}
-              />
-              <ReportStat
-                color={fastestPitStopTeam?.color}
-                icon={Gauge}
-                label="Быстрый пит-стоп"
-                value={fastestPitStop ?? "Нет данных"}
-              />
-              {hasRaceControlEventSummary(safetyCarSummary) ? (
-                <ReportStat icon={Flag} label="Флаги и нейтрализации" value={safetyCarSummary} />
-              ) : null}
-              <ReportStat icon={Trophy} label="Частая стратегия" value={mostCommonStrategy ?? "Нет данных"} />
-              <div className="rounded-xl border border-border bg-card p-4 text-center sm:p-5">
-                <Trophy aria-hidden="true" className="mx-auto size-8 text-primary sm:size-9" />
-                <p className="mt-3 font-display text-base font-bold sm:text-lg">
-                  {report.status === "ready" ? "Классификация подтверждена" : "Отчет частично готов"}
-                </p>
-                <p className="mt-2 font-telemetry text-[0.68rem] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  Обновлено: {report.generatedAt}
-                </p>
-              </div>
-            </aside>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
-function hasRaceControlEventSummary(summary: string | null): summary is string {
-  return Boolean(summary && !/не найдено|нет данных/i.test(summary));
-}
-
-function PodiumCard({
-  driverSlugByName,
-  podium,
-  results,
-  winner,
-}: {
-  driverSlugByName: Record<string, string>;
-  podium: string[];
-  results: GrandPrixReport["results"];
-  winner: string;
-}) {
-  const rows = podium.length ? podium.slice(0, 3) : [winner];
-
-  return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card">
-      <div className="border-b border-border bg-primary/10 p-4">
-        <h3 className="font-telemetry text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-          Подиум
-        </h3>
-      </div>
-      <div className="grid gap-3 p-4 sm:gap-4 sm:p-5">
-        {rows.map((name, index) => {
-          const result = getResultForDriverName(results, name);
-          const teamVisual = getTeamAsset(result?.team);
-          const driverSlug = getDriverSlug(driverSlugByName, name);
-
-          return (
-            <div className="flex items-center justify-between gap-3" key={`${index}-${name}`}>
-              <div className="flex min-w-0 items-center gap-3">
-                <span
-                  className="font-telemetry w-5 text-muted-foreground"
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <TeamColorBar className="h-8 w-1.5" color={teamVisual?.color} />
-                <span className="grid min-w-0 gap-0.5">
-                  {driverSlug ? (
-                    <Link
-                      className="truncate text-sm font-semibold transition-colors hover:text-primary sm:text-base"
-                      href={`/drivers/${driverSlug}`}
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      {name}
-                    </Link>
-                  ) : (
-                    <span className="truncate text-sm font-semibold sm:text-base">{name}</span>
-                  )}
-                  {teamVisual?.name ? (
-                    <span className="truncate text-xs text-muted-foreground">{teamVisual.name}</span>
-                  ) : null}
-                </span>
               </div>
             </div>
-          );
-        })}
-      </div>
-    </section>
+          </section>
+          <section id="report-positions" className="rr-section">
+            <SectionHeading
+              number="01"
+              title="Позиции и отрывы"
+              detail="Как менялось положение пилотов по ходу гонки"
+            />
+            <ReportTimingCharts analytics={analytics} mode="positions" />
+          </section>
+          <section id="report-strategy" className="rr-section">
+            <SectionHeading
+              number="02"
+              title="Темп и стратегия"
+              detail="Шины, время кругов и работа на пит-лейне"
+            />
+            <TyreHistory
+              report={report}
+              analytics={analytics}
+              totalLaps={totalLaps}
+            />
+            <ReportTimingCharts analytics={analytics} mode="pace" />
+            <div className="rr-two-columns rr-strategy-details">
+              <PitStops report={report} />
+              <div className="rr-conditions">
+                <h3>Условия гонки</h3>
+                <dl>
+                  <Detail
+                    label="Температура воздуха"
+                    value={
+                      reportNumber(report.weather.averageAirTemperature) !==
+                      null
+                        ? numberText(report.weather.averageAirTemperature) +
+                          " °C"
+                        : "—"
+                    }
+                  />
+                  <Detail
+                    label="Дождь во время гонки"
+                    value={
+                      typeof report.weather.rainfall === "boolean"
+                        ? report.weather.rainfall
+                          ? "Был дождь"
+                          : "Без дождя"
+                        : "—"
+                    }
+                  />
+                  <Detail
+                    label="Машина безопасности"
+                    value={numberText(report.raceStatistics.safetyCarCount)}
+                  />
+                  <Detail
+                    label="Виртуальная машина безопасности"
+                    value={numberText(
+                      report.raceStatistics.virtualSafetyCarCount,
+                    )}
+                  />
+                  <Detail
+                    label="Красные флаги"
+                    value={numberText(report.raceStatistics.redFlagCount)}
+                  />
+                  <Detail
+                    label="Пит-стопы"
+                    value={numberText(report.pitStops.length)}
+                  />
+                </dl>
+                <p className="rr-caption">Температура — средняя за гонку.</p>
+                <Link
+                  href={"/telemetry?season=" + report.season}
+                  className="rr-more-link"
+                >
+                  Открыть Telemetry Hub <Badge variant="outline">Plus</Badge>
+                  <ArrowRight size={15} />
+                </Link>
+              </div>
+            </div>
+          </section>
+          <section id="report-results" className="rr-section">
+            <SectionHeading
+              number="03"
+              title="Итоги Гран-при"
+              detail="Финиш, сравнение напарников и положение в чемпионате"
+            />
+            <Classification report={report} slugs={driverSlugByName} />
+            <div className="rr-two-columns rr-comparisons">
+              <PositionGains results={report.results} />
+              <Teammates results={report.results} />
+            </div>
+            <div className="rr-championship">
+              <h3>Чемпионат после этапа</h3>
+              <p className="rr-caption">
+                Очки за весь уик-энд, включая спринт, если он был.
+              </p>
+              <div className="rr-two-columns">
+                <Standings
+                  title="Пилоты"
+                  rows={analytics?.championship.drivers ?? []}
+                />
+                <Standings
+                  title="Команды"
+                  rows={analytics?.championship.teams ?? []}
+                />
+              </div>
+            </div>
+          </section>
+          <footer className="rr-footer">
+            <span>Обновлено {report.generatedAt}</span>
+          </footer>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-function getResultForDriverName(results: GrandPrixReport["results"], driverName: string) {
-  const normalizedDriver = normalizeDriverName(driverName);
-
-  return results.find((result) => {
-    const normalizedResultDriver = normalizeDriverName(result.driver);
-
-    return (
-      normalizedResultDriver === normalizedDriver ||
-      normalizedResultDriver.includes(normalizedDriver) ||
-      normalizedDriver.includes(normalizedResultDriver)
-    );
-  });
-}
-
-function getDriverSlug(driverSlugByName: Record<string, string>, driverName: string) {
-  return driverSlugByName[normalizeDriverName(driverName)];
-}
-
-function normalizeDriverName(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-function getTeamVisualFromHighlight(
-  value: unknown,
-  results: GrandPrixReport["results"],
-  nameKey = "driver",
-) {
-  if (!value || typeof value !== "object") {
-    return null;
-  }
-
-  const record = value as Record<string, unknown>;
-  const name = asText(record[nameKey]);
-
-  if (!name) {
-    return null;
-  }
-
-  return nameKey === "team" ? getTeamAsset(name) : getTeamAssetForDriver(name, results);
-}
-
-function getFastestPitStopTeamVisual(value: unknown, results: GrandPrixReport["results"]) {
-  if (!value || typeof value !== "object") {
-    return null;
-  }
-
-  const record = value as Record<string, unknown>;
-  const team = asText(record.team);
-
-  return team
-    ? getTeamAsset(team)
-    : getTeamVisualFromHighlight(value, results);
-}
-
-function ReportStat({
-  color,
-  icon: Icon,
-  label,
-  tone = "neutral",
-  value,
+function SectionHeading({
+  number,
+  title,
+  detail,
 }: {
-  color?: string | null;
-  icon: typeof Timer;
-  label: string;
-  tone?: "neutral" | "live" | "red";
-  value: string;
+  number: string;
+  title: string;
+  detail: string;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-3 sm:gap-4 sm:p-4">
-      <div className="flex min-w-0 items-center gap-3">
-        <Icon
-          aria-hidden="true"
-          className={cn(
-            "size-5 shrink-0 text-muted-foreground",
-            tone === "red" && "text-primary",
-            tone === "live" && "text-success",
-          )}
-        />
-        {color ? <TeamColorBar className="h-5 w-1" color={color} /> : null}
-        <span className="font-telemetry text-[0.6rem] font-bold uppercase tracking-[0.06em] text-muted-foreground sm:text-[0.68rem] sm:tracking-[0.08em]">
-          {label}
-        </span>
+    <div className="rr-section-heading">
+      <span>{number}</span>
+      <div>
+        <h2>{title}</h2>
+        <p className="rr-caption">{detail}</p>
       </div>
-      <span className={cn("max-w-[58%] break-words text-right font-telemetry text-[0.68rem] font-bold leading-4 sm:text-xs sm:leading-5", tone === "red" && "text-primary", tone === "live" && "text-success")}>
-        {value}
-      </span>
     </div>
   );
 }
-
-function formatDelta(value: number | null) {
-  if (value === null) {
-    return "-";
-  }
-
-  if (value > 0) {
-    return `+${value}`;
-  }
-
-  return String(value);
+function MissingData({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="rr-missing">
+      <h4>{title}</h4>
+      <p>{detail}</p>
+    </div>
+  );
 }
-
-function asText(value: unknown) {
-  return typeof value === "string" && value.trim() ? value.trim() : null;
+function Stat({
+  icon,
+  label,
+  value,
+  detail,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  detail: string;
+}) {
+  return (
+    <div className="rr-stat">
+      <div>
+        {icon}
+        <span>{label}</span>
+      </div>
+      <strong>{value}</strong>
+      <p>{detail}</p>
+    </div>
+  );
 }
-
-function asStringArray(value: unknown) {
-  return Array.isArray(value)
-    ? value.map((item) => String(item)).filter(Boolean)
-    : [];
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rr-detail">
+      <dt>{label}</dt>
+      <dd>{value}</dd>
+    </div>
+  );
 }
-
-function asHighlight(
-  value: unknown,
-  nameKey = "driver",
-  metricKey = "delta",
-) {
-  if (!value || typeof value !== "object") {
-    return null;
-  }
-
-  const record = value as Record<string, unknown>;
-  const name = asText(record[nameKey]);
-
-  if (!name) {
-    return null;
-  }
-
-  const metric = record[metricKey];
-
-  return metric === null || metric === undefined ? name : `${name} (${metric})`;
+function DriverName({
+  row,
+  slugs,
+  className,
+}: {
+  row: GrandPrixReportResult;
+  slugs: Record<string, string>;
+  className?: string;
+}) {
+  const slug = slugFor(row.driver, slugs);
+  return slug ? (
+    <Link href={"/drivers/" + slug} className={cn("rr-driver-link", className)}>
+      {row.driver}
+    </Link>
+  ) : (
+    <span className={className}>{row.driver}</span>
+  );
 }
-
-function asPitStopHighlight(value: unknown) {
-  if (!value || typeof value !== "object") {
-    return null;
-  }
-
-  const record = value as Record<string, unknown>;
-  const name = asText(record.team) ?? asText(record.driver);
-  const duration = Number(record.duration);
-
-  if (!name) {
-    return null;
-  }
-
-  return Number.isFinite(duration)
-    ? `${name} (${new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 3 }).format(duration)} с)`
-    : name;
+const compounds: Record<
+  string,
+  { label: string; color: string; name: string }
+> = {
+  SOFT: { label: "S", color: "#ec414b", name: "Мягкие" },
+  MEDIUM: { label: "M", color: "#e6b933", name: "Средние" },
+  HARD: { label: "H", color: "#d6d9de", name: "Жёсткие" },
+  INTERMEDIATE: { label: "I", color: "#4bac65", name: "Промежуточные" },
+  WET: { label: "W", color: "#5298eb", name: "Дождевые" },
+  UNKNOWN: { label: "?", color: "#8b8e96", name: "Нет данных" },
+};
+function TyreHistory({
+  report,
+  analytics,
+  totalLaps,
+}: {
+  report: GrandPrixReport;
+  analytics?: GrandPrixReportAnalytics | null;
+  totalLaps: number;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const rows = report.results.map((row) => ({
+    ...row,
+    stints:
+      analytics?.drivers.find((driver) => driver.driver === row.driver)
+        ?.tyres ??
+      row.tyres ??
+      [],
+  }));
+  const hasKnownLaps = (stints: TyreStint[]) =>
+    stints.some(
+      (stint) =>
+        (stint.startLap ?? 0) > 0 &&
+        (stint.endLap ?? 0) >= (stint.startLap ?? 0),
+    );
+  return (
+    <div className="rr-tyres">
+      <div className="rr-block-heading">
+        <h3>Шины по кругам</h3>
+        <div className="rr-tyre-legend">
+          {Object.values(compounds).map((tyre) => (
+            <span key={tyre.label}>
+              <i style={{ background: tyre.color }} />
+              {tyre.label}
+              <span className="sr-only"> — {tyre.name}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+      {totalLaps > 0 && rows.some((row) => hasKnownLaps(row.stints)) ? (
+        <>
+          <div className="rr-tyre-axis">
+            <span>Круг</span>
+            <div>
+              <span>1</span>
+              <span>{Math.round(totalLaps / 2)}</span>
+              <span>{totalLaps}</span>
+            </div>
+          </div>
+          {rows.slice(0, expanded ? rows.length : 6).map((row) => (
+            <div className="rr-tyre-row" key={row.driver}>
+              <span>
+                <TeamColorDot color={teamColor(row.team)} />
+                {surname(row.driver)}
+              </span>
+              <div className="rr-tyre-track">
+                {row.stints
+                  .filter(
+                    (stint) =>
+                      (stint.startLap ?? 0) > 0 &&
+                      (stint.endLap ?? 0) >= (stint.startLap ?? 0),
+                  )
+                  .map((stint, index) => {
+                    const from = Math.max(1, stint.startLap!),
+                      to = Math.min(totalLaps, stint.endLap!);
+                    const tyre = compounds[stint.compound.toUpperCase()] ?? {
+                      label: "?",
+                      color: "#8b8e96",
+                      name: "Состав неизвестен",
+                    };
+                    return to >= from ? (
+                      <span
+                        key={index}
+                        className="rr-tyre-stint"
+                        style={{
+                          left: ((from - 1) / totalLaps) * 100 + "%",
+                          width: ((to - from + 1) / totalLaps) * 100 + "%",
+                          background: tyre.color,
+                        }}
+                        title={tyre.name + ": круги " + from + "–" + to}
+                        aria-label={
+                          row.driver +
+                          ", " +
+                          tyre.name +
+                          ", круги " +
+                          from +
+                          "–" +
+                          to
+                        }
+                      >
+                        {tyre.label}
+                      </span>
+                    ) : null;
+                  })}
+                {!hasKnownLaps(row.stints) && (
+                  <span className="rr-tyre-unknown">Нет данных по кругам</span>
+                )}
+              </div>
+            </div>
+          ))}
+          {rows.length > 6 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? "Свернуть" : "Все пилоты"}
+              <ChevronDown className={cn(expanded && "rotate-180")} />
+            </Button>
+          )}
+        </>
+      ) : (
+        <MissingData
+          title="Стратегии по кругам пока недоступны"
+          detail="Составы шин, если они известны, показаны в итоговой таблице."
+        />
+      )}
+    </div>
+  );
 }
-
-function getSummaryParagraphs(summary?: string | null) {
-  return summary
-    ? summary
-        .split(/\n{2,}/)
-        .map((paragraph) => cleanMarkdown(paragraph))
-        .filter(Boolean)
-    : [];
+function PitStops({ report }: { report: GrandPrixReport }) {
+  const [expanded, setExpanded] = useState(false);
+  const [lane, setLane] = useState(false);
+  const all = getReportPitStops(report);
+  const measured = all
+    .filter((pit) => (lane ? pit.laneDuration : pit.duration) !== null)
+    .sort((a, b) =>
+      lane ? a.laneDuration! - b.laneDuration! : a.duration! - b.duration!,
+    );
+  const max = Math.max(
+    1,
+    ...measured.map((pit) => (lane ? pit.laneDuration! : pit.duration!)),
+  );
+  return (
+    <div className="rr-pits">
+      <div className="rr-block-heading">
+        <h3>Пит-стопы</h3>
+        {all.some((pit) => pit.laneDuration !== null) && (
+          <Button
+            variant="outline"
+            size="sm"
+            aria-pressed={lane}
+            onClick={() => setLane(!lane)}
+          >
+            {lane ? "Весь пит-лейн" : "Остановка"}
+          </Button>
+        )}
+      </div>
+      <p className="rr-caption">
+        {measured.length
+          ? lane
+            ? "Время проезда по пит-лейну вместе с остановкой."
+            : "Время остановки. Проезд по пит-лейну сюда не входит."
+          : "Число остановок по пилотам. Время остановок пока недоступно."}
+      </p>
+      {measured.length ? (
+        <div className="rr-pit-list">
+          {measured
+            .slice(0, expanded ? measured.length : 6)
+            .map((pit, index) => (
+              <div className="rr-pit-row" key={pit.driver + pit.lap + index}>
+                <span>
+                  {surname(pit.driver)}
+                  <small>Круг {pit.lap}</small>
+                </span>
+                <div>
+                  <i
+                    style={{
+                      width:
+                        ((lane ? pit.laneDuration! : pit.duration!) / max) *
+                          100 +
+                        "%",
+                      background: teamColor(pit.team),
+                    }}
+                  />
+                </div>
+                <strong>
+                  {numberText(lane ? pit.laneDuration : pit.duration)} с
+                </strong>
+              </div>
+            ))}
+          {measured.length > 6 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? "Свернуть" : "Все пит-стопы"}
+            </Button>
+          )}
+        </div>
+      ) : all.length ? (
+        <PitStopCounts report={report} />
+      ) : (
+        <MissingData
+          title="Данные об остановках пока недоступны"
+          detail="Остановки по кругам видны на графике шин, если есть данные о смене состава."
+        />
+      )}
+      {measured.length > 0 && all.length > measured.length && (
+        <p className="rr-caption">
+          Ещё {all.length - measured.length} остановок без замера времени.
+        </p>
+      )}
+    </div>
+  );
 }
-
-function getNewsSummary(value: Record<string, unknown>) {
-  const candidates = [
-    value.summary,
-    value.items,
-    value.news,
-    value.points,
-  ];
-
-  for (const candidate of candidates) {
-    if (Array.isArray(candidate)) {
-      return candidate
-        .map((item) => {
-          if (typeof item === "string") {
-            return cleanMarkdown(item);
-          }
-
-          if (item && typeof item === "object") {
-            const record = item as Record<string, unknown>;
-            return cleanMarkdown(asText(record.summary) ?? asText(record.title) ?? asText(record.text));
-          }
-
-          return null;
-        })
-        .filter((item): item is string => Boolean(item))
-        .slice(0, 3);
-    }
-  }
-
-  const text = asText(value.summary) ?? asText(value.text) ?? asText(value.body);
-
-  return text ? [cleanMarkdown(text)] : [];
+function PitStopCounts({ report }: { report: GrandPrixReport }) {
+  const [expanded, setExpanded] = useState(false);
+  const counts = report.results
+    .map((row) => ({
+      ...row,
+      count: getReportPitStops(report).filter(
+        (pit) => pit.driver === row.driver,
+      ).length,
+    }))
+    .sort((a, b) => b.count - a.count);
+  const maximum = Math.max(1, ...counts.map((row) => row.count));
+  return (
+    <div className="rr-pit-list">
+      {counts.slice(0, expanded ? counts.length : 6).map((row) => (
+        <div className="rr-pit-row" key={row.driver}>
+          <span>{surname(row.driver)}</span>
+          <div>
+            <i
+              style={{
+                width: (row.count / maximum) * 100 + "%",
+                background: teamColor(row.team),
+              }}
+            />
+          </div>
+          <strong>{row.count}</strong>
+        </div>
+      ))}
+      {counts.length > 6 && (
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "Свернуть" : "Все пилоты"}
+        </Button>
+      )}
+    </div>
+  );
 }
-
-function cleanMarkdown(value: string | null) {
-  return value
-    ? value
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .replace(/\*(.*?)\*/g, "$1")
-        .replace(/\*/g, "")
-        .trim()
-    : "";
+function resultTime(row: GrandPrixReportResult) {
+  if (row.time) return row.time;
+  if (/^\+\d+\s+Lap/i.test(row.status))
+    return "+" + row.status.match(/\d+/)?.[0] + " кр.";
+  if (row.status && !/^finished$/i.test(row.status)) return "Сход";
+  return "—";
+}
+function Classification({
+  report,
+  slugs,
+}: {
+  report: GrandPrixReport;
+  slugs: Record<string, string>;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const rows = report.results.slice(0, expanded ? report.results.length : 10);
+  return (
+    <div className="rr-classification">
+      <h3>Финишная классификация</h3>
+      {!rows.length ? (
+        <MissingData
+          title="Результаты ещё готовятся"
+          detail="Итоговая таблица появится после публикации результатов."
+        />
+      ) : (
+        <>
+          <Table className="rr-result-table">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Место</TableHead>
+                <TableHead>Пилот / команда</TableHead>
+                <TableHead className="text-right">Старт</TableHead>
+                <TableHead className="text-right">Позиции</TableHead>
+                <TableHead className="text-right">Время / отрыв</TableHead>
+                <TableHead className="text-right">Лучший круг</TableHead>
+                <TableHead className="text-right">Очки</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.driver}>
+                  <TableCell className="rr-result-place">
+                    {row.position ?? "—"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="rr-result-driver">
+                      <DriverAvatarBadge
+                        name={row.driver}
+                        slug={slugFor(row.driver, slugs)}
+                        season={report.season}
+                        color={teamColor(row.team)}
+                        className="size-10"
+                      />
+                      <div>
+                        <DriverName row={row} slugs={slugs} />
+                        <span className="rr-result-team">{row.team}</span>
+                      </div>
+                      {row.isFastestLap && (
+                        <Badge variant="secondary" className="rr-fastest-badge">
+                          Лучший круг
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {row.grid === 0 ? "Пит-лейн" : numberText(row.grid)}
+                  </TableCell>
+                  <TableCell
+                    className={cn(
+                      "text-right tabular-nums",
+                      (row.positionDelta ?? 0) > 0 && "rr-positive",
+                      (row.positionDelta ?? 0) < 0 && "rr-negative",
+                    )}
+                  >
+                    {row.positionDelta === null
+                      ? "—"
+                      : signed(row.positionDelta)}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {resultTime(row)}
+                  </TableCell>
+                  <TableCell
+                    className={cn(
+                      "text-right font-mono tabular-nums",
+                      row.isFastestLap && "font-semibold",
+                    )}
+                  >
+                    {row.bestLap ?? "—"}
+                  </TableCell>
+                  <TableCell className="text-right font-semibold tabular-nums">
+                    {numberText(row.points)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="rr-mobile-results">
+            {rows.map((row) => (
+              <div className="rr-mobile-result" key={row.driver}>
+                <strong>{row.position ?? "—"}</strong>
+                <div>
+                  <DriverName row={row} slugs={slugs} />
+                  <span className="rr-result-team">{row.team}</span>
+                  <span className="rr-result-meta">
+                    Старт{" "}
+                    {row.grid === 0 ? "с пит-лейна" : numberText(row.grid)} ·{" "}
+                    <span
+                      className={cn(
+                        (row.positionDelta ?? 0) > 0 && "rr-positive",
+                        (row.positionDelta ?? 0) < 0 && "rr-negative",
+                      )}
+                    >
+                      {row.positionDelta === null
+                        ? "—"
+                        : signed(row.positionDelta)}
+                    </span>
+                  </span>
+                  <span className="rr-result-best-lap">
+                    Лучший круг <strong>{row.bestLap ?? "—"}</strong>
+                  </span>
+                </div>
+                <div className="rr-mobile-result-time">
+                  <strong>
+                    {numberText(row.points)} <small>очк.</small>
+                  </strong>
+                  <span>{resultTime(row)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {report.results.length > 10 && (
+            <Button
+              className="rr-expand"
+              variant="outline"
+              aria-expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded
+                ? "Свернуть таблицу"
+                : "Все " + report.results.length + " пилота"}
+              <ChevronDown className={cn(expanded && "rotate-180")} />
+            </Button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+function PositionGains({ results }: { results: GrandPrixReportResult[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const rows = results
+    .filter((row) => row.positionDelta !== null)
+    .sort((a, b) => Math.abs(b.positionDelta!) - Math.abs(a.positionDelta!));
+  const max = Math.max(1, ...rows.map((row) => Math.abs(row.positionDelta!)));
+  return (
+    <div>
+      <h3>От старта к финишу</h3>
+      <p className="rr-caption">Разница между стартовым и итоговым местом</p>
+      {rows.length ? (
+        <div className="rr-gain-list">
+          {rows.slice(0, expanded ? rows.length : 8).map((row) => (
+            <div className="rr-gain-row" key={row.driver}>
+              <span>{surname(row.driver)}</span>
+              <div className="rr-gain-track">
+                <i
+                  style={{
+                    left:
+                      row.positionDelta! < 0
+                        ? 50 - (Math.abs(row.positionDelta!) / max) * 50 + "%"
+                        : "50%",
+                    width: (Math.abs(row.positionDelta!) / max) * 50 + "%",
+                    background:
+                      row.positionDelta! < 0
+                        ? "var(--muted-foreground)"
+                        : teamColor(row.team),
+                  }}
+                />
+              </div>
+              <strong
+                className={cn(
+                  row.positionDelta! > 0 && "rr-positive",
+                  row.positionDelta! < 0 && "rr-negative",
+                )}
+              >
+                {signed(row.positionDelta!)}
+              </strong>
+            </div>
+          ))}
+          {rows.length > 8 && (
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? "Свернуть" : "Все пилоты"}
+            </Button>
+          )}
+        </div>
+      ) : (
+        <MissingData
+          title="Нет данных о стартовой решётке"
+          detail="Изменение позиций появится, когда будет известен старт каждого пилота."
+        />
+      )}
+    </div>
+  );
+}
+function Teammates({ results }: { results: GrandPrixReportResult[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const teams = [...new Set(results.map((row) => row.team))];
+  return (
+    <div>
+      <h3>Внутри команды</h3>
+      <p className="rr-caption">Место на финише и очки обоих напарников</p>
+      <div className="rr-teammates">
+        {teams.slice(0, expanded ? teams.length : 4).map((team) => (
+          <div key={team}>
+            <div className="rr-team">
+              <TeamColorDot color={teamColor(team)} />
+              {team}
+            </div>
+            {results
+              .filter((row) => row.team === team)
+              .map((row) => (
+                <div className="rr-teammate-row" key={row.driver}>
+                  <span>{surname(row.driver)}</span>
+                  <strong>
+                    {row.position === null ? "—" : "P" + row.position}
+                  </strong>
+                  <span>{numberText(row.points)} очк.</span>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+      {teams.length > 4 && (
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "Свернуть" : "Все команды"}
+        </Button>
+      )}
+    </div>
+  );
+}
+function Standings({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: ReportStandingChange[];
+}) {
+  const [before, setBefore] = useState(false);
+  const sorted = [...rows]
+    .sort((a, b) =>
+      before
+        ? (a.previousPosition ?? 99) - (b.previousPosition ?? 99)
+        : a.position - b.position,
+    )
+    .slice(0, 5);
+  const max = Math.max(
+    1,
+    ...rows.map((row) => (before ? row.previousPoints : row.points)),
+  );
+  return (
+    <div className="rr-standings">
+      <div className="rr-block-heading">
+        <h4>{title}</h4>
+        {rows.length > 0 && (
+          <div
+            className="rr-period"
+            aria-label={title + ": положение в чемпионате"}
+          >
+            <button
+              type="button"
+              aria-pressed={before}
+              onClick={() => setBefore(true)}
+            >
+              До этапа
+            </button>
+            <button
+              type="button"
+              aria-pressed={!before}
+              onClick={() => setBefore(false)}
+            >
+              После
+            </button>
+          </div>
+        )}
+      </div>
+      {rows.length ? (
+        <ol>
+          {sorted.map((row) => (
+            <li key={row.id}>
+              <div>
+                <span className="rr-standing-position">
+                  {before ? (row.previousPosition ?? "—") : row.position}
+                </span>
+                <span>{row.name}</span>
+                <strong>
+                  {numberText(before ? row.previousPoints : row.points)}
+                </strong>
+                {!before && (
+                  <small
+                    className={cn(
+                      row.gained >= 0 ? "rr-positive" : "rr-negative",
+                    )}
+                  >
+                    {signed(row.gained)}
+                  </small>
+                )}
+              </div>
+              <div className="rr-standing-track">
+                <i
+                  style={{
+                    width:
+                      ((before ? row.previousPoints : row.points) / max) * 100 +
+                      "%",
+                    background: teamColor(row.team || row.name),
+                  }}
+                />
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <MissingData
+          title="Таблица чемпионата пока недоступна"
+          detail="Сравнение появится, когда будут сохранены полные результаты до и после этапа."
+        />
+      )}
+    </div>
+  );
 }

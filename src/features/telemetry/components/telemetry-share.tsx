@@ -20,14 +20,18 @@ export function TelemetryShare({
   onSaved,
   corner,
   range,
+  imageSource,
+  title = "Поделиться сравнением",
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  config: CompareConfig;
+  config?: CompareConfig;
   savedId?: string;
-  onSaved: (id: string) => void;
+  onSaved?: (id: string) => void;
   corner?: number;
-  range: [number, number];
+  range?: [number, number];
+  imageSource?: string;
+  title?: string;
 }) {
   const [id, setId] = useState(savedId),
     [format, setFormat] = useState<"horizontal" | "vertical">("horizontal"),
@@ -40,7 +44,7 @@ export function TelemetryShare({
       preview: string;
     } | null>(null);
   useEffect(() => {
-    if (!open) return;
+    if (!open || imageSource || !config) return;
     if (savedId) {
       void Promise.resolve().then(() => setId(savedId));
       return;
@@ -56,7 +60,7 @@ export function TelemetryShare({
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         setId(data.id);
-        onSaved(data.id);
+        onSaved?.(data.id);
         trackTelemetry("telemetry_permalink_created", data.id);
       })
       .catch((e) => {
@@ -65,9 +69,9 @@ export function TelemetryShare({
     return () => controller.abort();
     // Create one immutable link per comparison when the dialog opens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, savedId, config]);
-  const image = id
-    ? `/api/share-image/telemetry/${id}?v=14&format=${format}`
+  }, [open, savedId, config, imageSource]);
+  const image = imageSource ? `${imageSource}&format=${format}` : id
+    ? `/api/share-image/telemetry/${id}?v=22&format=${format}`
     : null;
   useEffect(() => {
     if (!open || !image) return;
@@ -79,7 +83,7 @@ export function TelemetryShare({
           throw new Error("Не удалось создать карточку. Попробуйте ещё раз.");
         const blob = await response.blob();
         if (controller.signal.aborted) return;
-        const file = new File([blob], `raceside-telemetry-${format}.png`, {
+        const file = new File([blob], `raceside-${imageSource ? "pace" : "telemetry"}-${format}.png`, {
           type: "image/png",
         });
         preview = URL.createObjectURL(file);
@@ -95,7 +99,7 @@ export function TelemetryShare({
       if (preview) URL.revokeObjectURL(preview);
       setPrepared(null);
     };
-  }, [open, image, format]);
+  }, [open, image, format, imageSource]);
   const card = prepared?.source === image ? prepared : null;
   function downloadImage() {
     if (!card) return;
@@ -136,7 +140,7 @@ export function TelemetryShare({
         aria-describedby={undefined}
       >
         <DialogHeader>
-          <DialogTitle>Поделиться сравнением</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div
           className="telemetry-share-formats"
@@ -151,7 +155,7 @@ export function TelemetryShare({
           >
             <span className="telemetry-share-format-icon is-horizontal" />
             <span>Горизонтальная</span>
-            <small>1600 × 900</small>
+            <small>3200 × 1800</small>
           </button>
           <button
             type="button"
@@ -161,7 +165,7 @@ export function TelemetryShare({
           >
             <span className="telemetry-share-format-icon is-vertical" />
             <span>Вертикальная</span>
-            <small>1080 × 1920</small>
+            <small>2160 × 3840</small>
           </button>
         </div>
         {error && <p role="alert">{error}</p>}
@@ -169,8 +173,8 @@ export function TelemetryShare({
           <div className="telemetry-share-preview">
             <Image
               unoptimized
-              width={format === "horizontal" ? 1600 : 1080}
-              height={format === "horizontal" ? 900 : 1920}
+              width={format === "horizontal" ? 3200 : 2160}
+              height={format === "horizontal" ? 1800 : 3840}
               src={card.preview}
               alt="Предпросмотр карточки RaceSide"
               onError={() =>

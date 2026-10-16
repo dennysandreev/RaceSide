@@ -4,9 +4,13 @@ import type {
   LocationSample,
   TelemetrySample,
   LiveHealth,
+  LivePresentation,
+  LiveView,
 } from "./types";
+import { applyTimelinePatch } from "../../../../worker/live/timeline.mjs";
 export const initialState: LiveSessionState = {
   session: null,
+  championship: null,
   drivers: {},
   locations: {},
   telemetry: {},
@@ -37,6 +41,12 @@ export class LiveStore {
   health: LiveHealth | null = null;
   connection = "connecting";
   clockOffset = 0;
+  presentation: LivePresentation | null = null;
+  seeking = false;
+  seekReady = false;
+  seekRevision = 0;
+  private presentationReceivedAt = 0;
+  private seekHandler: ((view: LiveView) => void) | null = null;
   private clockInitialized = false;
   private playbackDelayMs = MIN_PLAYBACK_DELAY_MS;
   private playbackDelayInitialized = false;
@@ -63,6 +73,23 @@ export class LiveStore {
       this.notify("connection");
     }
   }
+  setSeekHandler(handler: ((view: LiveView) => void) | null) {
+    this.seekHandler = handler;
+  }
+  seek(view: LiveView) {
+    this.seekHandler?.(view);
+  }
+  setSeeking(value: boolean) {
+    this.seeking = value;
+    this.notify("seeking");
+  }
+  setSeekReady(value: boolean) {
+    this.seekReady = value;
+    this.notify("seeking");
+  }
+  getPresentationNow = () => this.presentation
+    ? this.presentation.cursorTime + (this.presentation.paused ? 0 : Math.min(1000, Math.max(0, Date.now() - this.presentationReceivedAt)))
+    : Date.now() + this.clockOffset;
   resetSamples() {
     const telemetryDrivers = [...this.telemetry.keys()];
     this.locations.clear();
@@ -81,35 +108,40 @@ export class LiveStore {
       this.clockOffset +=
         Math.max(-10, Math.min(10, offset - this.clockOffset)) * 0.1;
     }
-    if (message.health) {
-      this.health = message.health;
-      this.notify("health");
+    if (message.health) this.health = message.health;
+    if (message.presentation) {
+      this.presentation = message.presentation;
+      this.presentationReceivedAt = Date.now();
     }
-    const data = message.data;
+    const data = message.patch ? applyTimelinePatch(this.state, message.patch) : message.data;
+    const changed = new Set<keyof LiveSessionState>();
+    const telemetryChanged = new Set<number>();
     if (data) {
-      if (
-        data.session?.session_key &&
-        data.session.session_key !== this.state.session?.session_key
-      ) {
+      const reset = message.reset || (data.session?.session_key &&
+        data.session.session_key !== this.state.session?.session_key);
+      if (reset) {
+        for (const driver of this.telemetry.keys()) telemetryChanged.add(driver);
         this.locations.clear();
         this.telemetry.clear();
-        this.state = initialState;
+        this.playbackDelayInitialized = false;
+        this.playbackDelayMs = MIN_PLAYBACK_DELAY_MS;
       }
+      const next = { ...(reset ? initialState : this.state), ...data };
       for (const key of Object.keys(data) as (keyof LiveSessionState)[]) {
-        if (JSON.stringify(data[key]) !== JSON.stringify(this.state[key])) {
-          this.state = { ...this.state, [key]: data[key] };
-          this.notify(key);
-        }
+        if (data[key] !== this.state[key] && JSON.stringify(data[key]) !== JSON.stringify(this.state[key])) changed.add(key);
       }
+      // Publish the complete state before notifying any panel. A seek must
+      // never render old flags alongside new timing or future telemetry.
+      this.state = next;
       if (message.type === "snapshot") {
         const locations = Object.entries(data.locations ?? {});
         this.observeLocationDelay(
-          message.serverTime,
+          message.presentation?.cursorTime ?? message.serverTime,
           locations.map(([, point]) => point),
         );
         for (const [n, p] of locations) this.addLocation(Number(n), p);
         for (const [n, p] of Object.entries(data.telemetry ?? {}))
-          this.addTelemetry(Number(n), p);
+          { this.addTelemetry(Number(n), p, false); telemetryChanged.add(Number(n)); }
       }
     }
     const locationSamples = (message.samples ?? []).filter(
@@ -120,11 +152,26 @@ export class LiveStore {
         { type: "location" }
       > => sample.type === "location",
     );
-    this.observeLocationDelay(message.serverTime, locationSamples);
+    const newestLocations = new Map<number, LocationSample>();
+    for (const point of locationSamples) {
+      const prior = newestLocations.get(point.driverNumber);
+      if (!prior || Date.parse(point.timestamp) > Date.parse(prior.timestamp))
+        newestLocations.set(point.driverNumber, point);
+    }
+    this.observeLocationDelay(message.presentation?.cursorTime ?? message.serverTime, [...newestLocations.values()]);
     for (const sample of message.samples ?? [])
       if (sample.type === "location")
         this.addLocation(sample.driverNumber, sample);
-      else this.addTelemetry(sample.driverNumber, sample);
+      else { this.addTelemetry(sample.driverNumber, sample, false); telemetryChanged.add(sample.driverNumber); }
+    for (const key of changed) this.notify(key);
+    for (const driver of telemetryChanged) this.notify(`telemetry:${driver}`);
+    if (message.health) this.notify("health");
+    if (message.reset) {
+      this.seekRevision++;
+      this.setSeeking(false);
+      this.notify("seekRevision");
+    }
+    if (message.presentation) this.notify("presentation");
   }
   private observeLocationDelay(
     serverTime: number,
@@ -162,7 +209,7 @@ export class LiveStore {
         .slice(-24),
     );
   }
-  addTelemetry(n: number, p: TelemetrySample) {
+  addTelemetry(n: number, p: TelemetrySample, notify = true) {
     const old = this.telemetry.get(n) ?? [];
     const cutoff = Date.parse(p.timestamp) - 60000;
     this.telemetry.set(
@@ -177,11 +224,11 @@ export class LiveStore {
         .sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp))
         .slice(-300),
     );
-    this.notify(`telemetry:${n}`);
+    if (notify) this.notify(`telemetry:${n}`);
   }
   sample(
     n: number,
-    now = Date.now() + this.clockOffset - this.playbackDelayMs,
+    now = this.getPresentationNow() - this.playbackDelayMs,
   ) {
     if (this.replaySampler) return this.replaySampler(n);
     if (

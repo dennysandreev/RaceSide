@@ -792,572 +792,1548 @@
         {
           "id": 107364040,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 9,
+            "sampledSrgbHex": "#b79d91",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "welcome-centre",
+            "roofSrgbHex": "#a26557",
+            "wallSrgbHex": "#c5c5b5",
+            "sources": [
+              "sentinel-tci.tif",
+              "welcome-courtyard"
+            ],
+            "evidence": "Reddish roofs visible inside both mapped footprints in Sentinel; light facade inferred from the official courtyard photo."
+          }
         },
         {
           "id": 107364078,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 62,
+            "sampledSrgbHex": "#f9faf3",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 107364092,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 6,
+            "sampledSrgbHex": "#e7e4cf",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144359492,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 6,
+            "sampledSrgbHex": "#f8e9eb",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144362327,
           "heightMeters": 13,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 90,
+            "sampledSrgbHex": "#fffdfa",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "pit-building",
+            "roofSrgbHex": "#b8bfbc",
+            "wallSrgbHex": "#c1c6bd",
+            "sources": [
+              "sentinel-tci.tif",
+              "official-architecture.html",
+              "main-grandstand"
+            ],
+            "evidence": "Light roof from Sentinel; glass/aluminium facade material from venue architecture and trackside view. Tone estimated."
+          }
         },
         {
           "id": 144362328,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#998d7c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 144362332,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#f9fae8",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144362333,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 17,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367527,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#978d69",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367529,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#938d6b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367532,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#727762",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367534,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 5,
+            "sampledSrgbHex": "#b2b0a4",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367536,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#877c5e",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144367542,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#b3ad95",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144520904,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#798672",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144520906,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#8ea49d",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144520908,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#868c84",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144520909,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#b1afab",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144520910,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#6a7e73",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529846,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 13,
+            "sampledSrgbHex": "#c9d4d0",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529851,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#9ba67d",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529857,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#999985",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529859,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#948b7c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529860,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#757e63",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529864,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#b8ac9c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144529866,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#98886e",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144532107,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 29,
+            "sampledSrgbHex": "#cdc3b2",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144533525,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#a0a182",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144533526,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#a2a182",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144536775,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#d8dedd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144536776,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#7a7d68",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144536777,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#a9a582",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144536780,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#4d573c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 144536782,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#7f8966",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232836,
           "heightMeters": 7.2,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 28,
+            "sampledSrgbHex": "#b59e88",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "south-paddock",
+            "roofSrgbHex": "#4a504d",
+            "wallSrgbHex": "#bec2bc",
+            "sources": [
+              "south-paddock"
+            ],
+            "evidence": "Official trackside exterior photograph; dark metal roof and light concrete facade."
+          }
         },
         {
           "id": 1105232837,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#a59784",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232838,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#998970",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232839,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#646d4b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232840,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#79876d",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232841,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#8f9175",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232842,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#b8a594",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232843,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#92a68b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232844,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#83816c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232845,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#7a826d",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1105232846,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#94a187",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1106524879,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#8c816f",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524880,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 6,
+            "sampledSrgbHex": "#958479",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524881,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#94897b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524882,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#6f685e",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524883,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#8d8076",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524884,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 6,
+            "sampledSrgbHex": "#847864",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106524885,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#8d7e72",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "paddock-chalets",
+            "roofSrgbHex": "#494e4b",
+            "wallSrgbHex": "#b9bcb3",
+            "sources": [
+              "chalet-exterior"
+            ],
+            "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+          }
         },
         {
           "id": 1106576349,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#545452",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1106756634,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 9,
+            "sampledSrgbHex": "#d2afab",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "welcome-centre",
+            "roofSrgbHex": "#a26557",
+            "wallSrgbHex": "#c5c5b5",
+            "sources": [
+              "sentinel-tci.tif",
+              "welcome-courtyard"
+            ],
+            "evidence": "Reddish roofs visible inside both mapped footprints in Sentinel; light facade inferred from the official courtyard photo."
+          }
         },
         {
           "id": 1106756635,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 15,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1106762509,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#9e9789",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1106762513,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 5,
+            "sampledSrgbHex": "#c1d1dc",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275026,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 5,
+            "sampledSrgbHex": "#f8df9b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275027,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 15,
+            "sampledSrgbHex": "#fefefc",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275028,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#7f7a5c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275031,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#afb19b",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275032,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#aeb4b4",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1315275033,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#bd5844",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598232,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#d1d8d2",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598233,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefffd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598234,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefefd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598235,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefefe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598236,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#f3e7ea",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598237,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefdfc",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598238,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#fdfcfa",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598239,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fef8f8",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598240,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefeef",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598241,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#fffffb",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598242,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#fbfdfa",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598243,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefefd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598244,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598245,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fef9ff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598246,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefefd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598247,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fffffa",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598248,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefefc",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598249,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598250,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefefe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598251,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fefeff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598252,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fdfdf6",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598253,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fcfdf9",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598254,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#f6f8f3",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598255,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#f3f9d5",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598256,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#feffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598257,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#fffdfe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598258,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598259,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefdfe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598260,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#feffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598261,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#e9e3df",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598262,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#f7f6f7",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598263,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#fefefe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598264,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefefe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598265,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fdfdff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598266,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#dfd4d9",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598267,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fffeff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598268,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fffffd",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598269,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefffe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598270,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#ffffff",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598271,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 3,
+            "sampledSrgbHex": "#fefdfe",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598273,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#77725c",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598275,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#404433",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330598301,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#a49b8a",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330601072,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#fffeeb",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1330601073,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 4,
+            "sampledSrgbHex": "#fefded",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1560042159,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "interior point for sub-pixel roof",
+            "nativeGridSamples": 0,
+            "sampledSrgbHex": "#757366",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1561237669,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#ced2c6",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1561237677,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#aca972",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1561237678,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#f2ffdf",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1561243403,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 1,
+            "sampledSrgbHex": "#8ea996",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         },
         {
           "id": 1561243404,
           "heightMeters": 3.6,
-          "heightSource": "estimated from mapped levels/venue photographs"
+          "heightSource": "estimated from mapped levels/venue photographs",
+          "appearance": {
+            "method": "footprint-interior median on 10 m grid",
+            "nativeGridSamples": 2,
+            "sampledSrgbHex": "#ecf6f8",
+            "source": "Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance",
+            "group": "satellite-roof-proxy",
+            "wallSource": "neutral facade estimate; no photographed wall colour"
+          }
         }
       ],
       "excluded": [],
@@ -1375,21 +2351,71 @@
           "name": "F Grandstand",
           "sections": 14,
           "footprintSource": "current OSM",
-          "heightSource": "photographic estimate; no LoD2/DSM roof survey"
+          "heightSource": "photographic estimate; no LoD2/DSM roof survey",
+          "appearance": {
+            "wayId": 107364038,
+            "name": "F Grandstand",
+            "roof": "#a4ada3",
+            "underside": "#767e70",
+            "frame": "#65736a",
+            "truss": "#819085",
+            "concrete": "#b1b5ac",
+            "seatGreen": "#227851",
+            "seatYellow": "#c1a03b",
+            "seatGrey": "#969c8f",
+            "sources": [
+              "f-grandstand",
+              "sentinel-tci.tif"
+            ],
+            "evidence": "Official F photograph shows galvanized steel and grey-green roof underside; roof top tone checked against Sentinel."
+          }
         },
         {
           "id": 107364100,
           "name": "K1 Grandstand",
           "sections": 17,
           "footprintSource": "current OSM",
-          "heightSource": "photographic estimate; no LoD2/DSM roof survey"
+          "heightSource": "photographic estimate; no LoD2/DSM roof survey",
+          "appearance": {
+            "wayId": 107364100,
+            "name": "K1 Grandstand",
+            "roof": "#b9bcad",
+            "underside": "#989d8b",
+            "frame": "#4a6157",
+            "truss": "#758178",
+            "concrete": "#adb1a7",
+            "seatGreen": "#227851",
+            "seatYellow": "#c1a03b",
+            "seatGrey": "#969c8f",
+            "sources": [
+              "sentinel-tci.tif",
+              "main-grandstand"
+            ],
+            "evidence": "Light roof confirmed in Sentinel; surface tones and structure remain an estimate from the same venue material family."
+          }
         },
         {
           "id": 144247993,
           "name": "Main Grandstand",
           "sections": 97,
           "footprintSource": "current OSM",
-          "heightSource": "photographic estimate; no LoD2/DSM roof survey"
+          "heightSource": "photographic estimate; no LoD2/DSM roof survey",
+          "appearance": {
+            "wayId": 144247993,
+            "name": "Main Grandstand",
+            "roof": "#c4c0aa",
+            "underside": "#a5a18a",
+            "frame": "#324e47",
+            "truss": "#5a6b62",
+            "concrete": "#adb1a7",
+            "seatGreen": "#227851",
+            "seatYellow": "#c1a03b",
+            "seatGrey": "#969c8f",
+            "sources": [
+              "main-grandstand"
+            ],
+            "evidence": "Venue daylight photograph shows cream membranes, dark green framing, grey trusses and green/yellow seats."
+          }
         }
       ],
       "minimumFrontageTrackClearanceMeters": 1.62,
@@ -1569,6 +2595,25 @@
   "surfaceExport": {
     "meshoptPositionBits": 18,
     "paintVerticesDrapedOnDeliveredRoad": 8374
+  },
+  "buildingAppearance": {
+    "auditFile": "docs/track-model-sepang-building-colours.json",
+    "auditSha256": "80cfbcb1e5d1e59844b1c8222bf266168f0ee315f29a4582922ff7a9a55427b2",
+    "verifiedOn": "2026-09-30",
+    "sourceColorSpace": "sRGB",
+    "vertexColorSpace": "linear",
+    "satelliteAlbedoScale": 0.55,
+    "roofSampling": "footprint-interior median on native 10 m grid; sub-pixel roofs use an interior point",
+    "photoReferencedBuildings": 12,
+    "satelliteRoofProxies": 102,
+    "photographsEmbedded": false,
+    "limitations": [
+      "Photo colour values are observed material approximations, not spectrophotometer measurements. Photograph dates are not supplied by the venue.",
+      "Satellite colour is sampled only inside mapped roof footprints on a 10 m grid; a tessellated interior point is used for roofs smaller than a source pixel.",
+      "Photographic brightness is reduced before it becomes surface albedo to avoid applying sunlight twice. Small-roof colours and facades without photographs remain estimated.",
+      "The Welcome Centre exterior roofs appear reddish in the pinned 2026 Sentinel image; the official indoor photograph supports only the light facade and canopy underside.",
+      "K1 uses the main-stand material family checked against its light roof in Sentinel; its promotional photo does not independently establish the top-of-roof paint colour."
+    ]
   },
   "sourceManifest": {
     "schemaVersion": 1,
@@ -1781,6 +2826,98 @@
         "bboxCrs": "EPSG:4326",
         "verticalDatum": null,
         "retrievedAt": "2026-09-22T07:18:54.406Z"
+      },
+      {
+        "id": "chalet-exterior",
+        "file": "chalet-exterior-colours.jpg",
+        "url": "https://www.sepangcircuit.com/media/wysiwyg/paddock-chalet-img1_1.jpg",
+        "page": "https://www.sepangcircuit.com/facilities-paddock-chalet",
+        "role": "charcoal metal canopy, off-white infill, dark framing and tinted glass",
+        "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+        "attribution": "PETRONAS Sepang International Circuit",
+        "bytes": 127268,
+        "sha256": "841d52e8e6b8b79b8ebcc4dc334dbace9fed68114ad8017d79457be56879eab2",
+        "retrievedAt": "2026-09-29T21:47:17.814391+00:00",
+        "photographedAt": null,
+        "crs": "document reference",
+        "resolution": "official photograph; observed material colours, not measured reflectance",
+        "bbox": [
+          101.727,
+          2.744,
+          101.75,
+          2.769
+        ],
+        "bboxCrs": "EPSG:4326",
+        "verticalDatum": null
+      },
+      {
+        "id": "south-paddock",
+        "file": "south-paddock-colours.jpg",
+        "url": "https://www.sepangcircuit.com/media/wysiwyg/support-paddock-south-img.jpg",
+        "page": "https://www.sepangcircuit.com/facilities-support-paddock-south",
+        "role": "dark metal roof, pale grey walls and green-grey glazing",
+        "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+        "attribution": "PETRONAS Sepang International Circuit",
+        "bytes": 494218,
+        "sha256": "1ec4b1379744a623a3cbde9b86ac050391486935188d1465d83cdc6115a0264f",
+        "retrievedAt": "2026-09-29T21:47:46.414413+00:00",
+        "photographedAt": null,
+        "crs": "document reference",
+        "resolution": "official photograph; observed material colours, not measured reflectance",
+        "bbox": [
+          101.727,
+          2.744,
+          101.75,
+          2.769
+        ],
+        "bboxCrs": "EPSG:4326",
+        "verticalDatum": null
+      },
+      {
+        "id": "welcome-courtyard",
+        "file": "welcome-exterior-colours.png",
+        "url": "https://www.sepangcircuit.com/media/wysiwyg/welcome-center-2.png",
+        "page": "https://www.sepangcircuit.com/facilities-welcome",
+        "role": "light concrete facade and warm canopy underside; pitched exterior roof colour comes from Sentinel, not this interior view",
+        "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+        "attribution": "PETRONAS Sepang International Circuit",
+        "bytes": 310093,
+        "sha256": "ab4d1315baf6f55a8814e81f8d581e71e2623ae85d5dcbf0dd5beed4f9cbf0a6",
+        "retrievedAt": "2026-09-29T21:48:37.978721+00:00",
+        "photographedAt": null,
+        "crs": "document reference",
+        "resolution": "official photograph; observed material colours, not measured reflectance",
+        "bbox": [
+          101.727,
+          2.744,
+          101.75,
+          2.769
+        ],
+        "bboxCrs": "EPSG:4326",
+        "verticalDatum": null
+      },
+      {
+        "id": "f-grandstand",
+        "file": "f-grandstand-colours.jpg",
+        "url": "https://www.sepangcircuit.com/media/mageplus/tickets/f-grandstand.jpg",
+        "page": "https://www.sepangcircuit.com/f-grandstand",
+        "role": "grey-green roof underside and grey galvanized structure; top colour checked against Sentinel",
+        "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+        "attribution": "PETRONAS Sepang International Circuit",
+        "bytes": 1444879,
+        "sha256": "bc8310d8b9d43877925e3cc1037792e5df84750ccac5849447436f3cc5e4a77b",
+        "retrievedAt": "2026-09-29T21:49:35.528137+00:00",
+        "photographedAt": null,
+        "crs": "document reference",
+        "resolution": "official photograph; observed material colours, not measured reflectance",
+        "bbox": [
+          101.727,
+          2.744,
+          101.75,
+          2.769
+        ],
+        "bboxCrs": "EPSG:4326",
+        "verticalDatum": null
       }
     ]
   },

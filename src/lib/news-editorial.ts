@@ -1,4 +1,7 @@
 export type NewsEditorialMeta = {
+  algorithm_version?: number;
+  token_usage?: number;
+  request_count?: number;
   article_type?: string;
   source_authors?: string[];
   status?: string;
@@ -19,8 +22,14 @@ export function newsReviewIssueLabel(issue: string) {
   const labels: Record<string, string> = {
     sensitive_material: "Чувствительная тема: проверь формулировки и оговорки источника.",
     analysis_requires_editor: "Перед публикацией проверь аргументы, условные формулировки и отсутствие пересказа чужих мнений.",
-    invalid_extraction: "Не удалось надёжно связать факты с фрагментами оригинала.",
+    invalid_extraction: "Предыдущая проверка остановилась на разборе оригинала. Попробуй обработать новость заново.",
+    invalid_event_metadata: "Не удалось определить событие и участников новости.",
     invalid_verification: "Проверка текста не завершилась.",
+    news_token_budget_exceeded: "Достигнут лимит обработки этой новости. Текст можно проверить и опубликовать вручную.",
+    news_invalid_response: "AI вернул неполный ответ. Проверь текст перед публикацией.",
+    invalid_duplicate_decision: "Не удалось подтвердить, что событие уже опубликовано.",
+    invalid_review_edits: "Не удалось применить исправление текста. Попробуй обработать новость заново.",
+    reader_markup: "Убери из текста ссылки и служебную разметку.",
     quality_threshold_not_met: "Текст не прошёл проверку точности и полноты.",
     essential_fact_missing: "В пересказе пропущена важная подробность источника.",
     driver_team_conflict: "Команда пилота не совпадает с актуальными данными.",
@@ -30,14 +39,16 @@ export function newsReviewIssueLabel(issue: string) {
     unnatural_language: "Перепиши неестественные обороты простым русским языком.",
     rumour_attribution_missing: "Не указано, что информация не подтверждена.",
     context_claim_mismatch: "Контекст статьи расходится с данными сайта.",
-    unknown_source_fact: "Не удалось подтвердить происхождение одного из утверждений.",
+    race_context_mismatch: "Проверь, к какому Гран-при относится новость.",
+    team_context_mismatch: "Не удалось подтвердить команду для этой новости.",
+    unknown_source_fact: "Предыдущая проверка остановилась на служебных данных. Попробуй обработать новость заново.",
     repeated_lead: "Начало статьи повторяет лид.",
     headline_scope_changed: "Заголовок обобщает частный случай на всю аудиторию.",
     incomplete_draft: "Текст статьи получен не полностью.",
     irrelevant_source: "Материал не подходит для новостной ленты.",
     update_target_changed: "Исходная статья изменилась во время подготовки обновления.",
   };
-  if (issue.startsWith("invented_number:")) return `В источнике не найдено число ${issue.slice("invented_number:".length)}.`;
+  if (issue.startsWith("invented_number:")) return `Предыдущая проверка отметила число ${issue.slice("invented_number:".length)}. Сверь значение и единицы с оригиналом.`;
   return labels[issue] ?? (/[а-яё]/i.test(issue) ? issue : "Требуется сверка с оригиналом.");
 }
 

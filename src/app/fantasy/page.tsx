@@ -123,7 +123,7 @@ export default async function FantasyPage({
   const [predictionState, leagues, leaderboard, profileSummary, leaderboardPreview] = await Promise.all([
     getPredictionState(user?.id),
     activeTab === "leagues" || activeTab === "overview"
-      ? getLeagues(user?.id)
+      ? getLeagues(user?.id, { onlyMine: activeTab === "overview" })
       : Promise.resolve([] as LeagueSummary[]),
     activeTab === "leaderboard"
       ? getGlobalFantasyLeaderboard()

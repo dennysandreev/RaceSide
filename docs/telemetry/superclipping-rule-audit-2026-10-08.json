@@ -1,0 +1,1694 @@
+{
+  "date": "2026-10-08",
+  "version": "track-analysis-5",
+  "adjacentSignalRegression": {
+    "laps": 72,
+    "weakAccelerationBefore": 18,
+    "weakAccelerationAfter": 18,
+    "differences": 0,
+    "finding": "An initial shared full-throttle run split exposed two unrelated weak-acceleration events in Sepang. Fixed by preserving pressed-pedal runs for weak acceleration and using full-throttle runs only for superclipping; covered by a failing-then-passing regression test."
+  },
+  "rules": {
+    "slowSpeed": 150,
+    "fastSpeed": 230,
+    "maxGap": 0.6,
+    "neutralSeconds": 0.05,
+    "maxSectorError": 0.35,
+    "fullThrottle": 98,
+    "pressedThrottle": 5,
+    "speedDrop": 8,
+    "minSignalSpeed": 200,
+    "minSuperclippingStartSpeed": 300,
+    "minSignalDuration": 1,
+    "minSignalDistance": 60,
+    "maxSignalGap": 0.5,
+    "maxSignalMergeSeconds": 1.5,
+    "maxSignalMergeDistance": 150,
+    "maxSignalSpeedRecovery": 2
+  },
+  "scope": "72 real cached lap traces across five circuits, 64 comparable and eight pit/cooldown traces. Fixed rule, no per-lap overrides; shared corridors use nearest-in-time other driver. Full cached traces scaled to verified track length. No external writes.",
+  "primarySources": [
+    {
+      "url": "https://www.formula1.com/en/latest/article/f1-2026-regulations-explained-the-key-terms-for-formula-1s-new-for-2026-rules.3T5BU6TC9quGcIpGzoWkY0",
+      "finding": "Harvesting at full throttle, usually at the end of a straight; depends on maps and circuit. No universal minimum speed stated."
+    },
+    {
+      "url": "https://global.honda/jp/tech/motorsports/Formula-1/glossary/terms/Super_Clipping/",
+      "finding": "ICE power drives MGU-K generation while the throttle stays fully pressed. Used for mechanism only, not numerical regulatory power limits."
+    }
+  ],
+  "limitations": [
+    "No battery/SOC/MGU-K channels: detections do not establish energy cause.",
+    "300 km/h is a conservative product threshold, not a physical lower limit; it can miss real lower-speed harvesting.",
+    "Missing samples cannot establish unseen pedal changes, despite bounded interpolation and consistent observed endpoints.",
+    "Straight/fast categories and distance are approximate; Monza and Madring geometry is estimated.",
+    "Only merges already established decline fragments; a short tail alone is not extrapolated through a corner.",
+    "Eight noncomparable pit/cooldown traces included separately for robustness, not evidence for track position or true positives."
+  ],
+  "hypotheses": {
+    "fullThrottle": "60% gas false positive removed; every sample checked, not event average.",
+    "entrySpeed": "250/260/280/290/300/310 tested. 300 retains all high-speed candidates in Baku/Monza/Madring, removes 243 approach and 283/286 corner-adjacent episodes in Spa. All-sample speed cutoff rejected because it truncates valid high-speed-start declines.",
+    "merging": "Pause 0.5/0.75/1/1.25/1.5/2/3 seconds, distance 60/100/150/200/250 m and recovery 0/1/2/3/5/8 km/h swept. 1.5 seconds and 150 m join six pairs in Spa; raising limits did not join more in these data. Recovery allowance selected for integer speed noise; negatives also tested synthetically.",
+    "reacceleration": "Production fixes an internal recovery loophole independently of fragment merging; one Monza result differs from initial prototype and is covered by recorded samples."
+  },
+  "summary": [
+    {
+      "circuit": "baku",
+      "laps": 19,
+      "comparable": 19,
+      "baseline": 14,
+      "full": 14,
+      "merged": 14,
+      "speed": {
+        "250": 14,
+        "260": 14,
+        "280": 13,
+        "290": 13,
+        "300": 13,
+        "310": 13
+      },
+      "sweeps": {
+        "pause0.5": 14,
+        "pause0.75": 14,
+        "pause1": 14,
+        "pause1.25": 14,
+        "pause1.5": 14,
+        "pause2": 14,
+        "pause3": 14,
+        "distance60": 14,
+        "distance100": 14,
+        "distance150": 14,
+        "distance200": 14,
+        "distance250": 14,
+        "recovery0": 14,
+        "recovery1": 14,
+        "recovery2": 14,
+        "recovery3": 14,
+        "recovery5": 14,
+        "recovery8": 14,
+        "noFast": 14
+      },
+      "current": 13,
+      "currentComparable": 13
+    },
+    {
+      "circuit": "sepang",
+      "laps": 21,
+      "comparable": 19,
+      "baseline": 7,
+      "full": 1,
+      "merged": 1,
+      "speed": {
+        "250": 1,
+        "260": 1,
+        "280": 0,
+        "290": 0,
+        "300": 0,
+        "310": 0
+      },
+      "sweeps": {
+        "pause0.5": 1,
+        "pause0.75": 1,
+        "pause1": 1,
+        "pause1.25": 1,
+        "pause1.5": 1,
+        "pause2": 1,
+        "pause3": 1,
+        "distance60": 1,
+        "distance100": 1,
+        "distance150": 1,
+        "distance200": 1,
+        "distance250": 1,
+        "recovery0": 1,
+        "recovery1": 1,
+        "recovery2": 1,
+        "recovery3": 1,
+        "recovery5": 1,
+        "recovery8": 1,
+        "noFast": 1
+      },
+      "current": 0,
+      "currentComparable": 0
+    },
+    {
+      "circuit": "monza",
+      "laps": 12,
+      "comparable": 8,
+      "baseline": 20,
+      "full": 17,
+      "merged": 17,
+      "speed": {
+        "250": 17,
+        "260": 17,
+        "280": 17,
+        "290": 17,
+        "300": 17,
+        "310": 15
+      },
+      "sweeps": {
+        "pause0.5": 17,
+        "pause0.75": 17,
+        "pause1": 17,
+        "pause1.25": 17,
+        "pause1.5": 17,
+        "pause2": 17,
+        "pause3": 17,
+        "distance60": 17,
+        "distance100": 17,
+        "distance150": 17,
+        "distance200": 17,
+        "distance250": 17,
+        "recovery0": 17,
+        "recovery1": 17,
+        "recovery2": 17,
+        "recovery3": 17,
+        "recovery5": 17,
+        "recovery8": 17,
+        "noFast": 17
+      },
+      "current": 16,
+      "currentComparable": 10
+    },
+    {
+      "circuit": "madring",
+      "laps": 10,
+      "comparable": 10,
+      "baseline": 11,
+      "full": 8,
+      "merged": 8,
+      "speed": {
+        "250": 8,
+        "260": 8,
+        "280": 8,
+        "290": 8,
+        "300": 8,
+        "310": 8
+      },
+      "sweeps": {
+        "pause0.5": 8,
+        "pause0.75": 8,
+        "pause1": 8,
+        "pause1.25": 8,
+        "pause1.5": 8,
+        "pause2": 8,
+        "pause3": 8,
+        "distance60": 8,
+        "distance100": 8,
+        "distance150": 8,
+        "distance200": 8,
+        "distance250": 8,
+        "recovery0": 8,
+        "recovery1": 8,
+        "recovery2": 8,
+        "recovery3": 8,
+        "recovery5": 8,
+        "recovery8": 8,
+        "noFast": 8
+      },
+      "current": 8,
+      "currentComparable": 8
+    },
+    {
+      "circuit": "spa",
+      "laps": 10,
+      "comparable": 8,
+      "baseline": 29,
+      "full": 26,
+      "merged": 20,
+      "speed": {
+        "250": 19,
+        "260": 19,
+        "280": 16,
+        "290": 13,
+        "300": 12,
+        "310": 12
+      },
+      "sweeps": {
+        "pause0.5": 26,
+        "pause0.75": 25,
+        "pause1": 23,
+        "pause1.25": 21,
+        "pause1.5": 20,
+        "pause2": 20,
+        "pause3": 20,
+        "distance60": 24,
+        "distance100": 22,
+        "distance150": 20,
+        "distance200": 20,
+        "distance250": 20,
+        "recovery0": 20,
+        "recovery1": 20,
+        "recovery2": 20,
+        "recovery3": 20,
+        "recovery5": 20,
+        "recovery8": 20,
+        "noFast": 23
+      },
+      "current": 12,
+      "currentComparable": 8
+    }
+  ],
+  "rows": [
+    {
+      "circuit": "baku",
+      "id": "11373:63:21",
+      "driver": "RUS",
+      "lap": 21,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5214.826069,
+          "to": 6003,
+          "duration": 8.913,
+          "speed": [
+            327,
+            308.0331950207469
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:63:22",
+      "driver": "RUS",
+      "lap": 22,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:63:24",
+      "driver": "RUS",
+      "lap": 24,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:19",
+      "driver": "VER",
+      "lap": 19,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5108.872432,
+          "to": 6001.657041,
+          "duration": 10.361,
+          "speed": [
+            319,
+            300
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:20",
+      "driver": "VER",
+      "lap": 20,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:21",
+      "driver": "VER",
+      "lap": 21,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:22",
+      "driver": "VER",
+      "lap": 22,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:3:8",
+      "driver": "VER",
+      "lap": 8,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:44:11",
+      "driver": "HAM",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:3:52",
+      "driver": "VER",
+      "lap": 52,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:12:52",
+      "driver": "ANT",
+      "lap": 52,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:3:53",
+      "driver": "VER",
+      "lap": 53,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:12:53",
+      "driver": "ANT",
+      "lap": 53,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:3:54",
+      "driver": "VER",
+      "lap": 54,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:12:54",
+      "driver": "ANT",
+      "lap": 54,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:3:55",
+      "driver": "VER",
+      "lap": 55,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11731:12:55",
+      "driver": "ANT",
+      "lap": 55,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:10:17",
+      "driver": "GAS",
+      "lap": 17,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 434.76739,
+          "to": 722.624486,
+          "duration": 3.12,
+          "speed": [
+            342,
+            333
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:63:16",
+      "driver": "RUS",
+      "lap": 16,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 3545.348985,
+          "to": 3823.466113,
+          "duration": 3.04,
+          "speed": [
+            330,
+            320
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11361:12:53",
+      "driver": "ANT",
+      "lap": 53,
+      "comparable": true,
+      "baseline": 3,
+      "fullThrottle": 2,
+      "merged": 2,
+      "prototypeMatch": false,
+      "reason": "Old prototype spanned a 295 to 299 km/h recovery before a new decline starting below 300; covered by real Monza regression fixture.",
+      "events": [
+        {
+          "from": 333.464807,
+          "to": 735.386841,
+          "duration": 4.44,
+          "speed": [
+            330,
+            307
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11361:63:51",
+      "driver": "RUS",
+      "lap": 51,
+      "comparable": true,
+      "baseline": 4,
+      "fullThrottle": 4,
+      "merged": 4,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 594.894376,
+          "to": 710.11341,
+          "duration": 1.28,
+          "speed": [
+            327,
+            314
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 1842.877231,
+          "to": 1936.662375,
+          "duration": 1.08,
+          "speed": [
+            313,
+            305
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 3678.660945,
+          "to": 3781.755894,
+          "duration": 1.161,
+          "speed": [
+            324,
+            308
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 4892.577627,
+          "to": 5010.293651,
+          "duration": 1.36,
+          "speed": [
+            320,
+            297
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11362:1:17",
+      "driver": "NOR",
+      "lap": 17,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1193.311357,
+          "to": 1285.963373,
+          "duration": 1.04,
+          "speed": [
+            324,
+            309
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11364:1:9",
+      "driver": "NOR",
+      "lap": 9,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "madring",
+      "id": "11364:12:10",
+      "driver": "ANT",
+      "lap": 10,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1183.06294,
+          "to": 1288.888566,
+          "duration": 1.16,
+          "speed": [
+            330,
+            316
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11364:16:8",
+      "driver": "LEC",
+      "lap": 8,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1192.649631,
+          "to": 1292.10236,
+          "duration": 1.081,
+          "speed": [
+            333,
+            321
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11365:1:18",
+      "driver": "NOR",
+      "lap": 18,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "madring",
+      "id": "11365:12:19",
+      "driver": "ANT",
+      "lap": 19,
+      "comparable": true,
+      "baseline": 2,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1185.075019,
+          "to": 1285.270194,
+          "duration": 1.12,
+          "speed": [
+            324,
+            311
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11365:3:17",
+      "driver": "VER",
+      "lap": 17,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1180.949494,
+          "to": 1288.813387,
+          "duration": 1.2,
+          "speed": [
+            326,
+            313
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11365:81:21",
+      "driver": "PIA",
+      "lap": 21,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1192.812339,
+          "to": 1289.451005,
+          "duration": 1.04,
+          "speed": [
+            335,
+            324
+          ],
+          "gear": 8,
+          "throttle": 98
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11369:12:57",
+      "driver": "ANT",
+      "lap": 57,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1160.852788,
+          "to": 1292.707083,
+          "duration": 1.441,
+          "speed": [
+            329,
+            317
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "madring",
+      "id": "11369:3:52",
+      "driver": "VER",
+      "lap": 52,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1187.522962,
+          "to": 1292.444664,
+          "duration": 1.16,
+          "speed": [
+            327,
+            315
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11370:3:6",
+      "driver": "VER",
+      "lap": 6,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5229.53659,
+          "to": 6003,
+          "duration": 8.829,
+          "speed": [
+            319,
+            309
+          ],
+          "gear": 8,
+          "throttle": 99.980921
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11370:63:14",
+      "driver": "RUS",
+      "lap": 14,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "baku",
+      "id": "11371:12:7",
+      "driver": "ANT",
+      "lap": 7,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5132.719392,
+          "to": 6003,
+          "duration": 9.606,
+          "speed": [
+            334,
+            315.109375
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11371:3:11",
+      "driver": "VER",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5365.237814,
+          "to": 6003,
+          "duration": 7.088,
+          "speed": [
+            330,
+            316
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11371:63:11",
+      "driver": "RUS",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5195.404684,
+          "to": 5997.860351,
+          "duration": 8.759,
+          "speed": [
+            336,
+            322
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:16:12",
+      "driver": "LEC",
+      "lap": 12,
+      "comparable": true,
+      "baseline": 2,
+      "fullThrottle": 2,
+      "merged": 2,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5207.583978,
+          "to": 6003,
+          "duration": 8.969,
+          "speed": [
+            326,
+            310
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:23",
+      "driver": "VER",
+      "lap": 23,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5103.883263,
+          "to": 6003,
+          "duration": 10.46,
+          "speed": [
+            317,
+            299
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:3:7",
+      "driver": "VER",
+      "lap": 7,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5151.969182,
+          "to": 5494.242499,
+          "duration": 3.84,
+          "speed": [
+            322,
+            313
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:63:23",
+      "driver": "RUS",
+      "lap": 23,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5194.644521,
+          "to": 6003,
+          "duration": 9.102,
+          "speed": [
+            328,
+            310
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11373:63:25",
+      "driver": "RUS",
+      "lap": 25,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5437.473432,
+          "to": 6003,
+          "duration": 6.338,
+          "speed": [
+            324,
+            314
+          ],
+          "gear": 8,
+          "throttle": 99.958333
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11377:3:48",
+      "driver": "VER",
+      "lap": 48,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5252.683803,
+          "to": 6003,
+          "duration": 8.25,
+          "speed": [
+            332,
+            320
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "baku",
+      "id": "11377:63:49",
+      "driver": "RUS",
+      "lap": 49,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 5158.522826,
+          "to": 6003,
+          "duration": 9.555,
+          "speed": [
+            326,
+            309
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "sepang",
+      "id": "11727:3:9",
+      "driver": "VER",
+      "lap": 9,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11728:3:2",
+      "driver": "VER",
+      "lap": 2,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11729:3:8",
+      "driver": "VER",
+      "lap": 8,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:3:10",
+      "driver": "VER",
+      "lap": 10,
+      "comparable": false,
+      "baseline": 2,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:3:11",
+      "driver": "VER",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:3:12",
+      "driver": "VER",
+      "lap": 12,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:3:9",
+      "driver": "VER",
+      "lap": 9,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:44:12",
+      "driver": "HAM",
+      "lap": 12,
+      "comparable": true,
+      "baseline": 2,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:44:13",
+      "driver": "HAM",
+      "lap": 13,
+      "comparable": false,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:44:14",
+      "driver": "HAM",
+      "lap": 14,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "sepang",
+      "id": "11730:44:15",
+      "driver": "HAM",
+      "lap": 15,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:12:14",
+      "driver": "ANT",
+      "lap": 14,
+      "comparable": true,
+      "baseline": 3,
+      "fullThrottle": 3,
+      "merged": 2,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1632.470112,
+          "to": 2292.24901,
+          "duration": 7.4,
+          "speed": [
+            328,
+            296
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 5719.713875,
+          "to": 6130.208473,
+          "duration": 4.561,
+          "speed": [
+            336,
+            306
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:3:11",
+      "driver": "VER",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 5,
+      "fullThrottle": 5,
+      "merged": 4,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1753.408097,
+          "to": 2312.049717,
+          "duration": 6.36,
+          "speed": [
+            328,
+            283
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 5714.419178,
+          "to": 5862.383832,
+          "duration": 1.6,
+          "speed": [
+            335,
+            327
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:12:11",
+      "driver": "ANT",
+      "lap": 11,
+      "comparable": true,
+      "baseline": 3,
+      "fullThrottle": 3,
+      "merged": 2,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1615.864758,
+          "to": 2274.458204,
+          "duration": 7.4,
+          "speed": [
+            327,
+            297
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 5721.648365,
+          "to": 6119.857125,
+          "duration": 4.399,
+          "speed": [
+            337,
+            309
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:12:12",
+      "driver": "ANT",
+      "lap": 12,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:12:13",
+      "driver": "ANT",
+      "lap": 13,
+      "comparable": false,
+      "baseline": 6,
+      "fullThrottle": 5,
+      "merged": 5,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 2800.029011,
+          "to": 3023.44811,
+          "duration": 7.4,
+          "speed": [
+            328,
+            296
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 4272.098863,
+          "to": 4332.294426,
+          "duration": 2.041,
+          "speed": [
+            318,
+            301
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:12:15",
+      "driver": "ANT",
+      "lap": 15,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:3:10",
+      "driver": "VER",
+      "lap": 10,
+      "comparable": false,
+      "baseline": 6,
+      "fullThrottle": 6,
+      "merged": 4,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 2841.082224,
+          "to": 3030.337594,
+          "duration": 6.36,
+          "speed": [
+            328,
+            283
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 4182.984778,
+          "to": 4398.543259,
+          "duration": 7.28,
+          "speed": [
+            335,
+            293
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:3:12",
+      "driver": "VER",
+      "lap": 12,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:3:8",
+      "driver": "VER",
+      "lap": 8,
+      "comparable": true,
+      "baseline": 4,
+      "fullThrottle": 4,
+      "merged": 3,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1717.835412,
+          "to": 2311.12435,
+          "duration": 6.76,
+          "speed": [
+            328,
+            282
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 5719.354935,
+          "to": 6127.382622,
+          "duration": 4.6,
+          "speed": [
+            332,
+            303
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "spa",
+      "id": "11330:3:9",
+      "driver": "VER",
+      "lap": 9,
+      "comparable": true,
+      "baseline": 0,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:10:13",
+      "driver": "GAS",
+      "lap": 13,
+      "comparable": false,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1992.482196,
+          "to": 2093.945628,
+          "duration": 3.32,
+          "speed": [
+            339,
+            330
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:10:14",
+      "driver": "GAS",
+      "lap": 14,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 428.966033,
+          "to": 732.177575,
+          "duration": 3.32,
+          "speed": [
+            339,
+            330
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:10:15",
+      "driver": "GAS",
+      "lap": 15,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:10:16",
+      "driver": "GAS",
+      "lap": 16,
+      "comparable": false,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 1992.373198,
+          "to": 2090.836625,
+          "duration": 3.12,
+          "speed": [
+            342,
+            333
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:63:12",
+      "driver": "RUS",
+      "lap": 12,
+      "comparable": false,
+      "baseline": 3,
+      "fullThrottle": 3,
+      "merged": 3,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 443.143845,
+          "to": 520.811903,
+          "duration": 2.72,
+          "speed": [
+            309,
+            284
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 1997.201348,
+          "to": 2108.029154,
+          "duration": 3.441,
+          "speed": [
+            345,
+            336
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 3030.247474,
+          "to": 3153.451919,
+          "duration": 4.121,
+          "speed": [
+            322,
+            304
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:63:13",
+      "driver": "RUS",
+      "lap": 13,
+      "comparable": true,
+      "baseline": 2,
+      "fullThrottle": 2,
+      "merged": 2,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 414.724742,
+          "to": 742.248342,
+          "duration": 3.441,
+          "speed": [
+            345,
+            336
+          ],
+          "gear": 8,
+          "throttle": 100
+        },
+        {
+          "from": 3467.631772,
+          "to": 3831.731405,
+          "duration": 4.121,
+          "speed": [
+            322,
+            304
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:63:14",
+      "driver": "RUS",
+      "lap": 14,
+      "comparable": true,
+      "baseline": 1,
+      "fullThrottle": 0,
+      "merged": 0,
+      "prototypeMatch": true,
+      "events": []
+    },
+    {
+      "circuit": "monza",
+      "id": "11357:63:15",
+      "driver": "RUS",
+      "lap": 15,
+      "comparable": false,
+      "baseline": 1,
+      "fullThrottle": 1,
+      "merged": 1,
+      "prototypeMatch": true,
+      "events": [
+        {
+          "from": 3068.35208,
+          "to": 3162.731313,
+          "duration": 3.04,
+          "speed": [
+            330,
+            320
+          ],
+          "gear": 8,
+          "throttle": 100
+        }
+      ]
+    }
+  ]
+}

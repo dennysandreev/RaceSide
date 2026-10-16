@@ -69,6 +69,8 @@ export type Lap = {
   pitIn: boolean;
   pitOut: boolean;
   deleted: boolean;
+  officialBestTime?: number | null;
+  officialBest?: boolean;
   complete: boolean;
   status: string[];
   validityKnown: boolean;
@@ -166,13 +168,126 @@ export type Comparison = {
   warnings: string[];
   source: { provider: string; url: string; license: string };
   evolution?: { session: Session; lap: Lap; driver: Driver; metrics: Metric }[];
+  analysis?: TelemetryAnalysis;
+};
+export type TrackCategory = "slow" | "medium" | "fast" | "straight";
+export type AnalysisSection = {
+  id: string;
+  category: TrackCategory;
+  corner: number | null;
+  from: number;
+  apex: number | null;
+  to: number;
+  speed: number | null;
+  minimumSpeeds?: (number | null)[];
+  times: (number | null)[];
+  gain: number | null;
+};
+export type SignalKind = "speed-drop" | "coasting" | "weak-acceleration";
+export type TelemetrySignal = {
+  id: string;
+  kind: SignalKind;
+  trace: number;
+  from: number;
+  to: number;
+  duration: number;
+  startSpeed: number;
+  endSpeed: number;
+  gear: number | null;
+  throttle: number;
+  brakingAt: number | null;
+};
+export type RepeatSummary = { pairs: number; wins: [number, number]; neutral: number; medianGain: number | null };
+export type ExitAnalysis = {
+  corner: number;
+  from: number;
+  exit: number;
+  to: number;
+  speeds: (number | null)[];
+  fullThrottle: (number | null)[];
+  exitGain: number | null;
+  straightGain: number | null;
+  totalGain: number | null;
+  exitVerified: boolean;
+  straightVerified: boolean;
+  exitNeutralSeconds: number;
+  straightNeutralSeconds: number;
+  repeatSummary: { exit: RepeatSummary; straight: RepeatSummary };
+  repeats: {
+    laps: [number, number];
+    exitGain: number | null;
+    straightGain: number | null;
+    neutralSeconds: number;
+    compounds: [string | null, string | null];
+    tyreAges: [number | null, number | null];
+    exitVerified: boolean;
+    straightVerified: boolean;
+    exitNeutralSeconds: number;
+    straightNeutralSeconds: number;
+  }[];
+};
+export type TelemetryAnalysis = {
+  version: string;
+  trackVersion: string;
+  reference: number;
+  other: number;
+  quality: {
+    timingAvailable: boolean;
+    sectorError: number | null;
+    neutralSeconds: number;
+    warnings: string[];
+  };
+  sections: AnalysisSection[];
+  profile: { category: TrackCategory; count: number; available: number; gain: number | null; speedValues: (number | null)[] }[];
+  exits: ExitAnalysis[];
+  signals: TelemetrySignal[];
+  repeatability: { pairs: number; reason: "context" | "laps" | "average" | "sessions" | null };
 };
 export type Catalog = {
   session: Session;
   drivers: Driver[];
   laps: Lap[];
   raceControl: Record<string, unknown>[];
+  pitDataKnown?: boolean;
   track: Track | null;
+};
+export type RacePaceReason =
+  | "START"
+  | "PIT_IN"
+  | "PIT_OUT"
+  | "DELETED"
+  | "INCOMPLETE"
+  | "UNKNOWN_CONTROL"
+  | "RED"
+  | "SC"
+  | "VSC"
+  | "YELLOW";
+export type RacePacePoint = {
+  driver: number;
+  lap: number;
+  time: number | null;
+  compound: string;
+  tyreAge: number | null;
+  stint: number | null;
+  clean: boolean;
+  reasons: RacePaceReason[];
+  trend: number | null;
+};
+export type RacePace = {
+  version: string;
+  session: Session;
+  drivers: Driver[];
+  points: RacePacePoint[];
+  stints: {
+    driver: number;
+    number: number | null;
+    compound: string;
+    from: number;
+    to: number;
+    ageAtStart: number | null;
+  }[];
+  totalLaps: number;
+  warnings: ("MISSING_TYRES" | "MISSING_CONTROL")[];
 };
 export type SavedComparison = {
   id: string;

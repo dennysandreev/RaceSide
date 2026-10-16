@@ -89,7 +89,7 @@ export function FantasySectionHeader({
 }) {
   return (
     <header className={cn("relative rounded-xl border border-border/70 bg-card/75", className)}>
-      <div className="overflow-hidden rounded-t-[calc(var(--radius)-1px)]">
+      <div className="overflow-hidden rounded-t-[calc(var(--radius-xl)-1px)]">
         <FantasySectionNav active={active} integrated />
       </div>
       <div className="relative px-4 py-4 sm:px-6 sm:py-5">{children}</div>

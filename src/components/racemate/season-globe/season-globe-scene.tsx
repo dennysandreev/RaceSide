@@ -25,6 +25,7 @@ import {
   Spherical,
   Texture,
   TextureLoader,
+  RepeatWrapping,
   Vector3,
 } from "three";
 
@@ -41,6 +42,7 @@ import {
   latLngToVector3,
 } from "@/lib/season-globe-geometry";
 import type { SeasonGlobeEvent, SeasonGlobePhase } from "@/types/racemate";
+import { SeasonGlobeLabels } from "./season-globe-labels";
 
 type SeasonGlobeSceneProps = {
   events: SeasonGlobeEvent[];
@@ -89,6 +91,8 @@ type GlobePalette = {
   markerUpcoming: string;
   markerUpcomingText: string;
   ocean: string;
+  rim: string;
+  lightTheme: boolean;
   routeCompleted: string;
   routeNext: string;
   routeUpcoming: string;
@@ -96,20 +100,22 @@ type GlobePalette = {
 };
 
 const defaultPalette: GlobePalette = {
-  border: "#a49f9d",
-  hostLand: "#82504c",
-  land: "#5b605f",
-  markerCompleted: "#9b9f9e",
+  border: "#52616c",
+  hostLand: "#5c302e",
+  land: "#26343f",
+  markerCompleted: "#dd3027",
   markerCompletedText: "#0b0d0d",
   markerNext: "#e10600",
   markerNextText: "#fff7f6",
   markerSelected: "#f2ecea",
-  markerUpcoming: "#d6aaa2",
+  markerUpcoming: "#a63d39",
   markerUpcomingText: "#231817",
-  ocean: "#101718",
-  routeCompleted: "#6d7372",
+  ocean: "#0b141b",
+  rim: "#80bbda",
+  lightTheme: false,
+  routeCompleted: "#a92823",
   routeNext: "#e10600",
-  routeUpcoming: "#9b625d",
+  routeUpcoming: "#c13b32",
   routeUpcomingOutline: "#271b1a",
 };
 
@@ -132,6 +138,7 @@ export function SeasonGlobeScene({
   const gestureModeRef = useRef<GestureMode>("idle");
   const lastPinchDistanceRef = useRef<number | null>(null);
   const didDragRef = useRef(false);
+  const wheelEngagedRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
   const palette = useSeasonGlobePalette();
@@ -147,6 +154,7 @@ export function SeasonGlobeScene({
     }
 
     const handleWheel = (event: WheelEvent) => {
+      if (!wheelEngagedRef.current && document.activeElement !== element && !event.ctrlKey) return;
       event.preventDefault();
       cameraRigRef.current?.zoomBy(event.deltaY * 0.0018);
     };
@@ -199,6 +207,7 @@ export function SeasonGlobeScene({
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    wheelEngagedRef.current = true;
     didDragRef.current = false;
     setHoveredRound(null);
     pointersRef.current.set(event.pointerId, {
@@ -310,6 +319,7 @@ export function SeasonGlobeScene({
     }
 
     if (event.key === "Escape") {
+      wheelEngagedRef.current = false;
       event.currentTarget.blur();
     }
   };
@@ -317,7 +327,7 @@ export function SeasonGlobeScene({
   return (
     <div
       aria-label={`Маршрут сезона Formula 1 ${season}. Используйте стрелки, чтобы выбрать этап.`}
-      className="season-globe-focus-target relative h-full min-h-0 w-full focus-visible:outline-none"
+      className="season-globe-focus-target relative h-full min-h-0 w-full select-none focus-visible:outline-none"
       onKeyDown={handleKeyDown}
       onPointerCancel={(event) => endPointer(event, false)}
       onPointerDown={handlePointerDown}
@@ -345,7 +355,7 @@ export function SeasonGlobeScene({
         style={{ background: "transparent" }}
       >
         <ContextLossMonitor onFailure={onFailure} />
-        <GlobeSurface palette={palette} />
+        <GlobeSurface palette={palette} selectedEvent={selectedEvent} />
         <SeasonRoute events={events} palette={palette} />
         <MarkerPicker events={events} ref={markerPickerRef} />
         <GrandPrixMarkers
@@ -355,6 +365,7 @@ export function SeasonGlobeScene({
           reduceMotion={reduceMotion}
           selectedRound={selectedRound}
         />
+        <SeasonGlobeLabels events={events} selectedRound={selectedRound} />
         <CameraRig
           event={selectedEvent}
           initialCue={initialCue}
@@ -365,9 +376,10 @@ export function SeasonGlobeScene({
   );
 }
 
-function GlobeSurface({ palette }: { palette: GlobePalette }) {
+function GlobeSurface({ palette, selectedEvent }: { palette: GlobePalette; selectedEvent: SeasonGlobeEvent | null }) {
   const { invalidate } = useThree();
   const [maskTexture, setMaskTexture] = useState<Texture | null>(null);
+  const [reliefTexture, setReliefTexture] = useState<Texture | null>(null);
   const uniforms = useMemo(
     () => ({
       borderColor: { value: new Color(palette.border) },
@@ -376,8 +388,16 @@ function GlobeSurface({ palette }: { palette: GlobePalette }) {
       landColor: { value: new Color(palette.land) },
       maskMap: { value: maskTexture },
       oceanColor: { value: new Color(palette.ocean) },
+      rimColor: { value: new Color(palette.rim) },
+      accentColor: { value: new Color(palette.routeNext) },
+      lightTheme: { value: palette.lightTheme ? 1 : 0 },
+      hasRelief: { value: Boolean(reliefTexture) },
+      reliefMap: { value: reliefTexture },
+      selectedDirection: { value: selectedEvent && hasGlobeCoordinates(selectedEvent)
+        ? latLngToVector3(selectedEvent.latitude, selectedEvent.longitude, 1)
+        : new Vector3(0, 0, 1) },
     }),
-    [maskTexture, palette.border, palette.hostLand, palette.land, palette.ocean],
+    [maskTexture, reliefTexture, palette, selectedEvent],
   );
 
   useEffect(() => {
@@ -393,6 +413,7 @@ function GlobeSurface({ palette }: { palette: GlobePalette }) {
         }
 
         texture.colorSpace = NoColorSpace;
+        texture.wrapS = RepeatWrapping;
         texture.anisotropy = 4;
         setMaskTexture(texture);
         invalidate();
@@ -402,6 +423,23 @@ function GlobeSurface({ palette }: { palette: GlobePalette }) {
         Sentry.captureException(error, { tags: { asset: "season-globe-country-mask" } });
         invalidate();
       },
+    );
+
+    loader.load(
+      "/geo/world-relief.webp",
+      (texture) => {
+        if (!active) {
+          texture.dispose();
+          return;
+        }
+        texture.colorSpace = NoColorSpace;
+        texture.wrapS = RepeatWrapping;
+        texture.anisotropy = 4;
+        setReliefTexture(texture);
+        invalidate();
+      },
+      undefined,
+      (error) => Sentry.captureException(error, { tags: { asset: "season-globe-relief" } }),
     );
 
     return () => {
@@ -417,10 +455,11 @@ function GlobeSurface({ palette }: { palette: GlobePalette }) {
     },
     [maskTexture],
   );
+  useEffect(() => () => reliefTexture?.dispose(), [reliefTexture]);
 
   return (
     <mesh>
-      <sphereGeometry args={[1, 72, 48]} />
+      <sphereGeometry args={[1, 128, 80]} />
       <shaderMaterial
         fragmentShader={globeFragmentShader}
         toneMapped={false}
@@ -439,6 +478,10 @@ function SeasonRoute({ events, palette }: { events: SeasonGlobeEvent[]; palette:
 
     return (
       <group key={`${segment.fromRound}:${segment.toRound}`}>
+        {segment.phase === "next" ? (
+          <Line color={palette.routeNext} depthTest depthWrite={false}
+            lineWidth={5} opacity={0.12} points={segment.points} renderOrder={1} transparent />
+        ) : null}
         {segment.phase === "upcoming" ? (
           <Line
             color={palette.routeUpcomingOutline}
@@ -447,8 +490,8 @@ function SeasonRoute({ events, palette }: { events: SeasonGlobeEvent[]; palette:
             depthTest
             depthWrite={false}
             gapSize={style.gapSize}
-            lineWidth={style.width + 1.8}
-            opacity={0.92}
+            lineWidth={style.width + 0.8}
+            opacity={0.3}
             points={segment.points}
             renderOrder={1}
             transparent
@@ -527,12 +570,11 @@ function GrandPrixMarker({
   const surfaceNormal = useMemo(() => position.clone().normalize(), [position]);
   const color = getMarkerColor(event.phase, palette);
   const labelColor = getMarkerLabelColor(event.phase, palette);
-  const markerSize = selected ? 0.07 : event.phase === "next" ? 0.06 : 0.05;
+  const markerSize = selected ? 0.065 : event.phase === "next" ? 0.052 : 0.021;
   const markerTexture = useSeasonGlobeMarkerTexture({
     backgroundColor: color,
     borderColor: palette.markerSelected,
     labelColor,
-    round: event.round,
     selected,
   });
 
@@ -662,13 +704,11 @@ function useSeasonGlobeMarkerTexture({
   backgroundColor,
   borderColor,
   labelColor,
-  round,
   selected,
 }: {
   backgroundColor: string;
   borderColor: string;
   labelColor: string;
-  round: number;
   selected: boolean;
 }) {
   const texture = useMemo(() => {
@@ -683,27 +723,40 @@ function useSeasonGlobeMarkerTexture({
     }
 
     context.clearRect(0, 0, canvas.width, canvas.height);
+    if (selected) {
+      const glow = context.createRadialGradient(64, 64, 20, 64, 64, 64);
+      glow.addColorStop(0, backgroundColor);
+      glow.addColorStop(1, "transparent");
+      context.fillStyle = glow;
+      context.fillRect(0, 0, 128, 128);
+    }
     context.beginPath();
-    context.arc(64, 64, selected ? 57 : 54, 0, Math.PI * 2);
+    context.arc(64, 64, selected ? 35 : 34, 0, Math.PI * 2);
     context.fillStyle = backgroundColor;
     context.fill();
 
-    context.lineWidth = selected ? 8 : 4;
-    context.strokeStyle = borderColor;
+    context.lineWidth = selected ? 5 : 2;
+    context.strokeStyle = selected ? labelColor : backgroundColor;
     context.stroke();
 
-    context.fillStyle = labelColor;
-    context.font = `900 ${round >= 10 ? 56 : 64}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillText(String(round), 64, 67);
+    if (selected) {
+      context.beginPath();
+      context.arc(64, 64, 51, 0, Math.PI * 2);
+      context.lineWidth = 2;
+      context.strokeStyle = backgroundColor;
+      context.stroke();
+      context.beginPath();
+      context.arc(64, 64, 9, 0, Math.PI * 2);
+      context.fillStyle = borderColor;
+      context.fill();
+    }
 
     const markerTexture = new CanvasTexture(canvas);
     markerTexture.colorSpace = SRGBColorSpace;
     markerTexture.needsUpdate = true;
 
     return markerTexture;
-  }, [backgroundColor, borderColor, labelColor, round, selected]);
+  }, [backgroundColor, borderColor, labelColor, selected]);
 
   useEffect(() => () => texture.dispose(), [texture]);
 
@@ -728,6 +781,7 @@ const CameraRig = forwardRef<CameraRigHandle, { event: SeasonGlobeEvent | null; 
       startedAt: number;
     } | null>(null);
     const initializedRef = useRef(false);
+    const previousFitRef = useRef<number | null>(null);
     const lastRoundRef = useRef<number | null>(null);
 
     const applyDirection = useCallback(
@@ -793,6 +847,18 @@ const CameraRig = forwardRef<CameraRigHandle, { event: SeasonGlobeEvent | null; 
       }),
       [applyDirection, camera, cameraDistances, invalidate],
     );
+
+    useEffect(() => {
+      // Reframe on responsive resize, while preserving the user's zoom ratio.
+      const previousFit = previousFitRef.current;
+      if (initializedRef.current && previousFit !== null && previousFit !== cameraDistances.initial) {
+        const ratio = camera.position.length() / previousFit;
+        applyDirection(camera.position, MathUtils.clamp(
+          cameraDistances.initial * ratio, cameraDistances.minimum, cameraDistances.maximum,
+        ));
+      }
+      previousFitRef.current = cameraDistances.initial;
+    }, [applyDirection, camera, cameraDistances]);
 
     useEffect(() => {
       if (!event || !hasGlobeCoordinates(event) || lastRoundRef.current === event.round) {
@@ -895,6 +961,8 @@ function useSeasonGlobePalette() {
           defaultPalette.markerUpcomingText,
         ),
         ocean: read("--season-globe-ocean", defaultPalette.ocean),
+        rim: read("--season-globe-rim", defaultPalette.rim),
+        lightTheme: document.documentElement.getAttribute("data-theme") === "light",
         routeCompleted: read("--season-globe-route-completed", defaultPalette.routeCompleted),
         routeNext: read("--season-globe-route-next", defaultPalette.routeNext),
         routeUpcoming: read("--season-globe-route-upcoming", defaultPalette.routeUpcoming),
@@ -925,8 +993,8 @@ function getRouteStyle(phase: SeasonGlobePhase, palette: GlobePalette) {
       dashed: false,
       dashSize: 0.035,
       gapSize: 0.025,
-      opacity: 0.78,
-      width: 1.25,
+      opacity: 0.55,
+      width: 0.9,
     };
   }
 
@@ -937,7 +1005,7 @@ function getRouteStyle(phase: SeasonGlobePhase, palette: GlobePalette) {
       dashSize: 0.035,
       gapSize: 0.025,
       opacity: 0.98,
-      width: 2.1,
+      width: 1.6,
     };
   }
 
@@ -946,8 +1014,8 @@ function getRouteStyle(phase: SeasonGlobePhase, palette: GlobePalette) {
     dashed: true,
     dashSize: 0.018,
     gapSize: 0.008,
-    opacity: 0.72,
-    width: 1.2,
+    opacity: 0.48,
+    width: 0.9,
   };
 }
 
@@ -1035,7 +1103,7 @@ function getCameraFitDistance(camera: PerspectiveCamera, width: number, height: 
   const aspect = Math.max(0.2, width / Math.max(1, height));
   const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
   const limitingFov = Math.min(verticalFov, horizontalFov);
-  const sceneRadius = 1.12;
+  const sceneRadius = 1.08;
 
   return Math.max(3.45, sceneRadius / Math.sin(limitingFov / 2) + 0.08);
 }
@@ -1043,11 +1111,21 @@ function getCameraFitDistance(camera: PerspectiveCamera, width: number, height: 
 const globeVertexShader = `
   varying vec2 vUv;
   varying vec3 vNormalView;
+  varying vec3 vTangentView;
+  varying vec3 vBitangentView;
+  varying vec3 vPositionView;
+  varying vec3 vSurfaceDirection;
 
   void main() {
     vUv = uv;
     vNormalView = normalize(normalMatrix * normal);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec3 tangent = normalize(vec3(normal.z + 0.00001, 0.0, -normal.x));
+    vTangentView = normalize(normalMatrix * tangent);
+    vBitangentView = normalize(normalMatrix * cross(normal, tangent));
+    vSurfaceDirection = normalize(position);
+    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+    vPositionView = viewPosition.xyz;
+    gl_Position = projectionMatrix * viewPosition;
   }
 `;
 
@@ -1058,21 +1136,69 @@ const globeFragmentShader = `
   uniform vec3 landColor;
   uniform vec3 hostLandColor;
   uniform vec3 borderColor;
+  uniform sampler2D reliefMap;
+  uniform bool hasRelief;
+  uniform vec3 rimColor;
+  uniform vec3 accentColor;
+  uniform vec3 selectedDirection;
+  uniform float lightTheme;
 
   varying vec2 vUv;
   varying vec3 vNormalView;
+  varying vec3 vTangentView;
+  varying vec3 vBitangentView;
+  varying vec3 vPositionView;
+  varying vec3 vSurfaceDirection;
+
+  float grain(vec2 point) {
+    return fract(sin(dot(point, vec2(127.1, 311.7))) * 43758.5453);
+  }
 
   void main() {
     vec3 mask = hasMask ? texture2D(maskMap, vUv).rgb : vec3(0.0);
-    vec3 baseColor = mix(oceanColor, landColor, mask.r);
-    baseColor = mix(baseColor, hostLandColor, mask.b * mask.r);
-    baseColor = mix(baseColor, borderColor, mask.g);
-
-    vec3 lightDirection = normalize(vec3(-0.35, 0.55, 0.8));
-    float diffuse = 0.74 + 0.26 * max(dot(vNormalView, lightDirection), 0.0);
-    float edge = pow(1.0 - max(vNormalView.z, 0.0), 2.0);
-    vec3 shaded = baseColor * diffuse + borderColor * edge * 0.045;
-
+    vec3 relief = hasRelief ? texture2D(reliefMap, vUv).rgb : vec3(0.5, 0.5, 0.0);
+    float land = smoothstep(0.2, 0.8, mask.r);
+    float host = smoothstep(0.2, 0.8, mask.b) * land;
+    float hostEdge = 0.0;
+    if (hasMask) {
+      vec2 texel = vec2(2.0 / 2048.0, 2.0 / 1024.0);
+      hostEdge = max(
+        max(abs(mask.b - texture2D(maskMap, vUv + vec2(texel.x, 0.0)).b),
+            abs(mask.b - texture2D(maskMap, vUv - vec2(texel.x, 0.0)).b)),
+        max(abs(mask.b - texture2D(maskMap, vUv + vec2(0.0, texel.y)).b),
+            abs(mask.b - texture2D(maskMap, vUv - vec2(0.0, texel.y)).b))
+      );
+    }
+    vec3 geometricNormal = normalize(vNormalView);
+    vec2 slopes = (relief.rg * 2.0 - 1.0) * land;
+    vec3 normal = normalize(geometricNormal +
+      normalize(vTangentView) * slopes.x * 0.75 +
+      normalize(vBitangentView) * slopes.y * 0.75);
+    vec3 viewDirection = normalize(-vPositionView);
+    vec3 keyDirection = normalize(vec3(-0.6, 0.95, 0.25));
+    vec3 fillDirection = normalize(vec3(0.8, -0.4, 0.25));
+    float key = max(dot(normal, keyDirection), 0.0);
+    float fill = max(dot(normal, fillDirection), 0.0);
+    float textureGrain = grain(floor(vUv * vec2(2048.0, 1024.0)));
+    vec3 surfaceColor = mix(landColor, hostLandColor, host * 0.72);
+    vec3 baseColor = mix(oceanColor, surfaceColor, land);
+    baseColor *= mix(0.82, 1.22, relief.b * land + textureGrain * 0.16);
+    vec3 shaded = baseColor * (mix(0.18, 0.65, lightTheme) + key * 0.9);
+    shaded += rimColor * pow(max(dot(normal, normalize(vec3(-0.3, 0.8, -0.4))), 0.0), 4.0) * 0.045;
+    float specular = pow(max(dot(normal, normalize(keyDirection + viewDirection)), 0.0), mix(42.0, 20.0, land));
+    shaded += rimColor * specular * mix(0.09, 0.045, land);
+    float fresnel = pow(1.0 - max(dot(geometricNormal, viewDirection), 0.0), 7.0);
+    shaded += rimColor * fresnel * (0.08 + key * 0.5);
+    shaded += accentColor * fill * land * mix(0.018, 0.025, lightTheme);
+    float activeRegion = pow(max(dot(normalize(vSurfaceDirection), selectedDirection), 0.0), 10.0);
+    float ridges = smoothstep(0.08, 0.4, length(slopes));
+    float detail = smoothstep(0.74, 0.95, textureGrain) * (0.1 + relief.b * 1.6);
+    shaded += accentColor * land * activeRegion * (detail + ridges * 0.35) * mix(0.45, 0.09, lightTheme);
+    shaded += accentColor * host * (0.035 + relief.b * 0.055 + ridges * 0.025) * mix(1.0, 0.3, lightTheme);
+    float hostBorder = max(hostEdge, mask.g * host);
+    shaded += accentColor * hostBorder * (0.16 + activeRegion * 0.16) * mix(1.0, 0.4, lightTheme);
+    shaded += borderColor * mask.g * mix(0.11, 0.22, lightTheme);
     gl_FragColor = vec4(shaded, 1.0);
+    #include <colorspace_fragment>
   }
 `;

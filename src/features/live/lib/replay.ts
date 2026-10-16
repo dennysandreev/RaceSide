@@ -46,12 +46,15 @@ export class LiveReplayAdapter {
 
   private readonly baseTimestampMs: number;
   private readonly positionsByDriver = new Map<number, ReplayPositionEvent[]>();
+  private readonly speedRecords = new Map<
+    number,
+    { offsetMs: number; speed: number }[]
+  >();
   private readonly motions = new Map<number, DriverMotion>();
   private readonly geometry: ReturnType<typeof buildTrackGeometry>;
   private readonly pitGeometry: ReturnType<typeof buildPitGeometry>;
   private readonly pitTrackProgress:
-    | { entry: number; exit: number }
-    | undefined;
+    { entry: number; exit: number } | undefined;
   private readonly pits: ReplayPit[];
   private readonly replay: RaceReplaySnapshot;
   private readonly redFlagWindows: Array<{ endMs: number; startMs: number }>;
@@ -62,7 +65,10 @@ export class LiveReplayAdapter {
       ...replay,
       lapTimings: mergeLapTimingsWithInferred(
         replay.lapTimings,
-        inferLapTimingsFromPositions(replay.positions),
+        inferLapTimingsFromPositions(
+          replay.positions,
+          getPlaybackStartMs(replay),
+        ),
       ),
     };
     this.durationMs = Math.max(1, replay.durationMs);
@@ -97,6 +103,17 @@ export class LiveReplayAdapter {
 
     for (const [driverNumber, items] of this.positionsByDriver) {
       items.sort((left, right) => left.offsetMs - right.offsetMs);
+      const records: { offsetMs: number; speed: number }[] = [];
+      for (const item of items) {
+        if (
+          item.speedKph != null &&
+          Number.isFinite(item.speedKph) &&
+          item.speedKph >= 0 &&
+          item.speedKph > (records.at(-1)?.speed ?? -1)
+        )
+          records.push({ offsetMs: item.offsetMs, speed: item.speedKph });
+      }
+      this.speedRecords.set(driverNumber, records);
       this.motions.set(
         driverNumber,
         buildDriverMotion(items, {
@@ -261,6 +278,11 @@ export class LiveReplayAdapter {
         const state: DriverLiveState = {
           acronym: driver.abbreviation,
           bestLap: bestLap ?? parseTiming(driver.bestLapTime),
+          maxSpeed:
+            this.speedRecords
+              .get(driver.driverNumber)
+              ?.findLast((record) => record.offsetMs <= boundedElapsed)
+              ?.speed ?? null,
           bestLapSectors: currentSectors,
           bestSectors: currentSectors,
           compound: position?.compound ?? driver.compound,
@@ -303,6 +325,9 @@ export class LiveReplayAdapter {
           team: driver.teamName,
           teamColour: driver.teamColor,
           tyreAge: position?.tyreAge ?? driver.tyreAge,
+          tyreAgeEstimated: position?.tyreAge != null
+            ? Boolean(position.tyreAgeEstimated)
+            : Boolean(driver.tyreAgeEstimated),
         };
 
         return [driver.driverNumber, state];
@@ -481,6 +506,15 @@ function getPlaybackStartMs(replay: RaceReplaySnapshot) {
     .map((timing) => timing.startOffsetMs);
   if (firstLapStarts.length) return Math.min(...firstLapStarts);
 
+  const raceStarts = replay.raceEvents
+    .filter(
+      (event) =>
+        event.message.trim().toUpperCase() === "SESSION STARTED" &&
+        event.offsetMs >= 0,
+    )
+    .map((event) => event.offsetMs);
+  if (raceStarts.length) return Math.min(...raceStarts);
+
   const starts = replay.positions
     .filter((position) => position.lapNumber === 1)
     .map((position) => Math.max(0, position.offsetMs));
@@ -583,8 +617,8 @@ function buildPits(
       if (position.isPitLane && !start) start = position;
       if (!position.isPitLane && start) {
         pits.push({
-          after: null,
-          before: null,
+          after: position.compound ?? null,
+          before: start.compound ?? null,
           driverNumber,
           // Legacy OpenF1 snapshots put the full lane duration in both
           // fields. Treating it as stationary time makes cars rush through
@@ -667,7 +701,7 @@ function getRaceSignal(
       flag = "GREEN";
       yellowSectors.clear();
     } else if (text.includes("TRACK CLEAR")) {
-      if (flag === "YELLOW") flag = "GREEN";
+      if (flag === "YELLOW" || flag === "SC_ENDING") flag = "GREEN";
       yellowSectors.clear();
     } else if (text.includes("CLEAR") && Number.isFinite(sector)) {
       yellowSectors.delete(sector);

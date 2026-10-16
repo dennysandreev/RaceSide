@@ -187,7 +187,7 @@ export default async function NewsArticlePage({
       <section className="grid gap-5 py-5 sm:py-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <article className="stitch-panel p-5 sm:p-6">
           <HighlightedParagraph
-            className="max-w-[72ch] text-lg leading-8 text-foreground"
+            className="max-w-[72ch] text-lg leading-8 text-foreground max-sm:hyphens-auto max-sm:text-justify"
             highlights={article.highlights ?? []}
             text={article.summary}
           />
@@ -201,7 +201,7 @@ export default async function NewsArticlePage({
             <div className="mt-5 grid max-w-[72ch] gap-4 text-base leading-7 text-muted-foreground">
               {detailParagraphs.map((paragraph) => (
                 <HighlightedParagraph
-                  className="text-pretty"
+                  className="text-pretty max-sm:hyphens-auto max-sm:text-justify"
                   highlights={article.highlights ?? []}
                   key={paragraph}
                   text={paragraph}

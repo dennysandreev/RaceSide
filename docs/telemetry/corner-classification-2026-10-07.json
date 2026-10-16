@@ -1,0 +1,132 @@
+{
+  "checkedAt": "2026-10-07T16:44:50.182Z",
+  "source": "Read-only saved telemetry comparisons in Supabase; existing production analysisSections and orientComparison functions.",
+  "rules": {
+    "slow": "minimum speed <150 km/h",
+    "medium": "minimum speed >=150 and <230 km/h",
+    "fast": "minimum speed >=230 km/h",
+    "classification": "Median of the two drivers minimum speeds around the canonical apex."
+  },
+  "cases": [
+    {
+      "id": "f4a6681383629ae2b2a6e4d9",
+      "track": "Madring",
+      "drivers": [
+        "NOR",
+        "ANT"
+      ],
+      "counts": {
+        "slow": 7,
+        "medium": 7,
+        "fast": 8
+      },
+      "medium": [
+        {
+          "corner": 7,
+          "speed": 188
+        },
+        {
+          "corner": 8,
+          "speed": 195
+        },
+        {
+          "corner": 11,
+          "speed": 224.5
+        },
+        {
+          "corner": 12,
+          "speed": 220.5
+        },
+        {
+          "corner": 14,
+          "speed": 151
+        },
+        {
+          "corner": 17,
+          "speed": 223
+        },
+        {
+          "corner": 19,
+          "speed": 221
+        }
+      ],
+      "metadataCorners": 22,
+      "analysedCorners": 22
+    },
+    {
+      "id": "eaa422f7bb84fff3e4a9aace",
+      "track": "Monza",
+      "drivers": [
+        "GAS",
+        "RUS"
+      ],
+      "counts": {
+        "slow": 3,
+        "medium": 6,
+        "fast": 2
+      },
+      "medium": [
+        {
+          "corner": 4,
+          "speed": 208.5
+        },
+        {
+          "corner": 6,
+          "speed": 205
+        },
+        {
+          "corner": 7,
+          "speed": 186
+        },
+        {
+          "corner": 8,
+          "speed": 185.5
+        },
+        {
+          "corner": 9,
+          "speed": 214.5
+        },
+        {
+          "corner": 11,
+          "speed": 207
+        }
+      ],
+      "metadataCorners": 11,
+      "analysedCorners": 11
+    },
+    {
+      "id": "sepang-local",
+      "track": "Sepang International Circuit",
+      "drivers": [
+        "VER",
+        "HAM"
+      ],
+      "counts": {
+        "slow": 7,
+        "medium": 4,
+        "fast": 4
+      },
+      "medium": [
+        {
+          "corner": 7,
+          "speed": 193.5
+        },
+        {
+          "corner": 8,
+          "speed": 209.5
+        },
+        {
+          "corner": 10,
+          "speed": 182.5
+        },
+        {
+          "corner": 11,
+          "speed": 154
+        }
+      ],
+      "metadataCorners": 15,
+      "analysedCorners": 15
+    }
+  ],
+  "limitations": "Three additional circuits from existing saved comparisons, not a season-wide validation."
+}

@@ -1,0 +1,36 @@
+{
+  "slug": "2026-singapore",
+  "coldMs": 145,
+  "warmMs": 0,
+  "bounded": false,
+  "requests": 5,
+  "rows": 68,
+  "timingPoints": 0,
+  "metrics": [
+    {
+      "table": "driver_standings",
+      "ms": 113,
+      "rows": 23
+    },
+    {
+      "table": "driver_standings",
+      "ms": 115,
+      "rows": 23
+    },
+    {
+      "table": "constructor_standings",
+      "ms": 113,
+      "rows": 11
+    },
+    {
+      "table": "race_replay_sessions",
+      "ms": 118,
+      "rows": 0
+    },
+    {
+      "table": "constructor_standings",
+      "ms": 140,
+      "rows": 11
+    }
+  ]
+}

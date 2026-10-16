@@ -20,6 +20,7 @@ import { headers } from "next/headers";
 export type CheckoutState = {
   checkout?: HostedCheckout;
   error?: string;
+  emailRejected?: boolean;
 };
 
 export type CancelCheckoutState = {
@@ -79,16 +80,21 @@ export async function startCheckout(
     };
   }
   try {
+    const paymentEmail = formData.get("email");
     return {
       checkout: await createCheckout({
         idempotencyKey,
         paymentMethod,
         priceCode,
         userId: user.id,
+        userEmail: typeof paymentEmail === "string" && paymentEmail.trim() ? paymentEmail : user.email,
       }),
     };
   } catch (error) {
-    return { error: checkoutMessage(error) };
+    return {
+      error: checkoutMessage(error),
+      emailRejected: error instanceof Error && error.message === "LAVA_EMAIL_REJECTED",
+    };
   }
 }
 
@@ -163,9 +169,8 @@ function isPaymentMethod(
   value: FormDataEntryValue | null,
 ): value is BillingPaymentMethod {
   return (
-    value === "tribute" ||
-    value === "yoomoney_card" ||
-    value === "yoomoney_wallet"
+    value === "lava" ||
+    value === "lava_rub"
   );
 }
 
@@ -175,8 +180,8 @@ function isOrderNumber(value: FormDataEntryValue | null): value is string {
 
 function checkoutMessage(error: unknown) {
   const code = error instanceof Error ? error.message : "";
-  if (code === "FIRST_YEAR_UNAVAILABLE")
-    return "Годовая цена действует только при первой покупке. Выберите месяц.";
+  if (code === "LAVA_SUBSCRIPTION_EXISTS")
+    return "Подписка уже продлевается. Управлять ею можно в личном кабинете.";
   if (code === "CHECKOUT_IN_PROGRESS")
     return "Предыдущая попытка оплаты ещё создаётся. Подождите несколько секунд.";
   if (code === "CHECKOUT_BUSY")
@@ -185,6 +190,10 @@ function checkoutMessage(error: unknown) {
     return "Эта попытка оплаты уже закрыта. Вернитесь к выбору подписки.";
   if (code === "CHECKOUT_NOT_FOUND")
     return "Не удалось найти эту оплату. Вернитесь к выбору подписки.";
+  if (code === "LAVA_EMAIL_REQUIRED")
+    return "Добавьте email, чтобы перейти к оплате картой.";
+  if (code === "LAVA_EMAIL_REJECTED")
+    return "Lava.top не принимает этот email для покупки. Попробуйте другую почту для оплаты — аккаунт RaceSide останется прежним.";
   if (code.endsWith("_DISABLED") || code.endsWith("_UNAVAILABLE"))
     return "Этот способ оплаты сейчас недоступен. Выберите другой.";
   return "Оплата временно недоступна. Попробуйте ещё раз чуть позже.";

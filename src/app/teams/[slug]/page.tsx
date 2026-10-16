@@ -24,6 +24,7 @@ import { StitchPanel, StitchPanelHeader } from "@/components/racemate/stitch-pri
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getPublishedSeasons, getTeamProfileBySlug } from "@/data/racemate-repository";
+import { getTeamInformation, type TeamInformation } from "@/data/team-information";
 import {
   CURRENT_F1_SEASON,
   resolvePublishedSeason,
@@ -181,6 +182,8 @@ function TeamHero({
   query: SeasonSearchParams;
   team: TeamProfile;
 }) {
+  const information = getTeamInformation(team.slug, team.season);
+
   return (
     <section
       className="relative min-h-[31rem] overflow-hidden rounded-xl border border-border bg-card sm:min-h-[35rem]"
@@ -211,7 +214,12 @@ function TeamHero({
         style={{ backgroundColor: team.color }}
       />
 
-      <div className="relative flex min-h-[31rem] flex-col justify-between p-5 text-foreground sm:min-h-[35rem] sm:p-7">
+      <div
+        className={cn(
+          "relative flex min-h-[31rem] flex-col justify-between p-5 text-foreground sm:min-h-[35rem] sm:p-7",
+          information && "gap-28 sm:gap-40 xl:gap-28",
+        )}
+      >
         <div>
           <div className="grid grid-cols-[minmax(0,1fr)_9.5rem] items-center gap-2 sm:flex sm:justify-between sm:gap-3">
             <Button asChild size="sm" variant="secondary">
@@ -236,33 +244,70 @@ function TeamHero({
           </h1>
         </div>
 
-        <div className="max-w-2xl">
-          <div className="mb-4 hidden items-center sm:flex">
-            <TeamLogo code={team.code} color={team.color} logo={team.logo} name={team.name} season={team.season} size="md" />
-          </div>
-          <h1 className="hidden text-balance font-display text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:block sm:text-6xl">
-            {team.shortName}
-          </h1>
-          <div className="mt-3 flex min-h-10 items-center justify-between gap-4">
-            {team.country ? (
-              <p className="inline-flex min-w-0 items-center gap-2 text-sm font-semibold text-muted-foreground sm:text-base">
-                <RaceFlag countryCode={team.countryCode} label={team.country} />
-                <span className="truncate">{team.country}</span>
-              </p>
-            ) : <span />}
-            <span className="shrink-0 sm:hidden">
+        <div className={cn("grid min-w-0 gap-6", information && "xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.85fr)] xl:items-end")}>
+          <div className="min-w-0 max-w-2xl">
+            <div className="mb-4 hidden items-center sm:flex">
               <TeamLogo code={team.code} color={team.color} logo={team.logo} name={team.name} season={team.season} size="md" />
-            </span>
-          </div>
+            </div>
+            <h1 className="hidden text-balance font-display text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:block sm:text-6xl">
+              {team.shortName}
+            </h1>
+            <div className="mt-3 flex min-h-10 items-center justify-between gap-4">
+              {team.country ? (
+                <p className="inline-flex min-w-0 items-center gap-2 text-sm font-semibold text-muted-foreground sm:text-base">
+                  <RaceFlag countryCode={team.countryCode} label={team.country} />
+                  <span className="truncate">{team.country}</span>
+                </p>
+              ) : <span />}
+              <span className="shrink-0 sm:hidden">
+                <TeamLogo code={team.code} color={team.color} logo={team.logo} name={team.name} season={team.season} size="md" />
+              </span>
+            </div>
 
-          <div className="mt-6 grid grid-cols-2 overflow-hidden rounded-md border border-border bg-background/80 backdrop-blur-sm sm:grid-cols-4">
-            <HeroMetric label="Место" value={formatPosition(team.stats.championshipPosition)} />
-            <HeroMetric label="Очки" value={formatStat(team.stats.points)} />
-            <HeroMetric label="Победы" value={formatStat(team.stats.wins)} />
-            <HeroMetric label="Подиумы" value={formatStat(team.stats.podiums)} />
+            <div className="mt-6 grid grid-cols-2 overflow-hidden rounded-md border border-border bg-background/80 backdrop-blur-sm sm:grid-cols-4">
+              <HeroMetric label="Место" value={formatPosition(team.stats.championshipPosition)} />
+              <HeroMetric label="Очки" value={formatStat(team.stats.points)} />
+              <HeroMetric label="Победы" value={formatStat(team.stats.wins)} />
+              <HeroMetric label="Подиумы" value={formatStat(team.stats.podiums)} />
+            </div>
           </div>
+          {information ? <TeamInformationSection information={information} /> : null}
         </div>
       </div>
+    </section>
+  );
+}
+
+function TeamInformationSection({ information }: { information: TeamInformation }) {
+  const rows = [
+    { label: "Первое участие", values: [String(information.firstEntryYear)] },
+    { label: "База команды", values: [information.base] },
+    {
+      label: information.teamPrincipals.length > 1 ? "Руководство команды" : "Руководитель команды",
+      values: information.teamPrincipals,
+    },
+    {
+      label: information.technicalDirectors.length > 1 ? "Технические директора" : "Технический директор",
+      values: information.technicalDirectors,
+    },
+    { label: "Шасси", values: [information.chassis] },
+  ];
+
+  return (
+    <section aria-label="О команде" className="min-w-0 border-t border-border/70 pt-5 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
+      <div className="flex min-h-11 items-center">
+        <h2 className="font-display text-base font-bold">О команде</h2>
+      </div>
+      <dl className="mt-1 divide-y divide-border/60">
+        {rows.map((row) => (
+          <div className="grid min-w-0 grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] items-start gap-3 py-2.5 xl:py-1.5" key={row.label}>
+            <dt className="text-xs leading-5 text-muted-foreground">{row.label}</dt>
+            <dd className="min-w-0 break-words text-right text-sm font-semibold leading-5">
+              {row.values.map((value) => <span className="block" key={value}>{value}</span>)}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

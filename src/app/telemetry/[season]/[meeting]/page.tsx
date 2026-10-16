@@ -44,7 +44,7 @@ export default async function MeetingPage({
   const access = await getSubscriptionAccess(user?.id ?? null);
   if (!access.entitlements.telemetry_full) {
     const demo = await getTelemetryDemoScope();
-    if (!demo || demo.meeting.id !== id) return <SubscriptionGateContent description="Этот Гран-при доступен с RaceSide Plus. В бесплатном демо открыт один этап N−2." signedIn title="Откройте полную телеметрию" />;
+    if (!demo || demo.meeting.id !== id) return <SubscriptionGateContent description="Этот Гран-при доступен с RaceSide Plus. В демо открыта одна гонка с выбором любых пилотов и кругов." signedIn title="Откройте полную телеметрию" />;
   }
   return <TelemetryHub demoMode={!access.entitlements.telemetry_full} initialSeason={season} initialMeeting={id} />;
 }

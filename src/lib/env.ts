@@ -1,3 +1,5 @@
+import aiPrompts from "../config/ai-prompts.json" with { type: "json" };
+
 export function getSupabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -34,10 +36,7 @@ export function getSiteUrl() {
 
 export function getOpenRouterEnv() {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const model =
-    process.env.OPENROUTER_MODEL ??
-    process.env.AI_SUMMARY_MODEL ??
-    "google/gemini-2.5-flash-lite";
+  const model = aiPrompts[0].modelFallback;
 
   if (!apiKey) {
     return null;

@@ -1,0 +1,24 @@
+RaceSide Grand Prix share PNG — finisher count fix, 2026-10-12
+
+Reproduction
+- Singapore main race: 22 results, 10 Finished, 8 Lapped, 4 Retired.
+- isRecapFinisher accepted Finished / Classified / +N Lap(s) but not Lapped.
+- Regression fixture reproduced the incorrect count: 10 instead of 18.
+
+Fix
+- Recognize Lapped as a finishing status in the existing shared recap predicate.
+- Finisher count, retirement markers and position-gain highlights use the same predicate.
+- Completed lap count is not used to infer retirement: Albon retired after 59 laps, Bottas finished after 59 laps.
+- Existing results, worker classification and database values remain unchanged.
+
+Validation
+- 22 recap-model, position-chart and actual ImageResponse tests passed.
+- Regression cases cover the Singapore field, one/multiple laps behind, casing/whitespace, DNF/DNS/DSQ, mechanical retirement and a retirement at full distance.
+- Targeted ESLint passed for the changed model and tests.
+- pnpm typecheck passed.
+- Production Next.js webpack build passed in an isolated temporary copy.
+- Actual local /api/share-image/grand-prix/2026/17 PNG generated from stored race data and visually inspected: 1080x1350, 18 из 22, 4 схода.
+- Artifact: singapore-2026-finishers-fixed.png.
+
+Deployment
+- Web deployment was not performed. The updated PNG generator requires web publication; this change does not require worker deployment.

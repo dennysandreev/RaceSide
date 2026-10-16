@@ -30,6 +30,469 @@ export async function validateTrackAsset({
   const metrics = inspectGltf(gltf, glbStats.size, previewStats.size);
   const failures = [];
 
+  if (modelId === "yas-marina") {
+    const { auditYasMarinaSurfaces } = await import("./audit-yas-marina-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditYasMarinaSurfaces(glbBuffer, metadata);
+    for (const layer of ["road", "paint", "runoff"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Yas Marina ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Yas Marina structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 16)) failures.push("Yas Marina reconstructed pit ramp exceeds the 16% grade limit");
+    if (!(audit.undergroundPitTriangles > 100)) failures.push("Yas Marina mapped pit-exit tunnel is missing");
+    if (!audit.tunnel.samples || audit.tunnel.missingRoof || !(audit.tunnel.minimumHeadroomMeters >= 4.5)) failures.push("Yas Marina pit-exit tunnel roof/headroom is incomplete");
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Yas Marina physical primitive requires an embedded texture and valid UVs");
+    if (!(audit.aerialProjection.maximumErrorMeters < .15)) failures.push("Yas Marina aerial texture projection is misaligned");
+    if (!(audit.bridgeSamples > 0 && audit.minimumBridgeClearanceMeters >= 4.5)) failures.push("Yas Marina W Hotel link bridge has insufficient clearance");
+    for (const name of [...Array.from({ length: 16 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!(gltf.nodes ?? []).some((node) => node.name === name)) failures.push(`Missing Yas Marina anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Yas Marina requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32640" || metadata.verticalExaggeration !== 1 || !/EGM2008/.test(metadata.verticalDatum)) failures.push("Yas Marina must retain native UTM 40N metres and EGM2008 without vertical exaggeration");
+    if (metadata.lapLength?.officialFiaMeters !== 5281 || !(metadata.lapLength.relativeErrorPercent < .5)) failures.push("Yas Marina length must match FIA 5281 m within 0.5%");
+    if (metadata.objects?.turnAnchors !== 16 || metadata.objects.pitGarageBoxes !== 40 || !(metadata.objects.grandstandFootprints >= 20) || metadata.objects.hotelWings !== 2) failures.push("Yas Marina turn, pit, hotel or grandstand geometry is incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 300)) failures.push("Yas Marina road/pit clearance, joins or physical pit wall are incomplete");
+    if (!quality?.buildings?.rendered.some((item) => item.osmWayId === 133907082)) failures.push("Yas Marina main pit building is missing");
+    if (metadata.controlPointReference?.referenceYear !== 2025 || metadata.controlPointReference.currentEventVerified !== false || !metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true) failures.push("Yas Marina must disclose source dates, reconstruction limits and textured physical objects");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-yas-marina-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Yas Marina source lock differs from delivery");
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "qatar") {
+    const { auditQatarSurfaces } = await import("./audit-qatar-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditQatarSurfaces(glbBuffer);
+    for (const layer of ["road", "apron", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Qatar ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Qatar structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 6)) failures.push("Qatar road grades exceed the low-relief terrain limit");
+    for (const [name, topology] of Object.entries(audit.ribbonTopology)) {
+      if (topology.degenerate || topology.adjacentWindingFlips || (/Raceway|Pit_Lane/.test(name) && topology.negative)) failures.push(`${name} has folded or collapsed ribbon triangles`);
+    }
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Qatar physical primitive requires embedded textures and valid UVs");
+    if (!(audit.aerialProjection.samples > 1000) || !(audit.aerialProjection.maximumErrorMeters < .1)) failures.push("Qatar ground image is not geographically UV-aligned");
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [...Array.from({ length: 16 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Qatar anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Qatar requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32639" || metadata.verticalExaggeration !== 1 || !/EGM2008/.test(metadata.verticalDatum)) failures.push("Qatar must retain metric UTM 39N and EGM2008 without vertical exaggeration");
+    if (metadata.lapLength?.officialFiaMeters !== 5419 || !(metadata.lapLength.relativeErrorPercent < .5)) failures.push("Qatar length must match FIA 5419 m within 0.5%");
+    if (metadata.objects?.turnAnchors !== 16 || metadata.objects.pitGarageBoxes !== 50 || metadata.objects.grandstandFootprints !== 6 || metadata.objects.permanentTeamHospitality !== 4) failures.push("Qatar pit and spectator infrastructure is incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 400)) failures.push("Qatar pit joins, road clearance or physical pit wall are incomplete");
+    if (!quality?.buildings?.rendered.some((item) => item.osmWayId === 152483597)) failures.push("Qatar's post-2023 pit building is missing");
+    if (metadata.controlPointReference?.referenceYear !== 2025 || metadata.controlPointReference.currentEventVerified !== false || !metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true) failures.push("Qatar source dates, estimates and texture coverage must be explicit");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-qatar-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Qatar source lock differs from delivery");
+    if (sourceDirectory) for (const source of lock.sources) {
+      const bytes = await readFile(path.join(sourceDirectory, source.file));
+      if (bytes.length !== source.bytes || createHash("sha256").update(bytes).digest("hex") !== source.sha256) failures.push(`Qatar source checksum mismatch: ${source.file}`);
+    }
+  }
+
+  if (modelId === "las-vegas") {
+    const { auditLasVegasSurfaces } = await import("./audit-las-vegas-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditLasVegasSurfaces(glbBuffer);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Las Vegas ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Las Vegas structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 6)) failures.push("Las Vegas road grades exceed the low-relief terrain limit");
+    for (const [name, topology] of Object.entries(audit.ribbonTopology)) {
+      if (topology.degenerate || topology.adjacentWindingFlips || (/Raceway|Pit_Lane/.test(name) && topology.negative)) failures.push(`${name} has folded or collapsed ribbon triangles`);
+    }
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Las Vegas physical primitive requires an embedded texture and valid UVs");
+    if (audit.textures.collapsedKerbUvTriangles) failures.push("Las Vegas casino kerb artwork has collapsed UV triangles");
+    for (const name of [...Array.from({ length: 17 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!(gltf.nodes ?? []).some((node) => node.name === name)) failures.push(`Missing Las Vegas anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Las Vegas requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32611" || metadata.verticalExaggeration !== 1 || !/NAVD88/.test(metadata.verticalDatum)) failures.push("Las Vegas must retain native UTM 11N metres and NAVD88 without vertical exaggeration");
+    if (metadata.lapLength?.officialFiaMeters !== 6201 || !(metadata.lapLength.relativeErrorPercent < .5)) failures.push("Las Vegas length must match FIA 6201 m within 0.5%");
+    if (metadata.objects?.turnAnchors !== 17 || metadata.objects.pitGarageBoxes !== 43 || !(metadata.objects.grandstandFootprints >= 25)) failures.push("Las Vegas turn, pit and event grandstand geometry is incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 300)) failures.push("Las Vegas road/pit clearance, joins or physical pit wall are incomplete");
+    if (!quality?.buildings?.rendered.some((item) => item.osmWayId === 1198427833)) failures.push("Las Vegas permanent pit pavilion is missing");
+    if (!metadata.objects?.sphere || !metadata.objects?.eiffelTower || !metadata.objects?.highRoller) failures.push("Las Vegas mapped landmarks are missing");
+    if (metadata.controlPointReference?.referenceYear !== 2025 || metadata.controlPointReference.currentEventVerified !== false || !metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true) failures.push("Las Vegas must disclose source dates, reconstruction limits and textured physical objects");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-las-vegas-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Las Vegas source lock differs from delivery");
+    if (sourceDirectory) for (const source of lock.sources) {
+      const bytes = await readFile(path.join(sourceDirectory, source.file));
+      if (createHash("sha256").update(bytes).digest("hex") !== source.sha256) failures.push(`Las Vegas source checksum mismatch: ${source.file}`);
+    }
+  }
+
+  if (modelId === "albert-park") {
+    const { auditAlbertParkSurfaces } = await import("./audit-albert-park-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditAlbertParkSurfaces(glbBuffer);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Albert Park ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Albert Park structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 6)) failures.push("Albert Park road grade exceeds the low-relief terrain limit");
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Albert Park physical primitive requires an embedded texture and valid UVs");
+    if (audit.bridgeSamples && !(audit.minimumBridgeClearanceMeters >= 4.5)) failures.push("Albert Park pedestrian bridge clearance is invalid");
+    if (!(audit.reviewedMainStraight.samples > 100) || !(audit.reviewedMainStraight.maximumRoadEdgeDeviationMeters <= 6.4)) failures.push("Albert Park pit exit introduces a jog in the main straight");
+    if (!(audit.reviewedPitExit.samples > 100) || !(audit.reviewedPitExit.maximumOppositeEdgeDeviationMeters <= 6.4)) failures.push("Albert Park pit exit crosses the opposite edge of the main straight");
+    if (!(audit.reviewedPitFrontage.samples > 100) || audit.reviewedPitFrontage.mainRoadOverlapSamples) failures.push("Albert Park pit frontage overlaps the main racing surface");
+    if (!(audit.reviewedRoadJoins.samples > 100) || !(audit.reviewedRoadJoins.maximumHeightDifferenceMeters <= .15)) failures.push("Albert Park pit junctions have incompatible road elevations");
+    for (const number of [11, 12, 13, 14]) {
+      const corner = audit.reviewedSouthernTurns[number];
+      if (!(corner.samples >= 9) || corner.missingCrossSections || !(corner.maximumAxisDeviationMeters <= 2.4)) failures.push(`Albert Park T${number} deviates from reviewed native southern controls`);
+    }
+    if (!(audit.reviewedTurn14Exit.samples > 100) || !(audit.reviewedTurn14Exit.maximumRoadEdgeDeviationMeters <= 6.4)) failures.push("Albert Park T14 has an extra bend before the native main straight");
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [...Array.from({ length: 14 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Albert Park anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Albert Park requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:7855" || metadata.verticalExaggeration !== 1) failures.push("Albert Park must retain native GDA2020/MGA55 metres");
+    if (metadata.lapLength?.officialFiaMeters !== 5278 || !(metadata.lapLength.relativeErrorPercent < .5)) failures.push("Albert Park length must match FIA 5278 m within 0.5%");
+    if (metadata.controlPointReference?.referenceYear !== 2026 || metadata.objects?.turnAnchors !== 14 || metadata.objects.pitGarageBoxes !== 45 || !(metadata.objects.grandstandFootprints >= 17)) failures.push("Albert Park sporting controls and mapped event infrastructure are incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 200)) failures.push("Albert Park road/pit clearance, joins or physical pit wall are incomplete");
+    if (!metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true || !/CC BY-SA 4.0/.test(gltf.asset?.copyright ?? "")) failures.push("Albert Park texture license and reconstruction limits must be explicit");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-albert-park-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Albert Park source lock differs from delivery");
+    // Authored registration/event reference files live in docs rather than cache.
+    if (sourceDirectory) for (const source of lock.sources) {
+      const sourcePath = source.file.startsWith("docs/") ? path.join(projectRoot, source.file) : path.join(sourceDirectory, source.file);
+      const bytes = await readFile(sourcePath);
+      if (createHash("sha256").update(bytes).digest("hex") !== source.sha256) failures.push(`Albert Park source checksum mismatch: ${source.file}`);
+    }
+  }
+
+  if (modelId === "shanghai") {
+    const { auditShanghaiSurfaces } = await import("./audit-shanghai-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditShanghaiSurfaces(glbBuffer);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Shanghai ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Shanghai structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 6) || !(audit.minimumBridgeClearanceMeters >= 4.5) || !audit.bridgeSamples) failures.push("Shanghai road gradients or media-bridge clearance are invalid");
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Shanghai physical mesh requires embedded textures and valid UVs");
+    if (audit.aerialProjection.meshes.length !== 4 || !(audit.aerialProjection.maximumErrorMeters < .1)) failures.push("Shanghai satellite UV projection differs from native-metre geometry");
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [...Array.from({ length: 16 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Shanghai anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Shanghai requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32651" || metadata.verticalExaggeration !== 1 ||
+        metadata.realWorldScale !== "1 unit = 1 metre; no vertical exaggeration") failures.push("Shanghai must retain native UTM 51N metres");
+    if (metadata.lapLength?.officialFiaMeters !== 5451 || !(metadata.lapLength.relativeErrorPercent <= .5)) failures.push("Shanghai must match FIA 5451 m within 0.5%");
+    if (JSON.stringify(metadata.sectorBoundaryDistancesMeters) !== "[1430,2999]" || metadata.controlPointReference?.referenceYear !== 2026 ||
+        metadata.controlPointReference.currentEventVerified !== true) failures.push("Shanghai requires pinned FIA 2026 controls");
+    if (metadata.objects?.turnAnchors !== 16 || metadata.objects.pitGarageBoxes !== 33 || metadata.objects.fiaGarageBays !== 3 ||
+        !(metadata.objects.grandstandFootprints >= 16) || !(metadata.objects.overWaterPavilions >= 20) ||
+        metadata.objects.mainComplex?.bridges?.length !== 2) failures.push("Shanghai venue or pit infrastructure is incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 ||
+        !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) ||
+        !(quality?.pitLane?.wall?.lengthMeters > 200)) failures.push("Shanghai driving surface or pit wall is incomplete");
+    if (!metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true || metadata.elevationApproximate !== true ||
+        metadata.assetLicense !== "CC BY-SA 4.0" || !metadata.rasterRegistration?.sourceSha256) failures.push("Shanghai source and reconstruction limits must be explicit");
+    const registration = metadata.rasterRegistration;
+    if (registration?.schemaVersion !== 2 || !(registration.groundControlPoints?.length >= 25) ||
+        !(registration.independentCheckPoints?.length >= 9) || !(registration.independentRmsResidualPixels < 6) ||
+        !(registration.independentMaximumResidualPixels < 8) || !(registration.jacobianDeterminantRange?.[1] < -.5) ||
+        !(registration.jacobianDeterminantRange?.[0] > -3) || registration.buildingCorrections?.length !== 26 ||
+        registration.buildingCorrections.some((control) => !(control.afterResidualPixels < .01))) {
+      failures.push("Shanghai satellite alignment requires independent checkpoints, an unfolded mapping and corrected pavilion footprints");
+    }
+    if (registration.roofFootprintCorrections?.length !== 2 || registration.roofFootprintCorrections.some((control) => !(control.maximumReprojectionResidualPixels < .01)) ||
+        ![1372223261, 1372223262].every((id) => quality.grandstands.rendered.some((stand) => stand.osmWayId === id))) failures.push("Shanghai must deliver both corrected H/K grandstands");
+    const registrationFile = await readFile(path.join(projectRoot, "docs/track-model-shanghai-skysat-registration.json"));
+    if (createHash("sha256").update(registrationFile).digest("hex") !== registration?.registrationSha256) failures.push("Shanghai registration controls differ from the delivered model");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-shanghai-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Shanghai source lock differs from delivery");
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "interlagos") {
+    const { auditInterlagosSurfaces } = await import("./audit-interlagos-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditInterlagosSurfaces(glbBuffer, metadata);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Interlagos ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Interlagos structures intersect driving surfaces");
+    if (!audit.turn10Alignment.samples || audit.turn10Alignment.missingRoadSupport) failures.push("Interlagos T10 asphalt misses the independently traced orthophoto edges");
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Interlagos physical primitive needs an embedded texture and valid UVs");
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [...Array.from({ length: 15 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`), "RaceStart", "SpeedTrap", "StartFinish", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Interlagos anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Interlagos requires Meshopt compression");
+    if (metadata.coordinateReferenceSystem !== "EPSG:31983" || metadata.verticalExaggeration !== 1) failures.push("Interlagos must retain native SIRGAS/UTM23S metres");
+    if (!(metadata.lapLength?.relativeErrorPercent < .5) || metadata.lapLength.officialFiaMeters !== 4309) failures.push("Interlagos lap must match FIA 4309 m within 0.5%");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 240)) failures.push("Interlagos road/pit clearance, joins or physical wall are incomplete");
+    if (metadata.objects?.turnAnchors !== 15 || metadata.objects.pitGarageBoxes !== 24 || metadata.objects.grandstandFootprints !== 3 || !(metadata.objects.buildingsTotal > 1000)) failures.push("Interlagos permanent circuit infrastructure is incomplete");
+    if (!quality?.buildings?.rendered.some((building) => building.id === 33779114)) failures.push("Interlagos mapped pit pavilion is missing");
+    if (!metadata.limitations?.length || metadata.controlPointReference?.referenceYear !== 2025 || metadata.controlPointReference.currentEventVerified !== false) failures.push("Interlagos must disclose source ages and event uncertainty");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-interlagos-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Interlagos source lock differs from delivery");
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "suzuka") {
+    const { auditSuzukaSurfaces } = await import("./audit-suzuka-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditSuzukaSurfaces(glbBuffer);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Suzuka ${layer} fails decoded surface clearance`);
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Suzuka structures intersect driving corridors");
+    if (!(audit.road.maximumGradePercent < 22) || !(audit.minimumBridgeClearanceMeters >= 4.5) || !audit.bridgeSamples) failures.push("Suzuka gradients or crossover clearance are invalid");
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) failures.push("Every Suzuka physical mesh requires embedded textures and valid UVs");
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [...Array.from({ length: 18 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "StartFinish", "SpeedTrap", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Suzuka anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Suzuka requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32653" || metadata.verticalExaggeration !== 1 || metadata.realWorldScale !== "1 unit = 1 metre; no vertical exaggeration") failures.push("Suzuka must retain native UTM 53N metres without vertical exaggeration");
+    if (metadata.lapLength?.officialFiaMeters !== 5807 || !(metadata.lapLength.relativeErrorPercent <= .5)) failures.push("Suzuka length must match the official 5807 m");
+    if (JSON.stringify(metadata.sectorBoundaryDistancesMeters) !== "[2184,4710]" || metadata.controlPointReference?.referenceYear !== 2026 || metadata.controlPointReference.currentEventVerified !== true) failures.push("Suzuka requires the pinned FIA 2026 timing layout");
+    if (metadata.objects?.turnAnchors !== 18 || metadata.objects.pitGarageBoxes !== 55 || metadata.objects.grandstandFootprints !== 29 || !(metadata.objects.buildingsTotal >= 200) || metadata.objects.wheel?.osmWayId !== 184107083) failures.push("Suzuka mapped venue or pit structures are incomplete");
+    const quality = metadata.layoutQuality;
+    if (quality?.surfaceClearance?.terrainBreakthroughSamples !== 0 || quality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 || !(quality?.pitLane?.entryGapMeters <= .05) || !(quality?.pitLane?.exitGapMeters <= .05) || !(quality?.pitLane?.wall?.lengthMeters > 250)) failures.push("Suzuka driving surfaces or physical pit wall are incomplete");
+    if (!metadata.limitations?.length || metadata.materials?.physicalObjectsTextured !== true) failures.push("Suzuka reconstruction limits and texture provenance must be explicit");
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-suzuka-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) failures.push("Suzuka source lock differs from delivery");
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "mexico") {
+    const { auditMexicoSurfaces } = await import("./audit-mexico-surfaces.mjs");
+    const stadiumReference = JSON.parse(await readFile(path.join(projectRoot,
+      "docs/track-model-mexico-stadium-reference.json"), "utf8"));
+    const audit = metrics.decodedSurfaceAudit = await auditMexicoSurfaces(glbBuffer, metadata, stadiumReference);
+    for (const layer of ["road", "paint", "surfaces"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) {
+        failures.push(`Mexico ${layer} fails decoded surface clearance`);
+      }
+    }
+    if (Object.keys(audit.structuralConflicts).length) failures.push("Mexico structures intersect the driving corridors");
+    if (!(audit.road.maximumGradePercent < 25)) failures.push("Mexico road has an unsupported steep slope");
+    if (!audit.longitudinalRoad.referenceAvailable || audit.longitudinalRoad.missingSamples ||
+        !(audit.longitudinalRoad.maximumAbsoluteGradePercent < 2) ||
+        !(audit.longitudinalRoad.maximumSmoothedGradeChangePerMeter < .05) ||
+        !(audit.longitudinalRoad.finishSeamHeightGapMeters <= .01)) {
+      failures.push("Mexico road longitudinal profile has unresolved waves or a disconnected seam");
+    }
+    const stadium = audit.stadium;
+    const eastHospitality = stadium.eastHospitality;
+    if (!eastHospitality?.triangles || !eastHospitality.sampleCount || eastHospitality.missingSamples || eastHospitality.outsideCentroids ||
+        eastHospitality.deckLevels.length !== 2 || eastHospitality.deckLevels.some((deck) => !deck.sampleCount || deck.missingSamples) ||
+        !eastHospitality.connectionSamples || eastHospitality.connectionMissingSamples ||
+        eastHospitality.maximumConnectionHeightErrorMeters > .08 ||
+        Object.values(eastHospitality.palette).some((count) => !count)) {
+      failures.push("Mexico eastern stadium hospitality or its connected north concourse has missing geometry or source colors");
+    }
+    if (audit.elevationAnchors.some((anchor) => !anchor.roadSupported ||
+      !(anchor.roadHeightErrorMeters <= .05) || !(anchor.extremumErrorMeters <= .01))) {
+      failures.push("Mexico height markers must match the highest and lowest road points");
+    }
+    if (!stadium.referenceAvailable || !stadium.seatingTriangles || !stadium.canopyTriangles || !stadium.trussTriangles ||
+        stadium.genericStadiumTriangles || stadium.seatingOutsideCentroids ||
+        stadium.banks.some((bank) => !bank.sampleCount || bank.missingSamples || bank.frontMissingSamples) ||
+        !stadium.canopy.sampleCount || stadium.canopy.missingSamples || stadium.canopy.outsideCentroids ||
+        !(Math.abs(stadium.canopy.projectedAreaSquareMeters / stadium.canopy.referenceAreaSquareMeters - 1) < .02) ||
+        stadium.westPassageMissingSamples || stadium.missingCantileverTips || !(stadium.maximumTipHeightErrorMeters < .5)) {
+      failures.push("Mexico stadium differs from the author-plan terraces or continuous cantilever canopy");
+    }
+    if (!stadium.palette.concreteTriangles || !stadium.palette.seatTriangles || !stadium.palette.steelTriangles ||
+        stadium.palette.canopyTriangles !== stadium.canopyTriangles ||
+        stadium.eventSurfaces.some((surface) => !surface.sampleCount || surface.missingSamples ||
+          !(surface.heightRangeMeters <= .05)) ||
+        !stadium.frontWalls.triangles || stadium.frontWalls.darkTriangles ||
+        !(stadium.frontWalls.maximumHeightMeters <= stadiumReference.seatingSection.frontHeightMeters + .2) ||
+        stadium.paintOverlays.some((overlay) => overlay.intersections) ||
+        stadium.roadPaintOverlays.some((overlay) => !overlay.sampleCount || overlay.intersections)) {
+      failures.push("Mexico stadium source materials or continuous painted apron are missing");
+    }
+    if (!audit.textures.physicalPrimitives || audit.textures.missingTextures.length || audit.textures.invalidUvs.length) {
+      failures.push("Mexico physical objects require embedded textures and valid UV coordinates");
+    }
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [
+      ...Array.from({ length: 17 }, (_, index) => `Turn_${String(index + 1).padStart(2, "0")}`),
+      "RaceStart", "SpeedTrap", "StartFinish", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint",
+    ]) {
+      if (!names.has(name)) failures.push(`Missing Mexico anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Mexico requires Meshopt compression");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32614" || metadata.verticalExaggeration !== 1) {
+      failures.push("Mexico must retain native UTM 14N metres without vertical exaggeration");
+    }
+    if (!(metadata.lapLength?.relativeErrorPercent < .5) || metadata.lapLength.officialFiaMeters !== 4304) {
+      failures.push("Mexico lap must match 4304 m within 0.5%");
+    }
+    if (!(metadata.raceStartDistanceMeters > 100) || metadata.finishDistanceMeters !== 0) {
+      failures.push("Mexico race-start and control lines must remain separate");
+    }
+    if (metadata.objects?.turnAnchors !== 17 || !(metadata.objects.buildingsTotal > 0) ||
+        !(metadata.objects.grandstandSections > 0) || metadata.objects.pitGarageBoxes !== 33 ||
+        metadata.controlPointReference?.pitBoxes !== 33) {
+      failures.push("Mexico track, pit and mapped venue structures are incomplete");
+    }
+    if (metadata.layoutQuality?.surfaceClearance?.terrainBreakthroughSamples !== 0 ||
+        metadata.layoutQuality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 ||
+        !(metadata.layoutQuality?.pitLane?.entryGapMeters <= .05) ||
+        !(metadata.layoutQuality?.pitLane?.exitGapMeters <= .05)) {
+      failures.push("Mexico driving surface is disconnected or intersects terrain");
+    }
+    if (!Number.isInteger(metadata.controlPointReference?.referenceYear) ||
+        typeof metadata.controlPointReference.currentEventVerified !== "boolean" || !metadata.limitations?.length) {
+      failures.push("Mexico must disclose the official control-map year and source limitations");
+    }
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-mexico-source-manifest.json"), "utf8"));
+    if (JSON.stringify(lock.sources) !== JSON.stringify(metadata.sourceManifest?.sources)) {
+      failures.push("Mexico delivery differs from its pinned source lock");
+    }
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "singapore") {
+    const { auditSingaporeSurfaces } = await import("./audit-singapore-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditSingaporeSurfaces(glbBuffer);
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) {
+        failures.push(`Singapore ${layer} fails compressed geometry clearance`);
+      }
+    }
+    if (Object.keys(audit.structuralConflicts).length || audit.bridgeConflicts) {
+      failures.push("Singapore structures intersect the driving corridors");
+    }
+    if (audit.bridgeGrandstandConflicts || metadata.layoutQuality.grandstands.waterConflicts ||
+        metadata.objects.bridges.ungroundedInteriorEndpoints || metadata.objects.bridges.maximumJointHeightGapMeters > .001) {
+      failures.push("Singapore bridge joints, approaches or grandstand clearance are invalid");
+    }
+    if (!(audit.road.maximumGradePercent < 25) || !(audit.minimumBridgeClearanceMeters > 4.5)) {
+      failures.push("Singapore road gradient or bridge clearance is invalid");
+    }
+    const names = new Set((gltf.nodes ?? []).map(node => node.name));
+    for (const name of [...Array.from({length:19}, (_,i)=>`Turn_${String(i+1).padStart(2,"0")}`),
+      "RaceStart", "SpeedTrap", "StartFinish", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint"]) {
+      if (!names.has(name)) failures.push(`Missing Singapore anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Singapore requires Meshopt");
+    for (const [name, mode] of Object.entries(metrics.materialAlphaModes)) {
+      if (!/Glow|Fence/.test(name) && mode !== "OPAQUE") failures.push(`${name} must be opaque`);
+    }
+    for (const imageName of ["singapore-orthophoto", "facade-glass", "facade-balcony", "facade-stone", "facade-garage"]) {
+      if (!gltf.images?.some(image=>image.name===imageName && image.bufferView!==undefined)) failures.push(`Missing embedded ${imageName}`);
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32648" || metadata.verticalExaggeration !== 1 ||
+        metadata.elevationApproximate !== true || metadata.verticalDatum !== null || !metadata.limitations?.length) {
+      failures.push("Singapore native metres and reconstruction limits must remain explicit");
+    }
+    if (!(metadata.lapLength?.relativeErrorPercent < .5) || metadata.lapLength.officialFiaMeters !== 4927) failures.push("Singapore lap length is invalid");
+    const buildings = metadata.layoutQuality?.buildings;
+    for (const id of [49890775,116801004,172307471,172307472]) {
+      if (!buildings?.rendered.some(building=>building.osmWayId===id)) failures.push(`Missing Singapore landmark footprint ${id}`);
+    }
+    if (metadata.objects.turnAnchors !== 19 || metadata.objects.flyerCapsules !== 28 || buildings.count < 1000 || metadata.objects.grandstandSections < 30) {
+      failures.push("Singapore city and event geometry is incomplete");
+    }
+    if (metadata.layoutQuality.pitLane.entryGapMeters > .05 || metadata.layoutQuality.pitLane.exitGapMeters > .05) failures.push("Singapore pit lane is disconnected");
+    const lock = JSON.parse(await readFile(path.join(projectRoot,"docs/track-model-singapore-source-manifest.json"),"utf8"));
+    if (JSON.stringify(lock.sources)!==JSON.stringify(metadata.sourceManifest.sources)) failures.push("Singapore source lock differs from delivery");
+    if (sourceDirectory) await validateSourceFiles(sourceDirectory, metadata.sourceManifest, failures);
+  }
+
+  if (modelId === "austin") {
+    const { auditAustinSurfaces } = await import("./audit-austin-surfaces.mjs");
+    metrics.decodedSurfaceAudit = await auditAustinSurfaces(glbBuffer);
+    const audit = metrics.decodedSurfaceAudit;
+    for (const layer of ["road", "paint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) {
+        failures.push(`Austin ${layer} fails decoded surface clearance`);
+      }
+    }
+    if (Object.keys(audit.structuralConflicts).length || audit.bridgeConflicts) {
+      failures.push("Austin driving corridors contain structural conflicts");
+    }
+    if (!(audit.road.maximumGradePercent < 22) || !(audit.minimumBridgeClearanceMeters >= 4.5)) {
+      failures.push("Austin road gradient or bridge clearance is invalid");
+    }
+    const names = new Set((gltf.nodes ?? []).map((node) => node.name));
+    for (const name of [
+      ...Array.from({ length: 20 }, (_, i) => `Turn_${String(i + 1).padStart(2, "0")}`),
+      "RaceStart", "SpeedTrap", "StartFinish", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint",
+    ]) {
+      if (!names.has(name)) failures.push(`missing Austin anchor: ${name}`);
+    }
+    if (!metrics.extensionsRequired.includes("EXT_meshopt_compression")) failures.push("Austin requires Meshopt compression");
+    if (!gltf.images?.some((image) => image.bufferView !== undefined && /austin-orthophoto/.test(image.name))) {
+      failures.push("Austin NAIP orthophoto must be embedded");
+    }
+    if (metadata.coordinateReferenceSystem !== "EPSG:32614" || metadata.verticalExaggeration !== 1) {
+      failures.push("Austin must retain native UTM 14N metres without vertical exaggeration");
+    }
+    if (!(metadata.lapLength?.relativeErrorPercent < .5) || metadata.lapLength.officialFiaMeters !== 5513) {
+      failures.push("Austin lap must match 5513 m within 0.5%");
+    }
+    if (metadata.objects?.turnAnchors !== 20 || metadata.objects.pitGarageBoxes !== 34 ||
+        metadata.objects.grandstandFootprints < 9 || metadata.objects.buildingsTotal < 40) {
+      failures.push("Austin mapped track, pit or venue structures are missing");
+    }
+    if (!metadata.layoutQuality?.buildings?.rendered.some((building) => building.osmWayId === 376713391) ||
+        !metadata.layoutQuality?.buildings?.rendered.some((building) => building.osmWayId === 847781224)) {
+      failures.push("Austin pit complex or observation tower is missing");
+    }
+    if (metadata.layoutQuality?.surfaceClearance?.terrainBreakthroughSamples !== 0 ||
+        metadata.layoutQuality?.pitLane?.surfaceClearance?.terrainBreakthroughSamples !== 0 ||
+        metadata.layoutQuality?.pitLane?.entryGapMeters > .05 || metadata.layoutQuality?.pitLane?.exitGapMeters > .05) {
+      failures.push("Austin driving surface is disconnected or intersects terrain");
+    }
+    if (metadata.controlPointReference?.referenceYear !== 2025 ||
+        metadata.controlPointReference.currentEventVerified !== false || !metadata.limitations?.length) {
+      failures.push("Austin must disclose provisional FIA controls and source limitations");
+    }
+    const lock = JSON.parse(await readFile(path.join(projectRoot, "docs/track-model-austin-source-manifest.json"), "utf8"));
+    if (JSON.stringify(metadata.sourceManifest.sources) !== JSON.stringify(lock.sources)) {
+      failures.push("Austin delivery source manifest differs from its pinned lock");
+    }
+    if (sourceDirectory) for (const source of lock.sources) {
+      const data = await readFile(path.join(sourceDirectory, source.file));
+      if (data.length !== source.bytes || createHash("sha256").update(data).digest("hex") !== source.sha256) {
+        failures.push(`Austin source cache changed: ${source.file}`);
+      }
+    }
+  }
+
   if (modelId === "miami") {
     const { auditMiamiSurfaces } = await import("./audit-miami-surfaces.mjs");
     metrics.decodedSurfaceAudit = await auditMiamiSurfaces(glbBuffer);
@@ -63,9 +526,13 @@ export async function validateTrackAsset({
 
   if (modelId === "sepang") {
     const { auditSepangSurfaces } = await import("./audit-sepang-surfaces.mjs");
-    const { verifySepangSources } = await import("./download-sepang-data.mjs");
-    metrics.decodedSurfaceAudit = await auditSepangSurfaces(glbBuffer);
+    const { verifySepangSources, loadSepangBuildingColours } = await import("./download-sepang-data.mjs");
+    const appearance = await loadSepangBuildingColours();
+    metrics.decodedSurfaceAudit = await auditSepangSurfaces(glbBuffer, appearance);
     const audit = metrics.decodedSurfaceAudit;
+    if (audit.appearance.missingBuildingColours.length || audit.appearance.missingGrandstandColours.length) failures.push("Sepang exported building colours differ from the researched linear palette");
+    if (metadata.buildingAppearance?.auditSha256 !== appearance.auditSha256 || metadata.buildingAppearance.vertexColorSpace !== "linear") failures.push("Sepang building colour provenance or colour space is missing");
+    if (metadata.layoutQuality?.buildings?.rendered.some((building) => !building.appearance?.group)) failures.push("Sepang buildings must carry roof colour evidence");
     for (const layer of ["road", "paint"]) {
       if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Sepang ${layer} fails decoded surface clearance`);
     }

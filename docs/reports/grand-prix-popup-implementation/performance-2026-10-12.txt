@@ -1,0 +1,39 @@
+Grand Prix report loading — 2026-10-12
+
+Root cause:
+The analytics query selected the most recently prepared Replay of any session
+in the weekend. Singapore's ready Qualifying Replay was selected while the
+Race Replay was still preparing. Its compact timing queries took about
+4.7 and 4.5 seconds; the legacy sample count added about 8.2 seconds.
+That qualifying Replay has 320,489 map/timing observations with a lap number.
+Both home and calendar waited for analytics before opening the report.
+
+Changes:
+- Select only ready Race sessions for race-report analytics.
+- Read compact timing pages in batches of at most four requests, with stable
+  offset_ms / id ordering, retaining the complete stored timing.
+- Five-minute analytics cache, with background refresh for stale values for
+  a further thirty minutes, so an expired cache does not block repeat opens.
+- Cache version changed to prevent reuse of old qualifying-derived analytics.
+- No database writes, migrations, dependencies or external F1 API requests.
+
+Measured against the same saved reports and database from this host:
+- Singapore analytics cold load: 17,607 ms before, 145 ms after.
+- Singapore analytics warm load: below 1 ms.
+- Malaysia analytics cold load: 2,556 ms; warm load below 1 ms.
+- Malaysia retained 1,142 stored position points across the field.
+- Production browser preview, click to visible report: home 735 ms;
+  calendar 1,758 ms. These browser timings include local tool overhead and
+  are local measurements, not production response-time guarantees.
+- Singapore retains its results, news, tyre history and championship data;
+  its race timing remains unavailable until the Race Replay is ready.
+
+Verification:
+- Four regression tests failed on the old implementation and passed after
+  the fix: wrong-session exclusion, correct Race selection, complete bounded
+  parallel timing reads, and non-blocking cache refresh.
+- All 23 relevant analytics, home-report, report-format and cache tests passed.
+- Targeted ESLint, typecheck and isolated production Webpack build passed.
+- Browser checked opening and closing from home, opening from calendar,
+  and existing position and pace charts in Malaysia.
+- Production was not deployed as part of this change.

@@ -18,6 +18,10 @@ Downloaded on 2026-07-01 from the official Formula1.com 2026 race pages / media.
 Hungary and Netherlands were refreshed on 2026-08-18 from their current
 official Formula1.com 2026 race-page assets.
 
+Singapore was refreshed on 2026-10-04 from its official Formula1.com 2026
+race-page asset, including the straight-mode and overtaking zones. Local WebP
+maps and 640x360 share previews preserve transparency.
+
 Historical 2020–2025 circuit maps were refreshed on 2026-07-18 from the
 official Formula1.com race-page assets and their archived event versions. Each
 season manifest in `public/f1/circuits/{season}/manifest.json` records the race
@@ -68,6 +72,13 @@ Building texture additions: Sefer azeri, [Ismailiyye palace main façade, Baku, 
 
 Individual hotel geometry: Nemoralis, [Hilton Hotel and Government House, Baku](https://commons.wikimedia.org/wiki/File:Hilton_Hotel_and_Government_House,_Baku.jpg) and [JW Marriott Absheron](https://commons.wikimedia.org/wiki/File:JW_Marriott_Absheron.jpg), 13 March 2024, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). These photographs were used as architectural references for approximate glazing, stone bands, balconies and roof geometry; the photographs are not embedded as textures. Mapped footprints come from OSM ways 152192792 and 153128834. The restored courtyard building uses OSM relation 2249851, including both inner rings. Source records and accuracy notes: `docs/track-model-baku-hotels.json`.
 
+## Suzuka 2026 Blender model
+
+- Geographic footprints, circuit, pit lane, mapped grandstands, roads and vegetation: © OpenStreetMap contributors, [ODbL 1.0](https://www.openstreetmap.org/copyright), relation 284570; projected to EPSG:32653.
+- Ground/roof textures and sampled object colours: 国土地理院 / Geospatial Information Authority of Japan, [Seamless Photo and DEM5A/DEM10B](https://maps.gsi.go.jp/development/ichiran.html), [Public Data License 1.0](https://web2.gsi.go.jp/ENGLISH/page_e30286.html). Imagery reprojected, resampled, colour-sampled and embedded; acquisition date is not supplied by the tile endpoint. Road grading and bridge elevations contain reconstruction estimates.
+- FIA Japanese GP 2026 Document 6, Suzuka Circuit map dated March 2026, official Circuit Wheel and pit-complex photographs: factual layout/colour references only; documents and photographs are not embedded or republished.
+- Authored surface, seating, facade-detail and fence textures: RaceSide. Exact URLs, SHA-256 hashes, dates, resolution and limitations: `/f1/tracks/3d/suzuka-metadata.json`; repository source card: `docs/track-model-suzuka-source-card.md`.
+
 ## Team Logos
 
 - Alpine: https://media.formula1.com/image/upload/c_lfill,w_160/q_auto/v1740000001/common/f1/2026/alpine/2026alpinelogowhite.webp
@@ -97,3 +108,44 @@ Individual hotel geometry: Nemoralis, [Hilton Hotel and Government House, Baku](
 - Ground and roof elevations: IGN, [LiDAR HD MNT/MNS](https://www.data.gouv.fr/datasets/mnt-lidar-hd), May/June 2021 acquisition, IGN69 vertical datum, 0.5 m source exported at 1 m. Etalab Open Licence 2.0. Road heights regularised locally; no vertical exaggeration.
 - FIA Monaco 2026 Document 7, FIA/ACM 2026 Media Kit, ACM Hospitality 2026 and Audi's “The race between races” (10 June 2026): factual event-layout references. Documents and photographs are not embedded in the model.
 - Exact URLs, dates, hashes and modelling limits: `/f1/tracks/3d/monaco-metadata.json` and repository `docs/track-model-monaco-source-card.md`. Unverified individual 2026 motorhomes are omitted.
+
+## Interlagos — Autódromo José Carlos Pace, Blender model
+
+- Ground/roof imagery and sampled colours: Prefeitura de São Paulo / GeoSampa, 2020 orthophoto and cadastral footprints, [CC BY-SA 4.0](https://prefeitura.sp.gov.br/web/licenciamento/w/licen%C3%A7a-para-uso-de-dados-do-geosampa). Cropped, UV projected and embedded; imagery is historical, not a photograph of the 2026 event. Attribution and ShareAlike terms apply to adapted imagery.
+- Bare-earth elevations and building/vegetation checks: PMSP 2017 classified LiDAR, [AWS Open Data registry](https://registry.opendata.aws/pmsp-lidar/), GPL-3.0 as identified by that dataset registry. Survey values retained; absolute vertical datum uncertainty disclosed.
+- Circuit, pit, permanent stand and paddock footprints, barriers: © OpenStreetMap contributors, [ODbL 1.0](https://www.openstreetmap.org/copyright), circuit relation 6781071, native EPSG:31983 metres.
+- FIA São Paulo GP 2025 circuit/pit drawing and official GP São Paulo photographs/map: factual geometry and colour references only; photographs/PDF are not embedded. 2026 temporary structures are not verified.
+- Authored material, facade, seat and fence details: RaceSide. All physical meshes have embedded textures and UVs. Facade colours and structural details include reconstruction estimates.
+- Reproducible geometry/material source: `scripts/track-model-blender/build-interlagos-digital-twin.py`, `prepare-interlagos-model.py`; exact sources, licenses and SHA-256: `docs/track-model-interlagos-source-manifest.json` and `/f1/tracks/3d/interlagos-metadata.json`. Source/licensing terms remain applicable to their derived data layers.
+
+## Shanghai 2026 Blender reconstruction
+
+- Geographic circuit, pit lane, permanent building/grandstand footprints and mapped vegetation: © OpenStreetMap contributors, [ODbL 1.0](https://www.openstreetmap.org/copyright), relation 2094941; EPSG:32651.
+- Ground and roof textures: Planet Labs, Inc., [Shanghai International Circuit, 7 April 2018, SkySat](https://commons.wikimedia.org/wiki/File:Shanghai_International_Circuit,_April_7,_2018_SkySat.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Imagery was visually georegistered, cropped, resampled, projected onto metric terrain/roof meshes and rendered. Pavilion positions and H/K roof contours were corrected against this imagery. It is historical and not a 2026 orthorectified survey. The Shanghai GLB and preview are made available under CC BY-SA 4.0; website software is separately licensed.
+- Terrain: OpenGeoHub / Ho et al. (2025), GEDTM30 v20250611, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Native approximately 30 m bare-earth estimate, 2006–2015 composite, EGM2008 datum. Cropped, resampled, smoothed and locally graded for the road platform.
+- FIA Chinese GP 2026 circuit/pit map and Media Kit, Shanghai/Juss 2026 event map, and Tilke & Partners architecture photographs: factual/visual references only, not embedded or republished. Facade, metal, seating and surface-detail textures are authored by RaceSide; reconstructed dimensions and historical-image registration are approximate.
+- Exact source URLs, SHA-256 hashes, dates, resolution, modifications and limits: [/f1/tracks/3d/shanghai-metadata.json](/f1/tracks/3d/shanghai-metadata.json); repository `docs/track-model-shanghai-source-card.md`. Unverified mobile 2026 motorhomes and tents are omitted.
+
+## Albert Park 3D model and preview
+
+`tracks/3d/albert-park.glb` and `albert-park-preview.webp`: RaceSide reconstruction, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/), containing modified Planet Labs Inc. SkySat imagery acquired 22 March 2018: https://commons.wikimedia.org/wiki/File:Melbourne_Grand_Prix_Circuit,_March_22,_2018_SkySat.jpg. The image is georegistered, cropped, projected on terrain and permanent roofs, sampled for colors and rendered; the resurfaced current race corridor replaces obsolete photographic road markings with authored textured asphalt. This asset license does not relicense site software.
+
+Geographic data © OpenStreetMap contributors, ODbL 1.0 (https://www.openstreetmap.org/copyright). Vicmap contours and spot heights © State of Victoria (Department of Transport and Planning), CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), interpolated to a 5 m AHD terrain grid. FIA 2026 event notes, circuit/pit drawings and Australian Grand Prix public visitor map are observational references; organizer 3D meshes, materials and map images are not embedded. Full pins and reconstruction limitations: `docs/track-model-albert-park-source-card.md` and `docs/track-model-albert-park-source-manifest.json`.
+
+## Las Vegas Blender reconstruction
+
+Las Vegas geographic geometry uses © OpenStreetMap contributors (ODbL): https://www.openstreetmap.org/copyright. Terrain and roof imagery uses USDA NAIP (11 June 2022) and USGS 3DEP, public domain. Facade modules, surface grain, casino kerbs, seating, chain-link and red Sphere LED textures are authored for RaceSide. The official F1 logo from Formula1.com is displayed on Sphere at the user’s request; F1 is a Formula One Licensing BV trademark. Guitar Tower height references use the Clark County public planning record. FIA 2025 and Las Vegas Grand Prix 2026 maps/photos are reference inputs only; their pixels are not redistributed in the GLB. Height estimates and historical source limitations are documented in docs/track-model-las-vegas-source-card.md and public/f1/tracks/3d/las-vegas-metadata.json.
+
+## Qatar — Lusail Blender reconstruction
+
+Geographic geometry © OpenStreetMap contributors, [ODbL 1.0](https://www.openstreetmap.org/copyright). Ground imagery contains modified Copernicus Sentinel data (2026), processed by ESA, Sentinel-2C acquired 30 September 2026; native 10 m, COG hosted by Element 84. Ground textures are geographically projected, supplemented with mapped material colours and authored grain. Terrain: OpenGeoHub / Ho et al. (2025), GEDTM30 v20250611, CC BY 4.0, historical approximately 30 m estimate in EGM2008; cropped, resampled, smoothed and locally graded in road corridors.
+
+FIA Qatar 2025 maps, LIC 2026 event map and LIC / Focus Design Partners photographs are factual and colour references only, not embedded or redistributed. Facade, seat, mineral, fence and blue/aqua apron detail textures are authored for RaceSide. Building and stand heights, facade rhythms and floodlight placement are approximate reconstructions. Current 2026 sporting controls and motorhomes are not verified. Exact source pins, modifications, licenses and limits: `/f1/tracks/3d/qatar-metadata.json`, repository `docs/track-model-qatar-source-card.md` and `docs/track-model-qatar-source-manifest.json`.
+
+## Yas Marina — современная Blender-модель
+
+Земля содержит изменённые данные Copernicus Sentinel (2026), processed by ESA, Sentinel-2C acquired 4 October 2026, native 10 m, COG hosted by Element 84. Использована родная EPSG:32640 геопривязка, crop/resampling, OSM-полигоны поверхности и авторские материалы. [Условия Copernicus](https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice). Исторические пиксели Planet 2018 и коммерческие изображения Esri/Vantor/AD-SDI не встроены.
+
+Геометрия © OpenStreetMap contributors, [ODbL 1.0](https://www.openstreetmap.org/copyright). Terrain: OpenGeoHub / Ho et al. (2025), GEDTM30, CC BY 4.0, приблизительно 30 м, EGM2008; crop, сглаживание и местное выравнивание дороги. FIA 2025, Ethara и sbp — фактические и цветовые источники, документы/фотографии не распространяются в модели. Текстуры асфальта, фасадов, сидений, стекла, пальм и сетки ограждений созданы RaceSide. GLB и preview доступны по CC BY-SA 4.0; программный код сайта лицензирован отдельно. Даты, SHA-256 и ограничения: `/f1/tracks/3d/yas-marina-metadata.json`, `docs/track-model-yas-marina-source-card.md`.
+
+Вода Яс-Марины: RaceSide, авторская текстура через imagegen с цветовым референсом © Planet Labs, Inc., [Yas Marina SkySat, 12 October 2018](https://commons.wikimedia.org/wiki/File:Yas_Marina_Circuit,_October_12,_2018_SkySat.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Модификации: новая текстура ряби, маска современных OSM-берегов/причалов, плавное наложение и запекание в Blender. Исторические трасса и береговая геометрия снимка не встроены; оттенок воды не заявлен как измерение 2026.

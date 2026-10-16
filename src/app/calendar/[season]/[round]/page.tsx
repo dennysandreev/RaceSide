@@ -20,6 +20,7 @@ import { RaceSessionResultsPanel } from "@/components/racemate/race-session-resu
 import { TrackMap } from "@/components/racemate/track-map";
 import { GrandPrixReportDialog } from "@/components/racemate/grand-prix-report-dialog";
 import { GrandPrixPodiumPreview } from "@/components/racemate/grand-prix-podium-preview";
+import { getGrandPrixReportAnalytics } from "@/data/grand-prix-report-analytics";
 import { JsonLd } from "@/components/racemate/json-ld";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -116,7 +117,9 @@ export default async function RaceCalendarPage({
         getRaceNews(race.id, 5),
         getRaceGrandPrixReport(seasonYear, raceRound),
         getGrandPrixReportBySlug(query.raceReport),
-        getRaceReplaySummaryByRaceId(race.id, CURRENT_F1_SEASON),
+        race.status === "Завершен"
+          ? getRaceReplaySummaryByRaceId(race.id, CURRENT_F1_SEASON)
+          : Promise.resolve(null),
       ])
     : [[], null, null, null] as const;
   const resultsBySession = await getSessionResultsBySessionIds(
@@ -133,6 +136,9 @@ export default async function RaceCalendarPage({
   }));
   const dialogReport = queryReport ?? raceReport;
   const isReportOpen = Boolean(query.raceReport && dialogReport?.raceSlug === query.raceReport);
+  const reportAnalytics = isReportOpen && dialogReport
+    ? await getGrandPrixReportAnalytics(dialogReport)
+    : null;
   const overviewReport = race.status === "Завершен" ? raceReport : null;
   const calendarHref = isCurrentSeason ? "/calendar" : `/calendar?season=${seasonYear}`;
   const raceTitleLength = Array.from(race.race).length;
@@ -346,7 +352,7 @@ export default async function RaceCalendarPage({
         </section>
       </article>
       {isCurrentSeason ? (
-        <GrandPrixReportDialog driverSlugByName={driverSlugByName} open={isReportOpen} report={dialogReport} />
+        <GrandPrixReportDialog analytics={reportAnalytics} driverSlugByName={driverSlugByName} open={isReportOpen} report={dialogReport} />
       ) : null}
     </AppShell>
   );

@@ -1,0 +1,12 @@
+{
+  "publishedAtUtc": "2026-10-05T12:23:31.928723+00:00",
+  "baseImageId": "sha256:be302e0c8f443c079cc64d97c7b3c20eaf11aee1cdc054ed019c10d873026231",
+  "imageId": "sha256:e4f42231d6e11216147ddfc5d49dea0968ba01ea3eaa030bb7b04968d68fe5c4",
+  "imageTag": "raceside:yas-marina-quay-20261005-51e323188726",
+  "health": "healthy",
+  "environmentUnchanged": true,
+  "previousTracksUnchanged": true,
+  "glbSha256": "51e32318872621257b9ab2c1e3e9b445efd35a0d5f0588cd3800edc5bceaf972",
+  "previewSha256": "6300ef7cee24e70b15eeb7ce9cacb69c7c0cf72951d0d79a1f239aa2f22a7ce2",
+  "backup": "/home/racemate/releases/yas-marina-quay-20261005-51e323188726/publication-backup"
+}

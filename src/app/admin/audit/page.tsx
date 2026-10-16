@@ -32,7 +32,7 @@ export default async function AdminAuditPage({ searchParams }: PageProps) {
         title="Аудит действий"
       />
       <AdminSection description={`${data.total} записей по текущему запросу.`} title="Журнал">
-        <AdminFilters
+        <AdminFilters query={query}
           search={query.search}
           status={query.status}
           statuses={[
@@ -89,7 +89,7 @@ export default async function AdminAuditPage({ searchParams }: PageProps) {
                 </article>
               );
             })}
-            <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/audit" search={query.search} status={query.status} total={data.total} />
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/audit" search={query.search} status={query.status} total={data.total} />
           </div>
         ) : <AdminEmpty description="Измени фильтр. Новые административные действия будут записаны автоматически." title="Записей по запросу нет" />}
       </AdminSection>

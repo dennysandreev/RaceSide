@@ -1,0 +1,1828 @@
+{
+  "schemaVersion": 4,
+  "modelId": "austin",
+  "generatedWith": "Blender 5.2.0 LTS",
+  "coordinateReferenceSystem": "EPSG:32614",
+  "verticalDatum": "NAVD88 orthometric metres",
+  "verticalExaggeration": 1,
+  "realWorldScale": "1 unit = 1 metre; no vertical exaggeration",
+  "boundsMeters": {
+    "width": 2400,
+    "depth": 1700
+  },
+  "originMeters": {
+    "x": 631550,
+    "y": 3334450
+  },
+  "lapLength": {
+    "geometryMeters": 5501.817844323178,
+    "officialFiaMeters": 5513,
+    "relativeErrorPercent": 0.20283249912609871
+  },
+  "finishDistanceMeters": 0,
+  "sectorBoundaryDistancesMeters": [
+    1555.0174601131139,
+    3818.623604222124
+  ],
+  "elevationProfile": [
+    {
+      "distanceMeters": 0.0,
+      "elevationMeters": 154.801
+    },
+    {
+      "distanceMeters": 30.566,
+      "elevationMeters": 154.795
+    },
+    {
+      "distanceMeters": 61.131,
+      "elevationMeters": 154.787
+    },
+    {
+      "distanceMeters": 91.697,
+      "elevationMeters": 154.786
+    },
+    {
+      "distanceMeters": 122.263,
+      "elevationMeters": 154.785
+    },
+    {
+      "distanceMeters": 152.828,
+      "elevationMeters": 154.783
+    },
+    {
+      "distanceMeters": 183.394,
+      "elevationMeters": 154.834
+    },
+    {
+      "distanceMeters": 213.96,
+      "elevationMeters": 155.251
+    },
+    {
+      "distanceMeters": 244.525,
+      "elevationMeters": 156.147
+    },
+    {
+      "distanceMeters": 275.091,
+      "elevationMeters": 157.5
+    },
+    {
+      "distanceMeters": 305.657,
+      "elevationMeters": 159.323
+    },
+    {
+      "distanceMeters": 336.222,
+      "elevationMeters": 161.617
+    },
+    {
+      "distanceMeters": 366.788,
+      "elevationMeters": 164.378
+    },
+    {
+      "distanceMeters": 397.354,
+      "elevationMeters": 167.578
+    },
+    {
+      "distanceMeters": 427.919,
+      "elevationMeters": 171.238
+    },
+    {
+      "distanceMeters": 458.485,
+      "elevationMeters": 175.285
+    },
+    {
+      "distanceMeters": 489.05,
+      "elevationMeters": 178.88
+    },
+    {
+      "distanceMeters": 519.616,
+      "elevationMeters": 181.335
+    },
+    {
+      "distanceMeters": 550.182,
+      "elevationMeters": 181.688
+    },
+    {
+      "distanceMeters": 580.747,
+      "elevationMeters": 179.919
+    },
+    {
+      "distanceMeters": 611.313,
+      "elevationMeters": 176.583
+    },
+    {
+      "distanceMeters": 641.879,
+      "elevationMeters": 173.05
+    },
+    {
+      "distanceMeters": 672.444,
+      "elevationMeters": 169.995
+    },
+    {
+      "distanceMeters": 703.01,
+      "elevationMeters": 167.496
+    },
+    {
+      "distanceMeters": 733.576,
+      "elevationMeters": 165.527
+    },
+    {
+      "distanceMeters": 764.141,
+      "elevationMeters": 163.996
+    },
+    {
+      "distanceMeters": 794.707,
+      "elevationMeters": 163.026
+    },
+    {
+      "distanceMeters": 825.273,
+      "elevationMeters": 162.595
+    },
+    {
+      "distanceMeters": 855.838,
+      "elevationMeters": 162.665
+    },
+    {
+      "distanceMeters": 886.404,
+      "elevationMeters": 163.243
+    },
+    {
+      "distanceMeters": 916.97,
+      "elevationMeters": 164.113
+    },
+    {
+      "distanceMeters": 947.535,
+      "elevationMeters": 164.771
+    },
+    {
+      "distanceMeters": 978.101,
+      "elevationMeters": 165.13
+    },
+    {
+      "distanceMeters": 1008.667,
+      "elevationMeters": 165.19
+    },
+    {
+      "distanceMeters": 1039.232,
+      "elevationMeters": 164.967
+    },
+    {
+      "distanceMeters": 1069.798,
+      "elevationMeters": 164.505
+    },
+    {
+      "distanceMeters": 1100.364,
+      "elevationMeters": 163.994
+    },
+    {
+      "distanceMeters": 1130.929,
+      "elevationMeters": 163.503
+    },
+    {
+      "distanceMeters": 1161.495,
+      "elevationMeters": 163.077
+    },
+    {
+      "distanceMeters": 1192.061,
+      "elevationMeters": 162.836
+    },
+    {
+      "distanceMeters": 1222.626,
+      "elevationMeters": 162.87
+    },
+    {
+      "distanceMeters": 1253.192,
+      "elevationMeters": 162.938
+    },
+    {
+      "distanceMeters": 1283.757,
+      "elevationMeters": 162.626
+    },
+    {
+      "distanceMeters": 1314.323,
+      "elevationMeters": 162.318
+    },
+    {
+      "distanceMeters": 1344.889,
+      "elevationMeters": 162.236
+    },
+    {
+      "distanceMeters": 1375.454,
+      "elevationMeters": 162.377
+    },
+    {
+      "distanceMeters": 1406.02,
+      "elevationMeters": 162.777
+    },
+    {
+      "distanceMeters": 1436.586,
+      "elevationMeters": 163.422
+    },
+    {
+      "distanceMeters": 1467.151,
+      "elevationMeters": 164.169
+    },
+    {
+      "distanceMeters": 1497.717,
+      "elevationMeters": 164.831
+    },
+    {
+      "distanceMeters": 1528.283,
+      "elevationMeters": 165.201
+    },
+    {
+      "distanceMeters": 1558.848,
+      "elevationMeters": 165.198
+    },
+    {
+      "distanceMeters": 1589.414,
+      "elevationMeters": 164.84
+    },
+    {
+      "distanceMeters": 1619.98,
+      "elevationMeters": 164.397
+    },
+    {
+      "distanceMeters": 1650.545,
+      "elevationMeters": 164.46
+    },
+    {
+      "distanceMeters": 1681.111,
+      "elevationMeters": 165.31
+    },
+    {
+      "distanceMeters": 1711.677,
+      "elevationMeters": 166.814
+    },
+    {
+      "distanceMeters": 1742.242,
+      "elevationMeters": 168.382
+    },
+    {
+      "distanceMeters": 1772.808,
+      "elevationMeters": 169.982
+    },
+    {
+      "distanceMeters": 1803.374,
+      "elevationMeters": 171.641
+    },
+    {
+      "distanceMeters": 1833.939,
+      "elevationMeters": 173.312
+    },
+    {
+      "distanceMeters": 1864.505,
+      "elevationMeters": 174.693
+    },
+    {
+      "distanceMeters": 1895.071,
+      "elevationMeters": 175.608
+    },
+    {
+      "distanceMeters": 1925.636,
+      "elevationMeters": 176.049
+    },
+    {
+      "distanceMeters": 1956.202,
+      "elevationMeters": 175.999
+    },
+    {
+      "distanceMeters": 1986.768,
+      "elevationMeters": 175.447
+    },
+    {
+      "distanceMeters": 2017.333,
+      "elevationMeters": 174.419
+    },
+    {
+      "distanceMeters": 2047.899,
+      "elevationMeters": 172.899
+    },
+    {
+      "distanceMeters": 2078.465,
+      "elevationMeters": 170.862
+    },
+    {
+      "distanceMeters": 2109.03,
+      "elevationMeters": 168.713
+    },
+    {
+      "distanceMeters": 2139.596,
+      "elevationMeters": 166.914
+    },
+    {
+      "distanceMeters": 2170.161,
+      "elevationMeters": 165.404
+    },
+    {
+      "distanceMeters": 2200.727,
+      "elevationMeters": 164.258
+    },
+    {
+      "distanceMeters": 2231.293,
+      "elevationMeters": 163.512
+    },
+    {
+      "distanceMeters": 2261.858,
+      "elevationMeters": 163.044
+    },
+    {
+      "distanceMeters": 2292.424,
+      "elevationMeters": 162.927
+    },
+    {
+      "distanceMeters": 2322.99,
+      "elevationMeters": 163.166
+    },
+    {
+      "distanceMeters": 2353.555,
+      "elevationMeters": 163.773
+    },
+    {
+      "distanceMeters": 2384.121,
+      "elevationMeters": 164.724
+    },
+    {
+      "distanceMeters": 2414.687,
+      "elevationMeters": 165.934
+    },
+    {
+      "distanceMeters": 2445.252,
+      "elevationMeters": 166.692
+    },
+    {
+      "distanceMeters": 2475.818,
+      "elevationMeters": 166.456
+    },
+    {
+      "distanceMeters": 2506.384,
+      "elevationMeters": 165.201
+    },
+    {
+      "distanceMeters": 2536.949,
+      "elevationMeters": 163.305
+    },
+    {
+      "distanceMeters": 2567.515,
+      "elevationMeters": 161.521
+    },
+    {
+      "distanceMeters": 2598.081,
+      "elevationMeters": 160.156
+    },
+    {
+      "distanceMeters": 2628.646,
+      "elevationMeters": 159.22
+    },
+    {
+      "distanceMeters": 2659.212,
+      "elevationMeters": 158.699
+    },
+    {
+      "distanceMeters": 2689.778,
+      "elevationMeters": 158.602
+    },
+    {
+      "distanceMeters": 2720.343,
+      "elevationMeters": 158.909
+    },
+    {
+      "distanceMeters": 2750.909,
+      "elevationMeters": 159.632
+    },
+    {
+      "distanceMeters": 2781.475,
+      "elevationMeters": 160.592
+    },
+    {
+      "distanceMeters": 2812.04,
+      "elevationMeters": 161.449
+    },
+    {
+      "distanceMeters": 2842.606,
+      "elevationMeters": 162.111
+    },
+    {
+      "distanceMeters": 2873.172,
+      "elevationMeters": 162.577
+    },
+    {
+      "distanceMeters": 2903.737,
+      "elevationMeters": 162.853
+    },
+    {
+      "distanceMeters": 2934.303,
+      "elevationMeters": 162.95
+    },
+    {
+      "distanceMeters": 2964.869,
+      "elevationMeters": 162.827
+    },
+    {
+      "distanceMeters": 2995.434,
+      "elevationMeters": 162.52
+    },
+    {
+      "distanceMeters": 3026.0,
+      "elevationMeters": 162.035
+    },
+    {
+      "distanceMeters": 3056.565,
+      "elevationMeters": 161.369
+    },
+    {
+      "distanceMeters": 3087.131,
+      "elevationMeters": 160.73
+    },
+    {
+      "distanceMeters": 3117.697,
+      "elevationMeters": 160.263
+    },
+    {
+      "distanceMeters": 3148.262,
+      "elevationMeters": 160.008
+    },
+    {
+      "distanceMeters": 3178.828,
+      "elevationMeters": 159.92
+    },
+    {
+      "distanceMeters": 3209.394,
+      "elevationMeters": 159.985
+    },
+    {
+      "distanceMeters": 3239.959,
+      "elevationMeters": 160.079
+    },
+    {
+      "distanceMeters": 3270.525,
+      "elevationMeters": 160.186
+    },
+    {
+      "distanceMeters": 3301.091,
+      "elevationMeters": 160.271
+    },
+    {
+      "distanceMeters": 3331.656,
+      "elevationMeters": 160.385
+    },
+    {
+      "distanceMeters": 3362.222,
+      "elevationMeters": 160.557
+    },
+    {
+      "distanceMeters": 3392.788,
+      "elevationMeters": 160.559
+    },
+    {
+      "distanceMeters": 3423.353,
+      "elevationMeters": 160.547
+    },
+    {
+      "distanceMeters": 3453.919,
+      "elevationMeters": 160.468
+    },
+    {
+      "distanceMeters": 3484.485,
+      "elevationMeters": 160.291
+    },
+    {
+      "distanceMeters": 3515.05,
+      "elevationMeters": 160.001
+    },
+    {
+      "distanceMeters": 3545.616,
+      "elevationMeters": 159.636
+    },
+    {
+      "distanceMeters": 3576.182,
+      "elevationMeters": 159.197
+    },
+    {
+      "distanceMeters": 3606.747,
+      "elevationMeters": 158.732
+    },
+    {
+      "distanceMeters": 3637.313,
+      "elevationMeters": 158.278
+    },
+    {
+      "distanceMeters": 3667.879,
+      "elevationMeters": 157.864
+    },
+    {
+      "distanceMeters": 3698.444,
+      "elevationMeters": 157.513
+    },
+    {
+      "distanceMeters": 3729.01,
+      "elevationMeters": 157.542
+    },
+    {
+      "distanceMeters": 3759.576,
+      "elevationMeters": 158.019
+    },
+    {
+      "distanceMeters": 3790.141,
+      "elevationMeters": 158.737
+    },
+    {
+      "distanceMeters": 3820.707,
+      "elevationMeters": 159.466
+    },
+    {
+      "distanceMeters": 3851.272,
+      "elevationMeters": 160.247
+    },
+    {
+      "distanceMeters": 3881.838,
+      "elevationMeters": 160.724
+    },
+    {
+      "distanceMeters": 3912.404,
+      "elevationMeters": 160.863
+    },
+    {
+      "distanceMeters": 3942.969,
+      "elevationMeters": 160.629
+    },
+    {
+      "distanceMeters": 3973.535,
+      "elevationMeters": 160.089
+    },
+    {
+      "distanceMeters": 4004.101,
+      "elevationMeters": 159.554
+    },
+    {
+      "distanceMeters": 4034.666,
+      "elevationMeters": 159.035
+    },
+    {
+      "distanceMeters": 4065.232,
+      "elevationMeters": 158.62
+    },
+    {
+      "distanceMeters": 4095.798,
+      "elevationMeters": 158.481
+    },
+    {
+      "distanceMeters": 4126.363,
+      "elevationMeters": 158.645
+    },
+    {
+      "distanceMeters": 4156.929,
+      "elevationMeters": 158.791
+    },
+    {
+      "distanceMeters": 4187.495,
+      "elevationMeters": 158.893
+    },
+    {
+      "distanceMeters": 4218.06,
+      "elevationMeters": 159.044
+    },
+    {
+      "distanceMeters": 4248.626,
+      "elevationMeters": 159.19
+    },
+    {
+      "distanceMeters": 4279.192,
+      "elevationMeters": 159.344
+    },
+    {
+      "distanceMeters": 4309.757,
+      "elevationMeters": 159.643
+    },
+    {
+      "distanceMeters": 4340.323,
+      "elevationMeters": 160.094
+    },
+    {
+      "distanceMeters": 4370.889,
+      "elevationMeters": 160.509
+    },
+    {
+      "distanceMeters": 4401.454,
+      "elevationMeters": 160.987
+    },
+    {
+      "distanceMeters": 4432.02,
+      "elevationMeters": 161.503
+    },
+    {
+      "distanceMeters": 4462.586,
+      "elevationMeters": 161.943
+    },
+    {
+      "distanceMeters": 4493.151,
+      "elevationMeters": 162.396
+    },
+    {
+      "distanceMeters": 4523.717,
+      "elevationMeters": 162.691
+    },
+    {
+      "distanceMeters": 4554.283,
+      "elevationMeters": 162.684
+    },
+    {
+      "distanceMeters": 4584.848,
+      "elevationMeters": 162.382
+    },
+    {
+      "distanceMeters": 4615.414,
+      "elevationMeters": 161.804
+    },
+    {
+      "distanceMeters": 4645.98,
+      "elevationMeters": 160.932
+    },
+    {
+      "distanceMeters": 4676.545,
+      "elevationMeters": 159.774
+    },
+    {
+      "distanceMeters": 4707.111,
+      "elevationMeters": 158.419
+    },
+    {
+      "distanceMeters": 4737.676,
+      "elevationMeters": 157.284
+    },
+    {
+      "distanceMeters": 4768.242,
+      "elevationMeters": 156.477
+    },
+    {
+      "distanceMeters": 4798.808,
+      "elevationMeters": 155.98
+    },
+    {
+      "distanceMeters": 4829.373,
+      "elevationMeters": 155.79
+    },
+    {
+      "distanceMeters": 4859.939,
+      "elevationMeters": 155.889
+    },
+    {
+      "distanceMeters": 4890.505,
+      "elevationMeters": 156.064
+    },
+    {
+      "distanceMeters": 4921.07,
+      "elevationMeters": 155.71
+    },
+    {
+      "distanceMeters": 4951.636,
+      "elevationMeters": 154.744
+    },
+    {
+      "distanceMeters": 4982.202,
+      "elevationMeters": 153.398
+    },
+    {
+      "distanceMeters": 5012.767,
+      "elevationMeters": 152.27
+    },
+    {
+      "distanceMeters": 5043.333,
+      "elevationMeters": 151.51
+    },
+    {
+      "distanceMeters": 5073.899,
+      "elevationMeters": 151.115
+    },
+    {
+      "distanceMeters": 5104.464,
+      "elevationMeters": 151.116
+    },
+    {
+      "distanceMeters": 5135.03,
+      "elevationMeters": 151.471
+    },
+    {
+      "distanceMeters": 5165.596,
+      "elevationMeters": 152.206
+    },
+    {
+      "distanceMeters": 5196.161,
+      "elevationMeters": 153.222
+    },
+    {
+      "distanceMeters": 5226.727,
+      "elevationMeters": 154.171
+    },
+    {
+      "distanceMeters": 5257.293,
+      "elevationMeters": 154.696
+    },
+    {
+      "distanceMeters": 5287.858,
+      "elevationMeters": 154.815
+    },
+    {
+      "distanceMeters": 5318.424,
+      "elevationMeters": 154.813
+    },
+    {
+      "distanceMeters": 5348.99,
+      "elevationMeters": 154.809
+    },
+    {
+      "distanceMeters": 5379.555,
+      "elevationMeters": 154.805
+    },
+    {
+      "distanceMeters": 5410.121,
+      "elevationMeters": 154.806
+    },
+    {
+      "distanceMeters": 5440.687,
+      "elevationMeters": 154.801
+    },
+    {
+      "distanceMeters": 5471.252,
+      "elevationMeters": 154.8
+    },
+    {
+      "distanceMeters": 5501.818,
+      "elevationMeters": 154.801
+    }
+  ],
+  "elevationsMeters": {
+    "low": 151.06983010297085,
+    "high": 181.86275853502005
+  },
+  "baseElevationMeters": 0,
+  "objects": {
+    "turnAnchors": 20,
+    "pitGarageBoxes": 34,
+    "grandstandFootprints": 9,
+    "grandstandSections": 108,
+    "amphitheaterBleacherFootprints": 5,
+    "amphitheaterBleacherRows": 54,
+    "startLightPods": 5,
+    "buildingsTotal": 47,
+    "raceMotorhomes": 0,
+    "mappedBarrierSegments": 861,
+    "mappedBarrierPosts": 929,
+    "mappedGateWays": 10,
+    "mappedFootbridgeSegments": 9,
+    "mappedFootbridgeSupports": 28,
+    "footbridgeColors": {
+      "Turn3": "red",
+      "SupportPaddock": "blue"
+    }
+  },
+  "layoutQuality": {
+    "surfaceClearance": {
+      "minimumTrackTerrainClearanceMeters": 0.514,
+      "startStraightMinimumClearanceMeters": 0.514,
+      "terrainBreakthroughSamples": 0
+    },
+    "pitLane": {
+      "lengthMeters": 948.9960661349924,
+      "laneWidthMeters": 8,
+      "pitBoxes": 34,
+      "garageFrontageDistanceMeters": [
+        319.3189985969009,
+        666.3203601003877
+      ],
+      "fastLaneSeparator": true,
+      "pitWall": {
+        "fenceHeightMeters": 1.15,
+        "lengthMeters": 347.001,
+        "panels": 116,
+        "wallHeightMeters": 1.05
+      },
+      "entryGapMeters": 0.0,
+      "exitGapMeters": 0.0,
+      "surfaceClearance": {
+        "minimumTrackTerrainClearanceMeters": 0.137,
+        "startStraightMinimumClearanceMeters": 0.137,
+        "terrainBreakthroughSamples": 0
+      }
+    },
+    "grandstands": {
+      "sections": 108,
+      "footprints": [
+        {
+          "osmWayId": 460658889,
+          "name": "Main Grandstand",
+          "footprintSource": "OSM, aligned with NAIP 2022",
+          "lengthMeters": 311.4375,
+          "depthMeters": 15.21875,
+          "rows": 18,
+          "endLowerRows": 16,
+          "coveredLengthMeters": 152.60437499987893,
+          "canopyBays": 15,
+          "groundAnchoredSupports": 145,
+          "supportGroundGapMeters": 0,
+          "reference": "Mir\u00f3 Rivera Main Grandstand section; AISC 2013 steel canopy"
+        },
+        {
+          "osmWayId": 460658890,
+          "name": null,
+          "lengthMeters": 76.3125,
+          "depthMeters": 26.234375,
+          "rows": 13,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 460658891,
+          "name": null,
+          "lengthMeters": 61.654296875,
+          "depthMeters": 27.5390625,
+          "rows": 14,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 460658892,
+          "name": "Turn 15 Grandstands",
+          "lengthMeters": 173.78125,
+          "depthMeters": 30.6875,
+          "rows": 15,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 460683347,
+          "name": null,
+          "lengthMeters": 130.28125,
+          "depthMeters": 24.04296875,
+          "rows": 12,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 998801547,
+          "name": null,
+          "lengthMeters": 96.15625,
+          "depthMeters": 16.21875,
+          "rows": 8,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 998801549,
+          "name": null,
+          "lengthMeters": 58.4375,
+          "depthMeters": 5.375,
+          "rows": 5,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 1183793497,
+          "name": null,
+          "lengthMeters": 79.5625,
+          "depthMeters": 25.5625,
+          "rows": 13,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        },
+        {
+          "osmWayId": 1183793500,
+          "name": null,
+          "lengthMeters": 39.875,
+          "depthMeters": 20.34375,
+          "rows": 10,
+          "footprintSource": "OSM, aligned with NAIP 2022"
+        }
+      ],
+      "minimumTrackClearanceMeters": 13.010122126410085
+    },
+    "amphitheaterBleachers": {
+      "footprints": [
+        {
+          "osmWayId": 460658893,
+          "rows": 12,
+          "groundAnchored": true
+        },
+        {
+          "osmWayId": 460658894,
+          "rows": 12,
+          "groundAnchored": true
+        },
+        {
+          "osmWayId": 460658895,
+          "rows": 12,
+          "groundAnchored": true
+        },
+        {
+          "osmWayId": 460658896,
+          "rows": 12,
+          "groundAnchored": true
+        },
+        {
+          "osmWayId": 998801548,
+          "rows": 6,
+          "groundAnchored": true
+        }
+      ],
+      "sections": 54
+    },
+    "buildings": {
+      "count": 47,
+      "rendered": [
+        {
+          "osmWayId": 376713391,
+          "name": "Pit Garages",
+          "heightMeters": 15.0,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7333,
+            0.7294,
+            0.7216
+          ],
+          "facadeColorEstimate": [
+            0.64,
+            0.59,
+            0.5
+          ]
+        },
+        {
+          "osmWayId": 376713392,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7373,
+            0.7333,
+            0.7176
+          ],
+          "facadeColorEstimate": [
+            0.54712272,
+            0.52038432,
+            0.4922419199999999
+          ]
+        },
+        {
+          "osmWayId": 376713393,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8078,
+            0.7961,
+            0.7765
+          ],
+          "facadeColorEstimate": [
+            0.5958678399999999,
+            0.5658990399999999,
+            0.5349822399999998
+          ]
+        },
+        {
+          "osmWayId": 382513263,
+          "name": null,
+          "heightMeters": 4.4,
+          "heightSource": "OSM",
+          "roofColorNaip": [
+            0.8,
+            0.7882,
+            0.7725
+          ],
+          "facadeColorEstimate": [
+            0.59080272,
+            0.56105832,
+            0.5308459199999999
+          ]
+        },
+        {
+          "osmWayId": 382513602,
+          "name": null,
+          "heightMeters": 4.5,
+          "heightSource": "OSM",
+          "roofColorNaip": [
+            0.8235,
+            0.8196,
+            0.8078
+          ],
+          "facadeColorEstimate": [
+            0.61252864,
+            0.58264984,
+            0.5518230399999999
+          ]
+        },
+        {
+          "osmWayId": 460658886,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7255,
+            0.7255,
+            0.7137
+          ],
+          "facadeColorEstimate": [
+            0.5407811199999999,
+            0.5148047199999999,
+            0.48741231999999984
+          ]
+        },
+        {
+          "osmWayId": 460658887,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7373,
+            0.7412,
+            0.7216
+          ],
+          "facadeColorEstimate": [
+            0.5496169599999999,
+            0.5236837599999999,
+            0.49493055999999996
+          ]
+        },
+        {
+          "osmWayId": 460683362,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7176,
+            0.7176,
+            0.7059
+          ],
+          "facadeColorEstimate": [
+            0.5348865599999999,
+            0.5091933599999999,
+            0.4820961599999999
+          ]
+        },
+        {
+          "osmWayId": 460683363,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7216,
+            0.7216,
+            0.7059
+          ],
+          "facadeColorEstimate": [
+            0.5370433599999999,
+            0.5112541599999999,
+            0.4835809599999999
+          ]
+        },
+        {
+          "osmWayId": 820304940,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7333,
+            0.7294,
+            0.7176
+          ],
+          "facadeColorEstimate": [
+            0.54498688,
+            0.51835528,
+            0.49077567999999994
+          ]
+        },
+        {
+          "osmWayId": 820304942,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7529,
+            0.749,
+            0.7412
+          ],
+          "facadeColorEstimate": [
+            0.5605017600000001,
+            0.5331165600000001,
+            0.50526336
+          ]
+        },
+        {
+          "osmWayId": 820304944,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8314,
+            0.8157,
+            0.7725
+          ],
+          "facadeColorEstimate": [
+            0.60691616,
+            0.57599696,
+            0.54177776
+          ]
+        },
+        {
+          "osmWayId": 847606838,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6353,
+            0.6118,
+            0.6157
+          ],
+          "facadeColorEstimate": [
+            0.46667887999999996,
+            0.44150528,
+            0.41961967999999994
+          ]
+        },
+        {
+          "osmWayId": 847606839,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7451,
+            0.7431,
+            0.7294
+          ],
+          "facadeColorEstimate": [
+            0.55422096,
+            0.5273697599999999,
+            0.49911455999999993
+          ]
+        },
+        {
+          "osmWayId": 847709729,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8118,
+            0.8078,
+            0.7804
+          ],
+          "facadeColorEstimate": [
+            0.600456,
+            0.571176,
+            0.5390879999999999
+          ]
+        },
+        {
+          "osmWayId": 847709730,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8157,
+            0.8078,
+            0.7725
+          ],
+          "facadeColorEstimate": [
+            0.6000856000000001,
+            0.5703855999999999,
+            0.5373975999999999
+          ]
+        },
+        {
+          "osmWayId": 847709760,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.549,
+            0.5373,
+            0.5333
+          ],
+          "facadeColorEstimate": [
+            0.40534816000000007,
+            0.38450896,
+            0.36459376
+          ]
+        },
+        {
+          "osmWayId": 847728917,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6235,
+            0.5686,
+            0.498
+          ],
+          "facadeColorEstimate": [
+            0.42906496,
+            0.40219576,
+            0.3734425599999999
+          ]
+        },
+        {
+          "osmWayId": 847728920,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7255,
+            0.6902,
+            0.5922
+          ],
+          "facadeColorEstimate": [
+            0.50791584,
+            0.4795850400000001,
+            0.44373024
+          ]
+        },
+        {
+          "osmWayId": 847730369,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.5647,
+            0.5412,
+            0.4745
+          ],
+          "facadeColorEstimate": [
+            0.39901584,
+            0.37723104,
+            0.35026224
+          ]
+        },
+        {
+          "osmWayId": 847781223,
+          "name": "Germania Insurance Amphiteater",
+          "heightMeters": 10.0,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6392,
+            0.6118,
+            0.6471
+          ],
+          "facadeColorEstimate": [
+            0.47454576,
+            0.4484805599999999,
+            0.42993935999999994
+          ]
+        },
+        {
+          "osmWayId": 847781224,
+          "heightMeters": 76.5,
+          "heightSource": "OSM and COTA official tower specification"
+        },
+        {
+          "osmWayId": 847784654,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8078,
+            0.8078,
+            0.8039
+          ],
+          "facadeColorEstimate": [
+            0.6040631999999999,
+            0.5750291999999999,
+            0.5455271999999999
+          ]
+        },
+        {
+          "osmWayId": 884805721,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8157,
+            0.8078,
+            0.7882
+          ],
+          "facadeColorEstimate": [
+            0.60337632,
+            0.57348792,
+            0.5421955199999999
+          ]
+        },
+        {
+          "osmWayId": 991938796,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7922,
+            0.7882,
+            0.7686
+          ],
+          "facadeColorEstimate": [
+            0.5874144,
+            0.5587464,
+            0.5282064
+          ]
+        },
+        {
+          "osmWayId": 997478696,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7725,
+            0.7647,
+            0.7451
+          ],
+          "facadeColorEstimate": [
+            0.57107008,
+            0.54274648,
+            0.5130068799999999
+          ]
+        },
+        {
+          "osmWayId": 998801550,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8275,
+            0.8235,
+            0.8078
+          ],
+          "facadeColorEstimate": [
+            0.61466448,
+            0.58467888,
+            0.55328928
+          ]
+        },
+        {
+          "osmWayId": 998803425,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7451,
+            0.749,
+            0.7529
+          ],
+          "facadeColorEstimate": [
+            0.5603832,
+            0.5338872,
+            0.5073911999999999
+          ]
+        },
+        {
+          "osmWayId": 1183793496,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.4275,
+            0.502,
+            0.4039
+          ],
+          "facadeColorEstimate": [
+            0.33078064,
+            0.32371984,
+            0.29594704
+          ]
+        },
+        {
+          "osmWayId": 1183793498,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6078,
+            0.5647,
+            0.4863
+          ],
+          "facadeColorEstimate": [
+            0.42062048,
+            0.39554288,
+            0.36622928
+          ]
+        },
+        {
+          "osmWayId": 1183793499,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6549,
+            0.6196,
+            0.5529
+          ],
+          "facadeColorEstimate": [
+            0.46161104,
+            0.43544624,
+            0.40551343999999995
+          ]
+        },
+        {
+          "osmWayId": 1183793501,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.4039,
+            0.4941,
+            0.3922
+          ],
+          "facadeColorEstimate": [
+            0.31889392,
+            0.31423552,
+            0.28652511999999997
+          ]
+        },
+        {
+          "osmWayId": 1183793502,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6157,
+            0.5804,
+            0.4941
+          ],
+          "facadeColorEstimate": [
+            0.42814992,
+            0.40363151999999997,
+            0.37299312
+          ]
+        },
+        {
+          "osmWayId": 1216518884,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6471,
+            0.5843,
+            0.5098
+          ],
+          "facadeColorEstimate": [
+            0.44260752000000003,
+            0.41417712,
+            0.38434271999999997
+          ]
+        },
+        {
+          "osmWayId": 1216518885,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6314,
+            0.5882,
+            0.5098
+          ],
+          "facadeColorEstimate": [
+            0.43825023999999996,
+            0.4123134399999999,
+            0.38215263999999993
+          ]
+        },
+        {
+          "osmWayId": 1216518886,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6588,
+            0.6196,
+            0.5843
+          ],
+          "facadeColorEstimate": [
+            0.46947792000000005,
+            0.44242152000000007,
+            0.41583312
+          ]
+        },
+        {
+          "osmWayId": 1216518887,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6471,
+            0.6078,
+            0.5294
+          ],
+          "facadeColorEstimate": [
+            0.45164128000000003,
+            0.42551368,
+            0.39469407999999995
+          ]
+        },
+        {
+          "osmWayId": 1216518939,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.5216,
+            0.498,
+            0.498
+          ],
+          "facadeColorEstimate": [
+            0.38068095999999996,
+            0.3596377599999999,
+            0.34142655999999993
+          ]
+        },
+        {
+          "osmWayId": 1216518940,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7961,
+            0.7804,
+            0.7333
+          ],
+          "facadeColorEstimate": [
+            0.57966608,
+            0.55006448,
+            0.51669488
+          ]
+        },
+        {
+          "osmWayId": 1216518941,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7765,
+            0.7353,
+            0.6647
+          ],
+          "facadeColorEstimate": [
+            0.5493743999999999,
+            0.5183123999999999,
+            0.48372239999999994
+          ]
+        },
+        {
+          "osmWayId": 1216518942,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.702,
+            0.698,
+            0.698
+          ],
+          "facadeColorEstimate": [
+            0.5239808,
+            0.49832479999999996,
+            0.4731487999999999
+          ]
+        },
+        {
+          "osmWayId": 1227207779,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7373,
+            0.451,
+            0.4549
+          ],
+          "facadeColorEstimate": [
+            0.43289071999999995,
+            0.37881631999999993,
+            0.35956591999999993
+          ]
+        },
+        {
+          "osmWayId": 1227207780,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6686,
+            0.6667,
+            0.6275
+          ],
+          "facadeColorEstimate": [
+            0.49163488,
+            0.46785328,
+            0.43959568
+          ]
+        },
+        {
+          "osmWayId": 1227207781,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.8235,
+            0.8118,
+            0.7882
+          ],
+          "facadeColorEstimate": [
+            0.6067855999999999,
+            0.5762995999999999,
+            0.5443855999999999
+          ]
+        },
+        {
+          "osmWayId": 1528618067,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.749,
+            0.7294,
+            0.6745
+          ],
+          "facadeColorEstimate": [
+            0.5411278399999999,
+            0.5129410399999998,
+            0.4805182399999999
+          ]
+        },
+        {
+          "osmWayId": 1528618072,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.7333,
+            0.7216,
+            0.6941
+          ],
+          "facadeColorEstimate": [
+            0.5384264000000001,
+            0.5112344,
+            0.4821464
+          ]
+        },
+        {
+          "osmWayId": 1528624093,
+          "name": null,
+          "heightMeters": 5.5,
+          "heightSource": "estimated from aerial reference",
+          "roofColorNaip": [
+            0.6941,
+            0.6627,
+            0.6275
+          ],
+          "facadeColorEstimate": [
+            0.49920128,
+            0.47162168,
+            0.44358607999999994
+          ]
+        }
+      ],
+      "excluded": [],
+      "roofTexture": "NAIP 2022 projected in EPSG:32614",
+      "facadeMethod": "individual NAIP 2022 footprint-median roof colors, desaturated and darkened; estimated facade finish"
+    },
+    "curbs": {
+      "sections": 300,
+      "widthMeters": 0.78,
+      "placement": "inner corner ranges checked on NAIP"
+    },
+    "terrainSurface": {
+      "style": "orthophoto",
+      "source": "Texas Geographic Information Office / USDA NAIP 2022",
+      "textureWidth": 3900,
+      "textureHeight": 2763,
+      "resolutionMeters": 0.6153846153846154
+    },
+    "roadGrading": {
+      "reference": "USGS centreline, Gaussian sigma 8 m",
+      "fullGradeHalfWidthMeters": 10,
+      "blendOuterHalfWidthMeters": 24,
+      "refinedCells": 4125,
+      "terrainGridMeters": [
+        5,
+        10
+      ]
+    }
+  },
+  "sourceManifest": {
+    "schemaVersion": 1,
+    "modelId": "austin",
+    "sources": [
+      {
+        "file": "osm.xml",
+        "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-97.65,30.12,-97.615,30.15",
+        "role": "circuit, pit lane, current building and grandstand footprints",
+        "license": "ODbL 1.0",
+        "attribution": "\u00a9 OpenStreetMap contributors",
+        "retrievedAt": "2026-09-29T06:38:24.687961+00:00",
+        "bbox": [
+          -97.65,
+          30.12,
+          -97.615,
+          30.15
+        ],
+        "crs": "EPSG:4326",
+        "verticalDatum": null,
+        "resolution": "vector",
+        "bytes": 4121170,
+        "sha256": "d5e09604ebb41df3738ce71ae146c00e758932c34c9835f2b55bce874b43dfd6"
+      },
+      {
+        "file": "ortho.jpg",
+        "url": "https://imagery.geographic.texas.gov/server/rest/services/NAIP/NAIP22_NCCIR_60cm/ImageServer/exportImage?bbox=630350%2C3333600%2C632750%2C3335300&bboxSR=32614&imageSR=32614&size=3900%2C2763&format=jpg&f=image",
+        "role": "actual terrain colour and roof reference",
+        "license": "USDA NAIP public domain; TxGIO service attribution",
+        "attribution": "Texas Geographic Information Office / USDA FSA",
+        "retrievedAt": "2026-09-29T06:42:15.647454+00:00",
+        "bbox": [
+          630350,
+          3333600,
+          632750,
+          3335300
+        ],
+        "crs": "EPSG:32614",
+        "verticalDatum": null,
+        "resolution": "0.6 m source; 0.615 m/px export",
+        "bytes": 1104614,
+        "sha256": "13f5a764cf2e75d9c966e2ff6b1ecb9d51889744441f2fed57b2b172e45ab446"
+      },
+      {
+        "file": "usgs-dtm.tif",
+        "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox=630350%2C3333600%2C632750%2C3335300&bboxSR=32614&imageSR=32614&size=2400%2C1700&format=tiff&pixelType=F32&interpolation=RSP_BilinearInterpolation&renderingRule=%7B%22rasterFunction%22%3A%22None%22%7D&f=image",
+        "role": "bare-earth terrain",
+        "license": "USGS public domain",
+        "attribution": "USGS 3DEP",
+        "retrievedAt": "2026-09-29T06:42:38.531564+00:00",
+        "bbox": [
+          630350,
+          3333600,
+          632750,
+          3335300
+        ],
+        "crs": "EPSG:32614",
+        "verticalDatum": "NAVD88 orthometric metres (3DEP 1 m collection)",
+        "resolution": "1 m export",
+        "bytes": 17435824,
+        "sha256": "e874619af407e4c6fbe71c2c46effa853864e23e91ec9782a60defdd0da47420"
+      },
+      {
+        "file": "naip-service.json",
+        "url": "https://imagery.geographic.texas.gov/server/rest/services/NAIP/NAIP22_NCCIR_60cm/ImageServer?f=pjson",
+        "role": "NAIP acquisition and service metadata",
+        "license": "public metadata",
+        "attribution": "Texas Geographic Information Office / USDA FSA",
+        "retrievedAt": "2026-09-29T06:49:14.259837+00:00",
+        "bbox": null,
+        "crs": null,
+        "verticalDatum": null,
+        "resolution": "service metadata",
+        "bytes": 9143,
+        "sha256": "113e6c85f5115847918ddb9c56051b3908c369bf24aea54520d7a9e9dbb65c17"
+      },
+      {
+        "file": "usgs-service.json",
+        "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer?f=pjson",
+        "role": "3DEP provenance and service metadata",
+        "license": "public metadata",
+        "attribution": "USGS 3DEP",
+        "retrievedAt": "2026-09-29T06:40:59.653412+00:00",
+        "bbox": null,
+        "crs": null,
+        "verticalDatum": null,
+        "resolution": "service metadata",
+        "bytes": 12981,
+        "sha256": "a300a739a6e47627d1cd6921fca368004d88a8ac62d6d32c64571c669e4349bb"
+      }
+    ],
+    "references": [
+      {
+        "url": "https://www.fia.com/system/files/decision-document/2025_united_states_grand_prix_-_event_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_quarantine_zone_map_red_zones_map.pdf",
+        "role": "FIA 2025 circuit and pit lane control map; reference only, not embedded",
+        "license": "FIA/FOM copyright"
+      },
+      {
+        "url": "https://circuitoftheamericas.com/ticket/grandstands-and-reserved-seating-f1/",
+        "role": "official 2026 grandstand inventory; reference only, not embedded",
+        "license": "Circuit of The Americas copyright"
+      },
+      {
+        "url": "https://circuitoftheamericas.com/wp-content/uploads/2024-USGP-Map.pdf",
+        "role": "official historical event map for visual placement comparison; reference only, not embedded",
+        "license": "Circuit of The Americas copyright"
+      }
+    ]
+  },
+  "controlPointReference": {
+    "referenceYear": 2025,
+    "currentEventVerified": false,
+    "document": "FIA United States GP 2025 Document 4, circuit and pit lane maps",
+    "sectorBoundaryDistancesMeters": [
+      1555.0174601131139,
+      3818.623604222124
+    ],
+    "speedTrapDistanceMeters": 3440.1338484706966,
+    "pitBoxes": 34,
+    "finishPlacementMethod": "nearest raceway point opposite OSM pit garage centroid",
+    "finishGarageSeparationMeters": 46.54412324068103,
+    "pitEndpointGapMeters": [
+      0.0,
+      0.0
+    ]
+  },
+  "limitations": [
+    "FIA 2026 event notes are not published before the October event; 2025 control and garage placement is provisional.",
+    "NAIP 2022 shows the permanent venue outside race week; temporary 2026 structures without geolocated evidence are omitted.",
+    "USGS 3DEP bare-earth DEM is resampled to 4 m, then the driving corridor is graded to the smoothed centreline profile; this is a visual reconstruction, not a road survey.",
+    "OSM building footprints are current; roofs use NAIP 2022 pixels, while roof forms, facade colors and heights without height tags are photographic estimates, not LoD2 survey.",
+    "Grand Plaza seating tiers, fence-post spacing, gate heights, bridge supports and start-light housings use mapped positions but estimated construction details.",
+    "FIA control line is estimated opposite mapped garages; no surveyed start/finish coordinate is available.",
+    "Small tents, containers, parked vehicles and spectators are omitted."
+  ],
+  "publicationStatus": "review-required"
+}

@@ -1,0 +1,386 @@
+{
+  "modelId": "interlagos",
+  "acquiredAt": "2026-10-03",
+  "sources": [
+    {
+      "file": "osm.xml",
+      "url": "https://overpass-api.de/api/map?bbox=-46.71,-23.714,-46.688,-23.693",
+      "role": "current raceway / pit / mapped structures",
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": "not applicable",
+      "resolution": "footprints / vector lines",
+      "bytes": 24990949,
+      "sha256": "ce6242d9e0848ab63eb991d73f951f2d92c065029f2639b3b25d7a3d7733df23"
+    },
+    {
+      "file": "orthophoto-2020.jpg",
+      "url": "https://raster.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wms?service=WMS&version=1.1.1&request=GetMap&layers=ORTO_RGB_2020&styles=&srs=EPSG%3A31983&bbox=325600%2C7377000%2C327750%2C7379100&width=4096&height=4000&format=image%2Fjpeg",
+      "role": "real surface/roof RGB",
+      "license": "CC BY-SA 4.0 (GeoSampa municipal geographic layers)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "not applicable",
+      "resolution": "0.525 m export pixels from 0.10 m survey",
+      "bytes": 4010438,
+      "sha256": "fed73f069a4cc510081cee21f89b1efdf1b90bd0ab32eae52ab0d147626cc228"
+    },
+    {
+      "file": "buildings.json",
+      "url": "https://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=geoportal%3Aedificacao&outputFormat=application%2Fjson&srsName=EPSG%3A31983&bbox=325600%2C7377000%2C327750%2C7379100%2CEPSG%3A31983",
+      "role": "cadastral footprints / geographic tile index",
+      "license": "CC BY-SA 4.0 (GeoSampa municipal geographic layers)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "not applicable",
+      "resolution": "footprints / vector lines",
+      "bytes": 6771995,
+      "sha256": "8668a5c6466667d89c0700ae487ad850d8690f1f0d3fa4323e1dce6d401a4ec8"
+    },
+    {
+      "file": "quadricula-mdt-2017.json",
+      "url": "https://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=geoportal:quadricula_folha_mds&outputFormat=application/json&srsName=EPSG:31983&bbox=325600,7377000,327750,7379100,EPSG:31983",
+      "role": "cadastral footprints / geographic tile index",
+      "license": "CC BY-SA 4.0 (GeoSampa municipal geographic layers)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "not applicable",
+      "resolution": "footprints / vector lines",
+      "bytes": 8841,
+      "sha256": "ac87b48917d029f42b1d56dc59e546cd1a2de190072029739455d6ceb4a64d76"
+    },
+    {
+      "file": "fia-2025.pdf",
+      "url": "https://www.fia.com/system/files/decision-document/2025_sao_paulo_grand_prix_-_event_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_quarantine_zone_and_red_zones_map.pdf",
+      "role": "official timing/garage reference",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© FIA / Formula One World Championship Ltd",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 3714010,
+      "sha256": "596191c397c17d82c4d52668c9603d7c5eaded90b57e32bb2d94fd8b25b284ff"
+    },
+    {
+      "file": "organizer-stands.html",
+      "url": "https://f1saopaulo.com.br/arquibancadas/",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 85177,
+      "sha256": "b1a9e5f4d10850163b86aeadec31877db3bc4e33f62f3344b55979c450e6bc8f"
+    },
+    {
+      "file": "organizer-map-2026.webp",
+      "url": "https://f1saopaulo.com.br/wp-content/uploads/2026/08/Mapa-completo.webp",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 72762,
+      "sha256": "d58c74ef3a8ceeb8e63979cb9c378b02679b97060ebb13ec21702a3a157a36b4"
+    },
+    {
+      "file": "photo-main-grandstand.jpg",
+      "url": "https://f1saopaulo.com.br/wp-content/uploads/2024/10/arq-M-1.jpg",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 469105,
+      "sha256": "02c4ea4401aaf1256e5a990a5c17669f79eaf500597f7bb6a9be2dc02837e786"
+    },
+    {
+      "file": "photo-stand-a.png",
+      "url": "https://f1saopaulo.com.br/wp-content/uploads/2024/09/setor_a_1.png",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 132552,
+      "sha256": "ebccaf29f29458534ce99c9dc5830a80ecdb30c2ff108d8da48cc4bb374e2269"
+    },
+    {
+      "file": "photo-stand-d.jpg",
+      "url": "https://f1saopaulo.com.br/wp-content/uploads/2024/10/arq-D-1.jpg",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 620408,
+      "sha256": "4341909b06433ffd6f0749e3813951e840546c215074b3647d3c8cee546bb97b"
+    },
+    {
+      "file": "photo-stand-g.jpg",
+      "url": "https://f1saopaulo.com.br/wp-content/uploads/2024/10/arq-G.jpg",
+      "role": "event layout / photographic color reference (reference only)",
+      "license": "All rights reserved; reference only, not embedded",
+      "attribution": "© GP São Paulo / MC Brazil Motorsport Holdings",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "not georeferenced",
+      "verticalDatum": "not applicable",
+      "resolution": "original official document/photo",
+      "bytes": 436147,
+      "sha256": "0a7156c81b0100a26931c2c998fe75416ca14035d07bb179084b145159804dae"
+    },
+    {
+      "file": "MDS_color_3333-424.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-424.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 26412633,
+      "sha256": "d0ae56c1c949536f3636e41b3c31df1920918283c070d2cefe74dc87a701ad43"
+    },
+    {
+      "file": "MDS_color_3333-433.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-433.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 25736267,
+      "sha256": "fa3e2edc4c1f988522c527e896d55ff0113facb605c2dd8a0d5195cbcdb537ec"
+    },
+    {
+      "file": "MDS_color_3333-434.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-434.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 33655975,
+      "sha256": "1d8f17906ac2c0b8666eb2d7829e67c89c8d9a0d632c862b1cd843eeb55e4fe7"
+    },
+    {
+      "file": "MDS_color_3333-452.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-452.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 25874560,
+      "sha256": "ca07c013356f51def32f8bcdee16a339c500be0b90ed04aa30f9a75485aa1211"
+    },
+    {
+      "file": "MDS_color_3333-454.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-454.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 26512464,
+      "sha256": "819393bdd63dcf11d081b96b00851d9421f7917e676aad756242b86c646ff1a1"
+    },
+    {
+      "file": "MDS_color_3333-461.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-461.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 26069804,
+      "sha256": "9403747e6628b99b7f9d88c673ac78057e0b4cc0cc7001a36be96a1a2af46573"
+    },
+    {
+      "file": "MDS_color_3333-462.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-462.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 35397878,
+      "sha256": "ebfbc7d63c7cc14c419e0ea1c20c968e2138c2c1f92e8a6af4d6a927d50de031"
+    },
+    {
+      "file": "MDS_color_3333-463.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-463.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 27687891,
+      "sha256": "caa81baef45b976b0dd6a3f8ce79fadf57559b77dd7466bc82eabbdd41f6ae90"
+    },
+    {
+      "file": "MDS_color_3333-464.laz",
+      "url": "https://laz-m3dc-pmsp.s3.sa-east-1.amazonaws.com/MDS_color_3333-464.laz",
+      "role": "classified ground/building/vegetation survey",
+      "license": "GPL-3.0 (PMSP AWS registry)",
+      "attribution": "Prefeitura Municipal de São Paulo / GeoSampa / FOTOTERRA",
+      "retrievedAt": "2026-10-03",
+      "bbox": [
+        325600,
+        7377000,
+        327750,
+        7379100
+      ],
+      "crs": "EPSG:31983",
+      "verticalDatum": "PMSP 2017 source heights; EPT datum unknown; OpenTopography describes SIRGAS 2000 ellipsoid",
+      "resolution": "classified LiDAR ~10 points/m²",
+      "bytes": 38099023,
+      "sha256": "94efa7c6587e9cbb459d7470d51483c5225a93037e713560ddbb62656b3a1641"
+    }
+  ]
+}

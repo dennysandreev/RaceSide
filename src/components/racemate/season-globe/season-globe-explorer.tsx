@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowRight, Gauge, MapPin } from "lucide-react";
+import { ArrowRight, Cloud, CloudRain, CloudSun, MapPin, Sun } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 
 import { HomeSessionStrip } from "@/components/racemate/home-session-strip";
 import { RaceFlag } from "@/components/racemate/race-flag";
@@ -22,6 +22,7 @@ import type {
   RaceDetail,
   SeasonGlobeData,
   SeasonGlobeEvent,
+  SessionWeather,
   TrackLayout,
 } from "@/types/racemate";
 
@@ -157,6 +158,10 @@ export function SeasonGlobeExplorer({
     selectedEvent?.round === initialSessionsRound
       ? nextSession.session
       : sessionStrip.items.find((item) => item.session.status === "Live")?.session.name ?? "";
+  const selectedWeather = sessionStrip.round === selectedEvent?.round
+    ? (sessionStrip.items.find((item) => item.session.name === activeSessionName) ??
+      sessionStrip.items.find((item) => item.session.status !== "Завершена"))?.session.weather
+    : undefined;
 
   const selectRelative = (offset: number) => {
     if (!data.events.length) {
@@ -178,30 +183,33 @@ export function SeasonGlobeExplorer({
 
   return (
     <>
-      <header className="flex min-h-14 items-center justify-between gap-3 border-b border-border/70 px-4 py-3 sm:px-5">
-        <p className="font-telemetry flex min-w-0 items-center gap-2 text-[0.66rem] font-bold uppercase tracking-[0.08em] text-primary sm:text-xs sm:tracking-[0.12em]">
-          <Gauge aria-hidden="true" className="size-4 shrink-0" />
-          <span className="truncate">{getStageLabel(selectedEvent)}</span>
-        </p>
+      <HomeSeasonProgress data={data} />
+      <header className="flex min-h-8 flex-wrap items-center justify-between gap-3 pb-1">
+        <p className="sr-only">{getStageLabel(selectedEvent)}</p>
+        <div className="flex shrink-0 items-center gap-2 font-telemetry text-[0.7rem] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+          <RaceFlag
+            className="h-4 w-6"
+            countryCode={selectedEvent?.countryCode ?? currentRace?.countryCode}
+            label={selectedEvent?.country ?? currentRace?.country ?? nextSession.race}
+            value={selectedEvent ? undefined : currentRace?.countryFlag}
+          />
+          <span>Раунд {selectedEvent?.round ?? currentRace?.round ?? "-"}</span>
+        </div>
         <div className="flex shrink-0 items-center gap-2">
           <Badge variant={getStageBadgeVariant(selectedEvent, nextSession.status)}>
             {getStageStatus(selectedEvent, nextSession.status, selectedEventCountdown)}
           </Badge>
-          <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
-            <span className="h-3 w-px bg-primary/70" aria-hidden="true" />
-            Сезон <span className="font-telemetry font-bold text-foreground">{data.season}</span>
-          </span>
         </div>
       </header>
 
-      <div className="grid min-w-0 lg:grid-cols-[minmax(16rem,0.82fr)_minmax(0,1.18fr)]">
+      <div className="grid min-w-0 items-center lg:grid-cols-[minmax(12rem,0.78fr)_minmax(0,1.4fr)]">
         <StageDetails
-          currentRace={currentRace}
           event={selectedEvent}
           nextSession={nextSession}
+          weather={selectedWeather}
         />
 
-        <div className="relative order-2 h-[14rem] min-w-0 px-2 py-2 sm:h-[17rem] sm:px-4 lg:col-start-2 lg:row-start-1 lg:z-10 lg:h-auto lg:min-h-[21rem] lg:px-3 lg:py-2">
+        <div className="relative order-2 h-[19rem] min-w-0 sm:h-[24rem] lg:col-start-2 lg:row-start-1 lg:h-[26rem]">
           {selectedEvent && drawableEvents.length ? (
             <SeasonGlobeSceneLazy
               events={data.events}
@@ -217,9 +225,12 @@ export function SeasonGlobeExplorer({
             fallback
           )}
         </div>
+        <div className="order-3 min-w-0 md:hidden">
+          <StageSessionDetails event={selectedEvent} nextSession={nextSession} weather={selectedWeather} />
+        </div>
       </div>
 
-      <div className="min-w-0 border-t border-border/70 px-4 pb-4 sm:px-6 lg:px-4">
+      <div className="min-w-0 pb-1">
         {selectedSessionsAreLoading ? (
           <SessionStripSkeleton />
         ) : sessionStrip.status === "error" ? (
@@ -258,6 +269,52 @@ export function SeasonGlobeExplorer({
   );
 }
 
+function HomeSeasonProgress({ data }: { data: SeasonGlobeData }) {
+  const totalCount = data.events.length;
+
+  if (!totalCount) {
+    return null;
+  }
+
+  const completedCount = data.events.filter((event) => event.phase === "completed").length;
+  const progressRatio = completedCount / totalCount;
+  const progressPercent = Math.round(progressRatio * 100);
+  const title = `Прогресс сезона ${data.season}`;
+  const progressStyle = {
+    "--season-progress-cell": `${100 / totalCount}%`,
+    "--season-progress-position": `${progressRatio * 100}%`,
+    "--season-progress-ratio": progressRatio,
+  } as CSSProperties;
+
+  return (
+    <div className="mb-4 hidden border-b border-border/50 pb-3 lg:block" style={progressStyle}>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+        <div className="flex items-baseline gap-4 font-telemetry tabular-nums">
+          <p className="text-xs text-muted-foreground">{completedCount} из {totalCount} этапов</p>
+          <p className="text-[1.375rem] font-bold leading-none text-foreground">{progressPercent}%</p>
+        </div>
+      </div>
+      <div
+        aria-label={title}
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={progressPercent}
+        aria-valuetext={`Завершено ${completedCount} из ${totalCount} этапов`}
+        className="home-season-progress-track"
+        role="progressbar"
+      >
+        <span aria-hidden="true" className="home-season-progress-segments">
+          <span className="home-season-progress-fill" />
+        </span>
+        {completedCount > 0 ? (
+          <span aria-hidden="true" className="home-season-progress-cursor" />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function SessionStripSkeleton() {
   return (
     <div
@@ -276,24 +333,17 @@ function SessionStripSkeleton() {
 }
 
 function StageDetails({
-  currentRace,
   event,
   nextSession,
+  weather,
 }: {
-  currentRace: RaceDetail | null;
   event: SeasonGlobeEvent | null;
   nextSession: NextSession;
+  weather?: SessionWeather;
 }) {
   const raceName = event?.raceName ?? nextSession.race;
+  const raceTitleParts = raceName.match(/^Гран-при\s+(.+)$/u);
   const circuitName = event?.circuitName ?? nextSession.circuit;
-  const country = event?.country ?? currentRace?.country ?? nextSession.race;
-  const action = event ? getEventAction(event) : { href: "/weekend", label: "Перейти к этапу" };
-  const raceCompletionLabel = event
-    ? formatSeasonGlobeDateTimeLabel(event.raceEndAtIso)
-    : null;
-  const raceStartLabel = event
-    ? formatSeasonGlobeDateTimeLabel(event.raceStartAtIso)
-    : null;
   const raceTitleLength = Array.from(raceName).length;
   const raceTitleSizeClass =
     raceTitleLength > 32
@@ -304,29 +354,25 @@ function StageDetails({
 
   return (
     <div
-      className="season-globe-details order-1 min-w-0 px-4 pb-5 pt-5 sm:px-6 sm:pt-6 lg:col-start-1 lg:row-start-1 lg:min-h-[21rem] lg:pb-6"
+      className="season-globe-details order-1 min-w-0 pb-1 pt-4 lg:col-start-1 lg:row-start-1 lg:min-h-[23rem] lg:pb-4 lg:pt-2"
       key={event?.round ?? "fallback"}
     >
       <div className="grid gap-3">
-        <div className="flex items-center gap-2 font-telemetry text-[0.7rem] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          <RaceFlag
-            className="h-4 w-6"
-            countryCode={event?.countryCode ?? currentRace?.countryCode}
-            label={country}
-            value={event ? undefined : currentRace?.countryFlag}
-          />
-          <span>Раунд {event?.round ?? currentRace?.round ?? "-"}</span>
-        </div>
         <h2
           className={`max-w-3xl text-balance font-display font-extrabold leading-[1.04] ${raceTitleSizeClass}`}
           id="next-race-title"
         >
-          {raceName}
+          {raceTitleParts ? (
+            <>
+              <span className="block whitespace-nowrap">Гран-при</span>{" "}
+              <span className="block">{raceTitleParts[1]}</span>
+            </>
+          ) : raceName}
         </h2>
         <p className="flex min-w-0 items-center gap-2 text-sm font-semibold text-muted-foreground sm:text-base">
           <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
           <span
-            className="min-w-0 break-words lg:whitespace-nowrap"
+            className="min-w-0 break-words"
             data-season-globe-circuit-name
           >
             {circuitName}
@@ -334,51 +380,97 @@ function StageDetails({
         </p>
       </div>
 
-      <div className="mt-5 border-t border-border/70 pt-4">
-        {event?.phase === "completed" ? (
-          <div>
-            <p className="font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
-              Уикенд {event.weekendDateLabel}
-            </p>
-            <div className="mt-1.5 grid gap-0.5">
-              <p className="text-sm font-bold text-foreground">Гонка завершилась</p>
-              <p className="text-xs text-muted-foreground">
-                {raceCompletionLabel ?? event.raceDateLabel}
-              </p>
-            </div>
-          </div>
-        ) : event?.phase === "upcoming" ? (
-          <div>
-            <p className="font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
-              Уикенд {event.weekendDateLabel}
-            </p>
-            <div className="mt-1.5 grid gap-0.5">
-              <p className="text-sm font-bold text-foreground">Гонка</p>
-              <p className="text-xs text-muted-foreground">
-                {raceStartLabel ?? event.raceDateLabel}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <p className="font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
-              Следующая сессия
-            </p>
-            <div className="mt-1.5 grid gap-0.5">
-              <p className="text-sm font-bold text-foreground">
-                {formatSessionName(nextSession.session)}
-              </p>
-              <p className="text-xs text-muted-foreground">{nextSession.startsAt}</p>
-            </div>
-          </div>
-        )}
+      {event?.phase !== "completed" && event?.weekendDateLabel ? (
+        <p className="mt-4 text-sm font-medium text-muted-foreground">{event.weekendDateLabel} {event.season}</p>
+      ) : null}
 
-        <Button asChild className="mt-5 w-full" variant="secondary">
-          <Link href={action.href} prefetch={false}>
-            {action.label}
-            <ArrowRight aria-hidden="true" data-icon="inline-end" />
-          </Link>
-        </Button>
+      <div className="hidden md:block">
+        <StageSessionDetails event={event} nextSession={nextSession} weather={weather} />
+      </div>
+    </div>
+  );
+}
+
+function StageSessionDetails({ event, nextSession, weather }: {
+  event: SeasonGlobeEvent | null;
+  nextSession: NextSession;
+  weather?: SessionWeather;
+}) {
+  const action = event ? getEventAction(event) : { href: "/weekend", label: "Перейти к этапу" };
+  const raceCompletionLabel = event
+    ? formatSeasonGlobeDateTimeLabel(event.raceEndAtIso)
+    : null;
+  const raceStartLabel = event
+    ? formatSeasonGlobeDateTimeLabel(event.raceStartAtIso)
+    : null;
+  return (
+    <div className="mt-5 border-t border-border/70 pt-4">
+      <div className="flex items-end justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          {event?.phase === "completed" ? (
+            <div>
+              <p className="font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
+                Уикенд {event.weekendDateLabel}
+              </p>
+              <div className="mt-1.5 grid gap-0.5">
+                <p className="text-sm font-bold text-foreground">Гонка завершилась</p>
+                <p className="text-xs text-muted-foreground">
+                  {raceCompletionLabel ?? event.raceDateLabel}
+                </p>
+              </div>
+            </div>
+          ) : event?.phase === "upcoming" ? (
+            <div>
+              <p className="font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
+                Дата гонки
+              </p>
+              <div className="mt-1.5 grid gap-0.5">
+                <p className="text-sm font-bold text-foreground">Гонка</p>
+                <p className="text-xs text-muted-foreground">
+                  {raceStartLabel ?? event.raceDateLabel}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="whitespace-nowrap font-telemetry text-[0.64rem] font-bold uppercase tracking-[0.1em] text-primary">
+                Следующая сессия
+              </p>
+              <div className="mt-1.5 grid gap-0.5">
+                <p className="text-sm font-bold text-foreground">
+                  {formatSessionName(nextSession.session)}
+                </p>
+                <p className="text-xs text-muted-foreground">{nextSession.startsAt}</p>
+              </div>
+            </div>
+          )}
+        </div>
+        {event?.phase !== "completed" && weather?.temperatureC != null ? (
+          <StageWeather weather={weather} />
+        ) : null}
+      </div>
+
+      <Button asChild className="mt-4 w-full" variant="secondary">
+        <Link href={action.href} prefetch={false}>
+          {action.label}
+          <ArrowRight aria-hidden="true" data-icon="inline-end" />
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+function StageWeather({ weather }: { weather: SessionWeather }) {
+  const rain = weather.precipitationMm;
+  const Icon = rain == null ? Cloud : rain >= 0.4 ? CloudRain : rain > 0 ? CloudSun : Sun;
+  const label = rain == null ? "Прогноз погоды" : rain >= 0.4 ? "Дождь" : rain > 0 ? "Морось" : "Без осадков";
+
+  return (
+    <div className="flex shrink-0 items-center gap-2 text-muted-foreground">
+      <Icon aria-hidden="true" className="size-6 shrink-0 text-warning" strokeWidth={1.4} />
+      <div>
+        <p className="font-telemetry text-lg font-bold leading-tight text-foreground">{weather.temperature}</p>
+        <p className="mt-1 max-w-[4.75rem] text-xs">{label}</p>
       </div>
     </div>
   );

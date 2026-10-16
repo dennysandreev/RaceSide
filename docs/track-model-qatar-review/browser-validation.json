@@ -1,0 +1,174 @@
+{
+  "dark": {
+    "cases": [
+      {
+        "width": 375,
+        "initialHtmlHasHeavyGeometry": false,
+        "theme": "dark",
+        "canvas": {
+          "width": 375,
+          "height": 900
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\n5,419 км\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 768,
+        "initialHtmlHasHeavyGeometry": false,
+        "theme": "dark",
+        "canvas": {
+          "width": 684,
+          "height": 290
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 1024,
+        "initialHtmlHasHeavyGeometry": false,
+        "theme": "dark",
+        "canvas": {
+          "width": 924,
+          "height": 290
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 1440,
+        "initialHtmlHasHeavyGeometry": false,
+        "theme": "dark",
+        "canvas": {
+          "width": 715,
+          "height": 408.65625
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      }
+    ],
+    "errors": [],
+    "responses": [
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      }
+    ]
+  },
+  "light": {
+    "cases": [
+      {
+        "width": 375,
+        "theme": "light",
+        "canvas": {
+          "width": 375,
+          "height": 900
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\n5,419 км\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 768,
+        "theme": "light",
+        "canvas": {
+          "width": 684,
+          "height": 290
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 1024,
+        "theme": "light",
+        "canvas": {
+          "width": 924,
+          "height": 290
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      },
+      {
+        "width": 1440,
+        "theme": "light",
+        "canvas": {
+          "width": 715,
+          "height": 408.65625
+        },
+        "overflow": false,
+        "toolbarInside": true,
+        "labels": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\nST\nS1\nS2\nS3\nS1\nS2\nS3\n5,419 км\nПерепад\n5.6 м\nМасштаб 100%, объёмный вид"
+      }
+    ],
+    "errors": [],
+    "responses": [
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      },
+      {
+        "url": "http://localhost:3044/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+        "status": 200
+      }
+    ]
+  },
+  "controls": {
+    "first": "Масштаб 100%, объёмный вид",
+    "rotated": "Масштаб 100%, вид сверху",
+    "reset": "Масштаб 100%, объёмный вид",
+    "zoom": "Масштаб 500%, объёмный вид",
+    "afterReset": "Масштаб 100%, объёмный вид",
+    "fullscreenClosed": true,
+    "errors": []
+  },
+  "zoom": {
+    "zoom": "Масштаб 800%, объёмный вид",
+    "reset": "Масштаб 100%, объёмный вид",
+    "fullscreenClosed": true,
+    "labels": [
+      {
+        "x": 476.9442138671875,
+        "y": 115.90725708007812,
+        "width": 20,
+        "height": 20,
+        "top": 115.90725708007812,
+        "right": 496.9442138671875,
+        "bottom": 135.90725708007812,
+        "left": 476.9442138671875
+      }
+    ]
+  },
+  "fallback": [
+    {
+      "src": "http://localhost:3044/_next/image?url=%2Ff1%2Ftracks%2F3d%2Fqatar-preview.webp%3Fv%3Dc0c34ad8a39b&w=750&q=75",
+      "loaded": true,
+      "naturalWidth": 720,
+      "opacity": "1"
+    }
+  ]
+}

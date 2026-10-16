@@ -4,6 +4,14 @@ const catalog = JSON.parse(
   readFileSync(new URL("../src/config/ai-prompts.json", import.meta.url), "utf8"),
 );
 const definitions = new Map(catalog.map((definition) => [definition.key, definition]));
+export const TEXT_AI_MODEL = catalog[0].modelFallback;
+if (catalog.some(definition => definition.modelFallback !== TEXT_AI_MODEL)) {
+  throw new Error("Text AI tasks must use the shared model");
+}
+
+export function textAiRequestOptions() {
+  return { reasoning: { effort: "none", exclude: true } };
+}
 const placeholderPattern = /\{\{\s*([a-z][a-z0-9_]*)\s*\}\}/g;
 const publishedPromptCache = new Map();
 const cacheTtlMs = 60_000;
@@ -83,8 +91,9 @@ export async function resolveWorkerAiPrompt({
       promptVersionId: selected.id,
       promptVersion: selected.version,
       source: selected.source,
-      model: normalizeModel(selected.model) ?? definition.modelFallback,
-      maxTokens: normalizeMaxTokens(selected.max_tokens) ?? definition.maxTokens,
+      // Persisted prompt versions cannot silently restore a retired model.
+      model: TEXT_AI_MODEL,
+      maxTokens: Math.min(normalizeMaxTokens(selected.max_tokens) ?? definition.maxTokens, definition.maxTokens),
     }
     : {
       systemPrompt: definition.defaultSystemPrompt,
@@ -194,15 +203,6 @@ function extractVariables(template) {
 
 function normalizeString(value) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
-}
-
-function normalizeModel(value) {
-  const model = normalizeString(value);
-  return model &&
-    model.length <= 160 &&
-    /^[a-zA-Z0-9._:-]+\/[a-zA-Z0-9._:-]+$/.test(model)
-    ? model
-    : null;
 }
 
 function normalizeMaxTokens(value) {

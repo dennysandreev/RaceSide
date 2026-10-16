@@ -1,0 +1,7285 @@
+{
+  "schemaVersion": 4,
+  "modelId": "qatar",
+  "generatedWith": "Blender 5.2.0 LTS",
+  "coordinateReferenceSystem": "EPSG:32639",
+  "verticalDatum": "EGM2008 orthometric metres (EPSG:3855), GEDTM30 estimate",
+  "verticalExaggeration": 1,
+  "realWorldScale": "1 unit = 1 metre; no vertical exaggeration",
+  "originMeters": {
+    "x": 545590.0,
+    "y": 2819330.0
+  },
+  "boundsMeters": {
+    "width": 1660,
+    "depth": 1840
+  },
+  "lapLength": {
+    "geometryMeters": 5417.922271742086,
+    "officialFiaMeters": 5419,
+    "relativeErrorPercent": 0.019887954565672716
+  },
+  "elevationProfile": [
+    {
+      "distanceMeters": 0.0,
+      "elevationMeters": 13.693020057678224
+    },
+    {
+      "distanceMeters": 30.099568176344924,
+      "elevationMeters": 12.739507579803467
+    },
+    {
+      "distanceMeters": 60.19913635268985,
+      "elevationMeters": 12.533836555480958
+    },
+    {
+      "distanceMeters": 90.29870452903478,
+      "elevationMeters": 12.20942406654358
+    },
+    {
+      "distanceMeters": 120.3982727053797,
+      "elevationMeters": 11.6994234085083
+    },
+    {
+      "distanceMeters": 150.4978408817246,
+      "elevationMeters": 11.295112562179566
+    },
+    {
+      "distanceMeters": 180.59740905806956,
+      "elevationMeters": 11.002130126953126
+    },
+    {
+      "distanceMeters": 210.69697723441448,
+      "elevationMeters": 10.721221590042116
+    },
+    {
+      "distanceMeters": 240.7965454107594,
+      "elevationMeters": 10.557820320129395
+    },
+    {
+      "distanceMeters": 270.8961135871043,
+      "elevationMeters": 10.569642210006714
+    },
+    {
+      "distanceMeters": 300.9956817634492,
+      "elevationMeters": 10.58853168487549
+    },
+    {
+      "distanceMeters": 331.09524993979414,
+      "elevationMeters": 10.578315019607544
+    },
+    {
+      "distanceMeters": 361.1948181161391,
+      "elevationMeters": 10.56837272644043
+    },
+    {
+      "distanceMeters": 391.294386292484,
+      "elevationMeters": 10.77103695869446
+    },
+    {
+      "distanceMeters": 421.39395446882895,
+      "elevationMeters": 10.948208332061768
+    },
+    {
+      "distanceMeters": 451.4935226451738,
+      "elevationMeters": 10.915993881225589
+    },
+    {
+      "distanceMeters": 481.5930908215188,
+      "elevationMeters": 10.685051345825197
+    },
+    {
+      "distanceMeters": 511.69265899786376,
+      "elevationMeters": 10.45712718963623
+    },
+    {
+      "distanceMeters": 541.7922271742086,
+      "elevationMeters": 10.466959953308105
+    },
+    {
+      "distanceMeters": 571.8917953505536,
+      "elevationMeters": 10.651842737197876
+    },
+    {
+      "distanceMeters": 601.9913635268985,
+      "elevationMeters": 10.776000213623048
+    },
+    {
+      "distanceMeters": 632.0909317032434,
+      "elevationMeters": 10.587570571899414
+    },
+    {
+      "distanceMeters": 662.1904998795883,
+      "elevationMeters": 10.32895097732544
+    },
+    {
+      "distanceMeters": 692.2900680559333,
+      "elevationMeters": 10.242916345596315
+    },
+    {
+      "distanceMeters": 722.3896362322782,
+      "elevationMeters": 10.277322387695312
+    },
+    {
+      "distanceMeters": 752.4892044086231,
+      "elevationMeters": 10.50710005760193
+    },
+    {
+      "distanceMeters": 782.588772584968,
+      "elevationMeters": 10.828543853759765
+    },
+    {
+      "distanceMeters": 812.688340761313,
+      "elevationMeters": 11.00475287437439
+    },
+    {
+      "distanceMeters": 842.7879089376579,
+      "elevationMeters": 11.122313499450684
+    },
+    {
+      "distanceMeters": 872.8874771140028,
+      "elevationMeters": 11.303220129013063
+    },
+    {
+      "distanceMeters": 902.9870452903476,
+      "elevationMeters": 11.459879112243653
+    },
+    {
+      "distanceMeters": 933.0866134666927,
+      "elevationMeters": 11.441824913024904
+    },
+    {
+      "distanceMeters": 963.1861816430376,
+      "elevationMeters": 11.250730514526369
+    },
+    {
+      "distanceMeters": 993.2857498193824,
+      "elevationMeters": 11.019197511672976
+    },
+    {
+      "distanceMeters": 1023.3853179957275,
+      "elevationMeters": 10.782621860504152
+    },
+    {
+      "distanceMeters": 1053.4848861720723,
+      "elevationMeters": 10.576610279083255
+    },
+    {
+      "distanceMeters": 1083.5844543484172,
+      "elevationMeters": 10.537982940673828
+    },
+    {
+      "distanceMeters": 1113.684022524762,
+      "elevationMeters": 10.72687907218933
+    },
+    {
+      "distanceMeters": 1143.7835907011072,
+      "elevationMeters": 10.871658897399904
+    },
+    {
+      "distanceMeters": 1173.883158877452,
+      "elevationMeters": 10.836446714401246
+    },
+    {
+      "distanceMeters": 1203.982727053797,
+      "elevationMeters": 10.62088603973389
+    },
+    {
+      "distanceMeters": 1234.0822952301419,
+      "elevationMeters": 10.315145826339723
+    },
+    {
+      "distanceMeters": 1264.1818634064869,
+      "elevationMeters": 10.12262535095215
+    },
+    {
+      "distanceMeters": 1294.2814315828316,
+      "elevationMeters": 10.076493978500368
+    },
+    {
+      "distanceMeters": 1324.3809997591766,
+      "elevationMeters": 10.102092361450197
+    },
+    {
+      "distanceMeters": 1354.4805679355215,
+      "elevationMeters": 10.17981905937195
+    },
+    {
+      "distanceMeters": 1384.5801361118665,
+      "elevationMeters": 10.313050460815429
+    },
+    {
+      "distanceMeters": 1414.6797042882113,
+      "elevationMeters": 10.392742013931276
+    },
+    {
+      "distanceMeters": 1444.7792724645565,
+      "elevationMeters": 10.351243400573733
+    },
+    {
+      "distanceMeters": 1474.8788406409012,
+      "elevationMeters": 10.300609922409059
+    },
+    {
+      "distanceMeters": 1504.9784088172462,
+      "elevationMeters": 10.328341674804689
+    },
+    {
+      "distanceMeters": 1535.077976993591,
+      "elevationMeters": 10.457474422454833
+    },
+    {
+      "distanceMeters": 1565.177545169936,
+      "elevationMeters": 10.66812629699707
+    },
+    {
+      "distanceMeters": 1595.2771133462809,
+      "elevationMeters": 10.836377668380738
+    },
+    {
+      "distanceMeters": 1625.376681522626,
+      "elevationMeters": 10.925936031341553
+    },
+    {
+      "distanceMeters": 1655.4762496989708,
+      "elevationMeters": 11.04508204460144
+    },
+    {
+      "distanceMeters": 1685.5758178753158,
+      "elevationMeters": 11.24123764038086
+    },
+    {
+      "distanceMeters": 1715.6753860516606,
+      "elevationMeters": 11.431671094894408
+    },
+    {
+      "distanceMeters": 1745.7749542280055,
+      "elevationMeters": 11.562258338928222
+    },
+    {
+      "distanceMeters": 1775.8745224043503,
+      "elevationMeters": 11.399493217468267
+    },
+    {
+      "distanceMeters": 1805.9740905806952,
+      "elevationMeters": 11.169610214233401
+    },
+    {
+      "distanceMeters": 1836.0736587570404,
+      "elevationMeters": 11.23736939430237
+    },
+    {
+      "distanceMeters": 1866.1732269333854,
+      "elevationMeters": 11.48539333343506
+    },
+    {
+      "distanceMeters": 1896.2727951097302,
+      "elevationMeters": 11.750478219985961
+    },
+    {
+      "distanceMeters": 1926.3723632860751,
+      "elevationMeters": 12.00077209472656
+    },
+    {
+      "distanceMeters": 1956.47193146242,
+      "elevationMeters": 12.228802871704099
+    },
+    {
+      "distanceMeters": 1986.5714996387649,
+      "elevationMeters": 12.472889614105224
+    },
+    {
+      "distanceMeters": 2016.6710678151098,
+      "elevationMeters": 12.48172998428345
+    },
+    {
+      "distanceMeters": 2046.770635991455,
+      "elevationMeters": 12.259337425231935
+    },
+    {
+      "distanceMeters": 2076.8702041678,
+      "elevationMeters": 12.06755599975586
+    },
+    {
+      "distanceMeters": 2106.9697723441445,
+      "elevationMeters": 11.999253940582276
+    },
+    {
+      "distanceMeters": 2137.0693405204897,
+      "elevationMeters": 11.982340574264526
+    },
+    {
+      "distanceMeters": 2167.1689086968345,
+      "elevationMeters": 11.99216537475586
+    },
+    {
+      "distanceMeters": 2197.268476873179,
+      "elevationMeters": 12.058851337432861
+    },
+    {
+      "distanceMeters": 2227.368045049524,
+      "elevationMeters": 12.29478387832641
+    },
+    {
+      "distanceMeters": 2257.467613225869,
+      "elevationMeters": 12.643272829055784
+    },
+    {
+      "distanceMeters": 2287.5671814022144,
+      "elevationMeters": 12.803759574890138
+    },
+    {
+      "distanceMeters": 2317.666749578559,
+      "elevationMeters": 12.768150711059572
+    },
+    {
+      "distanceMeters": 2347.766317754904,
+      "elevationMeters": 12.776174163818359
+    },
+    {
+      "distanceMeters": 2377.865885931249,
+      "elevationMeters": 12.811495971679689
+    },
+    {
+      "distanceMeters": 2407.965454107594,
+      "elevationMeters": 12.700817298889165
+    },
+    {
+      "distanceMeters": 2438.0650222839386,
+      "elevationMeters": 12.370519876480111
+    },
+    {
+      "distanceMeters": 2468.1645904602838,
+      "elevationMeters": 12.025527763366703
+    },
+    {
+      "distanceMeters": 2498.264158636629,
+      "elevationMeters": 11.861761617660521
+    },
+    {
+      "distanceMeters": 2528.3637268129737,
+      "elevationMeters": 11.78894157409668
+    },
+    {
+      "distanceMeters": 2558.4632949893185,
+      "elevationMeters": 11.739500474929812
+    },
+    {
+      "distanceMeters": 2588.562863165663,
+      "elevationMeters": 11.741543674468994
+    },
+    {
+      "distanceMeters": 2618.6624313420084,
+      "elevationMeters": 11.814072465896606
+    },
+    {
+      "distanceMeters": 2648.761999518353,
+      "elevationMeters": 11.929559898376464
+    },
+    {
+      "distanceMeters": 2678.8615676946984,
+      "elevationMeters": 11.934342718124391
+    },
+    {
+      "distanceMeters": 2708.961135871043,
+      "elevationMeters": 11.843058300018313
+    },
+    {
+      "distanceMeters": 2739.0607040473883,
+      "elevationMeters": 11.706264781951907
+    },
+    {
+      "distanceMeters": 2769.160272223733,
+      "elevationMeters": 11.565419960021975
+    },
+    {
+      "distanceMeters": 2799.259840400078,
+      "elevationMeters": 11.39488873481751
+    },
+    {
+      "distanceMeters": 2829.3594085764225,
+      "elevationMeters": 11.182857322692875
+    },
+    {
+      "distanceMeters": 2859.4589767527677,
+      "elevationMeters": 11.127718162536622
+    },
+    {
+      "distanceMeters": 2889.558544929113,
+      "elevationMeters": 11.233774566650391
+    },
+    {
+      "distanceMeters": 2919.6581131054572,
+      "elevationMeters": 11.441860485076898
+    },
+    {
+      "distanceMeters": 2949.7576812818024,
+      "elevationMeters": 11.611527919769287
+    },
+    {
+      "distanceMeters": 2979.857249458147,
+      "elevationMeters": 11.612262535095216
+    },
+    {
+      "distanceMeters": 3009.9568176344924,
+      "elevationMeters": 11.824239921569818
+    },
+    {
+      "distanceMeters": 3040.0563858108376,
+      "elevationMeters": 12.273685789108274
+    },
+    {
+      "distanceMeters": 3070.155953987182,
+      "elevationMeters": 12.718272304534906
+    },
+    {
+      "distanceMeters": 3100.255522163527,
+      "elevationMeters": 12.853292703628542
+    },
+    {
+      "distanceMeters": 3130.355090339872,
+      "elevationMeters": 12.535178184509284
+    },
+    {
+      "distanceMeters": 3160.454658516217,
+      "elevationMeters": 12.251533699035646
+    },
+    {
+      "distanceMeters": 3190.5542266925618,
+      "elevationMeters": 12.309675025939937
+    },
+    {
+      "distanceMeters": 3220.653794868907,
+      "elevationMeters": 12.622387838363643
+    },
+    {
+      "distanceMeters": 3250.753363045252,
+      "elevationMeters": 12.99644012451172
+    },
+    {
+      "distanceMeters": 3280.8529312215965,
+      "elevationMeters": 13.17609634399414
+    },
+    {
+      "distanceMeters": 3310.9524993979417,
+      "elevationMeters": 13.228738498687743
+    },
+    {
+      "distanceMeters": 3341.0520675742864,
+      "elevationMeters": 13.257793855667114
+    },
+    {
+      "distanceMeters": 3371.1516357506316,
+      "elevationMeters": 13.263404273986819
+    },
+    {
+      "distanceMeters": 3401.251203926976,
+      "elevationMeters": 13.224003982543948
+    },
+    {
+      "distanceMeters": 3431.350772103321,
+      "elevationMeters": 13.11717338562012
+    },
+    {
+      "distanceMeters": 3461.4503402796663,
+      "elevationMeters": 12.93221302032471
+    },
+    {
+      "distanceMeters": 3491.549908456011,
+      "elevationMeters": 12.857603645324708
+    },
+    {
+      "distanceMeters": 3521.6494766323563,
+      "elevationMeters": 12.946908140182495
+    },
+    {
+      "distanceMeters": 3551.7490448087005,
+      "elevationMeters": 12.94849014282227
+    },
+    {
+      "distanceMeters": 3581.8486129850457,
+      "elevationMeters": 12.841415977478032
+    },
+    {
+      "distanceMeters": 3611.9481811613905,
+      "elevationMeters": 12.655694198608407
+    },
+    {
+      "distanceMeters": 3642.0477493377357,
+      "elevationMeters": 12.353180170059211
+    },
+    {
+      "distanceMeters": 3672.147317514081,
+      "elevationMeters": 12.209026718139649
+    },
+    {
+      "distanceMeters": 3702.2468856904256,
+      "elevationMeters": 12.433938312530513
+    },
+    {
+      "distanceMeters": 3732.346453866771,
+      "elevationMeters": 12.62517433166504
+    },
+    {
+      "distanceMeters": 3762.446022043115,
+      "elevationMeters": 12.800001573562618
+    },
+    {
+      "distanceMeters": 3792.5455902194603,
+      "elevationMeters": 13.109460735321038
+    },
+    {
+      "distanceMeters": 3822.645158395805,
+      "elevationMeters": 13.303707695007322
+    },
+    {
+      "distanceMeters": 3852.7447265721503,
+      "elevationMeters": 13.45727138519287
+    },
+    {
+      "distanceMeters": 3882.8442947484955,
+      "elevationMeters": 13.728883886337279
+    },
+    {
+      "distanceMeters": 3912.94386292484,
+      "elevationMeters": 14.037449550628654
+    },
+    {
+      "distanceMeters": 3943.043431101185,
+      "elevationMeters": 14.244906949996947
+    },
+    {
+      "distanceMeters": 3973.1429992775297,
+      "elevationMeters": 14.33323268890381
+    },
+    {
+      "distanceMeters": 4003.242567453875,
+      "elevationMeters": 14.337290334701539
+    },
+    {
+      "distanceMeters": 4033.3421356302197,
+      "elevationMeters": 14.338200759887695
+    },
+    {
+      "distanceMeters": 4063.441703806565,
+      "elevationMeters": 14.300840330123904
+    },
+    {
+      "distanceMeters": 4093.54127198291,
+      "elevationMeters": 14.154105949401856
+    },
+    {
+      "distanceMeters": 4123.640840159254,
+      "elevationMeters": 14.030859422683719
+    },
+    {
+      "distanceMeters": 4153.7404083356,
+      "elevationMeters": 13.938965702056887
+    },
+    {
+      "distanceMeters": 4183.839976511944,
+      "elevationMeters": 13.886743831634522
+    },
+    {
+      "distanceMeters": 4213.939544688289,
+      "elevationMeters": 13.937709999084472
+    },
+    {
+      "distanceMeters": 4244.039112864634,
+      "elevationMeters": 13.923323678970338
+    },
+    {
+      "distanceMeters": 4274.1386810409795,
+      "elevationMeters": 13.775274848937991
+    },
+    {
+      "distanceMeters": 4304.238249217325,
+      "elevationMeters": 13.584229612350468
+    },
+    {
+      "distanceMeters": 4334.337817393669,
+      "elevationMeters": 13.344861602783208
+    },
+    {
+      "distanceMeters": 4364.437385570014,
+      "elevationMeters": 13.187712860107423
+    },
+    {
+      "distanceMeters": 4394.536953746358,
+      "elevationMeters": 13.264527225494383
+    },
+    {
+      "distanceMeters": 4424.636521922704,
+      "elevationMeters": 13.341558694839481
+    },
+    {
+      "distanceMeters": 4454.736090099048,
+      "elevationMeters": 13.163002586364755
+    },
+    {
+      "distanceMeters": 4484.835658275393,
+      "elevationMeters": 13.015833854675298
+    },
+    {
+      "distanceMeters": 4514.935226451738,
+      "elevationMeters": 12.981683444976808
+    },
+    {
+      "distanceMeters": 4545.034794628084,
+      "elevationMeters": 12.9677547454834
+    },
+    {
+      "distanceMeters": 4575.134362804429,
+      "elevationMeters": 13.023461532592773
+    },
+    {
+      "distanceMeters": 4605.233930980773,
+      "elevationMeters": 13.279534101486197
+    },
+    {
+      "distanceMeters": 4635.333499157118,
+      "elevationMeters": 13.722361183166491
+    },
+    {
+      "distanceMeters": 4665.4330673334625,
+      "elevationMeters": 14.031112146377557
+    },
+    {
+      "distanceMeters": 4695.532635509808,
+      "elevationMeters": 14.10715141296387
+    },
+    {
+      "distanceMeters": 4725.632203686153,
+      "elevationMeters": 14.146349620819091
+    },
+    {
+      "distanceMeters": 4755.731771862498,
+      "elevationMeters": 14.287910938262936
+    },
+    {
+      "distanceMeters": 4785.831340038843,
+      "elevationMeters": 14.49334182739258
+    },
+    {
+      "distanceMeters": 4815.930908215188,
+      "elevationMeters": 14.604790878295898
+    },
+    {
+      "distanceMeters": 4846.030476391533,
+      "elevationMeters": 14.65450348854065
+    },
+    {
+      "distanceMeters": 4876.130044567877,
+      "elevationMeters": 14.624333667755131
+    },
+    {
+      "distanceMeters": 4906.229612744222,
+      "elevationMeters": 14.502518463134772
+    },
+    {
+      "distanceMeters": 4936.3291809205675,
+      "elevationMeters": 14.369990539550784
+    },
+    {
+      "distanceMeters": 4966.428749096913,
+      "elevationMeters": 14.207843732833869
+    },
+    {
+      "distanceMeters": 4996.528317273258,
+      "elevationMeters": 13.849931526184083
+    },
+    {
+      "distanceMeters": 5026.627885449602,
+      "elevationMeters": 13.373881530761732
+    },
+    {
+      "distanceMeters": 5056.727453625947,
+      "elevationMeters": 13.124121475219727
+    },
+    {
+      "distanceMeters": 5086.827021802292,
+      "elevationMeters": 13.272877836227403
+    },
+    {
+      "distanceMeters": 5116.926589978637,
+      "elevationMeters": 13.758807373046869
+    },
+    {
+      "distanceMeters": 5147.026158154982,
+      "elevationMeters": 13.992054414749147
+    },
+    {
+      "distanceMeters": 5177.125726331326,
+      "elevationMeters": 13.877048301696782
+    },
+    {
+      "distanceMeters": 5207.225294507672,
+      "elevationMeters": 13.804293346405032
+    },
+    {
+      "distanceMeters": 5237.324862684017,
+      "elevationMeters": 13.649246788024907
+    },
+    {
+      "distanceMeters": 5267.424430860362,
+      "elevationMeters": 13.705620002746581
+    },
+    {
+      "distanceMeters": 5297.523999036706,
+      "elevationMeters": 14.064090728759746
+    },
+    {
+      "distanceMeters": 5327.6235672130515,
+      "elevationMeters": 14.874807786941512
+    },
+    {
+      "distanceMeters": 5357.723135389397,
+      "elevationMeters": 15.686522006988518
+    },
+    {
+      "distanceMeters": 5387.822703565741,
+      "elevationMeters": 15.168378591537508
+    },
+    {
+      "distanceMeters": 5417.922271742086,
+      "elevationMeters": 13.693020057678224
+    }
+  ],
+  "elevationsMeters": {
+    "low": 10.076493978500368,
+    "high": 15.686522006988518
+  },
+  "finishDistanceMeters": 0,
+  "raceStartDistanceMeters": 225,
+  "baseElevationMeters": 0,
+  "sectorBoundaryDistancesMeters": [
+    1871.9860676405265,
+    3471.3489437391027
+  ],
+  "objects": {
+    "turnAnchors": 16,
+    "pitGarageBoxes": 50,
+    "buildingsTotal": 141,
+    "grandstandFootprints": 6,
+    "raceMotorhomes": 0,
+    "permanentTeamHospitality": 4,
+    "mappedBarrierPanels": 3668,
+    "floodlightMasts": 150,
+    "floodlightPlacementMethod": "photographic reconstruction at nominal 65 m spacing along safety corridor; not individually surveyed",
+    "trees": 1371,
+    "vegetationMethod": "OSM individual planted trees; simplified source-informed canopy dimensions"
+  },
+  "layoutQuality": {
+    "surfaceClearance": {
+      "minimumTrackTerrainClearanceMeters": 0.738,
+      "startStraightMinimumClearanceMeters": 0.743,
+      "terrainBreakthroughSamples": 0
+    },
+    "pitLane": {
+      "pitGarageBoxes": 50,
+      "frontageDistancesMeters": [
+        569.1624429336148,
+        973.1764144909699
+      ],
+      "wall": {
+        "fenceHeightMeters": 2.2,
+        "lengthMeters": 454.014,
+        "panels": 152,
+        "wallHeightMeters": 1.1
+      },
+      "fastLaneSeparator": true,
+      "taperProfile": "smoothstep",
+      "entryGapMeters": 0.0,
+      "exitGapMeters": 0.0,
+      "surfaceClearance": {
+        "minimumTrackTerrainClearanceMeters": 0.713,
+        "startStraightMinimumClearanceMeters": 0.74,
+        "terrainBreakthroughSamples": 0
+      }
+    },
+    "grandstands": {
+      "count": 6,
+      "rendered": [
+        {
+          "id": 152483596,
+          "name": "Main Grandstand",
+          "footprint": [
+            [
+              545116.879139408,
+              2819272.839463532
+            ],
+            [
+              545103.8172045171,
+              2819265.619519616
+            ],
+            [
+              545127.2576753729,
+              2819223.3739794437
+            ],
+            [
+              545158.7148108975,
+              2819167.4681507465
+            ],
+            [
+              545191.944727146,
+              2819107.5374704706
+            ],
+            [
+              545223.96656065,
+              2819051.246112653
+            ],
+            [
+              545258.9974374389,
+              2818987.977355691
+            ],
+            [
+              545290.3340365245,
+              2818932.37042097
+            ],
+            [
+              545307.2329529246,
+              2818901.8192749918
+            ],
+            [
+              545320.2850900055,
+              2818909.039376534
+            ]
+          ],
+          "rowsBuilt": 747,
+          "seatsBuilt": 14193,
+          "covered": true,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 21.647681765482453
+        },
+        {
+          "id": 1316027537,
+          "name": "Permanent northeast terrace",
+          "footprint": [
+            [
+              545468.3853333499,
+              2819930.5701488457
+            ],
+            [
+              545447.6000382463,
+              2819907.2110061334
+            ],
+            [
+              545450.1302667396,
+              2819904.982665072
+            ],
+            [
+              545429.6653067722,
+              2819881.979006908
+            ],
+            [
+              545426.8729792308,
+              2819884.439014644
+            ],
+            [
+              545401.4118038493,
+              2819855.826094119
+            ],
+            [
+              545416.8653467739,
+              2819842.2243741523
+            ],
+            [
+              545454.3812212306,
+              2819884.3884928734
+            ],
+            [
+              545451.7602718667,
+              2819886.6940425523
+            ],
+            [
+              545459.9302185997,
+              2819895.879957708
+            ],
+            [
+              545462.8838444207,
+              2819893.2765436196
+            ],
+            [
+              545483.9094391655,
+              2819916.902301548
+            ]
+          ],
+          "rowsBuilt": 249,
+          "seatsBuilt": 4233,
+          "covered": false,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 21.367560317472655
+        },
+        {
+          "id": 1436401469,
+          "name": "T2 Grandstand",
+          "footprint": [
+            [
+              545270.9156105185,
+              2819677.90177322
+            ],
+            [
+              545254.1310790186,
+              2819677.911431658
+            ],
+            [
+              545256.5390483063,
+              2819613.779312376
+            ],
+            [
+              545251.641792491,
+              2819608.602291446
+            ],
+            [
+              545243.8220269071,
+              2819608.7087323847
+            ],
+            [
+              545215.1899238557,
+              2819634.823953402
+            ],
+            [
+              545211.6360617357,
+              2819630.6481418917
+            ],
+            [
+              545207.3722322887,
+              2819634.3213556805
+            ],
+            [
+              545200.9960936692,
+              2819626.592350191
+            ],
+            [
+              545238.5929966716,
+              2819591.6704049297
+            ],
+            [
+              545259.1438942404,
+              2819592.4707890977
+            ],
+            [
+              545273.0427917005,
+              2819607.6669641263
+            ]
+          ],
+          "rowsBuilt": 203,
+          "seatsBuilt": 3654,
+          "covered": false,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 20.90163959905041
+        },
+        {
+          "id": 1436401470,
+          "name": "T3 Grandstand",
+          "footprint": [
+            [
+              545243.9865640958,
+              2819812.66914166
+            ],
+            [
+              545244.9133808053,
+              2819690.1834039334
+            ],
+            [
+              545260.3406331661,
+              2819690.3020297103
+            ],
+            [
+              545259.4237255675,
+              2819812.787802493
+            ]
+          ],
+          "rowsBuilt": 247,
+          "seatsBuilt": 4446,
+          "covered": false,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 34.00191909759662
+        },
+        {
+          "id": -100,
+          "name": "North Grandstand",
+          "footprint": [
+            [
+              545021.8182630747,
+              2819432.9845739533
+            ],
+            [
+              545015.8490449722,
+              2819444.4392111367
+            ],
+            [
+              545009.8798268691,
+              2819455.8938483214
+            ],
+            [
+              545003.9106087661,
+              2819467.348485506
+            ],
+            [
+              544997.9413906633,
+              2819478.8031226904
+            ],
+            [
+              544992.152411614,
+              2819489.592365166
+            ],
+            [
+              544985.9364007303,
+              2819500.914974691
+            ],
+            [
+              544979.720389846,
+              2819512.2375842165
+            ],
+            [
+              544973.5043789622,
+              2819523.5601937426
+            ],
+            [
+              544967.2883680781,
+              2819534.8828032687
+            ],
+            [
+              544961.0057263133,
+              2819546.327430293
+            ],
+            [
+              544953.6934901668,
+              2819561.325886766
+            ],
+            [
+              544948.4597246888,
+              2819579.8584380425
+            ],
+            [
+              544930.7179461003,
+              2819576.8204629743
+            ],
+            [
+              544936.9465315448,
+              2819554.7274493063
+            ],
+            [
+              544945.1884331728,
+              2819537.7359672217
+            ],
+            [
+              544951.5097638358,
+              2819526.2204913273
+            ],
+            [
+              544957.7257747202,
+              2819514.8978818012
+            ],
+            [
+              544963.941785604,
+              2819503.575272275
+            ],
+            [
+              544970.1577964883,
+              2819492.2526627495
+            ],
+            [
+              544976.373807372,
+              2819480.930053225
+            ],
+            [
+              544981.9787994905,
+              2819470.4847284313
+            ],
+            [
+              544987.9480175934,
+              2819459.030091247
+            ],
+            [
+              544993.9172356965,
+              2819447.5754540623
+            ],
+            [
+              544999.8864537998,
+              2819436.1208168766
+            ],
+            [
+              545005.8556719021,
+              2819424.6661796942
+            ]
+          ],
+          "rowsBuilt": 303,
+          "seatsBuilt": 5454,
+          "covered": false,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 24.43438129498096
+        },
+        {
+          "id": -101,
+          "name": "T16 Grandstand",
+          "footprint": [
+            [
+              545695.6264032257,
+              2818729.231814925
+            ],
+            [
+              545690.0424356181,
+              2818718.302993376
+            ],
+            [
+              545684.4584680101,
+              2818707.374171826
+            ],
+            [
+              545678.8745004022,
+              2818696.445350277
+            ],
+            [
+              545673.2905327944,
+              2818685.516528727
+            ],
+            [
+              545667.7065651861,
+              2818674.5877071763
+            ],
+            [
+              545662.1225975782,
+              2818663.658885627
+            ],
+            [
+              545656.5386299705,
+              2818652.7300640782
+            ],
+            [
+              545650.9546623627,
+              2818641.801242529
+            ],
+            [
+              545645.0448558204,
+              2818630.4208608475
+            ],
+            [
+              545638.9543344204,
+              2818619.036808935
+            ],
+            [
+              545628.5850791225,
+              2818604.1417959523
+            ],
+            [
+              545642.2437700541,
+              2818592.41830833
+            ],
+            [
+              545654.646080942,
+              2818610.2181304004
+            ],
+            [
+              545660.9206429855,
+              2818621.9379732558
+            ],
+            [
+              545666.9836006357,
+              2818633.6114233704
+            ],
+            [
+              545672.5675682435,
+              2818644.5402449197
+            ],
+            [
+              545678.151535851,
+              2818655.4690664685
+            ],
+            [
+              545683.7355034589,
+              2818666.397888018
+            ],
+            [
+              545689.3194710674,
+              2818677.3267095685
+            ],
+            [
+              545694.9034386752,
+              2818688.2555311183
+            ],
+            [
+              545700.4874062828,
+              2818699.1843526675
+            ],
+            [
+              545706.0713738911,
+              2818710.1131742173
+            ],
+            [
+              545711.6553414984,
+              2818721.0419957666
+            ]
+          ],
+          "rowsBuilt": 267,
+          "seatsBuilt": 4806,
+          "covered": false,
+          "geometryEstimated": true,
+          "minimumTrackClearanceMeters": 23.528197873136293
+        }
+      ],
+      "excluded": [],
+      "seatColorMethod": "LIC current photos; simplified cool gray seating, cream canopy, galvanized steel"
+    },
+    "buildings": {
+      "count": 141,
+      "rendered": [
+        {
+          "osmWayId": 152483597,
+          "heightMeters": 12.8,
+          "footprint": [
+            [
+              545194.0294405352,
+              2819299.7437045267
+            ],
+            [
+              545169.8019229096,
+              2819286.306731722
+            ],
+            [
+              545177.9116245948,
+              2819271.827256069
+            ],
+            [
+              545175.53399966,
+              2819270.5125044337
+            ],
+            [
+              545186.626727177,
+              2819250.7054690835
+            ],
+            [
+              545189.034432231,
+              2819252.042472065
+            ],
+            [
+              545367.3910716025,
+              2818933.9049247983
+            ],
+            [
+              545387.6362567714,
+              2818945.1250219094
+            ],
+            [
+              545395.9429621744,
+              2818949.737805308
+            ],
+            [
+              545377.4576301688,
+              2818982.7197297057
+            ],
+            [
+              545372.742480265,
+              2818980.101367959
+            ],
+            [
+              545295.3135292523,
+              2819118.2189401314
+            ],
+            [
+              545321.246697065,
+              2819132.6031951914
+            ],
+            [
+              545321.7826573917,
+              2819131.641578091
+            ],
+            [
+              545350.1234799231,
+              2819147.3629172477
+            ],
+            [
+              545343.1662962555,
+              2819159.786444383
+            ],
+            [
+              545314.2135134684,
+              2819143.7308290387
+            ],
+            [
+              545315.1943743398,
+              2819141.9844688955
+            ],
+            [
+              545290.2343566117,
+              2819128.135067616
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.2,
+            0.23,
+            0.24
+          ],
+          "roofColor": [
+            0.87,
+            0.85,
+            0.77
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1037707301,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545389.6083382723,
+              2818926.7379076947
+            ],
+            [
+              545394.0882229835,
+              2818918.7134273737
+            ],
+            [
+              545388.67071883,
+              2818915.7272384474
+            ],
+            [
+              545416.3692986086,
+              2818866.0992504326
+            ],
+            [
+              545412.4165323328,
+              2818863.9153462825
+            ],
+            [
+              545409.0995957007,
+              2818869.8507931083
+            ],
+            [
+              545405.8190128057,
+              2818868.0346114193
+            ],
+            [
+              545376.9575084697,
+              2818919.7516506803
+            ],
+            [
+              545388.3944148252,
+              2818926.0693545705
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027494,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544979.7923097254,
+              2819360.3271117588
+            ],
+            [
+              544996.2565663814,
+              2819368.9979883204
+            ],
+            [
+              544998.8358098877,
+              2819364.15627956
+            ],
+            [
+              544982.3715860479,
+              2819355.4743261337
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027495,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545089.858188075,
+              2819130.8913125754
+            ],
+            [
+              545100.2623766874,
+              2819136.441191699
+            ],
+            [
+              545113.3399712249,
+              2819112.2222900377
+            ],
+            [
+              545102.935768803,
+              2819106.6724011125
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027504,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545702.8383346411,
+              2819345.9670094107
+            ],
+            [
+              545711.0956917964,
+              2819364.9205858023
+            ],
+            [
+              545718.0308939536,
+              2819361.9432414137
+            ],
+            [
+              545709.7735446122,
+              2819342.9896606933
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027506,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545861.9374803114,
+              2818778.7282285877
+            ],
+            [
+              545848.9565493923,
+              2818753.7009491604
+            ],
+            [
+              545824.076130238,
+              2818766.4504318046
+            ],
+            [
+              545837.0470431865,
+              2818791.477652554
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027507,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545783.2598240046,
+              2818818.756909209
+            ],
+            [
+              545770.439644175,
+              2818793.7191826706
+            ],
+            [
+              545795.8631398763,
+              2818780.849646763
+            ],
+            [
+              545808.6832475527,
+              2818805.8984715957
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027508,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545913.020251517,
+              2818810.3312125383
+            ],
+            [
+              545903.5847822272,
+              2818791.9714774676
+            ],
+            [
+              545796.2312615898,
+              2818846.57472571
+            ],
+            [
+              545805.6768876887,
+              2818864.934419087
+            ],
+            [
+              545910.98634993,
+              2818811.365185479
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027509,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545324.131908527,
+              2818889.086105618
+            ],
+            [
+              545329.8312801826,
+              2818891.951409336
+            ],
+            [
+              545332.9579557609,
+              2818885.793820334
+            ],
+            [
+              545327.2484935124,
+              2818882.9395550974
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027510,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545028.3292795705,
+              2819389.7476952095
+            ],
+            [
+              545021.7883723344,
+              2819386.115582396
+            ],
+            [
+              545032.132329013,
+              2819367.7012182465
+            ],
+            [
+              545038.6732426425,
+              2819371.3333359417
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027511,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545117.4663991561,
+              2819766.3292928855
+            ],
+            [
+              545113.1952289011,
+              2819763.258481705
+            ],
+            [
+              545124.2619192938,
+              2819748.046989062
+            ],
+            [
+              545128.5330546504,
+              2819751.1288774987
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027512,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545217.9548117376,
+              2819694.012435274
+            ],
+            [
+              545223.6029515528,
+              2819694.0979701346
+            ],
+            [
+              545223.7965696537,
+              2819675.4722562847
+            ],
+            [
+              545218.1484594007,
+              2819675.3756476464
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027513,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545198.3681752653,
+              2819657.7344645825
+            ],
+            [
+              545217.2196752655,
+              2819667.6761198877
+            ],
+            [
+              545220.7295410789,
+              2819661.0768405134
+            ],
+            [
+              545201.8780341912,
+              2819651.1351804435
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027514,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545305.477382482,
+              2819224.4191617607
+            ],
+            [
+              545300.5010586506,
+              2819221.7777912375
+            ],
+            [
+              545309.6446754022,
+              2819204.777036213
+            ],
+            [
+              545314.6210038859,
+              2819207.418410014
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027515,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545292.9204918961,
+              2819246.17015819
+            ],
+            [
+              545287.9645753073,
+              2819243.4402697454
+            ],
+            [
+              545297.0858859099,
+              2819227.081719016
+            ],
+            [
+              545302.0417693403,
+              2819229.822684531
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027516,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545274.0444567084,
+              2819287.8771644477
+            ],
+            [
+              545266.3992890731,
+              2819283.853608234
+            ],
+            [
+              545284.296913233,
+              2819252.0766008412
+            ],
+            [
+              545291.4998963089,
+              2819256.0875962507
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027517,
+          "heightMeters": 9.2,
+          "footprint": [
+            [
+              545297.8302713048,
+              2819143.763951687
+            ],
+            [
+              545317.6440914338,
+              2819154.6613462567
+            ],
+            [
+              545310.2012005548,
+              2819168.0577514074
+            ],
+            [
+              545306.4089842422,
+              2819165.9740854786
+            ],
+            [
+              545307.0865167296,
+              2819164.758246622
+            ],
+            [
+              545299.5221443635,
+              2819160.6020595436
+            ],
+            [
+              545298.106400408,
+              2819163.1442719665
+            ],
+            [
+              545311.1784985322,
+              2819170.3312173015
+            ],
+            [
+              545303.2299680779,
+              2819184.645050765
+            ],
+            [
+              545298.7254567795,
+              2819182.1713876883
+            ],
+            [
+              545299.3928994299,
+              2819180.966588225
+            ],
+            [
+              545292.4304986383,
+              2819177.1335868984
+            ],
+            [
+              545290.9136119755,
+              2819179.863714629
+            ],
+            [
+              545303.1931421263,
+              2819186.6160865393
+            ],
+            [
+              545295.3558635769,
+              2819200.7309704525
+            ],
+            [
+              545291.9950160651,
+              2819198.8923951536
+            ],
+            [
+              545292.5006317742,
+              2819197.986043856
+            ],
+            [
+              545284.7757602914,
+              2819193.7407299513
+            ],
+            [
+              545283.2386254275,
+              2819196.5150857605
+            ],
+            [
+              545294.8861029549,
+              2819202.9220195003
+            ],
+            [
+              545287.2713848543,
+              2819216.616851918
+            ],
+            [
+              545284.1212330053,
+              2819214.88973094
+            ],
+            [
+              545284.6876022978,
+              2819213.850697728
+            ],
+            [
+              545270.0906159859,
+              2819205.828073302
+            ],
+            [
+              545277.0405049396,
+              2819192.5628654207
+            ],
+            [
+              545283.5896097998,
+              2819178.9308649795
+            ],
+            [
+              545291.1873478058,
+              2819161.349022253
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.86,
+            0.83,
+            0.74
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": true
+        },
+        {
+          "osmWayId": 1316027518,
+          "heightMeters": 9.2,
+          "footprint": [
+            [
+              545245.3648808051,
+              2819283.228769922
+            ],
+            [
+              545226.1837223104,
+              2819272.5329473927
+            ],
+            [
+              545235.733770571,
+              2819260.1402738593
+            ],
+            [
+              545244.8149682095,
+              2819246.7050717897
+            ],
+            [
+              545254.614360985,
+              2819231.921284606
+            ],
+            [
+              545263.8520525184,
+              2819216.8033863707
+            ],
+            [
+              545270.3723912847,
+              2819220.579508
+            ],
+            [
+              545272.0010272955,
+              2819217.4953901195
+            ],
+            [
+              545282.6330959642,
+              2819223.9763957774
+            ],
+            [
+              545275.0382413904,
+              2819237.748819831
+            ],
+            [
+              545263.4714166546,
+              2819231.275731918
+            ],
+            [
+              545261.5714121982,
+              2819234.3589329137
+            ],
+            [
+              545272.3341702052,
+              2819240.8292988017
+            ],
+            [
+              545265.2774597701,
+              2819252.9978284035
+            ],
+            [
+              545253.6409622752,
+              2819246.3251821892
+            ],
+            [
+              545251.7400633872,
+              2819249.6741559776
+            ],
+            [
+              545262.0279162457,
+              2819256.8848614856
+            ],
+            [
+              545255.4563954027,
+              2819268.246640093
+            ],
+            [
+              545242.9472846041,
+              2819261.039502781
+            ],
+            [
+              545241.0459411416,
+              2819264.5213637827
+            ],
+            [
+              545252.2102663375,
+              2819271.1259589284
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.86,
+            0.83,
+            0.74
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": true
+        },
+        {
+          "osmWayId": 1316027519,
+          "heightMeters": 9.2,
+          "footprint": [
+            [
+              545356.3875330101,
+              2819054.761757219
+            ],
+            [
+              545373.2106895767,
+              2819064.342370935
+            ],
+            [
+              545380.786427433,
+              2819050.337384441
+            ],
+            [
+              545370.9581166535,
+              2819043.92547251
+            ],
+            [
+              545372.6865929307,
+              2819041.0521099875
+            ],
+            [
+              545380.7922614198,
+              2819045.6531299683
+            ],
+            [
+              545379.8319752093,
+              2819047.255594006
+            ],
+            [
+              545381.9788244088,
+              2819048.458859251
+            ],
+            [
+              545390.2977883692,
+              2819034.6225075703
+            ],
+            [
+              545378.2094284443,
+              2819027.7821155284
+            ],
+            [
+              545380.0592334934,
+              2819024.698760619
+            ],
+            [
+              545388.0553253979,
+              2819029.011490897
+            ],
+            [
+              545387.0745220779,
+              2819030.735698109
+            ],
+            [
+              545389.7631866893,
+              2819032.217650536
+            ],
+            [
+              545397.6282966206,
+              2819018.844869226
+            ],
+            [
+              545385.3209824944,
+              2819011.3614401435
+            ],
+            [
+              545386.8793127508,
+              2819008.2770976513
+            ],
+            [
+              545395.0859947929,
+              2819012.7345072785
+            ],
+            [
+              545394.3363244537,
+              2819014.470571944
+            ],
+            [
+              545397.0957992601,
+              2819015.8198787565
+            ],
+            [
+              545405.405799618,
+              2819001.673435802
+            ],
+            [
+              545385.359144085,
+              2818991.218083907
+            ],
+            [
+              545378.7302149937,
+              2819007.5850259387
+            ],
+            [
+              545372.0022562563,
+              2819023.519752106
+            ],
+            [
+              545365.4084294145,
+              2819038.436134449
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.86,
+            0.83,
+            0.74
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": true
+        },
+        {
+          "osmWayId": 1316027520,
+          "heightMeters": 9.2,
+          "footprint": [
+            [
+              545312.2968211499,
+              2819122.052648761
+            ],
+            [
+              545322.018670226,
+              2819109.439138736
+            ],
+            [
+              545331.319449206,
+              2819096.5141390786
+            ],
+            [
+              545341.0480882202,
+              2819081.9073574357
+            ],
+            [
+              545350.2251473009,
+              2819066.9443475828
+            ],
+            [
+              545357.6907751991,
+              2819070.5908264834
+            ],
+            [
+              545359.1768965928,
+              2819068.0488588177
+            ],
+            [
+              545368.8651950916,
+              2819074.2498830664
+            ],
+            [
+              545361.3998928728,
+              2819088.2995463354
+            ],
+            [
+              545349.702766008,
+              2819081.6930577825
+            ],
+            [
+              545347.5309330879,
+              2819084.8971388424
+            ],
+            [
+              545358.5660484004,
+              2819091.102719962
+            ],
+            [
+              545351.378032944,
+              2819103.4147208775
+            ],
+            [
+              545339.8102259171,
+              2819097.2073406065
+            ],
+            [
+              545338.1838487266,
+              2819099.615947981
+            ],
+            [
+              545349.0773424892,
+              2819106.0868161446
+            ],
+            [
+              545341.7600701558,
+              2819117.9886485226
+            ],
+            [
+              545329.2479362488,
+              2819111.6451902473
+            ],
+            [
+              545327.4781117515,
+              2819114.861710206
+            ],
+            [
+              545338.644773239,
+              2819120.80194656
+            ],
+            [
+              545331.8702662917,
+              2819132.7056232146
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.86,
+            0.83,
+            0.74
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": true
+        },
+        {
+          "osmWayId": 1316027521,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545390.7375538022,
+              2819070.913282977
+            ],
+            [
+              545385.7716525472,
+              2819068.1501040542
+            ],
+            [
+              545395.1152964334,
+              2819051.504451055
+            ],
+            [
+              545400.0812396433,
+              2819054.256559517
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027522,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545371.8439095601,
+              2819093.938364239
+            ],
+            [
+              545376.8906618835,
+              2819096.5689251446
+            ],
+            [
+              545385.7726461878,
+              2819079.711295401
+            ],
+            [
+              545380.7258891191,
+              2819077.080731269
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027523,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545457.0336202574,
+              2818935.006436774
+            ],
+            [
+              545433.5272225769,
+              2818922.2026634975
+            ],
+            [
+              545465.0612409306,
+              2818864.9578543715
+            ],
+            [
+              545488.5676735648,
+              2818877.772754885
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027524,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545411.2340283234,
+              2818984.3182092425
+            ],
+            [
+              545421.054856462,
+              2818966.2899519326
+            ],
+            [
+              545413.068750357,
+              2818961.9883105853
+            ],
+            [
+              545429.7773575,
+              2818931.3148547015
+            ],
+            [
+              545456.5548886508,
+              2818945.746526742
+            ],
+            [
+              545455.3412041715,
+              2818947.968265064
+            ],
+            [
+              545459.0433022308,
+              2818949.9630743293
+            ],
+            [
+              545458.61830007,
+              2818950.8032496613
+            ],
+            [
+              545429.7327118708,
+              2819003.682862191
+            ],
+            [
+              545425.8701094585,
+              2819001.5989244045
+            ],
+            [
+              545424.8890361617,
+              2819003.400645538
+            ],
+            [
+              545403.8101882864,
+              2818992.0447733887
+            ],
+            [
+              545408.7458879306,
+              2818982.9808942727
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027525,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545461.9060126331,
+              2819021.521491598
+            ],
+            [
+              545490.9938795777,
+              2818968.2993413303
+            ],
+            [
+              545458.61830007,
+              2818950.8032496613
+            ],
+            [
+              545429.7327118708,
+              2819003.682862191
+            ],
+            [
+              545429.54057766,
+              2819004.025501914
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027526,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545579.8557347947,
+              2818938.857110715
+            ],
+            [
+              545560.0818887822,
+              2818927.992690694
+            ],
+            [
+              545562.852842233,
+              2818923.018853417
+            ],
+            [
+              545560.8563772058,
+              2818921.9268107433
+            ],
+            [
+              545563.4655726699,
+              2818917.2292712927
+            ],
+            [
+              545565.3516650918,
+              2818918.2655688697
+            ],
+            [
+              545567.3034717167,
+              2818914.761776933
+            ],
+            [
+              545587.1776537559,
+              2818925.681918658
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027531,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545524.4521028643,
+              2818765.0070953835
+            ],
+            [
+              545534.29440636,
+              2818770.3006957863
+            ],
+            [
+              545538.59309342,
+              2818762.397459612
+            ],
+            [
+              545532.984471026,
+              2818759.44378493
+            ],
+            [
+              545528.7507856858,
+              2818757.103856162
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027532,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545513.2777011731,
+              2818781.967576907
+            ],
+            [
+              545523.5926642726,
+              2818787.1852595503
+            ],
+            [
+              545528.3180090308,
+              2818777.954599438
+            ],
+            [
+              545518.0130916791,
+              2818772.7369474755
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027533,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545498.8298466675,
+              2818830.499795595
+            ],
+            [
+              545510.6889968583,
+              2818836.7968905857
+            ],
+            [
+              545516.849183342,
+              2818825.3341711345
+            ],
+            [
+              545504.9799745425,
+              2818819.0370367086
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027534,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545568.2198945992,
+              2818775.4990971955
+            ],
+            [
+              545573.2066802457,
+              2818766.2471947046
+            ],
+            [
+              545539.2357367995,
+              2818747.8152767434
+            ],
+            [
+              545534.1777058239,
+              2818757.3327233684
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027535,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545605.358264374,
+              2818799.423481819
+            ],
+            [
+              545610.6170146394,
+              2818790.0064104134
+            ],
+            [
+              545581.1317748826,
+              2818773.726940538
+            ],
+            [
+              545574.0990303264,
+              2818769.8492617155
+            ],
+            [
+              545568.8402984125,
+              2818779.2663469687
+            ],
+            [
+              545575.7225360252,
+              2818783.065993068
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316027536,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545588.9466186399,
+              2818902.089387532
+            ],
+            [
+              545554.9766104434,
+              2818883.491313941
+            ],
+            [
+              545558.9411009528,
+              2818876.317825755
+            ],
+            [
+              545574.9830751676,
+              2818885.0987068783
+            ],
+            [
+              545574.4875175651,
+              2818885.994008038
+            ],
+            [
+              545583.346215061,
+              2818890.8413403365
+            ],
+            [
+              545583.9226720621,
+              2818889.802353885
+            ],
+            [
+              545593.002072368,
+              2818894.772257741
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039486,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545109.4614392961,
+              2819424.926018232
+            ],
+            [
+              545102.9506481265,
+              2819421.316114278
+            ],
+            [
+              545121.0907872987,
+              2819388.9860143824
+            ],
+            [
+              545127.59153896,
+              2819392.5958929607
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039488,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545265.1377819784,
+              2819389.361808707
+            ],
+            [
+              545269.0736118611,
+              2819402.453444312
+            ],
+            [
+              545278.0781230163,
+              2819399.7818714976
+            ],
+            [
+              545274.1523517544,
+              2819386.690267177
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039502,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546191.3202227447,
+              2818880.046960894
+            ],
+            [
+              546172.5503884482,
+              2818869.6169783873
+            ],
+            [
+              546176.0394912092,
+              2818863.4054599227
+            ],
+            [
+              546194.809293473,
+              2818873.846520964
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039503,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545694.554731861,
+              2819817.3123246334
+            ],
+            [
+              545675.9164336254,
+              2819806.905606609
+            ],
+            [
+              545679.6172991549,
+              2819800.351390916
+            ],
+            [
+              545698.2556038507,
+              2819810.758113918
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039504,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545392.6459764129,
+              2819811.932449893
+            ],
+            [
+              545402.758303962,
+              2819823.3286336814
+            ],
+            [
+              545408.3126369624,
+              2819818.463875586
+            ],
+            [
+              545398.1902974909,
+              2819807.056579729
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039505,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545462.1815761107,
+              2820111.741017197
+            ],
+            [
+              545468.8023346736,
+              2820115.395776567
+            ],
+            [
+              545479.8034724502,
+              2820095.8544319505
+            ],
+            [
+              545473.1927571788,
+              2820092.199701488
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039506,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545919.7967438602,
+              2819635.706659208
+            ],
+            [
+              545925.8022955733,
+              2819640.0128921038
+            ],
+            [
+              545938.4355721048,
+              2819622.559422005
+            ],
+            [
+              545932.4400289113,
+              2819618.2642919132
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039507,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546185.1722475606,
+              2819356.6705991216
+            ],
+            [
+              546178.9228696199,
+              2819353.1053653406
+            ],
+            [
+              546167.9014637189,
+              2819372.2252673297
+            ],
+            [
+              546174.1408229528,
+              2819375.7793876347
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039508,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545804.5970904197,
+              2818522.56891715
+            ],
+            [
+              545797.0921912824,
+              2818515.655250085
+            ],
+            [
+              545803.6396642146,
+              2818508.623558406
+            ],
+            [
+              545801.9663530195,
+              2818507.0785556743
+            ],
+            [
+              545805.7192942906,
+              2818503.049412611
+            ],
+            [
+              545807.3926434736,
+              2818504.583341998
+            ],
+            [
+              545810.6108934744,
+              2818501.1282149646
+            ],
+            [
+              545817.8051872362,
+              2818507.7529039606
+            ],
+            [
+              545814.5869369018,
+              2818511.2080292976
+            ],
+            [
+              545816.5808663593,
+              2818513.0531273284
+            ],
+            [
+              545812.9489956639,
+              2818516.94979459
+            ],
+            [
+              545811.2756865844,
+              2818515.4047906473
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316039509,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545696.8903418313,
+              2818585.9201746164
+            ],
+            [
+              545705.9687833982,
+              2818602.9939559135
+            ],
+            [
+              545711.3745359549,
+              2818600.6093732677
+            ],
+            [
+              545702.4285815408,
+              2818583.0044918605
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316199218,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545506.3380547469,
+              2818694.5374331665
+            ],
+            [
+              545513.1301185524,
+              2818698.2702953713
+            ],
+            [
+              545523.6074420076,
+              2818679.4138008924
+            ],
+            [
+              545516.8153713421,
+              2818675.680933557
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316199219,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545404.1149966624,
+              2819050.327924295
+            ],
+            [
+              545397.5736820467,
+              2819046.79529453
+            ],
+            [
+              545414.2718376453,
+              2819016.1993007553
+            ],
+            [
+              545420.8031121556,
+              2819019.731904276
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236404,
+          "heightMeters": 14.5,
+          "footprint": [
+            [
+              545031.9890062535,
+              2819625.2915443666
+            ],
+            [
+              545018.9277106093,
+              2819617.9720114595
+            ],
+            [
+              545020.3937564311,
+              2819615.3856434356
+            ],
+            [
+              545011.796586516,
+              2819610.5617021527
+            ],
+            [
+              545016.0430342809,
+              2819603.0789343417
+            ],
+            [
+              545014.7891017676,
+              2819602.365983407
+            ],
+            [
+              545020.825157128,
+              2819591.722092649
+            ],
+            [
+              545013.7226721512,
+              2819587.744799392
+            ],
+            [
+              545022.6200703094,
+              2819572.049747847
+            ],
+            [
+              545027.3249875379,
+              2819574.679030202
+            ],
+            [
+              545030.530097245,
+              2819569.0199618977
+            ],
+            [
+              545036.0876715435,
+              2819572.13937035
+            ],
+            [
+              545037.8267309135,
+              2819569.0666700294
+            ],
+            [
+              545051.0284743686,
+              2819576.4752846756
+            ],
+            [
+              545045.7001396182,
+              2819585.8701900966
+            ],
+            [
+              545056.0026994712,
+              2819591.652254544
+            ],
+            [
+              545057.8428632055,
+              2819588.4027142045
+            ],
+            [
+              545068.0050068151,
+              2819594.095723656
+            ],
+            [
+              545065.5683531472,
+              2819598.3842035416
+            ],
+            [
+              545068.477563688,
+              2819600.0107979546
+            ],
+            [
+              545055.9099339535,
+              2819622.1827868624
+            ],
+            [
+              545050.7536603885,
+              2819619.286199551
+            ],
+            [
+              545047.4474891261,
+              2819625.11103208
+            ],
+            [
+              545035.7906284677,
+              2819618.582460937
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236405,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544894.3158976258,
+              2819553.26909641
+            ],
+            [
+              544891.8481009722,
+              2819557.8675724887
+            ],
+            [
+              544874.8826366708,
+              2819548.851846357
+            ],
+            [
+              544877.3504290319,
+              2819544.253367261
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236406,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544847.315362766,
+              2819596.2998097697
+            ],
+            [
+              544858.290120928,
+              2819602.460487665
+            ],
+            [
+              544867.3996495891,
+              2819586.389533594
+            ],
+            [
+              544856.4248450168,
+              2819580.2399222907
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236407,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545511.5131070724,
+              2818810.222253074
+            ],
+            [
+              545518.7370452264,
+              2818814.0341059384
+            ],
+            [
+              545522.1561753188,
+              2818807.6228540135
+            ],
+            [
+              545514.9322346046,
+              2818803.8109993697
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236408,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545082.1259571372,
+              2819146.7009823187
+            ],
+            [
+              545097.9077772597,
+              2819155.126052478
+            ],
+            [
+              545103.1165245809,
+              2819145.487139484
+            ],
+            [
+              545087.3346961264,
+              2819137.062063403
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236409,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545405.3462339349,
+              2818669.6435341383
+            ],
+            [
+              545398.7444990333,
+              2818666.088556038
+            ],
+            [
+              545408.8387216595,
+              2818647.529671611
+            ],
+            [
+              545415.440463233,
+              2818651.0846545123
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316236410,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545381.1877928845,
+              2818712.628110989
+            ],
+            [
+              545376.5027761003,
+              2818709.9877048354
+            ],
+            [
+              545385.7142929172,
+              2818693.839927142
+            ],
+            [
+              545390.3993136646,
+              2818696.4803364086
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316253589,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545770.4913357808,
+              2819175.3383879964
+            ],
+            [
+              545760.6003366295,
+              2819175.581408459
+            ],
+            [
+              545760.4494289464,
+              2819169.744925014
+            ],
+            [
+              545770.3404324049,
+              2819169.501904377
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316253593,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545186.8664752346,
+              2819343.4061876135
+            ],
+            [
+              545179.2422758482,
+              2819339.1280511147
+            ],
+            [
+              545181.3251792594,
+              2819335.447463725
+            ],
+            [
+              545176.3995385125,
+              2819332.6844965327
+            ],
+            [
+              545182.5673605507,
+              2819321.7864220925
+            ],
+            [
+              545178.9257808204,
+              2819319.7475958597
+            ],
+            [
+              545182.3938667851,
+              2819313.6354200207
+            ],
+            [
+              545185.3332037239,
+              2819315.2842879957
+            ],
+            [
+              545187.8913028014,
+              2819310.7747612107
+            ],
+            [
+              545205.9285953449,
+              2819320.8908205912
+            ],
+            [
+              545203.1985817945,
+              2819325.70983348
+            ],
+            [
+              545207.0808878188,
+              2819327.8934409004
+            ],
+            [
+              545202.2174494395,
+              2819336.470384371
+            ],
+            [
+              545198.5959407254,
+              2819334.44269436
+            ],
+            [
+              545193.9549353773,
+              2819342.6328043826
+            ],
+            [
+              545188.9089153891,
+              2819339.8029822605
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316253599,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545879.9677296267,
+              2819459.3613408147
+            ],
+            [
+              545903.3293948437,
+              2819478.798730503
+            ],
+            [
+              545896.8604198804,
+              2819486.5061541377
+            ],
+            [
+              545873.5989619255,
+              2819467.157710631
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316253614,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544811.6705373825,
+              2819630.863934236
+            ],
+            [
+              544800.3043680534,
+              2819624.5358746527
+            ],
+            [
+              544786.6649983058,
+              2819648.753197586
+            ],
+            [
+              544798.0311530555,
+              2819655.0812459784
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259387,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545523.9921430551,
+              2818861.813856439
+            ],
+            [
+              545528.3462581547,
+              2818864.1984900283
+            ],
+            [
+              545548.5529119556,
+              2818827.6678944444
+            ],
+            [
+              545544.1987883087,
+              2818825.283254513
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259388,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545507.1567433289,
+              2818858.7444896693
+            ],
+            [
+              545509.2434937485,
+              2818859.8922006777
+            ],
+            [
+              545511.7616502597,
+              2818861.273931702
+            ],
+            [
+              545534.6879530745,
+              2818820.068290953
+            ],
+            [
+              545530.0830736555,
+              2818817.527767503
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259389,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545492.4144182142,
+              2818890.443336854
+            ],
+            [
+              545505.3864379094,
+              2818897.5526087484
+            ],
+            [
+              545508.1271859955,
+              2818892.5897318153
+            ],
+            [
+              545495.1651762753,
+              2818885.491565332
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259390,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545483.3216324277,
+              2818907.1451451415
+            ],
+            [
+              545496.1732535759,
+              2818914.187555665
+            ],
+            [
+              545501.8569268254,
+              2818903.9191940664
+            ],
+            [
+              545489.0052985895,
+              2818896.8767782757
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259391,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545473.6473754778,
+              2818923.4131002934
+            ],
+            [
+              545487.0106481555,
+              2818930.7340892847
+            ],
+            [
+              545492.8358881277,
+              2818920.211504587
+            ],
+            [
+              545479.4726078967,
+              2818912.8905099835
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259392,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545464.5460133932,
+              2818939.6940825335
+            ],
+            [
+              545477.9795187761,
+              2818947.048523265
+            ],
+            [
+              545479.1627529605,
+              2818944.9152749227
+            ],
+            [
+              545483.501331664,
+              2818937.0786001533
+            ],
+            [
+              545470.0678190857,
+              2818929.724154073
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259393,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545225.2700473462,
+              2819296.0398239004
+            ],
+            [
+              545247.9540950475,
+              2819308.1649547094
+            ],
+            [
+              545250.5737197156,
+              2819303.3012816412
+            ],
+            [
+              545227.8694521287,
+              2819291.2093000333
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259394,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545221.7222285959,
+              2819337.632609527
+            ],
+            [
+              545231.8256156268,
+              2819342.90473127
+            ],
+            [
+              545237.2071247502,
+              2819332.712755007
+            ],
+            [
+              545227.1138201583,
+              2819327.4295895128
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259395,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545225.4367831476,
+              2819318.077519301
+            ],
+            [
+              545241.2186860982,
+              2819326.392026504
+            ],
+            [
+              545246.8122482619,
+              2819315.912848696
+            ],
+            [
+              545231.0303735975,
+              2819307.587261326
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259396,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545468.8959247965,
+              2819280.5314078405
+            ],
+            [
+              545474.1428128732,
+              2819283.3952404656
+            ],
+            [
+              545481.3331454569,
+              2819270.4078000505
+            ],
+            [
+              545486.7304956685,
+              2819273.3607404833
+            ],
+            [
+              545488.227235633,
+              2819270.6527134846
+            ],
+            [
+              545477.5729789675,
+              2819264.824828587
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259397,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545445.9305695912,
+              2819283.2108004983
+            ],
+            [
+              545456.0533749863,
+              2819288.671414957
+            ],
+            [
+              545470.0812190656,
+              2819262.9943164913
+            ],
+            [
+              545459.958399546,
+              2819257.533691798
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259398,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545429.1668812115,
+              2819273.973580758
+            ],
+            [
+              545439.4804019507,
+              2819279.512347431
+            ],
+            [
+              545453.3771865137,
+              2819253.9455264816
+            ],
+            [
+              545443.053638193,
+              2819248.395641537
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259399,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545412.5836332552,
+              2819264.8698821855
+            ],
+            [
+              545422.6959639465,
+              2819270.4633224914
+            ],
+            [
+              545436.8533693631,
+              2819245.096700664
+            ],
+            [
+              545426.7409873976,
+              2819239.514323843
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259400,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545395.5088504748,
+              2819255.4766147416
+            ],
+            [
+              545405.9119544206,
+              2819261.281433322
+            ],
+            [
+              545416.033841466,
+              2819243.3317091702
+            ],
+            [
+              545405.6206768252,
+              2819237.526848888
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259401,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545433.0972802719,
+              2819306.3892694945
+            ],
+            [
+              545438.2444475674,
+              2819309.0201968704
+            ],
+            [
+              545443.6673470208,
+              2819298.529445137
+            ],
+            [
+              545449.1857167498,
+              2819301.360968266
+            ],
+            [
+              545451.7555388572,
+              2819296.386424707
+            ],
+            [
+              545441.0899581749,
+              2819290.935044034
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259402,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545413.4919447398,
+              2819302.2696539504
+            ],
+            [
+              545423.6947785111,
+              2819307.841255082
+            ],
+            [
+              545435.1427831528,
+              2819287.105413887
+            ],
+            [
+              545424.939937989,
+              2819281.5338043342
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259403,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545396.4653608329,
+              2819293.496688077
+            ],
+            [
+              545406.9796317561,
+              2819299.1136285136
+            ],
+            [
+              545418.2573554609,
+              2819278.20001259
+            ],
+            [
+              545407.7430349061,
+              2819272.5941374223
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259404,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545379.7337577298,
+              2819283.683794632
+            ],
+            [
+              545389.9860844534,
+              2819289.488089963
+            ],
+            [
+              545401.7853406698,
+              2819268.8973740665
+            ],
+            [
+              545391.5229896964,
+              2819263.081962097
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259405,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545972.4985875564,
+              2819440.8089431385
+            ],
+            [
+              545978.8687710994,
+              2819441.3956035078
+            ],
+            [
+              545979.2864762528,
+              2819436.834571967
+            ],
+            [
+              545972.9263031727,
+              2819436.2590197846
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259406,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545950.4876409555,
+              2819467.0671832627
+            ],
+            [
+              545955.7125045157,
+              2819470.4405346382
+            ],
+            [
+              545961.4012005595,
+              2819467.5254783696
+            ],
+            [
+              545961.3015527416,
+              2819461.4233901794
+            ],
+            [
+              545956.1861791994,
+              2819458.360483333
+            ],
+            [
+              545950.8304831398,
+              2819460.889097258
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259407,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545940.1286532778,
+              2819457.308684363
+            ],
+            [
+              545943.0268668276,
+              2819459.190133086
+            ],
+            [
+              545947.593796872,
+              2819452.207079997
+            ],
+            [
+              545944.6955824109,
+              2819450.3256303137
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259408,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545948.9521843413,
+              2819448.834190551
+            ],
+            [
+              545955.5207918616,
+              2819438.4693861143
+            ],
+            [
+              545952.1609291206,
+              2819436.3870182177
+            ],
+            [
+              545945.592323247,
+              2819446.7518242537
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259409,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545956.1428304295,
+              2819438.7926671216
+            ],
+            [
+              545967.5865875853,
+              2819439.983668529
+            ],
+            [
+              545968.1787646506,
+              2819434.371211002
+            ],
+            [
+              545956.735040762,
+              2819433.169135351
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259410,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545890.7814750158,
+              2819436.1763576176
+            ],
+            [
+              545895.8747345518,
+              2819436.902560141
+            ],
+            [
+              545896.606033625,
+              2819431.744609088
+            ],
+            [
+              545891.5127721546,
+              2819431.01840632
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259411,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545892.1309529712,
+              2819429.5366176483
+            ],
+            [
+              545939.6896797871,
+              2819435.8680130383
+            ],
+            [
+              545940.174418521,
+              2819432.2706442024
+            ],
+            [
+              545940.5867495512,
+              2819429.271019984
+            ],
+            [
+              545893.0279995834,
+              2819422.9396218043
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259412,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545876.1654933648,
+              2819433.867150333
+            ],
+            [
+              545888.040186208,
+              2819435.4250013223
+            ],
+            [
+              545889.6599957501,
+              2819423.227066692
+            ],
+            [
+              545877.7852922123,
+              2819421.66921445
+            ],
+            [
+              545877.620304594,
+              2819422.8867829205
+            ],
+            [
+              545876.330594643,
+              2819432.6163603794
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259413,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545858.9906619599,
+              2819439.1569901914
+            ],
+            [
+              545864.3860492668,
+              2819439.7070330945
+            ],
+            [
+              545866.4339049374,
+              2819419.9138356545
+            ],
+            [
+              545861.0385097003,
+              2819419.363792059
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259414,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545822.0489444936,
+              2819405.4209988615
+            ],
+            [
+              545852.2723192518,
+              2819411.116879862
+            ],
+            [
+              545854.227218991,
+              2819400.8469568593
+            ],
+            [
+              545834.5603950445,
+              2819397.147318223
+            ],
+            [
+              545836.2695895954,
+              2819388.1832769467
+            ],
+            [
+              545825.712971443,
+              2819386.1981031694
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259415,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545930.7580053668,
+              2819455.3496462563
+            ],
+            [
+              545924.2710467469,
+              2819465.3603764526
+            ],
+            [
+              545929.1149051074,
+              2819468.466634796
+            ],
+            [
+              545935.5918533036,
+              2819458.4447985534
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259416,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545911.2952580318,
+              2819497.6517747175
+            ],
+            [
+              545917.7221159308,
+              2819487.57438835
+            ],
+            [
+              545912.396705495,
+              2819484.2117807125
+            ],
+            [
+              545905.9698500952,
+              2819494.2891695593
+            ],
+            [
+              545909.179135656,
+              2819496.315639729
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259417,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546004.8422573389,
+              2819505.0493556685
+            ],
+            [
+              546006.9447812269,
+              2819501.568290897
+            ],
+            [
+              546007.8545542031,
+              2819500.05428808
+            ],
+            [
+              546004.4543221509,
+              2819498.0271373913
+            ],
+            [
+              546001.44202613,
+              2819503.0222057197
+            ],
+            [
+              546002.4851587274,
+              2819503.6459334386
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259418,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545978.8534539752,
+              2819539.4443006604
+            ],
+            [
+              545989.3632585437,
+              2819546.2355318945
+            ],
+            [
+              546008.257479009,
+              2819517.3310360797
+            ],
+            [
+              546007.3850177746,
+              2819516.7632645033
+            ],
+            [
+              545997.747660726,
+              2819510.539790444
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259419,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545958.6982595719,
+              2819572.6522721346
+            ],
+            [
+              545969.540172846,
+              2819579.3117417893
+            ],
+            [
+              545985.2457972442,
+              2819554.0395885217
+            ],
+            [
+              545974.4039088455,
+              2819547.369032719
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259421,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545204.4112438208,
+              2819386.2440641695
+            ],
+            [
+              545199.284949213,
+              2819383.380744629
+            ],
+            [
+              545158.2236407852,
+              2819455.95356481
+            ],
+            [
+              545163.3398651049,
+              2819458.816835232
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259422,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545170.125310773,
+              2819464.421005237
+            ],
+            [
+              545174.940645757,
+              2819467.095007503
+            ],
+            [
+              545218.8556199552,
+              2819388.81772903
+            ],
+            [
+              545214.0302142457,
+              2819386.143677543
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259423,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545135.8215406676,
+              2819550.9809449306
+            ],
+            [
+              545140.8104006042,
+              2819552.8581975256
+            ],
+            [
+              545170.8255100551,
+              2819474.345616672
+            ],
+            [
+              545165.8366619935,
+              2819472.4572796286
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316259424,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545123.0846918625,
+              2819548.7785648927
+            ],
+            [
+              545128.0434025956,
+              2819550.6557109947
+            ],
+            [
+              545157.9366376278,
+              2819472.4970576335
+            ],
+            [
+              545152.9678510453,
+              2819470.619867084
+            ],
+            [
+              545135.6179345475,
+              2819515.9976899833
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472047,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546207.5593560819,
+              2818773.3834212166
+            ],
+            [
+              546193.7011601628,
+              2818766.824103675
+            ],
+            [
+              546180.8938347539,
+              2818793.612069054
+            ],
+            [
+              546194.7520086723,
+              2818800.171373877
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472048,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546184.2558032601,
+              2818763.0817353986
+            ],
+            [
+              546170.407369366,
+              2818756.5999937546
+            ],
+            [
+              546157.7712570089,
+              2818783.2999793426
+            ],
+            [
+              546171.6196688645,
+              2818789.7817084515
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472049,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546161.0357565741,
+              2818751.8723157016
+            ],
+            [
+              546146.9144670109,
+              2818745.8104675882
+            ],
+            [
+              546135.1099674775,
+              2818773.288516928
+            ],
+            [
+              546149.2312328861,
+              2818779.350353151
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472050,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546125.6651720445,
+              2818769.380082995
+            ],
+            [
+              546111.5640644747,
+              2818763.296193672
+            ],
+            [
+              546123.6812175782,
+              2818735.498057813
+            ],
+            [
+              546137.7823494468,
+              2818741.5819593323
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472053,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545389.3422394254,
+              2818622.879417836
+            ],
+            [
+              545400.5886856389,
+              2818629.1189618893
+            ],
+            [
+              545409.467578555,
+              2818613.269068411
+            ],
+            [
+              545398.231174153,
+              2818607.0295512495
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472054,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545669.5721588276,
+              2818529.4827678287
+            ],
+            [
+              545677.818454465,
+              2818545.955695866
+            ],
+            [
+              545689.0347719986,
+              2818540.390568367
+            ],
+            [
+              545680.788448663,
+              2818523.928707179
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472085,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545013.5448329846,
+              2819297.0423528277
+            ],
+            [
+              545024.6104832176,
+              2819303.1259500287
+            ],
+            [
+              545033.5799224937,
+              2819286.988192727
+            ],
+            [
+              545022.514262699,
+              2819280.904588368
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316472086,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545160.1594754511,
+              2819001.474791914
+            ],
+            [
+              545181.9700237681,
+              2819013.486109252
+            ],
+            [
+              545205.7241336531,
+              2818970.8320305906
+            ],
+            [
+              545183.9135356002,
+              2818958.820675888
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316495183,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545019.4592401652,
+              2819869.197168136
+            ],
+            [
+              545024.6746684167,
+              2819875.393979224
+            ],
+            [
+              545027.6878163164,
+              2819878.9699296677
+            ],
+            [
+              545041.8181613281,
+              2819867.201603986
+            ],
+            [
+              545038.4546692135,
+              2819863.2036611503
+            ],
+            [
+              545033.5895879158,
+              2819857.428833859
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1316739891,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545306.0363058703,
+              2820053.6377837476
+            ],
+            [
+              545302.6958894827,
+              2820051.766047233
+            ],
+            [
+              545304.0911810333,
+              2820049.3012825698
+            ],
+            [
+              545307.4416480578,
+              2820051.1730534607
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1317690464,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546191.3808138344,
+              2818480.9644556255
+            ],
+            [
+              546192.1511023624,
+              2818482.0302120172
+            ],
+            [
+              546193.4470057912,
+              2818482.245089082
+            ],
+            [
+              546194.5150903275,
+              2818481.4846733855
+            ],
+            [
+              546194.7306410475,
+              2818480.189766414
+            ],
+            [
+              546193.960314395,
+              2818479.1350836805
+            ],
+            [
+              546192.6644106712,
+              2818478.9202065724
+            ],
+            [
+              546191.5963260416,
+              2818479.6806224147
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1317690465,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546256.6505135123,
+              2818412.553578785
+            ],
+            [
+              546256.3469802489,
+              2818413.128374699
+            ],
+            [
+              546240.5358094781,
+              2818442.242501002
+            ],
+            [
+              546247.3579975455,
+              2818445.9647661406
+            ],
+            [
+              546244.6471920342,
+              2818450.883303442
+            ],
+            [
+              546248.5800007613,
+              2818453.023087778
+            ],
+            [
+              546267.5860335594,
+              2818418.5380787607
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1317710669,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546403.335529976,
+              2818536.5025190352
+            ],
+            [
+              546393.5980665596,
+              2818538.705700725
+            ],
+            [
+              546394.9049618732,
+              2818544.44653315
+            ],
+            [
+              546404.6423829744,
+              2818542.254426266
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1320495225,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546189.5006790346,
+              2819546.9249671926
+            ],
+            [
+              546200.6555233527,
+              2819553.1648957394
+            ],
+            [
+              546207.5418898757,
+              2819541.0516235624
+            ],
+            [
+              546209.2814926845,
+              2819537.9015547773
+            ],
+            [
+              546211.0612987047,
+              2819534.7516250736
+            ],
+            [
+              546215.5208871027,
+              2819526.8712996524
+            ],
+            [
+              546204.3660272913,
+              2819520.6313591423
+            ],
+            [
+              546200.5334049896,
+              2819527.406457737
+            ],
+            [
+              546198.0255215453,
+              2819531.838453395
+            ],
+            [
+              546196.6805706029,
+              2819534.2147094863
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1320495230,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544829.1600002652,
+              2819126.471763894
+            ],
+            [
+              544831.364339358,
+              2819122.525756716
+            ],
+            [
+              544833.2956730288,
+              2819119.0660880236
+            ],
+            [
+              544835.722507161,
+              2819114.711091687
+            ],
+            [
+              544837.2695711356,
+              2819111.947793471
+            ],
+            [
+              544844.1960772908,
+              2819099.546057231
+            ],
+            [
+              544833.0299650435,
+              2819093.3736872952
+            ],
+            [
+              544830.2997828396,
+              2819098.2702902243
+            ],
+            [
+              544824.5361166587,
+              2819108.5940302555
+            ],
+            [
+              544822.2003367287,
+              2819112.772150698
+            ],
+            [
+              544817.9939040452,
+              2819120.2994060707
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1434597775,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              544993.008766095,
+              2819222.944052296
+            ],
+            [
+              544991.4339519206,
+              2819221.9974730704
+            ],
+            [
+              544989.1093433804,
+              2819225.832311257
+            ],
+            [
+              544990.6942080763,
+              2819226.77892401
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1434858522,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545176.5520702716,
+              2819856.028285122
+            ],
+            [
+              545173.036787179,
+              2819861.276537076
+            ],
+            [
+              545168.7648749514,
+              2819858.438257292
+            ],
+            [
+              545172.2801196772,
+              2819853.2010780624
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1435601383,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545304.1238487964,
+              2819449.0383212594
+            ],
+            [
+              545298.7950053752,
+              2819440.703751062
+            ],
+            [
+              545294.000543953,
+              2819443.7439269475
+            ],
+            [
+              545299.3294265666,
+              2819452.067421429
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1435601384,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545296.4370362572,
+              2819439.533004652
+            ],
+            [
+              545294.8590783358,
+              2819436.5598472306
+            ],
+            [
+              545291.4961212196,
+              2819438.331367207
+            ],
+            [
+              545293.07411715,
+              2819441.293450418
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1435817870,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545372.4616003216,
+              2818751.6562766596
+            ],
+            [
+              545357.8642605791,
+              2818746.5681595854
+            ],
+            [
+              545367.7087282259,
+              2818718.6287795124
+            ],
+            [
+              545382.3060575778,
+              2818723.7279805513
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436378893,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545807.6835992342,
+              2819881.762025728
+            ],
+            [
+              545804.8881602059,
+              2819876.3040693225
+            ],
+            [
+              545809.1569368105,
+              2819874.1481916523
+            ],
+            [
+              545811.942324246,
+              2819879.606114538
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426774,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545805.2678050144,
+              2819424.8869068353
+            ],
+            [
+              545801.1667813179,
+              2819422.037937843
+            ],
+            [
+              545803.9038599118,
+              2819418.149278419
+            ],
+            [
+              545807.9948335679,
+              2819420.9982138174
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426775,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545818.1338171338,
+              2819433.402527477
+            ],
+            [
+              545813.0644456096,
+              2819431.569041816
+            ],
+            [
+              545814.8299469111,
+              2819426.702550651
+            ],
+            [
+              545819.8993200649,
+              2819428.536036945
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426777,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545974.0189292247,
+              2819586.281572172
+            ],
+            [
+              545969.2947797797,
+              2819583.4525562087
+            ],
+            [
+              545975.632518839,
+              2819572.987302068
+            ],
+            [
+              545980.3666832398,
+              2819575.8274285565
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426778,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545942.3090341403,
+              2819539.4516517874
+            ],
+            [
+              545938.0069865137,
+              2819536.6240968863
+            ],
+            [
+              545921.5694128615,
+              2819561.4065377144
+            ],
+            [
+              545925.8714557799,
+              2819564.234087485
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426779,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545904.9132074942,
+              2819550.3307996364
+            ],
+            [
+              545896.6999735544,
+              2819544.9982007234
+            ],
+            [
+              545916.1998800676,
+              2819515.2651102105
+            ],
+            [
+              545924.4231755801,
+              2819520.597755237
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426780,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545928.5549031026,
+              2819523.269685608
+            ],
+            [
+              545937.1089462368,
+              2819528.8692488354
+            ],
+            [
+              545917.5289872612,
+              2819558.491295637
+            ],
+            [
+              545908.9749553781,
+              2819552.8917445615
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426781,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545947.8424415695,
+              2819493.9456472276
+            ],
+            [
+              545956.5268497117,
+              2819499.634261758
+            ],
+            [
+              545939.523321646,
+              2819525.300652882
+            ],
+            [
+              545930.8289107857,
+              2819519.6009407444
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426782,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545926.9177638369,
+              2819517.0848021526
+            ],
+            [
+              545918.5441259287,
+              2819511.629826225
+            ],
+            [
+              545935.5580988915,
+              2819485.8416317212
+            ],
+            [
+              545943.9317084068,
+              2819491.307691803
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426783,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545892.680778354,
+              2819541.75082076
+            ],
+            [
+              545888.0679884246,
+              2819538.678589341
+            ],
+            [
+              545904.9284498938,
+              2819513.665006673
+            ],
+            [
+              545909.541206813,
+              2819516.7483175574
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426784,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545871.9351481897,
+              2819465.812058572
+            ],
+            [
+              545856.5210095752,
+              2819452.990959738
+            ],
+            [
+              545862.9899767168,
+              2819445.283517025
+            ],
+            [
+              545878.3038775587,
+              2819458.0267617996
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426785,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545909.179135656,
+              2819496.315639729
+            ],
+            [
+              545902.6006932111,
+              2819506.6361369253
+            ],
+            [
+              545904.7168145694,
+              2819507.9722709046
+            ],
+            [
+              545911.2952580318,
+              2819497.6517747175
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426786,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545883.002569732,
+              2819494.6754937833
+            ],
+            [
+              545875.3866843452,
+              2819488.06037965
+            ],
+            [
+              545882.3691019971,
+              2819480.1000057687
+            ],
+            [
+              545889.9850266041,
+              2819486.704049977
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426787,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545848.5381886868,
+              2819441.9893213296
+            ],
+            [
+              545843.2238141772,
+              2819441.262379232
+            ],
+            [
+              545843.9451179137,
+              2819436.0822435133
+            ],
+            [
+              545849.2494437824,
+              2819436.8091514218
+            ],
+            [
+              545849.1463567025,
+              2819437.5618265616
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426788,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545910.784117179,
+              2819438.6480244934
+            ],
+            [
+              545905.1076921598,
+              2819437.9862591685
+            ],
+            [
+              545905.6874747676,
+              2819433.0492676604
+            ],
+            [
+              545911.3639018623,
+              2819433.711033196
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426789,
+          "heightMeters": 3,
+          "footprint": [
+            [
+              545870.1019100121,
+              2819431.797681194
+            ],
+            [
+              545871.3915775246,
+              2819422.0791770285
+            ],
+            [
+              545877.620304594,
+              2819422.8867829205
+            ],
+            [
+              545876.330594643,
+              2819432.6163603794
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.74,
+            0.72,
+            0.64
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426790,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545905.1311253648,
+              2819451.6626651557
+            ],
+            [
+              545901.7331451969,
+              2819448.971112062
+            ],
+            [
+              545904.0749667945,
+              2819446.044550041
+            ],
+            [
+              545907.4829979201,
+              2819448.7361382013
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1436426791,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545985.8790027413,
+              2819445.8382009817
+            ],
+            [
+              545979.9810506427,
+              2819445.297455831
+            ],
+            [
+              545980.8579203024,
+              2819435.8100949605
+            ],
+            [
+              545987.5898540323,
+              2819436.4201505138
+            ],
+            [
+              545987.4957441089,
+              2819437.4829261587
+            ],
+            [
+              545993.6850927589,
+              2819438.0468241293
+            ],
+            [
+              545993.1629933126,
+              2819443.737039282
+            ],
+            [
+              545986.1296195644,
+              2819443.1037969124
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1441583072,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545912.6731123335,
+              2818806.0444071563
+            ],
+            [
+              545907.642623367,
+              2818795.7394612646
+            ],
+            [
+              545914.5089449564,
+              2818792.4297600714
+            ],
+            [
+              545919.4794650527,
+              2818802.6348373652
+            ],
+            [
+              545917.6370275042,
+              2818803.5255050347
+            ],
+            [
+              545918.78481661,
+              2818805.8881921456
+            ],
+            [
+              545916.3785656306,
+              2818807.0537740183
+            ],
+            [
+              545915.2706388691,
+              2818804.790889328
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1441583073,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546016.5705334682,
+              2818859.390046282
+            ],
+            [
+              546011.6365823869,
+              2818859.0408640206
+            ],
+            [
+              546011.7741378536,
+              2818857.0369535396
+            ],
+            [
+              546010.7491532523,
+              2818856.966985987
+            ],
+            [
+              546010.8657307363,
+              2818855.217704033
+            ],
+            [
+              546012.3127859232,
+              2818855.311270581
+            ],
+            [
+              546012.3973827993,
+              2818854.0934278765
+            ],
+            [
+              546016.9193163299,
+              2818854.4190458017
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1441583077,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              546031.8486343216,
+              2818859.3207739587
+            ],
+            [
+              546026.2971482101,
+              2818860.254039496
+            ],
+            [
+              546026.0903404105,
+              2818859.0130467885
+            ],
+            [
+              546025.5572889951,
+              2818859.1108790482
+            ],
+            [
+              546025.2026849942,
+              2818857.005610626
+            ],
+            [
+              546025.8865792834,
+              2818856.886149231
+            ],
+            [
+              546025.6895559091,
+              2818855.7227077764
+            ],
+            [
+              546030.9091667747,
+              2818854.8436701875
+            ],
+            [
+              546031.1063420643,
+              2818855.9628164805
+            ],
+            [
+              546031.7801472663,
+              2818855.8543946245
+            ],
+            [
+              546032.0657256338,
+              2818857.5718378564
+            ],
+            [
+              546031.5628655261,
+              2818857.658699782
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1441583080,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545777.2283829637,
+              2819177.432260669
+            ],
+            [
+              545773.2279114907,
+              2819177.485019452
+            ],
+            [
+              545773.1804475304,
+              2819173.7307907087
+            ],
+            [
+              545777.1809201249,
+              2819173.678031895
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1442536470,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545933.5624932541,
+              2818670.493559707
+            ],
+            [
+              545928.4580744891,
+              2818667.076343777
+            ],
+            [
+              545929.6804319441,
+              2818665.286560534
+            ],
+            [
+              545934.7748378555,
+              2818668.6926686126
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1442536471,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545936.4198980307,
+              2818669.6728211283
+            ],
+            [
+              545941.3639500203,
+              2818672.956602442
+            ],
+            [
+              545940.1516048948,
+              2818674.757492956
+            ],
+            [
+              545935.2075532905,
+              2818671.473712076
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1442536481,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545491.2661235332,
+              2818415.0466632275
+            ],
+            [
+              545488.4101991009,
+              2818415.4245450064
+            ],
+            [
+              545489.2137560731,
+              2818421.506861951
+            ],
+            [
+              545492.0696792376,
+              2818421.12898036
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1443691416,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545084.0087288623,
+              2819816.868701886
+            ],
+            [
+              545082.3445832421,
+              2819815.611738495
+            ],
+            [
+              545083.9497212173,
+              2819813.5020251404
+            ],
+            [
+              545085.6139042769,
+              2819814.747914911
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1443696256,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545704.118085516,
+              2818576.864228088
+            ],
+            [
+              545703.2993227084,
+              2818575.266785976
+            ],
+            [
+              545701.1848786392,
+              2818576.3337376346
+            ],
+            [
+              545702.0036416281,
+              2818577.931179616
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1444137987,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545645.8340821598,
+              2818982.3146390645
+            ],
+            [
+              545644.918454194,
+              2818979.6537709995
+            ],
+            [
+              545646.3473598391,
+              2818979.171391541
+            ],
+            [
+              545647.2528987746,
+              2818981.843299231
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        },
+        {
+          "osmWayId": 1444137988,
+          "heightMeters": 5.2,
+          "footprint": [
+            [
+              545647.676332298,
+              2818987.3595644897
+            ],
+            [
+              545646.550578194,
+              2818984.4211311014
+            ],
+            [
+              545648.0903466766,
+              2818983.8505384796
+            ],
+            [
+              545649.2060872642,
+              2818986.7778639058
+            ]
+          ],
+          "heightMethod": "LIC / architect photograph estimate; no public LoD2 or DSM",
+          "facadeColor": [
+            0.82,
+            0.78,
+            0.66
+          ],
+          "roofColor": [
+            0.79,
+            0.76,
+            0.65
+          ],
+          "teamHospitality": false
+        }
+      ],
+      "excluded": [
+        {
+          "id": 1316027505,
+          "reason": "track, pit or reserved grandstand overlap"
+        },
+        {
+          "id": 1442338650,
+          "reason": "track, pit or reserved grandstand overlap"
+        },
+        {
+          "id": 1442338654,
+          "reason": "track, pit or reserved grandstand overlap"
+        }
+      ],
+      "lod2Available": false,
+      "remainingDrivingCorridorConflicts": 0,
+      "permanentTeamHospitality": 4
+    },
+    "curbs": [
+      {
+        "turn": 1,
+        "startMeters": 475.9217555267529,
+        "endMeters": 591.9217555267529,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 2,
+        "startMeters": 767.6605608484482,
+        "endMeters": 883.6605608484482,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 3,
+        "startMeters": 1017.3690005498372,
+        "endMeters": 1087.3690005498372,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 4,
+        "startMeters": 1426.8311043542383,
+        "endMeters": 1542.8311043542383,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 5,
+        "startMeters": 1605.037260048136,
+        "endMeters": 1675.037260048136,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 6,
+        "startMeters": 1893.9860676405265,
+        "endMeters": 2009.9860676405265,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 7,
+        "startMeters": 2289.166782425601,
+        "endMeters": 2405.166782425601,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 8,
+        "startMeters": 2546.907660947172,
+        "endMeters": 2616.907660947172,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 9,
+        "startMeters": 2663.017189821611,
+        "endMeters": 2733.017189821611,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 10,
+        "startMeters": 2862.303291219007,
+        "endMeters": 2978.303291219007,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 11,
+        "startMeters": 3103.0501272035017,
+        "endMeters": 3173.0501272035017,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 12,
+        "startMeters": 3511.3489437391027,
+        "endMeters": 3581.3489437391027,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 13,
+        "startMeters": 3717.7892988549766,
+        "endMeters": 3787.7892988549766,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 14,
+        "startMeters": 3914.4919400226304,
+        "endMeters": 4030.4919400226304,
+        "side": -1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 15,
+        "startMeters": 4239.468470742881,
+        "endMeters": 4309.468470742881,
+        "side": 1,
+        "geometryEstimated": true
+      },
+      {
+        "turn": 16,
+        "startMeters": 4703.509356318243,
+        "endMeters": 4819.509356318243,
+        "side": -1,
+        "geometryEstimated": true
+      }
+    ],
+    "terrainSurface": {
+      "macroColorSource": "Copernicus Sentinel-2C 2026-09-30 true colour, 10 m",
+      "detailSource": "current OpenStreetMap ground geometry",
+      "currentGroundPolygons": 253,
+      "currentGroundLines": 643,
+      "textureWidth": 2048,
+      "textureHeight": 2270,
+      "detailMethod": "mapped material colours plus deterministic authored mineral grain; not high-resolution orthophoto"
+    },
+    "roadGrading": {
+      "source": "GEDTM30, EGM2008; 24 m profile smoothing",
+      "technicalLiftMeters": 0.65,
+      "method": "lower intersecting historical terrain estimates inside road corridors only",
+      "maximumTerrainCorrectionMeters": 1.8380298614501953,
+      "verticalExaggeration": 1,
+      "terrainResolutionMeters": 30
+    }
+  },
+  "materials": {
+    "physicalObjectsTextured": true,
+    "colorSpace": "sRGB source colours converted once to linear vertex colours",
+    "facadeMethod": "LIC / architect photo colours with authored repeating window detail; not facade photogrammetry",
+    "roofMethod": "source-informed cream and light sand colours with embedded mineral texture",
+    "paintedRunoffMethod": "LIC photograph blue/aqua geometric apron; simplified authored repeat"
+  },
+  "controlPointReference": {
+    "referenceYear": 2025,
+    "currentEventVerified": false,
+    "reference": "FIA Qatar circuit map V2, 27 November 2025; event map LIC August 2026",
+    "sectorBoundaryDistancesMeters": [
+      1871.9860676405265,
+      3471.3489437391027
+    ],
+    "speedTrapDistanceMeters": 328.9217555267529,
+    "raceStartDistanceMeters": 225,
+    "raceStartMethod": "estimated metric registration of the separate FIA race-start symbol; not a surveyed point",
+    "drsDetectionDistanceMeters": 4314.468470742881,
+    "drsActivationDistanceMeters": 5066.509356318243
+  },
+  "sourceManifest": {
+    "schemaVersion": 1,
+    "modelId": "qatar",
+    "bbox": [
+      51.443,
+      25.477,
+      51.462,
+      25.503
+    ],
+    "coordinateReferenceSystem": "EPSG:32639",
+    "sources": [
+      {
+        "file": "osm.xml",
+        "url": "https://www.openstreetmap.org/api/0.6/map?bbox=51.443,25.477,51.462,25.503",
+        "role": "current raceway, buildings, landscaping, service roads and barriers",
+        "license": "ODbL 1.0",
+        "attribution": "ODbL 1.0",
+        "crs": "EPSG:4326",
+        "resolution": "OSM vector snapshot",
+        "acquisitionDate": "2026-10-05",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "verticalDatum": null,
+        "redistributed": false,
+        "sha256": "28de32cebec7314fe5c1303098594869b2af93251eb491a3c45e789677f4494e",
+        "bytes": 4268405,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "fia-2025-maps.pdf",
+        "url": "https://www.fia.com/system/files/decision-document/2025_qatar_grand_prix_-_event_notes_-_circuit_map._pit_lane_drawing_emergency_exits_map_ers_battery_containment_area_red_zones_map.pdf",
+        "role": "latest available FIA control points and 50 garage positions; reference only",
+        "license": "FIA/FOWC copyright; reference only",
+        "attribution": "FIA/FOWC copyright; reference only",
+        "crs": "diagram",
+        "resolution": "official vector map",
+        "acquisitionDate": "2025-11-27",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "verticalDatum": null,
+        "redistributed": false,
+        "sha256": "97cf896ba89c89c707357c948ccfb4b77e02a2347d5d7483febd75bb3ae418d7",
+        "bytes": 1954421,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "event-2026-map.webp",
+        "url": "https://www.lcsc.qa/sites/default/files/styles/avif_webp/public/2026-08/eventmap.png.webp?itok=SrVi--zB",
+        "role": "current promoter grandstand and hospitality locations; reference only",
+        "license": "Lusail International Circuit copyright; reference only",
+        "attribution": "Lusail International Circuit copyright; reference only",
+        "crs": "diagram",
+        "resolution": "2050 x 1368 event map",
+        "acquisitionDate": "2026-08",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "verticalDatum": null,
+        "redistributed": false,
+        "sha256": "b5036d632a00f01c31442838bc90b811b1b01e68f3dc45a6267a6e0ef87484f8",
+        "bytes": 57890,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "architect-pit.jpg",
+        "url": "https://cdn.prod.website-files.com/697e040e00eff1ea73b85774/6a3563aac783af210480ecba_Lusail-International-Circuit1.jpg",
+        "role": "post-2023 pit architecture and material colour reference",
+        "license": "Focus Design Partners / Lusail International Circuit copyright; reference only",
+        "attribution": "Focus Design Partners / Lusail International Circuit copyright; reference only",
+        "crs": "photograph",
+        "resolution": "architect photograph",
+        "acquisitionDate": "post-2023; exact capture date unknown",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "verticalDatum": null,
+        "redistributed": false,
+        "sha256": "f661f067fbfac795867447b3e4fb59ce787fefc39cbfb3a4481954d11ce32785",
+        "bytes": 1184020,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "main-grandstand.webp",
+        "url": "https://www.lcsc.qa/sites/default/files/styles/race_ticket_listing/public/2025-11/Grandstand%20main%20image_1.JPG.webp?itok=DNXEhYLn",
+        "role": "pit facade, grandstand canopy, run-off pattern and floodlights; reference only",
+        "license": "Lusail International Circuit copyright; reference only",
+        "attribution": "Lusail International Circuit copyright; reference only",
+        "crs": "photograph",
+        "resolution": "8192 x 5464 photograph",
+        "acquisitionDate": "2025-11 publication; capture date unknown",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "verticalDatum": null,
+        "redistributed": false,
+        "sha256": "c2807774888169119640c850ffd2d7809194985d2ae13de3b8c2b1fe7b554f61",
+        "bytes": 1975256,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "sentinel-20260930.tif",
+        "url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/39/R/WJ/2026/9/S2C_39RWJ_20260930_0_L2A/TCI.tif",
+        "role": "licensed current true-colour ground image; coarse detail complemented by mapped OSM surfaces",
+        "license": "Copernicus Sentinel data: free, full and open use",
+        "licenseUrl": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+        "attribution": "Contains modified Copernicus Sentinel data (2026), processed by ESA; COG hosted by Element 84",
+        "crs": "EPSG:32639",
+        "verticalDatum": null,
+        "resolution": "native 10 m RGB",
+        "acquisitionDate": "2026-09-30",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "cropBounds": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "downloadMethod": "native-rgb-cog-window",
+        "redistributed": true,
+        "sha256": "c030f4d1a5cd825844febf659c5d47849b6f24b74aa9a6aae506b95ab89ec0ad",
+        "bytes": 79834,
+        "retrievedAt": "2026-10-05"
+      },
+      {
+        "file": "gedtm30-native.tif",
+        "url": "https://s3.opengeohub.org/global/edtm/gedtm_rf_m_30m_s_20060101_20151231_go_epsg.4326.3855_v20250611.tif",
+        "role": "bare-earth terrain estimate; native unresampled COG crop",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "OpenGeoHub / Ho et al. (2025), GEDTM30; cropped for RaceSide",
+        "crs": "EPSG:4326",
+        "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+        "resolution": "1 arc-second / approximately 30 m",
+        "acquisitionDate": "2006-2015 composite; v20250611",
+        "bbox": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "cropBounds": [
+          51.443,
+          25.477,
+          51.462,
+          25.503
+        ],
+        "downloadMethod": "native-cog-window",
+        "redistributed": true,
+        "sha256": "55845f50c33a39f9778aaff95431a3e062f52f931b02cebbc9fddc0e4e9bd2c0",
+        "bytes": 5879,
+        "retrievedAt": "2026-10-05"
+      }
+    ]
+  },
+  "limitations": [
+    "FIA 2025 sporting map is the latest published control reference at acquisition; 2026 controls and team garage assignments need a later event update.",
+    "The promoter's August 2026 event map confirms grandstand categories; manually reconstructed North and T16 footprints and all stand heights are estimates, not survey data.",
+    "Sentinel true colour has native 10 m resolution. Fine ground boundaries come from OSM; authored material detail is not aerial photogrammetry.",
+    "GEDTM30 is a 30 m historical bare-earth estimate in EGM2008. Small berms, local banking and the 2023 earthworks are not surveyed.",
+    "No public LoD2/DSM was located. Building heights, facade rhythm, seat row patterns and floodlight dimensions are source-informed estimates.",
+    "Permanent team hospitality pavilions are modelled from current mapped footprints. Unconfirmed 2026 motorhomes, transporters and small temporary tents are omitted."
+  ],
+  "publicationStatus": "validated-reconstruction",
+  "visualAcceptance": {
+    "controlZones": [
+      "pit",
+      "north-t1",
+      "t2-t3",
+      "t16"
+    ],
+    "browserWidthsPixels": [
+      375,
+      768,
+      1024,
+      1440
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "zoomLimitPercent": 800,
+    "fallbackVerified": true,
+    "physicalTexturesVerifiedAfterMeshopt": true,
+    "limitsDisclosed": true
+  }
+}

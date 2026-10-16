@@ -1,0 +1,1123 @@
+{
+  "generatedAt": "2026-10-07T21:22:34.026Z",
+  "scope": "Read-only research; telemetry calculation remains track-analysis-4. UI changes implemented separately.",
+  "monza": {
+    "drivers": [
+      [
+        "GAS",
+        17
+      ],
+      [
+        "RUS",
+        16
+      ]
+    ],
+    "quality": {
+      "timingAvailable": false,
+      "sectorError": 0.514011,
+      "neutralSeconds": 0.514011,
+      "warnings": [
+        "ESTIMATED_SECTIONS",
+        "LOCAL_TIMING_MISMATCH"
+      ]
+    },
+    "sectors": [
+      {
+        "sector": 1,
+        "distance": 1918.126023,
+        "elapsed": [
+          27.455132221960795,
+          27.130121086943866
+        ],
+        "telemetryGap": -0.32501113501692913,
+        "officialGap": 0.18900000000000006
+      },
+      {
+        "sector": 2,
+        "distance": 3743.297568,
+        "elapsed": [
+          54.20616653108998,
+          54.71732338352958
+        ],
+        "telemetryGap": 0.5111568524396048,
+        "officialGap": 0.07900000000000773
+      }
+    ],
+    "sections": [
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 0,
+        "to": 794.3746903878716,
+        "times": [
+          8.822213,
+          8.562524
+        ],
+        "gain": null
+      },
+      {
+        "category": "slow",
+        "corner": 1,
+        "from": 794.3746903878716,
+        "to": 951.0686714999999,
+        "times": [
+          5.29358,
+          4.495178
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 951.0686714999999,
+        "to": 951.0686715,
+        "times": [
+          0,
+          0
+        ],
+        "gain": null
+      },
+      {
+        "category": "slow",
+        "corner": 2,
+        "from": 951.0686715,
+        "to": 995.3028782491015,
+        "times": [
+          1.317605,
+          1.848439
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 995.3028782491015,
+        "to": 1359.354516,
+        "times": [
+          5.317175,
+          5.632939
+        ],
+        "gain": null
+      },
+      {
+        "category": "fast",
+        "corner": 3,
+        "from": 1359.354516,
+        "to": 1444.6831751954676,
+        "times": [
+          1.036427,
+          1.022428
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 1444.6831751954676,
+        "to": 2008.7228562820194,
+        "times": [
+          null,
+          6.637491
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 4,
+        "from": 2008.7228562820194,
+        "to": 2173.01223,
+        "times": [
+          null,
+          3.919838
+        ],
+        "gain": null
+      },
+      {
+        "category": "slow",
+        "corner": 5,
+        "from": 2173.01223,
+        "to": 2267.9692664784425,
+        "times": [
+          2.066236,
+          2.075011
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 2267.9692664784425,
+        "to": 2442.4483110285673,
+        "times": [
+          3.305807,
+          2.806151
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 6,
+        "from": 2442.4483110285673,
+        "to": 2607.9943572813204,
+        "times": [
+          2.738562,
+          null
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 2607.9943572813204,
+        "to": 2818.84414954841,
+        "times": [
+          3.468922,
+          3.323909
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 7,
+        "from": 2818.84414954841,
+        "to": 2942.9329438445106,
+        "times": [
+          2.205708,
+          2.233238
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 2942.9329438445106,
+        "to": 3855.062398912979,
+        "times": [
+          11.197023,
+          10.67443
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 8,
+        "from": 3855.062398912979,
+        "to": 4018.2004890000003,
+        "times": [
+          null,
+          2.817822
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 4018.2004890000003,
+        "to": 4024.146102,
+        "times": [
+          0.107348,
+          0.098106
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 9,
+        "from": 4024.146102,
+        "to": 4116.1321515,
+        "times": [
+          1.509981,
+          1.409077
+        ],
+        "gain": null
+      },
+      {
+        "category": "fast",
+        "corner": 10,
+        "from": 4116.1321515,
+        "to": 4208.118201,
+        "times": [
+          1.318953,
+          1.252068
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 4208.118201,
+        "to": 5053.10848889232,
+        "times": [
+          null,
+          null
+        ],
+        "gain": null
+      },
+      {
+        "category": "medium",
+        "corner": 11,
+        "from": 5053.10848889232,
+        "to": 5259.458074270891,
+        "times": [
+          3.234009,
+          3.320756
+        ],
+        "gain": null
+      },
+      {
+        "category": "straight",
+        "corner": null,
+        "from": 5259.458074270891,
+        "to": 5793,
+        "times": [
+          7.381203,
+          null
+        ],
+        "gain": null
+      }
+    ],
+    "profile": [
+      {
+        "category": "slow",
+        "count": 3,
+        "available": 0,
+        "gain": null,
+        "speedValues": [
+          101,
+          74
+        ]
+      },
+      {
+        "category": "medium",
+        "count": 6,
+        "available": 0,
+        "gain": null,
+        "speedValues": [
+          206.5,
+          195.5
+        ]
+      },
+      {
+        "category": "fast",
+        "count": 2,
+        "available": 0,
+        "gain": null,
+        "speedValues": [
+          272,
+          275.5
+        ]
+      },
+      {
+        "category": "straight",
+        "count": 10,
+        "available": 0,
+        "gain": null,
+        "speedValues": [
+          342,
+          343
+        ]
+      }
+    ]
+  },
+  "spa": {
+    "track": {
+      "name": "Circuit de Spa-Francorchamps",
+      "length": 7004
+    },
+    "events": [
+      {
+        "driver": "ANT",
+        "lap": 14,
+        "signals": [
+          {
+            "id": "0:speed-drop:1632",
+            "kind": "speed-drop",
+            "trace": 0,
+            "from": 1632.470112,
+            "to": 2292.24901,
+            "duration": 7.4,
+            "startSpeed": 328,
+            "endSpeed": 296,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "0:speed-drop:5720",
+            "kind": "speed-drop",
+            "trace": 0,
+            "from": 5719.713875,
+            "to": 5849.553385,
+            "duration": 1.4,
+            "startSpeed": 336,
+            "endSpeed": 327,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "0:speed-drop:5980",
+            "kind": "speed-drop",
+            "trace": 0,
+            "from": 5979.639302,
+            "to": 6130.208473,
+            "duration": 1.721,
+            "startSpeed": 318,
+            "endSpeed": 306,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          }
+        ]
+      },
+      {
+        "driver": "VER",
+        "lap": 11,
+        "signals": [
+          {
+            "id": "1:speed-drop:1753",
+            "kind": "speed-drop",
+            "trace": 1,
+            "from": 1753.408097,
+            "to": 1973.739475,
+            "duration": 2.44,
+            "startSpeed": 328,
+            "endSpeed": 319,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "1:speed-drop:2059",
+            "kind": "speed-drop",
+            "trace": 1,
+            "from": 2059.159043,
+            "to": 2312.049717,
+            "duration": 2.959,
+            "startSpeed": 317,
+            "endSpeed": 283,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "1:speed-drop:2856",
+            "kind": "speed-drop",
+            "trace": 1,
+            "from": 2856.050282,
+            "to": 2924.833889,
+            "duration": 1.041,
+            "startSpeed": 243,
+            "endSpeed": 230,
+            "gear": 6,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "1:speed-drop:4202",
+            "kind": "speed-drop",
+            "trace": 1,
+            "from": 4202.070927,
+            "to": 4388.943247,
+            "duration": 2.399,
+            "startSpeed": 286,
+            "endSpeed": 263,
+            "gear": 7,
+            "throttle": 100,
+            "brakingAt": null
+          },
+          {
+            "id": "1:speed-drop:5714",
+            "kind": "speed-drop",
+            "trace": 1,
+            "from": 5714.419178,
+            "to": 5862.383832,
+            "duration": 1.6,
+            "startSpeed": 335,
+            "endSpeed": 327,
+            "gear": 8,
+            "throttle": 100,
+            "brakingAt": null
+          }
+        ]
+      }
+    ],
+    "boundaries": [
+      {
+        "driver": "ANT",
+        "previous": [
+          5719.713875,
+          5849.553385
+        ],
+        "next": [
+          5979.639302,
+          6130.208473
+        ],
+        "gapDistance": 130.08591699999943,
+        "samples": [
+          {
+            "distance": 5849.553385177281,
+            "elapsed": 85.349,
+            "speed": 327,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": null
+          },
+          {
+            "distance": 5867.837879515781,
+            "elapsed": 85.549,
+            "speed": 326,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": 0.20000000000000284
+          },
+          {
+            "distance": 5979.639302172393,
+            "elapsed": 86.789,
+            "speed": 318,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": 1.2399999999999949
+          },
+          {
+            "distance": 5997.419782884412,
+            "elapsed": 86.989,
+            "speed": 317,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": 0.20000000000000284
+          }
+        ]
+      },
+      {
+        "driver": "VER",
+        "previous": [
+          1753.408097,
+          1973.739475
+        ],
+        "next": [
+          2059.159043,
+          2312.049717
+        ],
+        "gapDistance": 85.41956800000003,
+        "samples": [
+          {
+            "distance": 1973.739475416924,
+            "elapsed": 27.177,
+            "speed": 319,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": null
+          },
+          {
+            "distance": 2059.159043171945,
+            "elapsed": 28.138,
+            "speed": 317,
+            "throttle": 100,
+            "brake": 0,
+            "gear": 8,
+            "drs": null,
+            "gapSeconds": 0.9610000000000021
+          }
+        ]
+      }
+    ]
+  },
+  "mergePrototype": {
+    "scope": "Research prototype only; production logic unchanged. Full throttle >=98%, gap <=1.5 s /150 m, same observed gear/DRS, brake 0, speed recovery <=2 km/h; intervening sections straight or fast only.",
+    "laps": 56,
+    "summary": [
+      {
+        "circuit": "baku",
+        "laps": 19,
+        "before": 14,
+        "after": 14
+      },
+      {
+        "circuit": "sepang",
+        "laps": 21,
+        "before": 1,
+        "after": 1
+      },
+      {
+        "circuit": "monza",
+        "laps": 4,
+        "before": 8,
+        "after": 8
+      },
+      {
+        "circuit": "madring",
+        "laps": 10,
+        "before": 8,
+        "after": 8
+      },
+      {
+        "circuit": "spa",
+        "laps": 2,
+        "before": 8,
+        "after": 6
+      }
+    ],
+    "rows": [
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 21,
+        "id": "11373:63:21",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 22,
+        "id": "11373:63:22",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 24,
+        "id": "11373:63:24",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 19,
+        "id": "11373:3:19",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 20,
+        "id": "11373:3:20",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 21,
+        "id": "11373:3:21",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 22,
+        "id": "11373:3:22",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 8,
+        "id": "11730:3:8",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "HAM",
+        "lap": 11,
+        "id": "11730:44:11",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 52,
+        "id": "11731:3:52",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "ANT",
+        "lap": 52,
+        "id": "11731:12:52",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 53,
+        "id": "11731:3:53",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "ANT",
+        "lap": 53,
+        "id": "11731:12:53",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 54,
+        "id": "11731:3:54",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "ANT",
+        "lap": 54,
+        "id": "11731:12:54",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 55,
+        "id": "11731:3:55",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "ANT",
+        "lap": 55,
+        "id": "11731:12:55",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "monza",
+        "driver": "GAS",
+        "lap": 17,
+        "id": "11357:10:17",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "monza",
+        "driver": "RUS",
+        "lap": 16,
+        "id": "11357:63:16",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "monza",
+        "driver": "ANT",
+        "lap": 53,
+        "id": "11361:12:53",
+        "before": 2,
+        "after": 2,
+        "merges": []
+      },
+      {
+        "circuit": "monza",
+        "driver": "RUS",
+        "lap": 51,
+        "id": "11361:63:51",
+        "before": 4,
+        "after": 4,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "NOR",
+        "lap": 17,
+        "id": "11362:1:17",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "NOR",
+        "lap": 9,
+        "id": "11364:1:9",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "ANT",
+        "lap": 10,
+        "id": "11364:12:10",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "LEC",
+        "lap": 8,
+        "id": "11364:16:8",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "NOR",
+        "lap": 18,
+        "id": "11365:1:18",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "ANT",
+        "lap": 19,
+        "id": "11365:12:19",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "VER",
+        "lap": 17,
+        "id": "11365:3:17",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "PIA",
+        "lap": 21,
+        "id": "11365:81:21",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "ANT",
+        "lap": 57,
+        "id": "11369:12:57",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "madring",
+        "driver": "VER",
+        "lap": 52,
+        "id": "11369:3:52",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 6,
+        "id": "11370:3:6",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 14,
+        "id": "11370:63:14",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "ANT",
+        "lap": 7,
+        "id": "11371:12:7",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 11,
+        "id": "11371:3:11",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 11,
+        "id": "11371:63:11",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "LEC",
+        "lap": 12,
+        "id": "11373:16:12",
+        "before": 2,
+        "after": 2,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 23,
+        "id": "11373:3:23",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 7,
+        "id": "11373:3:7",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 23,
+        "id": "11373:63:23",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 25,
+        "id": "11373:63:25",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "VER",
+        "lap": 48,
+        "id": "11377:3:48",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "baku",
+        "driver": "RUS",
+        "lap": 49,
+        "id": "11377:63:49",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 9,
+        "id": "11727:3:9",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 2,
+        "id": "11728:3:2",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 8,
+        "id": "11729:3:8",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 10,
+        "id": "11730:3:10",
+        "before": 1,
+        "after": 1,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 11,
+        "id": "11730:3:11",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 12,
+        "id": "11730:3:12",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "VER",
+        "lap": 9,
+        "id": "11730:3:9",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "HAM",
+        "lap": 12,
+        "id": "11730:44:12",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "HAM",
+        "lap": 13,
+        "id": "11730:44:13",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "HAM",
+        "lap": 14,
+        "id": "11730:44:14",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "sepang",
+        "driver": "HAM",
+        "lap": 15,
+        "id": "11730:44:15",
+        "before": 0,
+        "after": 0,
+        "merges": []
+      },
+      {
+        "circuit": "spa",
+        "driver": "ANT",
+        "lap": 14,
+        "id": "11330:12:14",
+        "before": 3,
+        "after": 2,
+        "merges": [
+          {
+            "from": 5719.713875,
+            "to": 6130.208473,
+            "duration": 4.561000000000007,
+            "startSpeed": 336,
+            "endSpeed": 306,
+            "parts": [
+              [
+                5719.713875,
+                5849.553385
+              ],
+              [
+                5979.639302,
+                6130.208473
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "circuit": "spa",
+        "driver": "VER",
+        "lap": 11,
+        "id": "11330:3:11",
+        "before": 5,
+        "after": 4,
+        "merges": [
+          {
+            "from": 1753.408097,
+            "to": 2312.049717,
+            "duration": 6.360000000000003,
+            "startSpeed": 328,
+            "endSpeed": 283,
+            "parts": [
+              [
+                1753.408097,
+                1973.739475
+              ],
+              [
+                2059.159043,
+                2312.049717
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "prototypeTests": {
+    "passed": 11,
+    "failed": 0
+  },
+  "limitations": [
+    "Missing samples do not prove continuity or battery state.",
+    "The grouping audit is not a precision/recall measurement against labelled ERS data.",
+    "Merge rules and throttle filtering are not enabled in production code."
+  ]
+}

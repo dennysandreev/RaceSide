@@ -1,0 +1,295 @@
+{
+  "anchorNames": [
+    "HighPoint",
+    "LowPoint",
+    "SectorBoundary_02",
+    "SectorBoundary_03",
+    "SpeedTrap",
+    "StartFinish",
+    "Turn_01",
+    "Turn_02",
+    "Turn_03",
+    "Turn_04",
+    "Turn_05",
+    "Turn_06",
+    "Turn_07",
+    "Turn_08",
+    "Turn_09",
+    "Turn_10",
+    "Turn_11",
+    "Turn_12",
+    "Turn_13",
+    "Turn_14"
+  ],
+  "animations": 0,
+  "bytes": 6353048,
+  "drawCalls": 31,
+  "extensionsRequired": [
+    "EXT_meshopt_compression"
+  ],
+  "materialAlphaModes": {
+    "AlbertPark_Source_Colored_Physical_Objects": "OPAQUE",
+    "AlbertPark_Textured_Facades": "OPAQUE",
+    "AlbertPark_Chain_Link_Fence": "BLEND",
+    "AlbertPark_White_Paint": "OPAQUE",
+    "AlbertPark_Sand_Gravel": "OPAQUE",
+    "AlbertPark_Green_Kerbs": "OPAQUE",
+    "AlbertPark_Gold_Kerbs": "OPAQUE",
+    "AlbertPark_Canvas_Canopies": "OPAQUE",
+    "AlbertPark_Asphalt": "OPAQUE",
+    "AlbertPark_Pit_Concrete": "OPAQUE",
+    "AlbertPark_Sector_1": "OPAQUE",
+    "AlbertPark_Sector_2": "OPAQUE",
+    "AlbertPark_Sector_3": "OPAQUE",
+    "AlbertPark_Sector_1_Glow": "BLEND",
+    "AlbertPark_Sector_2_Glow": "BLEND",
+    "AlbertPark_Sector_3_Glow": "BLEND",
+    "AlbertPark_Planet_SkySat_2018": "OPAQUE",
+    "AlbertPark_Checker_Black": "OPAQUE",
+    "AlbertPark_Colored_Seat_Rows": "OPAQUE"
+  },
+  "materialNames": [
+    "AlbertPark_Source_Colored_Physical_Objects",
+    "AlbertPark_Textured_Facades",
+    "AlbertPark_Chain_Link_Fence",
+    "AlbertPark_White_Paint",
+    "AlbertPark_Sand_Gravel",
+    "AlbertPark_Green_Kerbs",
+    "AlbertPark_Gold_Kerbs",
+    "AlbertPark_Canvas_Canopies",
+    "AlbertPark_Asphalt",
+    "AlbertPark_Pit_Concrete",
+    "AlbertPark_Sector_1",
+    "AlbertPark_Sector_2",
+    "AlbertPark_Sector_3",
+    "AlbertPark_Sector_1_Glow",
+    "AlbertPark_Sector_2_Glow",
+    "AlbertPark_Sector_3_Glow",
+    "AlbertPark_Planet_SkySat_2018",
+    "AlbertPark_Checker_Black",
+    "AlbertPark_Colored_Seat_Rows"
+  ],
+  "materials": 19,
+  "meshNames": [
+    "AlbertPark_2026_Turf_Strips_Mesh",
+    "AlbertPark_Buildings_Mesh",
+    "AlbertPark_Catch_Fences_Mesh",
+    "AlbertPark_Edge_And_Pit_Markings_Mesh",
+    "AlbertPark_Event_Barriers_Mesh",
+    "AlbertPark_Event_Catch_Fences_Mesh",
+    "AlbertPark_Grandstands_Mesh",
+    "AlbertPark_Gravel_Runoff_Mesh",
+    "AlbertPark_Guardrails_Mesh",
+    "AlbertPark_Kerbs_Mesh",
+    "AlbertPark_Main_Grandstand_Roof_Mesh",
+    "AlbertPark_Pedestrian_Bridges_Mesh",
+    "AlbertPark_Pit_And_Gantry_Details_Mesh",
+    "AlbertPark_Pit_Lane_Mesh",
+    "AlbertPark_Pit_Wall_Mesh",
+    "AlbertPark_Raceway_Mesh",
+    "AlbertPark_Sector_Core_Mesh",
+    "AlbertPark_Sector_Glow_Mesh",
+    "AlbertPark_Source_Roofs_Mesh",
+    "AlbertPark_Start_Finish_Mesh",
+    "AlbertPark_Terrain_Mesh",
+    "AlbertPark_Textured_Seat_Rows_Mesh",
+    "AlbertPark_Vegetation_Mesh"
+  ],
+  "meshes": 23,
+  "nodes": 44,
+  "previewBytes": 425884,
+  "triangles": 211390,
+  "decodedSurfaceAudit": {
+    "road": {
+      "triangles": 6070,
+      "minimumClearanceMeters": 0.6502200252310524,
+      "intersections": 0,
+      "missingSupport": 0,
+      "failures": [],
+      "maximumGradePercent": 4.572359494865061,
+      "maximumGradeTriangle": [
+        [
+          256.7109375,
+          5.25,
+          761.6796875
+        ],
+        [
+          252.58984375,
+          5.25,
+          754.8203125
+        ],
+        [
+          251.01953125,
+          5.33270263671875,
+          755.71875
+        ]
+      ],
+      "maximumGradeMesh": "Pit_Lane"
+    },
+    "paint": {
+      "triangles": 10826,
+      "minimumClearanceMeters": 0.19611865364769088,
+      "intersections": 0,
+      "missingSupport": 0,
+      "failures": []
+    },
+    "structuralConflicts": {},
+    "textures": {
+      "physicalPrimitives": 25,
+      "texturedPrimitives": 25,
+      "missingTextures": [],
+      "invalidUvs": []
+    },
+    "bridgeSamples": 252,
+    "minimumBridgeClearanceMeters": 5.54493192844213,
+    "reviewedJunction": {
+      "samples": 60,
+      "maximumRoadEdgeDeviationMeters": 6.158335166711614
+    },
+    "reviewedMainStraight": {
+      "samples": 450,
+      "maximumRoadEdgeDeviationMeters": 6.004934230983395
+    },
+    "reviewedPitExit": {
+      "samples": 363,
+      "maximumOppositeEdgeDeviationMeters": 2.3084242658738106
+    },
+    "reviewedPitFrontage": {
+      "samples": 883,
+      "mainRoadOverlapSamples": 0
+    },
+    "reviewedRoadJoins": {
+      "samples": 538,
+      "maximumHeightDifferenceMeters": 0.01937067292061645
+    },
+    "reviewedSouthernTurns": {
+      "11": {
+        "samples": 15,
+        "missingCrossSections": 0,
+        "maximumAxisDeviationMeters": 1.125
+      },
+      "12": {
+        "samples": 9,
+        "missingCrossSections": 0,
+        "maximumAxisDeviationMeters": 0.125
+      },
+      "13": {
+        "samples": 9,
+        "missingCrossSections": 0,
+        "maximumAxisDeviationMeters": 0.875
+      },
+      "14": {
+        "samples": 12,
+        "missingCrossSections": 0,
+        "maximumAxisDeviationMeters": 0.125
+      }
+    },
+    "reviewedTurn14Exit": {
+      "samples": 450,
+      "maximumRoadEdgeDeviationMeters": 6.3739488435092255
+    }
+  },
+  "lapLength": {
+    "geometryMeters": 5286.948888693868,
+    "officialFiaMeters": 5278,
+    "relativeErrorPercent": 0.16955075206267445
+  },
+  "photoRegistration": {
+    "controlPoints": 12,
+    "withheldCheckPoints": 2,
+    "checkResidualPixels": [
+      3.6244985735362043,
+      2.425844791209124
+    ],
+    "maximumCheckResidualPixels": 3.6244985735362043,
+    "manualControlUncertaintyMeters": 3,
+    "roadBandOverpainted": false
+  },
+  "browserValidation": {
+    "date": "2026-10-04",
+    "localUrl": "http://127.0.0.1:3021/calendar/2026/1",
+    "assetRevision": "812632008569",
+    "ownTests": {
+      "passed": 7,
+      "total": 7
+    },
+    "relatedTests": {
+      "passed": 146,
+      "total": 146
+    },
+    "lint": "source lint passed; generated .track-model-build excluded",
+    "typecheck": "passed",
+    "build": "passed",
+    "browser": {
+      "375": {
+        "light": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "dark": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "normal": "official scheme after closing 3D",
+        "fullscreen": true
+      },
+      "768": {
+        "light": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "dark": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "normal": "3D",
+        "fullscreen": true
+      },
+      "1024": {
+        "light": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "dark": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "normal": "3D",
+        "fullscreen": true
+      },
+      "1440": {
+        "light": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "dark": {
+          "canvas": 1,
+          "turnLabels": 14,
+          "horizontalOverflow": 0
+        },
+        "normal": "3D",
+        "fullscreen": true
+      }
+    },
+    "criticalAreas": [
+      "T11/T12",
+      "T13/T14",
+      "T11 800%",
+      "T12 800%",
+      "T13 800%",
+      "T14 800%",
+      "main straight/pit exit 800%",
+      "pre-T6 800%",
+      "T1/T2",
+      "whole overhead"
+    ],
+    "consoleErrors": 0
+  }
+}

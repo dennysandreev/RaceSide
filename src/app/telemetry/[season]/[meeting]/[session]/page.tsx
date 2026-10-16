@@ -51,7 +51,7 @@ export default async function SessionPage({
   if (!access.entitlements.telemetry_full) {
     const demo = await getTelemetryDemoScope();
     const allowed = demo?.meeting.id === meeting && (!session || demo.sessions.some((item) => item.id === session));
-    if (!allowed) return <SubscriptionGateContent description="Эта сессия доступна с RaceSide Plus. В бесплатном демо открыт один этап N−2." signedIn title="Откройте полную телеметрию" />;
+    if (!allowed) return <SubscriptionGateContent description="Эта сессия доступна с RaceSide Plus. В демо открыта одна гонка с выбором любых пилотов и кругов." signedIn title="Откройте полную телеметрию" />;
   }
   return (
     <TelemetryHub

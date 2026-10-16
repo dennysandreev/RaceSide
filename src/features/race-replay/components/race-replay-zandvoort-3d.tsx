@@ -47,8 +47,20 @@ import {
   RED_BULL_RING_REPLAY_PATH,
   RED_BULL_RING_TRACK_MODEL,
 } from "@/data/red-bull-ring-model";
-import type { CircuitModelPoint } from "@/data/track-model-types";
+import { BAKU_REPLAY_PATH, BAKU_TRACK_MODEL } from "@/data/baku-model";
+import { SEPANG_MODEL, SEPANG_TRACK_MODEL } from "@/data/sepang-model";
+import sepangLivePath from "@/data/sepang-live-path.json";
+import preparedLivePaths from "@/data/live-2026-paths.json";
+import { SINGAPORE_TRACK_MODEL } from "@/data/singapore-model";
+import { AUSTIN_TRACK_MODEL } from "@/data/austin-model";
+import { MEXICO_TRACK_MODEL } from "@/data/mexico-model";
+import { INTERLAGOS_TRACK_MODEL } from "@/data/interlagos-model";
+import { LAS_VEGAS_TRACK_MODEL } from "@/data/las-vegas-model";
+import { QATAR_TRACK_MODEL } from "@/data/qatar-model";
+import { YAS_MARINA_TRACK_MODEL } from "@/data/yas-marina-model";
+import type { CircuitModelPoint, TrackModelDefinition } from "@/data/track-model-types";
 import { cn } from "@/lib/utils";
+import { fitTrackModelFrame, getTrackModelFrame, trackModelCameraPolarDeg, type TrackModelViewport } from "@/lib/track-model-camera";
 import { alignPitTrackProgress, connectModelPitLane, type PitTrackProgress } from "../lib/pit-path";
 
 const ZANDVOORT_ASSET_PATH = "/f1/tracks/3d/zandvoort.glb";
@@ -68,7 +80,8 @@ export type ReplayTrackCar = {
 };
 
 export type ZandvoortReplayCar = ReplayTrackCar;
-export type ReplayTrackId = "catalunya" | "hungaroring" | "madring" | "montreal" | "red-bull-ring" | "silverstone" | "spa" | "zandvoort";
+export type ReplayTrackId = "baku" | "catalunya" | "hungaroring" | "madring" | "montreal" | "red-bull-ring" | "sepang" | "silverstone" | "spa" | "zandvoort"
+  | "singapore" | "austin" | "mexico" | "interlagos" | "las-vegas" | "qatar" | "yas-marina";
 
 type ReplayTrackConfig = {
   alt: string;
@@ -93,7 +106,53 @@ type ReplayTrackConfig = {
   turnCount: number;
 };
 
+function preparedTrackConfig(model: TrackModelDefinition, path: typeof preparedLivePaths.singapore): ReplayTrackConfig {
+  if (!model.webgl) throw new Error(`Missing 3D track asset: ${model.id}`);
+  return {
+    alt: model.data.circuitName,
+    ariaLabel: `3D-карта трассы ${model.data.circuitName}`,
+    assetPath: model.webgl.assetPath,
+    camera: model.webgl.camera,
+    previewPath: model.webgl.previewPath,
+    turnCount: model.webgl.turnCount,
+    path: { ...path, trackPoints: model.data.points,
+      pitLanePoints: path.pitLanePoints.map(([progress, x, y, z]) => [progress, x, y, z] as const) },
+  };
+}
+
 const REPLAY_TRACK_CONFIGS: Record<ReplayTrackId, ReplayTrackConfig> = {
+  singapore: preparedTrackConfig(SINGAPORE_TRACK_MODEL, preparedLivePaths.singapore),
+  austin: preparedTrackConfig(AUSTIN_TRACK_MODEL, preparedLivePaths.austin),
+  mexico: preparedTrackConfig(MEXICO_TRACK_MODEL, preparedLivePaths.mexico),
+  interlagos: preparedTrackConfig(INTERLAGOS_TRACK_MODEL, preparedLivePaths.interlagos),
+  "las-vegas": preparedTrackConfig(LAS_VEGAS_TRACK_MODEL, preparedLivePaths["las-vegas"]),
+  qatar: preparedTrackConfig(QATAR_TRACK_MODEL, preparedLivePaths.qatar),
+  "yas-marina": preparedTrackConfig(YAS_MARINA_TRACK_MODEL, preparedLivePaths["yas-marina"]),
+  sepang: {
+    alt: "Трасса Сепанг",
+    ariaLabel: "3D-карта трассы Сепанг",
+    assetPath: SEPANG_TRACK_MODEL.webgl.assetPath,
+    camera: SEPANG_TRACK_MODEL.webgl.camera,
+    path: {
+      baseElevationMeters: sepangLivePath.baseElevationMeters,
+      startFinishProgress: 0,
+      surfaceOffsetMeters: 0.45,
+      trackPoints: SEPANG_MODEL.points,
+      pitLanePoints: sepangLivePath.pitLanePoints as [number, number, number, number][],
+      trackWidthMeters: 16,
+    },
+    previewPath: SEPANG_TRACK_MODEL.webgl.previewPath,
+    turnCount: SEPANG_TRACK_MODEL.webgl.turnCount,
+  },
+  baku: {
+    alt: "Трасса Баку",
+    ariaLabel: "3D-карта городской трассы Баку",
+    assetPath: BAKU_TRACK_MODEL.webgl.assetPath,
+    camera: { ...BAKU_TRACK_MODEL.webgl.camera, fitWidth: 3_000, fitHeight: 2_100 },
+    path: BAKU_REPLAY_PATH,
+    previewPath: BAKU_TRACK_MODEL.webgl.previewPath,
+    turnCount: BAKU_TRACK_MODEL.webgl.turnCount,
+  },
   madring: {
     alt: "Трасса Мадринг",
     ariaLabel: "3D-карта трассы Мадринг",
@@ -190,6 +249,10 @@ const REPLAY_TRACK_CONFIGS: Record<ReplayTrackId, ReplayTrackConfig> = {
 };
 
 type RaceReplayTrack3DProps = {
+  onOverviewPoints?: (points: readonly CircuitModelPoint[]) => void;
+  frameRotationDeg?: number;
+  frameTiltDeg?: number;
+  viewport?: TrackModelViewport;
   sampleCar?: (driverNumber: number) => ReplayTrackCar | null;
   cars: ReplayTrackCar[];
   followDriver: number | null;
@@ -208,6 +271,7 @@ type CarPose = ReplayTrackCar & {
 };
 
 export function RaceReplayTrack3D({
+  onOverviewPoints, frameRotationDeg, frameTiltDeg, viewport,
   sampleCar,
   cars,
   followDriver,
@@ -226,6 +290,7 @@ export function RaceReplayTrack3D({
     const pit = connectModelPitLane(source.path.trackPoints, source.path.pitLanePoints);
     return { ...source, path: { ...source.path, pitLanePoints: pit.points, pitTrackProgress: pit.anchors } };
   }, [trackId]);
+  useLayoutEffect(() => { onOverviewPoints?.(config.path.trackPoints); }, [config, onOverviewPoints]);
   const poses = useMemo(() => cars.map((car) => buildCarPose(car, config)), [cars, config]);
   const followPosition = followDriver === null
     ? null
@@ -262,6 +327,7 @@ export function RaceReplayTrack3D({
           <directionalLight intensity={0.7} position={[1_000, 900, 700]} />
           <ReplayCameraRig
             cameraConfig={config.camera}
+            frame={viewport ? { bounds: getTrackModelFrame(config.path.trackPoints, frameRotationDeg ?? 0, frameTiltDeg ?? 10, rotationDeg, tiltDeg), viewport } : undefined}
             followPosition={followPosition}
             sampleFollowPosition={sampleCar && followDriver !== null ? () => {
               const car = sampleCar(followDriver);
@@ -430,6 +496,7 @@ function ReplayCar({ car, config, sampleCar, onSelect }: {
 }
 
 function ReplayCameraRig({
+  frame,
   sampleFollowPosition,
   cameraConfig,
   followPosition,
@@ -439,6 +506,7 @@ function ReplayCameraRig({
   tiltDeg,
   zoom,
 }: {
+  frame?: import("@/lib/track-model-camera").TrackModelCameraFrame;
   sampleFollowPosition?: () => readonly [number, number, number] | null;
   cameraConfig: ReplayTrackConfig["camera"];
   followPosition: readonly [number, number, number] | null;
@@ -457,7 +525,7 @@ function ReplayCameraRig({
     const position = sampleFollowPosition?.();
     const camera = cameraRef.current;
     if (!position || !camera) return;
-    const polar = MathUtils.degToRad(MathUtils.clamp(48 + (tiltDeg - 10) * 0.34, 40, 72));
+    const polar = MathUtils.degToRad(trackModelCameraPolarDeg(tiltDeg));
     const azimuth = MathUtils.degToRad(38 + rotationDeg);
     const radius = cameraConfig.radius;
     camera.position.set(position[0] + Math.sin(azimuth) * Math.sin(polar) * radius,
@@ -474,7 +542,7 @@ function ReplayCameraRig({
     }
 
     const target = followPosition ? new Vector3(...followPosition) : new Vector3(0, cameraConfig.lookAtY, 0);
-    const polarDeg = MathUtils.clamp(48 + (tiltDeg - 10) * 0.34, 40, 72);
+    const polarDeg = trackModelCameraPolarDeg(tiltDeg);
     const polar = MathUtils.degToRad(polarDeg);
     const azimuth = MathUtils.degToRad(38 + rotationDeg);
     const radius = cameraConfig.radius;
@@ -486,16 +554,21 @@ function ReplayCameraRig({
       target.z + Math.cos(azimuth) * horizontalRadius,
     );
     camera.lookAt(target);
-    camera.zoom = Math.min(width / cameraConfig.fitWidth, height / cameraConfig.fitHeight) * zoom;
+    const fitted = frame ? fitTrackModelFrame(frame.bounds, { ...frame.viewport, width, height }) : null;
+    camera.zoom = (fitted?.scale ?? Math.min(width / cameraConfig.fitWidth, height / cameraConfig.fitHeight)) * zoom;
     camera.clearViewOffset();
 
-    if (!followPosition && (panX !== 0 || panY !== 0)) {
-      camera.setViewOffset(width, height, -panX * width, -panY * height, width, height);
+    if (!followPosition) {
+      const offsetX = (fitted?.offsetX ?? 0) * zoom + panX * width;
+      const offsetY = fitted && frame
+        ? frame.bounds.centerY * fitted.scale * zoom + (frame.viewport.top - frame.viewport.bottom) / 2 + panY * height
+        : panY * height;
+      if (offsetX !== 0 || offsetY !== 0) camera.setViewOffset(width, height, -offsetX, -offsetY, width, height);
     }
 
     camera.updateProjectionMatrix();
     invalidate();
-  }, [cameraConfig, followPosition, height, invalidate, panX, panY, rotationDeg, tiltDeg, width, zoom]);
+  }, [cameraConfig, frame, followPosition, height, invalidate, panX, panY, rotationDeg, tiltDeg, width, zoom]);
 
   return (
     <DreiOrthographicCamera

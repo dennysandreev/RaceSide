@@ -15,6 +15,7 @@ import { getSocialMediaDeliveryUrl } from "@/lib/social-media-storage";
 import { getOrCreatePredictionShareUrl } from "@/lib/share-links";
 import { CURRENT_F1_SEASON } from "@/lib/season-navigation";
 import { getDriverSeasonNumberOverride } from "@/lib/driver-season-number";
+import { normalizeDailyDigestBody } from "@/lib/daily-digest-content";
 import { getFantasyLeagueAvatarUrl } from "@/lib/fantasy-league-avatar";
 import { formatGrandPrixNameRu, formatGrandPrixTagNameRu } from "@/lib/race-display";
 import { formatRaceStatus } from "@/lib/race-status";
@@ -45,6 +46,7 @@ import {
 } from "@/data/racemate-overview";
 import {
   getCircuitAsset,
+  getVersionedCircuitMapUrl,
   getSeasonDriverAvatarPath,
   getTeamAsset,
   getTeamMatchNames,
@@ -2338,7 +2340,6 @@ export async function getDriverChampionshipMatrix(
   const teamProfileById = new Map(teamProfiles.map((profile) => [profile.id, profile]));
   const rows = [...rowsByDriver.values()]
     .filter((row) => row.cumulative.has(standingsLatestRound))
-    .sort((a, b) => a.latestPosition - b.latestPosition)
     .map((row) => {
       const seasonalDriver = driverSeasonProfiles.get(row.driverId);
       const seasonalTeamId = seasonalDriver?.primary_team_id ?? row.teamId;
@@ -2396,7 +2397,9 @@ export async function getDriverChampionshipMatrix(
         positionByRound,
         podiumByRound,
       };
-    });
+    })
+    .sort((a, b) => b.total - a.total || a.position - b.position)
+    .map((row, index) => ({ ...row, position: index + 1 }));
 
   return { rounds, rows };
 }
@@ -3441,7 +3444,6 @@ export async function getConstructorChampionshipMatrix(
   const teamProfileById = new Map(teamProfiles.map((profile) => [profile.id, profile]));
   const rows = [...rowsByTeam.values()]
     .filter((row) => row.cumulative.has(standingsLatestRound))
-    .sort((a, b) => a.latestPosition - b.latestPosition)
     .map((row) => {
       const seasonalTeam = teamProfileById.get(row.teamId);
       const pointsByRound: Record<number, number> = {};
@@ -3474,7 +3476,9 @@ export async function getConstructorChampionshipMatrix(
         wins: row.wins,
         pointsByRound,
       };
-    });
+    })
+    .sort((a, b) => b.points - a.points || a.position - b.position)
+    .map((row, index) => ({ ...row, position: index + 1 }));
 
   return { rounds, rows };
 }
@@ -5036,7 +5040,14 @@ async function loadRankedGlobalFantasyLeaderboard(): Promise<RankedGlobalFantasy
   return { rows, updatedAt: new Date().toISOString() };
 }
 
-const getRankedGlobalFantasyLeaderboard = cache(loadRankedGlobalFantasyLeaderboard);
+const getRankedGlobalFantasyLeaderboard = cache(() =>
+  withServerTtlCache(
+    "fantasy:global-leaderboard",
+    30_000,
+    loadRankedGlobalFantasyLeaderboard,
+    { staleWhileRevalidateMs: 5 * 60_000 },
+  ),
+);
 const getCachedPublicShareLeaderboard = unstable_cache(
   loadRankedGlobalFantasyLeaderboard,
   ["public-prediction-share-leaderboard-v1"],
@@ -5594,7 +5605,14 @@ export async function getAiUsageSummary(): Promise<AiUsageSummary> {
   };
 }
 
-export async function getLeagues(userId?: string | null): Promise<LeagueSummary[]> {
+export async function getLeagues(
+  userId?: string | null,
+  { onlyMine = false }: { onlyMine?: boolean } = {},
+): Promise<LeagueSummary[]> {
+  if (onlyMine && !userId) {
+    return [];
+  }
+
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
@@ -5604,12 +5622,14 @@ export async function getLeagues(userId?: string | null): Promise<LeagueSummary[
   const admin = createSupabaseAdminClient();
   const db = admin ?? supabase;
   const [publicResult, ownedResult, membershipsResult] = await Promise.all([
-    db
-      .from("prediction_leagues")
-      .select("id, owner_user_id, name, invite_code, is_public, avatar_path, avatar_updated_at, profiles:owner_user_id(display_name, email)")
-      .eq("is_public", true)
-      .order("created_at", { ascending: false })
-      .limit(50),
+    onlyMine
+      ? Promise.resolve({ data: null, error: null })
+      : db
+          .from("prediction_leagues")
+          .select("id, owner_user_id, name, invite_code, is_public, avatar_path, avatar_updated_at, profiles:owner_user_id(display_name, email)")
+          .eq("is_public", true)
+          .order("created_at", { ascending: false })
+          .limit(50),
     userId
       ? db
           .from("prediction_leagues")
@@ -5883,10 +5903,42 @@ async function hydrateLeagueScores(summaries: LeagueSummary[]) {
   }
 
   const leagueIds = summaries.map((league) => league.id).filter(Boolean) as string[];
-  const { data: membersData } = await admin
-    .from("prediction_league_members")
-    .select("league_id, user_id, role, joined_at")
-    .in("league_id", leagueIds);
+  const scoreData = await withServerTtlCache(
+    `fantasy:league-scores:${[...leagueIds].sort().join(",")}`,
+    30_000,
+    async () => {
+      const { data: membersData } = await admin
+        .from("prediction_league_members")
+        .select("league_id, user_id, role, joined_at")
+        .in("league_id", leagueIds);
+      const userIds = [...new Set((membersData ?? []).map((member) => member.user_id))];
+
+      if (!userIds.length) {
+        return { membersData, profilesData: [], predictionsData: [] };
+      }
+
+      const [profilesResult, predictionsResult] = await Promise.all([
+        admin
+          .from("profiles")
+          .select("id, display_name, email")
+          .in("id", userIds),
+        admin
+          .from("predictions")
+          .select("user_id, race_id, score, races(round, race_name, race_start_at)")
+          .in("user_id", userIds)
+          .is("league_id", null)
+          .not("score", "is", null),
+      ]);
+
+      return {
+        membersData,
+        profilesData: profilesResult.data ?? [],
+        predictionsData: predictionsResult.data ?? [],
+      };
+    },
+    { staleWhileRevalidateMs: 5 * 60_000 },
+  );
+  const { membersData, profilesData, predictionsData } = scoreData;
 
   const membersByLeague = new Map<string, LeagueMemberRow[]>();
   ((membersData ?? []) as LeagueMemberRow[]).forEach((member) => {
@@ -5902,26 +5954,14 @@ async function hydrateLeagueScores(summaries: LeagueSummary[]) {
     return summaries;
   }
 
-  const [profilesResult, predictionsResult] = await Promise.all([
-    admin
-      .from("profiles")
-      .select("id, display_name, email")
-      .in("id", userIds),
-    admin
-      .from("predictions")
-      .select("user_id, race_id, score, races(round, race_name, race_start_at)")
-      .in("user_id", userIds)
-      .is("league_id", null)
-      .not("score", "is", null),
-  ]);
   const profiles = new Map(
-    ((profilesResult.data ?? []) as LeagueProfileRow[]).map((profile) => [
+    (profilesData as LeagueProfileRow[]).map((profile) => [
       profile.id,
       getProfileName(profile),
     ]),
   );
   const scoreByUser = new Map<string, number>();
-  const scoredPredictions = (predictionsResult.data ?? []) as unknown as LeaguePredictionRow[];
+  const scoredPredictions = predictionsData as unknown as LeaguePredictionRow[];
   scoredPredictions.forEach((prediction) => {
     scoreByUser.set(
       prediction.user_id,
@@ -7534,7 +7574,7 @@ export async function getLatestDailyDigest(): Promise<DailyDigest | null> {
   return {
     id: digest.id,
     title: digest.title,
-    body: digest.body_md,
+    body: normalizeDailyDigestBody(digest.body_md),
     generatedAt: formatRelativeTime(digest.generated_at),
     status: digest.status,
   };
@@ -9299,7 +9339,10 @@ async function getRaceTrackAssetsByRaceIds(raceIds: string[]) {
 
   ((data ?? []) as unknown as RaceTrackAssetDbRow[]).forEach((asset) => {
     if (asset.image_url) {
-      assets.set(asset.race_id, asset);
+      assets.set(asset.race_id, {
+        ...asset,
+        image_url: getVersionedCircuitMapUrl(asset.image_url),
+      });
     }
   });
 

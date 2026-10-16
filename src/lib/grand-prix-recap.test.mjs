@@ -242,19 +242,107 @@ test("passes race-only flag event counts to the generated card", () => {
   });
 });
 
-test("gives long Grand Prix names more height without reducing the title", () => {
+test("keeps the approved 4:5 card and a smaller single-line race title", () => {
   const regular = getGrandPrixRecapImageLayout("Гран-при Австрии");
   const silverstone = getGrandPrixRecapImageLayout("Гран-при Великобритании");
   const zandvoort = getGrandPrixRecapImageLayout("Гран-при Нидерландов");
 
-  assert.equal(regular.titleFontSize, 54);
-  assert.equal(silverstone.titleFontSize, 54);
-  assert.equal(zandvoort.titleFontSize, 54);
+  assert.equal(regular.titleFontSize, 44);
+  assert.equal(silverstone.titleFontSize, 44);
+  assert.equal(zandvoort.titleFontSize, 44);
   assert.equal(regular.canvasHeight, 1350);
-  assert.ok(silverstone.canvasHeight > regular.canvasHeight);
+  assert.equal(silverstone.canvasHeight, regular.canvasHeight);
   assert.equal(zandvoort.canvasHeight, silverstone.canvasHeight);
-  assert.ok(silverstone.heroHeight > regular.heroHeight);
+  assert.equal(silverstone.heroHeight, regular.heroHeight);
   assert.equal(silverstone.titleMetaMarginTop, regular.titleMetaMarginTop);
+});
+
+test("shares the whole field and the exact after-round championship, without fabricating absent timing", () => {
+  const field = Array.from({ length: 22 }, (_, index) => result(
+    index + 1, `Driver ${index + 1}`, `driver-${index + 1}`, index % 2 ? "Williams" : "Mercedes",
+    index + 1, index < 10 ? 10 - index : 0, index ? `+${index}.000` : "1:28:00.000",
+    { driverNumber: index + 1, status: index >= 19 ? "Retired" : index === 18 ? "+1 Lap" : "Finished" },
+  ));
+  const championship = [1, 2, 3].map((position) => ({ id: String(position), name: `Leader ${position}`, position, points: 400 - position * 10, team: "Mercedes" }));
+  const analytics = {
+    totalLaps: 71,
+    drivers: [{ number: 1, driver: "Different display name", code: "VER", positions: [{ lap: 1, value: 2 }, { lap: 2, value: null }, { lap: 3, value: 1 }] }],
+    championship: { drivers: championship, teams: [] },
+  };
+  const data = buildGrandPrixRecapData({ race, report, sessions: sessions(false), resultsBySession: new Map([["race", field]]), analytics });
+  assert.equal(data.positionDrivers.length, 22);
+  assert.equal(data.positionDrivers[0].code, "VER");
+  assert.deepEqual(data.positionDrivers[0].points, analytics.drivers[0].positions);
+  assert.deepEqual(data.positionDrivers[1].points, []);
+  assert.equal(data.classification.length, 10);
+  assert.deepEqual(data.championship, championship);
+  assert.equal(data.totalLaps, 71);
+  assert.equal(data.finishers, 19);
+  assert.equal(data.retirements, 3);
+  assert.equal(data.starters, 22);
+  assert.equal(data.podium[0].points, field[0].points);
+});
+
+test("keeps missing points unknown and excludes a retired driver from position gains", () => {
+  const data = buildGrandPrixRecapData({
+    race, report, sessions: sessions(false), resultsBySession: new Map([["race", [
+      ...raceResults.map((row, index) => ({ ...row, points: index === 1 ? null : row.points })),
+      result(4, "Retired Driver", "retired-driver", "Williams", 22, 0, "Без времени", { status: "Engine" }),
+    ]]]),
+  });
+  assert.equal(data.bestTeam.pointsComplete, false);
+  assert.equal(data.podium[1].points, null);
+  assert.deepEqual(data.positionGain, { driver: "Carlos Sainz", gained: 7 });
+  assert.deepEqual(data.championship, []);
+  assert.ok(data.positionDrivers.every((driver) => driver.points.length === 0));
+});
+
+test("Singapore finishers include all eight lapped pilots, independently of completed lap count", () => {
+  const field = Array.from({ length: 22 }, (_, index) => result(
+    index + 1, `Driver ${index + 1}`, `driver-${index + 1}`, "Mercedes",
+    index + 1, index < 10 ? 10 - index : 0, index ? `+${index}.000` : "1:42:00.785",
+    {
+      driverNumber: index + 1,
+      status: index < 10 ? "Finished" : index === 17 || index >= 19 ? "Retired" : "Lapped",
+      laps: [62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 61, 61, 61, 61, 61, 61, 60, 59, 59, 36, 29, 7][index],
+    },
+  ));
+  const data = buildGrandPrixRecapData({ race, report, sessions: sessions(false), resultsBySession: new Map([["race", field]]) });
+  assert.equal(data.finishers, 18);
+  assert.equal(data.retirements, 4);
+  assert.equal(data.starters, 22);
+  assert.equal(data.positionDrivers[17].finished, false, "Albon retired after 59 laps");
+  assert.equal(data.positionDrivers[18].finished, true, "Bottas finished after the same 59 laps");
+  assert.equal(data.positionDrivers.filter((driver) => !driver.finished).length, 4);
+});
+
+test("only finishing statuses count, including lapped finishes and excluding late retirements", () => {
+  for (const [status, finished] of [
+    ["Finished", true], ["Classified", true], ["Lapped", true], ["  lApPeD  ", true],
+    ["+1 Lap", true], ["+2 Laps", true], ["Финиш", true], ["Классифицирован", true],
+    ["Retired", false], ["DNF", false], ["DNS", false], ["DSQ", false],
+    ["Engine", false], ["Not classified", false], ["Disqualified", false],
+  ]) {
+    const data = buildGrandPrixRecapData({
+      race, report, sessions: sessions(false),
+      resultsBySession: new Map([["race", [...raceResults,
+        result(4, "Fourth Driver", "fourth-driver", "Williams", 22, 0, "Без времени", { status, laps: finished ? 69 : 71 }),
+      ]]]),
+    });
+    assert.equal(data.finishers, finished ? 4 : 3, status);
+    assert.equal(data.retirements, finished ? 0 : 1, status);
+    assert.equal(data.positionDrivers[3].finished, finished, status);
+    assert.equal(data.positionGain.driver, finished ? "Fourth Driver" : "Carlos Sainz", status);
+  }
+});
+
+test("chooses the quickest valid lap when the report highlight is absent", () => {
+  const data = buildGrandPrixRecapData({
+    race, report: { ...report, highlights: {} }, sessions: sessions(false),
+    resultsBySession: new Map([["race", raceResults.map((row, index) => ({ ...row, bestLap: index === 0 ? "1:08.100" : index === 1 ? "1:06.400" : "Без времени" }))]]),
+  });
+  assert.equal(data.fastestLap.driver, "Andrea Kimi Antonelli");
+  assert.equal(data.fastestLap.time, "1:06.400");
 });
 
 test("fits two four-stop strategies into the fixed card grid", () => {

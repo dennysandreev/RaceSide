@@ -1,8 +1,11 @@
-export type BillingProviderCode = "tribute" | "yoomoney";
+// Legacy codes identify historical records; new checkout accepts only lava/lava_rub.
+export type BillingProviderCode = "tribute" | "yoomoney" | "lava";
 export type BillingPaymentMethod =
   | "tribute"
   | "yoomoney_card"
-  | "yoomoney_wallet";
+  | "yoomoney_wallet"
+  | "lava"
+  | "lava_rub";
 export type BillingOrderStatus =
   | "failed"
   | "paid"
@@ -42,6 +45,9 @@ export type BillingOrder = {
   provider: BillingProviderCode;
   providerLabel: string | null;
   providerOrderId: string | null;
+  lavaAutoRenew: boolean;
+  lavaCancelledAt: string | null;
+  refundedAmountMinor: number;
   status: BillingOrderStatus;
   userId: string;
 };
@@ -56,18 +62,11 @@ export type SubscriptionAccess = {
   userId: string | null;
 };
 
-export type HostedCheckout =
-  | {
-      kind: "form";
-      action: "https://yoomoney.ru/quickpay/confirm";
-      fields: Record<string, string>;
-      orderNumber: string;
-    }
-  | {
-      kind: "redirect";
-      orderNumber: string;
-      url: string;
-    };
+export type HostedCheckout = {
+  kind: "redirect";
+  orderNumber: string;
+  url: string;
+};
 
 export interface PaymentProvider {
   capabilities: {

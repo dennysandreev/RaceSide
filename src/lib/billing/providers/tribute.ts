@@ -3,8 +3,6 @@ import "server-only";
 import type { PaymentProvider } from "@/lib/billing/types";
 import { verifyRawBodyHmac } from "@/lib/billing/signatures";
 
-const TRIBUTE_API_ORIGIN = "https://tribute.tg";
-
 export const tributeProvider: PaymentProvider = {
   capabilities: {
     apiRefund: true,
@@ -39,41 +37,6 @@ export type TributeWebhookEvent =
       paymentMethod: "tribute";
       transactionId: string;
     };
-
-export async function createTributeOrder(input: {
-  amountMinor: number;
-  apiKey: string;
-  customerId: string;
-  description: string;
-  failUrl: string;
-  successUrl: string;
-  title: string;
-}) {
-  const response = await fetch(`${TRIBUTE_API_ORIGIN}/api/v1/shop/orders`, {
-    body: JSON.stringify({
-      amount: input.amountMinor,
-      currency: "rub",
-      customerId: input.customerId,
-      description: input.description,
-      failUrl: input.failUrl,
-      period: "onetime",
-      successUrl: input.successUrl,
-      title: input.title,
-    }),
-    cache: "no-store",
-    headers: {
-      "Api-Key": input.apiKey,
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    signal: AbortSignal.timeout(12_000),
-  });
-  const payload = await response.json().catch(() => null) as TributeShopOrder | null;
-  if (!response.ok || !payload?.uuid) throw new Error("TRIBUTE_ORDER_FAILED");
-  const url = payload.paymentUrl ?? payload.webappPaymentUrl;
-  if (!url || !isTrustedTributeUrl(url)) throw new Error("TRIBUTE_CHECKOUT_URL_INVALID");
-  return { ...payload, checkoutUrl: url };
-}
 
 export function verifyTributeWebhook(rawBody: string, signature: string, apiKey: string) {
   return verifyRawBodyHmac(rawBody, signature, apiKey);
@@ -117,15 +80,6 @@ export function parseTributeWebhook(rawBody: string): TributeWebhookEvent {
     paymentMethod: "tribute" as const,
     transactionId,
   };
-}
-
-function isTrustedTributeUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && (url.hostname === "tribute.tg" || url.hostname.endsWith(".tribute.tg"));
-  } catch {
-    return false;
-  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

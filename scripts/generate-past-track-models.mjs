@@ -306,9 +306,12 @@ await fs.mkdir(cacheDirectory, { recursive: true });
 const geoJson = await readCachedJson("f1-circuits.geojson", geoJsonUrl);
 
 for (const track of tracks) {
-  // Miami is now built from pinned geodata in Blender. Do not overwrite it
+  // These tracks are built from pinned geodata in Blender. Do not overwrite them
   // with the legacy schematic generator when refreshing the other circuits.
+  if (track.id === "albert-park") continue;
   if (track.id === "miami") continue;
+  if (track.id === "suzuka") continue;
+  if (track.id === "shanghai") continue;
   const feature = geoJson.features.find(({ properties }) => properties.id === track.geoJsonId);
 
   if (!feature || feature.geometry.type !== "LineString") {

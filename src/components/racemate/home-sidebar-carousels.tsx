@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 
 import { votePollFromHome } from "@/app/polls/actions";
+import { DriverAvatarBadge } from "@/components/racemate/driver-avatar-badge";
 import { TeamColorProgress } from "@/components/racemate/team-color";
+import { TeamLogo } from "@/components/racemate/team-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,7 +50,11 @@ export type HomeStandingSlide = {
     meta: string;
     points: number;
     color?: string;
+    driverSlug?: string;
+    avatarUrl?: string | null;
     href?: string;
+    teamCode?: string;
+    teamLogo?: string;
   }>;
 };
 
@@ -103,46 +109,74 @@ export function HomeStandingsCarousel({ slides }: { slides: HomeStandingSlide[] 
           key={`${slide.id}-${carousel.transitionKey}`}
           style={carousel.slideStyle}
         >
-          {slide.rows.map((row) => (
-            <div
-              className="grid min-h-[3.35rem] grid-cols-[2.25rem_minmax(0,1fr)_4rem] items-center gap-3 px-1 py-1"
-              key={`${slide.id}-${row.position}-${row.name}`}
-            >
-              <span className="relative grid size-8 place-items-center overflow-hidden rounded-md border border-border/75 bg-background/45 font-telemetry text-sm font-extrabold text-foreground">
-                {row.position}
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-x-1 bottom-0 h-0.5 rounded-t-full"
-                  style={{ backgroundColor: row.color ?? "var(--primary)" }}
-                />
-              </span>
-              <span className="min-w-0">
+          {slide.rows.map((row) => {
+            const identity = (
+              <>
+                {slide.id === "constructors" ? (
+                  <TeamLogo
+                    code={row.teamCode}
+                    color={row.color}
+                    logo={row.teamLogo}
+                    name={row.name}
+                    shape="square"
+                  />
+                ) : (
+                  <DriverAvatarBadge
+                    className="size-10"
+                    color={row.color}
+                    name={row.name}
+                    sizes="2.5rem"
+                    slug={row.driverSlug}
+                    src={row.avatarUrl}
+                  />
+                )}
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold transition-colors group-hover:text-primary motion-reduce:transition-none">
+                    {row.name}
+                  </span>
+                  <span className="mt-0.5 flex min-w-0 items-center gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="size-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: row.color ?? "var(--primary)" }}
+                    />
+                    <span className="block truncate text-xs text-muted-foreground">{row.meta}</span>
+                  </span>
+                </span>
+              </>
+            );
+
+            return (
+              <div
+                className="grid min-h-[3.35rem] grid-cols-[2.25rem_minmax(0,1fr)_4rem] items-center gap-3 px-1 py-1"
+                key={`${slide.id}-${row.position}-${row.name}`}
+              >
+                <span className="relative grid size-8 place-items-center overflow-hidden rounded-md border border-border/75 bg-background/45 font-telemetry text-sm font-extrabold text-foreground">
+                  {row.position}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-1 bottom-0 h-0.5 rounded-t-full"
+                    style={{ backgroundColor: row.color ?? "var(--primary)" }}
+                  />
+                </span>
                 {row.href ? (
                   <Link
-                    className="block truncate text-sm font-semibold transition-colors hover:text-primary"
+                    className="group flex min-h-11 min-w-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     href={row.href}
                     prefetch={false}
                   >
-                    {row.name}
+                    {identity}
                   </Link>
                 ) : (
-                  <span className="block truncate text-sm font-semibold">{row.name}</span>
+                  <div className="flex min-h-11 min-w-0 items-center gap-2">{identity}</div>
                 )}
-                <span className="mt-0.5 flex min-w-0 items-center gap-1.5">
-                  <span
-                    aria-hidden="true"
-                    className="size-1.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: row.color ?? "var(--primary)" }}
-                  />
-                  <span className="block truncate text-xs text-muted-foreground">{row.meta}</span>
+                <span className="grid justify-items-end">
+                  <span className="font-telemetry text-base font-extrabold leading-none">{row.points}</span>
+                  <span className="mt-1 text-[0.6rem] font-semibold uppercase text-muted-foreground">очк.</span>
                 </span>
-              </span>
-              <span className="grid justify-items-end">
-                <span className="font-telemetry text-base font-extrabold leading-none">{row.points}</span>
-                <span className="mt-1 text-[0.6rem] font-semibold uppercase text-muted-foreground">очк.</span>
-              </span>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
         <div>
           <Button asChild className="mt-3 w-full" size="sm" variant="secondary">
@@ -610,7 +644,6 @@ function useCarousel(length: number, intervalMs: number) {
         startX: event.clientX,
         startY: event.clientY,
       };
-      event.currentTarget.setPointerCapture(event.pointerId);
       setIsDragging(true);
       setIsTemporarilyPaused(true);
     },
@@ -623,6 +656,9 @@ function useCarousel(length: number, intervalMs: number) {
       drag.deltaX = event.clientX - drag.startX;
       drag.deltaY = event.clientY - drag.startY;
       if (Math.abs(drag.deltaX) > 8 && Math.abs(drag.deltaX) > Math.abs(drag.deltaY)) {
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }
         const maxOffset = event.currentTarget.getBoundingClientRect().width * 0.72;
         setDragOffsetX(Math.max(-maxOffset, Math.min(maxOffset, drag.deltaX)));
         event.preventDefault();

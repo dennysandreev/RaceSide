@@ -9,6 +9,7 @@ import { telemetryStore } from "@/features/telemetry/lib/server";
 import {
   TelemetryShareImage,
   shareFormats,
+  shareImageScale,
   type ShareFormat,
 } from "@/features/telemetry/lib/share-image";
 import { getPredictionShareFonts } from "@/lib/prediction-share-fonts";
@@ -86,8 +87,8 @@ export async function GET(
         portraits,
       }),
       {
-        width,
-        height,
+        width: width * shareImageScale,
+        height: height * shareImageScale,
         fonts: [
           ...fonts,
           {
@@ -101,7 +102,7 @@ export async function GET(
           },
         ],
         headers: {
-          "Cache-Control": "public, max-age=3600, s-maxage=3600",
+          "Cache-Control": "private, no-store",
           "Content-Disposition": `${query.has("download") ? "attachment" : "inline"}; filename="raceside-telemetry-${format}-${id}.png"`,
           "X-Content-Type-Options": "nosniff",
         },

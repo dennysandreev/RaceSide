@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   buildPublicHealthPayload,
+  createDatabaseHealthProbe,
   getPublicHealthStatus,
 } from "@/lib/admin-agent/health";
 import {
@@ -13,7 +14,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+const checkDatabaseHealth = createDatabaseHealthProbe(async () => {
   const checkedAt = new Date().toISOString();
   const release = getRuntimeReleaseSha();
   const supabase = createSupabaseAdminClient();
@@ -43,6 +44,13 @@ export async function GET() {
     }
   }
 
+  return databaseHealthy;
+});
+
+export async function GET() {
+  const checkedAt = new Date().toISOString();
+  const release = getRuntimeReleaseSha();
+  const databaseHealthy = await checkDatabaseHealth();
   const payload = buildPublicHealthPayload({
     checkedAt,
     databaseHealthy,

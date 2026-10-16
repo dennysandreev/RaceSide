@@ -61,6 +61,24 @@ export function isOpenF1ResultProbeDue({
   return nowMs >= endMs + Math.max(0, Number(delayMinutes) || 0) * 60_000;
 }
 
+export function hasFinalOpenF1SessionSignal(controls) {
+  const latest = (Array.isArray(controls) ? controls : [])
+    .filter((row) =>
+      row?.flag === "CHEQUERED" ||
+      /SESSION (?:STARTED|RESUMED|FINISHED|ABORTED|SUSPENDED)|GREEN LIGHT/i.test(
+        row?.message ?? "",
+      ),
+    )
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+    .at(-1);
+
+  return Boolean(
+    latest &&
+      (latest.flag === "CHEQUERED" ||
+        /SESSION FINISHED/i.test(latest.message ?? "")),
+  );
+}
+
 export function normalizeOpenF1SessionClassification(payload, sessionType) {
   const normalizedType = String(sessionType ?? "").toLowerCase();
   const rows = Array.isArray(payload) ? payload : [];

@@ -12,6 +12,7 @@ export type TelemetrySetupCatalog = Pick<
 >;
 
 export type TelemetryBootstrapStage =
+  | "demo"
   | "seasons"
   | "meetings"
   | "sessions"

@@ -9,6 +9,18 @@ export function formatSessionName(name?: string | null) {
     .trim();
 }
 
+export function splitSessionStart(value: string) {
+  const normalized = value.trim();
+  const match = /(?:^|,\s*)(\d{1,2}:\d{2})$/.exec(normalized);
+
+  if (!match) return { date: normalized, time: null };
+
+  return {
+    date: normalized.slice(0, match.index).trim(),
+    time: match[1],
+  };
+}
+
 export function formatSessionCountdown(startsAtIso?: string | null, status?: string | null) {
   if (status === "Live") {
     return "Live сейчас";

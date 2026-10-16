@@ -29,11 +29,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getCircuitAsset, getTeamAssetForMarketOutcome, getTeamProfileAsset } from "@/data/f1-assets";
+import { getGrandPrixReportAnalytics } from "@/data/grand-prix-report-analytics";
 import {
-  getConstructorStandings,
+  getConstructorChampionshipMatrix,
   getConstructorChampionOdds,
   getCurrentRaceDetail,
-  getDriverStandings,
+  getDriverChampionshipMatrix,
   getDriverSlugMap,
   getGrandPrixReportBySlug,
   getLatestGrandPrixReport,
@@ -83,7 +84,7 @@ export default async function Home({
           Новости, календарь, результаты и статистика чемпионата Формулы-1.
         </p>
       </header>
-      <section className="grid grid-cols-[minmax(0,1fr)] gap-5 pb-5 xl:grid-cols-[minmax(0,1fr)_23rem] xl:items-start">
+      <section className="grid grid-cols-[minmax(0,1fr)] gap-5 pb-5 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:items-start">
         <div className="contents xl:grid xl:min-w-0 xl:gap-5">
           <div className="order-1 xl:order-none">
             <Suspense fallback={<Skeleton className="h-[38rem] w-full" />}>
@@ -126,8 +127,18 @@ async function HomeNewsPanel() {
 }
 
 function getHomeStandings() {
-  return withServerTtlCache("public:home:standings", 60_000,
-    () => Promise.all([getDriverStandings(CURRENT_F1_SEASON), getConstructorStandings(CURRENT_F1_SEASON)]),
+  return withServerTtlCache("public:home:standings:v2", 60_000,
+    async () => {
+      const [drivers, constructors] = await Promise.all([
+        getDriverChampionshipMatrix(CURRENT_F1_SEASON),
+        getConstructorChampionshipMatrix(CURRENT_F1_SEASON),
+      ]);
+
+      return [
+        drivers.rows.map((row) => ({ ...row, points: row.total })),
+        constructors.rows,
+      ] as const;
+    },
     { staleWhileRevalidateMs: 5 * 60_000 });
 }
 
@@ -146,7 +157,8 @@ async function HomeReportPanel() {
 async function HomeReportDialog({ slug }: { slug?: string }) {
   if (!slug) return null;
   const [report, driverSlugByName] = await Promise.all([getGrandPrixReportBySlug(slug), getHomeDriverSlugs()]);
-  return <GrandPrixReportDialog driverSlugByName={driverSlugByName} open={report?.raceSlug === slug} report={report} />;
+  const analytics = report?.raceSlug === slug ? await getGrandPrixReportAnalytics(report) : null;
+  return <GrandPrixReportDialog analytics={analytics} driverSlugByName={driverSlugByName} open={report?.raceSlug === slug} report={report} />;
 }
 
 async function HomeStandingsPanel() {
@@ -157,10 +169,12 @@ async function HomeStandingsPanel() {
       actionLabel: "Подробнее",
       id: "drivers",
       rows: standings.slice(0, 6).map((row) => ({
+        avatarUrl: row.avatarUrl,
         color: row.teamColor,
+        driverSlug: row.driverSlug,
         href: row.driverSlug ? `/drivers/${row.driverSlug}` : undefined,
         meta: row.team,
-        name: row.driver,
+        name: row.driverSlug === "andrea-kimi-antonelli" ? "Andrea K Antonelli" : row.driver,
         points: row.points,
         position: row.position,
       })),
@@ -180,6 +194,8 @@ async function HomeStandingsPanel() {
           name: row.team,
           points: row.points,
           position: row.position,
+          teamCode: row.teamCode,
+          teamLogo: row.teamLogo,
         };
       }),
       title: "Кубок конструкторов",
@@ -251,7 +267,7 @@ function CurrentRaceCard({
   sessions: SessionWithResults[];
 }) {
   return (
-    <section className="stitch-panel overflow-hidden p-0" aria-labelledby="next-race-title">
+    <section className="home-season-hero min-w-0" aria-labelledby="next-race-title">
       <SeasonGlobeExplorer
         currentRace={currentRace}
         data={seasonGlobeData}

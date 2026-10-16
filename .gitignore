@@ -7,9 +7,20 @@ coverage
 *.tsbuildinfo
 __pycache__/
 *.py[cod]
-.env
-.env*.local
+.env*
 !.env.example
+.claude/
+/.npmrc
+test-results/
+playwright-report/
+blob-report/
+docs/codemap/
+/Avatars f1/
+/backups/
+/releases/
+*.log
+*.pem
+*.key
 .DS_Store
 output/playwright
 output/circuit-map-review

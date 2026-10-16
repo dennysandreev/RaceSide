@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 2,
+  "crs": "EPSG:7855",
+  "sourceImage": "skysat-2018.jpg",
+  "imageSize": [
+    3036,
+    3036
+  ],
+  "worldOrigin": [
+    321283.07186462166,
+    5809488.717636564
+  ],
+  "imageToLocalWorld": [
+    [
+      0.7441682820206661,
+      -0.007530844178508074,
+      -1059.6011113005086
+    ],
+    [
+      0.033775357850214426,
+      -0.7590888648724444,
+      913.6120357525833
+    ],
+    [
+      -1.1789720260804787e-05,
+      -3.0628849009087154e-05,
+      1.0
+    ]
+  ],
+  "gcps": [
+    {
+      "osmNodeId": "9652554565",
+      "pixel": [
+        1136,
+        1674
+      ],
+      "world": [
+        321040.8341059767,
+        5809144.72668227
+      ],
+      "residualMeters": 3.2327713693474087
+    },
+    {
+      "osmNodeId": "7324121839",
+      "pixel": [
+        670,
+        912
+      ],
+      "world": [
+        320690.2159817336,
+        5809738.072150856
+      ],
+      "residualMeters": 5.332911873944763
+    },
+    {
+      "osmNodeId": "520248865",
+      "pixel": [
+        830,
+        870
+      ],
+      "world": [
+        320823.59425758594,
+        5809783.44753911
+      ],
+      "residualMeters": 6.621753474310351
+    },
+    {
+      "osmNodeId": "9422334607",
+      "pixel": [
+        838,
+        580
+      ],
+      "world": [
+        320830.82820480847,
+        5810010.040400935
+      ],
+      "residualMeters": 5.453269752733551
+    },
+    {
+      "osmNodeId": "7324143946",
+      "pixel": [
+        1466,
+        408
+      ],
+      "world": [
+        321311.00879682007,
+        5810157.38559179
+      ],
+      "residualMeters": 4.9562511125838435
+    },
+    {
+      "osmNodeId": "7324143958",
+      "pixel": [
+        1672,
+        526
+      ],
+      "world": [
+        321468.9660922549,
+        5810082.618122214
+      ],
+      "residualMeters": 2.415951484142596
+    },
+    {
+      "osmNodeId": "7318990955",
+      "pixel": [
+        2508,
+        2446
+      ],
+      "world": [
+        322169.391548563,
+        5808528.531298778
+      ],
+      "residualMeters": 6.198577297442296
+    },
+    {
+      "osmNodeId": "9652554528",
+      "pixel": [
+        2236,
+        2503
+      ],
+      "world": [
+        321929.73592923075,
+        5808464.919306556
+      ],
+      "residualMeters": 7.0216338412025845
+    },
+    {
+      "osmNodeId": "7324121810",
+      "pixel": [
+        2095,
+        2352
+      ],
+      "world": [
+        321816.67663962697,
+        5808601.539861837
+      ],
+      "role": "unchanged public-road centre, not new kerb"
+    },
+    {
+      "osmNodeId": "7324121901",
+      "pixel": [
+        2035,
+        2267
+      ],
+      "world": [
+        321765.9872163657,
+        5808664.94169049
+      ],
+      "role": "unchanged public-road centre, not new kerb"
+    },
+    {
+      "osmNodeId": "7324121827",
+      "pixel": [
+        1887,
+        2364
+      ],
+      "world": [
+        321650.5269569851,
+        5808571.410260225
+      ],
+      "role": "unchanged public-road centre, not new kerb"
+    },
+    {
+      "osmNodeId": "7324121841",
+      "pixel": [
+        1840,
+        2338
+      ],
+      "world": [
+        321605.86476041074,
+        5808592.74376123
+      ],
+      "role": "unchanged public-road centre, not new kerb"
+    }
+  ],
+  "method": "Ground-control homography with smooth residual correction. T12 control corrected from outside white line to road centre; added unchanged public-road controls near T13/T14. Historical public-road centre at T13 is separate from the widened 2022 race centre.",
+  "rmsMeters": 5.3689323755910845,
+  "residualWarp": {
+    "method": "thin plate spline in inverse-homography image coordinates; zero correction at eight image-perimeter anchors",
+    "perimeterPixels": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1518.0,
+        0.0
+      ],
+      [
+        3036.0,
+        0.0
+      ],
+      [
+        3036.0,
+        1518.0
+      ],
+      [
+        3036.0,
+        3036.0
+      ],
+      [
+        1518.0,
+        3036.0
+      ],
+      [
+        0.0,
+        3036.0
+      ],
+      [
+        0.0,
+        1518.0
+      ]
+    ],
+    "pixelScale": 3036
+  },
+  "rmsScope": "Original eight-point homography only; not the accuracy of the residual-corrected image",
+  "manualControlUncertaintyMeters": 3,
+  "checkPoints": [
+    {
+      "osmNodeId": "7324002873",
+      "world": [
+        321624.68746681436,
+        5808578.4537683185
+      ],
+      "pixel": [
+        1857,
+        2352
+      ],
+      "role": "withheld T14 curve road centre"
+    },
+    {
+      "osmNodeId": "9652574530",
+      "world": [
+        321726.7937766819,
+        5808626.566480433
+      ],
+      "pixel": [
+        1986,
+        2309
+      ],
+      "role": "withheld T13-to-T14 straight road centre"
+    }
+  ]
+}

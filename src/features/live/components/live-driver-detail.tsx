@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Flag, Headphones, Timer } from "lucide-react";
 import { useLive } from "./live-provider";
 import { DriverPortrait, ordered, Tyre } from "./live-timing";
-import { compoundText, driverStatus, gapText, lapTime } from "../lib/format";
+import { compoundText, driverStatus, gapText, lapTime, tyreAgeText, tyreAgeDescription } from "../lib/format";
 import { sessionCapabilities } from "../lib/session";
 
 export function DriverDetail({
@@ -85,6 +85,10 @@ export function DriverDetail({
           <h3>Телеметрия</h3>
           <span>Последние 60 секунд</span>
         </div>
+        <dl className="live-session-speed">
+          <dt>Макс. скорость за сессию</dt>
+          <dd>{d.maxSpeed == null ? "—" : `${Math.round(d.maxSpeed)} км/ч`}</dd>
+        </dl>
         {children}
       </section>
       <div className="live-driver-columns">
@@ -170,7 +174,7 @@ export function DriverDetail({
           </p>
           <div className="live-tyre-summary">
             <b>{compoundText[d.compound ?? ""] ?? "Ждём данные о шинах"}</b>
-            <span>{d.tyreAge ?? "—"} кругов на текущем комплекте</span>
+            <span title={tyreAgeDescription(d)}>{tyreAgeText(d)} {d.tyreAgeEstimated ? "кругов после пита" : "кругов на текущем комплекте"}</span>
           </div>
         </section>
         <section className="live-driver-section">

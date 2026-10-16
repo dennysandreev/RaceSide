@@ -61,6 +61,7 @@
   --mclaren-papaya: #ff8700;
   --obsidian-elevated: #121212;
   --obsidian-surface: #1e1e1e;
+  --racemate-logo-mark: #e10600;
   --racemate-logo-wordmark: #f5f4f2;
   --racemate-logo-descriptor: #bdb8b6;
   --team-logo-surface: oklch(0.25 0.014 250);
@@ -112,19 +113,20 @@
   --track-model-height-text: #f4f2ee;
   --track-model-profile-fill: #264f32;
   --track-model-profile-line: #c9ff4b;
-  --season-globe-ocean: #101718;
-  --season-globe-land: #5b605f;
-  --season-globe-host-land: #82504c;
-  --season-globe-border: #aaa5a2;
-  --season-globe-route-completed: #6d7372;
+  --season-globe-ocean: #0b141b;
+  --season-globe-land: #26343f;
+  --season-globe-host-land: #5c302e;
+  --season-globe-border: #52616c;
+  --season-globe-rim: #80bbda;
+  --season-globe-route-completed: #a92823;
   --season-globe-route-next: #e10600;
-  --season-globe-route-upcoming: #9b625d;
+  --season-globe-route-upcoming: #c13b32;
   --season-globe-route-upcoming-outline: #271b1a;
-  --season-globe-marker-completed: #9b9f9e;
+  --season-globe-marker-completed: #dd3027;
   --season-globe-marker-completed-text: #0b0d0d;
   --season-globe-marker-next: #e10600;
   --season-globe-marker-next-text: #fff7f6;
-  --season-globe-marker-upcoming: #d6aaa2;
+  --season-globe-marker-upcoming: #a63d39;
   --season-globe-marker-upcoming-text: #231817;
   --season-globe-marker-selected: #f2ecea;
   --sidebar: #101010;
@@ -208,15 +210,16 @@ html[data-theme="light"] {
   --track-model-height-text: #1e2b1f;
   --track-model-profile-fill: #aac398;
   --track-model-profile-line: #426d2e;
-  --season-globe-ocean: #edf2f0;
-  --season-globe-land: #c7cfcb;
-  --season-globe-host-land: #d9a6a1;
-  --season-globe-border: #78847e;
-  --season-globe-route-completed: #3f4c47;
+  --season-globe-ocean: #d4e0e7;
+  --season-globe-land: #a3b3bc;
+  --season-globe-host-land: #c38d84;
+  --season-globe-border: #657883;
+  --season-globe-rim: #537d98;
+  --season-globe-route-completed: #a3332b;
   --season-globe-route-next: #d90000;
   --season-globe-route-upcoming: #d90000;
   --season-globe-route-upcoming-outline: #fffaf8;
-  --season-globe-marker-completed: #f8faf9;
+  --season-globe-marker-completed: #b32e28;
   --season-globe-marker-completed-text: #26312d;
   --season-globe-marker-next: #d90000;
   --season-globe-marker-next-text: #fff7f6;
@@ -250,6 +253,95 @@ html[data-theme="light"] .feed-filter-select {
   box-sizing: border-box;
 }
 
+.home-season-progress-track {
+  position: relative;
+  height: 7px;
+  margin-top: 9px;
+}
+
+.home-season-progress-segments {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
+  mask-image: repeating-linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(var(--season-progress-cell) - 2px),
+    transparent calc(var(--season-progress-cell) - 2px),
+    transparent var(--season-progress-cell)
+  );
+}
+
+.home-season-progress-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--primary) 68%, #780000),
+    var(--primary)
+  );
+  transform: scaleX(var(--season-progress-ratio));
+  transform-origin: left center;
+  animation: home-season-progress-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-season-progress-cursor {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--season-progress-position) - 2px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 15%, white);
+  box-shadow: 0 0 4px var(--primary), 0 0 12px var(--primary);
+  transform: translate(-50%, -50%);
+  animation: home-season-progress-cursor-in 240ms 900ms both;
+}
+
+.home-season-progress-cursor::after {
+  position: absolute;
+  inset: -3px;
+  border: 1px solid var(--primary);
+  border-radius: inherit;
+  content: "";
+  opacity: 0;
+  animation: home-season-progress-pulse 1400ms 1100ms 2;
+}
+
+@keyframes home-season-progress-in {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(var(--season-progress-ratio));
+  }
+}
+
+@keyframes home-season-progress-cursor-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes home-season-progress-pulse {
+  from {
+    opacity: 0.6;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
 .season-globe-static-sphere {
   position: relative;
   overflow: hidden;
@@ -273,6 +365,40 @@ html[data-theme="light"] .feed-filter-select {
   filter: grayscale(1);
   mix-blend-mode: screen;
   opacity: 0.12;
+}
+
+.season-globe-label-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.season-globe-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 18px;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px var(--background);
+  pointer-events: none;
+}
+
+.season-globe-label-selected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--background) 92%, transparent);
+  text-shadow: none;
 }
 
 .season-globe-focus-target:focus-visible {
@@ -658,6 +784,12 @@ html[data-theme="light"] .race-replay-map-stage {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .home-season-progress-fill,
+  .home-season-progress-cursor,
+  .home-season-progress-cursor::after {
+    animation: none !important;
+  }
+
   .racemate-loading-progress::before,
   .racemate-loading-progress span,
   .racemate-loading-step {
@@ -730,6 +862,102 @@ html[data-theme="light"] .plus-theme-image[data-theme-image="dark"] {
 
 html[data-theme="light"] .plus-theme-image[data-theme-image="light"] {
   display: block;
+}
+
+.plus-offer-dialog {
+  container-type: inline-size;
+  background: var(--popover);
+  border-radius: 12px;
+}
+.plus-offer-brand { display: flex; align-items: center; gap: 10px; padding: 16px 20px 0; }
+.plus-offer-logo { width: 164px; height: auto; }
+.plus-offer-wordmark { display: inline-flex; align-items: center; gap: 8px; color: var(--racemate-logo-wordmark); font-size: 17px; font-weight: 700; letter-spacing: -.025em; }
+.plus-offer-wordmark > span { font-weight: 500; }
+.plus-offer-intro { padding: 9px 28px 20px; }
+.plus-offer-title { font-size: 30px; line-height: 1.14; font-weight: 750; letter-spacing: -.035em; text-wrap: balance; }
+.plus-offer-description { margin-top: 10px; max-width: 50ch; font-size: 14px; line-height: 1.55; text-wrap: pretty; }
+.plus-offer-gallery { position: relative; height: calc((100cqw - 56px) * .35 + 81px); margin: 0 28px; isolation: isolate; }
+.plus-offer-screen {
+  position: absolute;
+  padding: 0;
+  color: var(--foreground);
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 10px 24px rgb(0 0 0 / .16);
+  cursor: pointer;
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+}
+.plus-offer-screen:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
+.plus-offer-screen-bar { display: flex; align-items: center; gap: 7px; height: 29px; padding: 0 11px; background: var(--muted); border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 500; }
+.plus-offer-screen-bar svg { width: 13px; height: 13px; flex: 0 0 13px; color: var(--muted-foreground); }
+.plus-offer-screen-image { display: block; width: 100%; aspect-ratio: 1.78; overflow: hidden; }
+.plus-offer-screen-image img { width: 100%; height: auto; max-width: none; }
+.plus-offer-screen-telemetry { width: 46%; left: 1%; top: 15px; transform: rotate(-7deg); z-index: 1; }
+.plus-offer-screen-fantasy { width: 46%; right: 1%; top: 19px; transform: rotate(7deg); z-index: 2; }
+.plus-offer-screen-live { width: 62%; left: 19%; top: 52px; transform: rotate(-1deg); z-index: 3; }
+.plus-offer-screen[aria-pressed="true"] { z-index: 4; box-shadow: 0 14px 30px rgb(0 0 0 / .2); }
+.plus-offer-screen-telemetry[aria-pressed="true"], .plus-offer-screen-telemetry:hover { transform: rotate(-4deg) translateY(-6px); }
+.plus-offer-screen-fantasy[aria-pressed="true"], .plus-offer-screen-fantasy:hover { transform: rotate(4deg) translateY(-6px); }
+.plus-offer-screen-live[aria-pressed="true"], .plus-offer-screen-live:hover { transform: rotate(0) translateY(-4px); }
+.plus-offer-screen:hover, .plus-offer-screen:focus-visible { z-index: 5; }
+.plus-offer-screen-telemetry .plus-offer-screen-image img { width: 125%; transform: translate(-20%, -2%); }
+.plus-offer-benefits, .plus-offer-paid-benefits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; list-style: none; padding: 14px 28px 0; margin: 0; }
+.plus-offer-benefits li, .plus-offer-paid-benefits li { display: flex; align-items: flex-start; gap: 8px; min-width: 0; font-size: 13px; }
+.plus-offer-benefits svg, .plus-offer-paid-benefits svg { width: 17px; height: 17px; flex: 0 0 17px; margin-top: 2px; color: var(--muted-foreground); }
+.plus-offer-benefits b, .plus-offer-paid-benefits b { font-weight: 600; }
+.plus-offer-benefits small, .plus-offer-paid-benefits small { display: block; color: var(--muted-foreground); font-size: 12px; margin-top: 2px; }
+.plus-offer-actions { padding: 14px 28px 15px; }
+.plus-offer-dialog .plus-offer-primary { font-family: var(--font-geist-sans), sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0; text-transform: none; min-height: 46px; box-shadow: none; }
+.plus-offer-login { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; min-height: 32px; margin-top: 7px; color: var(--muted-foreground); font-size: 12px; }
+.plus-offer-login a { padding: 7px 2px; color: var(--foreground); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.plus-offer-login a:focus-visible, .plus-offer-price-link:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
+.plus-offer-upsell { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 13px 28px; background: var(--muted); border-top: 1px solid var(--border); }
+.plus-offer-upsell p { margin: 4px 0 0; max-width: 44ch; color: var(--muted-foreground); font-size: 12px; line-height: 1.55; }
+.plus-offer-upsell .plus-offer-upsell-title { margin: 0; color: var(--foreground); font-size: 13px; font-weight: 600; }
+.plus-offer-price-link { display: flex; flex-direction: column; gap: 4px; padding: 5px 0; color: var(--foreground); font-size: 13px; font-weight: 600; text-align: right; white-space: nowrap; }
+.plus-offer-price-link > span { color: var(--muted-foreground); font-size: 12px; font-weight: 400; text-decoration: underline; text-underline-offset: 3px; }
+.plus-offer-paid-gallery { position: relative; height: 190px; margin: 0 28px 18px; overflow: hidden; }
+.plus-offer-preview { position: absolute; width: 66%; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; background: var(--popover); }
+.plus-offer-preview img { width: 100%; height: auto; }
+.plus-offer-preview-live { top: 0; left: 0; }
+.plus-offer-preview-telemetry { width: 62%; top: 43px; right: 0; box-shadow: -8px 8px 18px rgb(0 0 0 / .16); }
+.plus-offer-preview-telemetry img { width: 125%; max-width: none; transform: translateX(-20%); }
+.plus-offer-paid-benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 0 28px 21px; }
+.plus-offer-checkout { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 20px; border-top: 1px solid var(--border); padding: 17px 28px 21px; }
+.plus-offer-price { font-size: 29px; font-weight: 700; letter-spacing: -.025em; line-height: 1.12; font-variant-numeric: tabular-nums; }
+.plus-offer-price > span { font-size: 18px; font-weight: 400; letter-spacing: 0; }
+.plus-offer-price > small { font-size: 12px; font-weight: 400; color: var(--muted-foreground); letter-spacing: 0; white-space: nowrap; }
+
+@container (max-width: 430px) {
+  .plus-offer-brand { padding: 10px 12px 0; }
+  .plus-offer-intro { padding: 7px 20px 17px; }
+  .plus-offer-title { font-size: 25px; }
+  .plus-offer-gallery { height: calc((100cqw - 32px) * .405 + 88px); margin-inline: 16px; }
+  .plus-offer-screen-bar { height: 25px; padding-inline: 7px; gap: 5px; }
+  .plus-offer-screen-telemetry, .plus-offer-screen-fantasy { width: 51%; top: 12px; }
+  .plus-offer-screen-live { width: 72%; left: 14%; top: 62px; }
+  .plus-offer-benefits { grid-template-columns: 1fr; gap: 8px; padding: 14px 20px 0; }
+  .plus-offer-benefits li { align-items: center; gap: 8px; }
+  .plus-offer-benefits li > span { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .plus-offer-benefits small { margin-top: 0; white-space: nowrap; }
+  .plus-offer-actions { padding: 14px 20px 18px; }
+  .plus-offer-upsell { padding: 14px 20px; grid-template-columns: 1fr; gap: 7px; }
+  .plus-offer-price-link { text-align: left; flex-direction: row; justify-content: space-between; }
+  .plus-offer-paid-gallery { height: 104px; margin-inline: 20px; }
+  .plus-offer-preview { width: 79%; }
+  .plus-offer-preview-telemetry { width: 74%; top: 36px; }
+  .plus-offer-paid-benefits { padding: 0 20px 18px; gap: 15px; }
+  .plus-offer-paid-benefits li { font-size: 12px; gap: 6px; }
+  .plus-offer-paid-benefits small { display: none; }
+  .plus-offer-checkout { padding: 16px 20px 17px; grid-template-columns: 1fr; gap: 13px; }
+  .plus-offer-price { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plus-offer-dialog, .plus-offer-dialog .plus-offer-primary { animation: none; transition: none; }
+  .plus-offer-screen { transition: none; }
 }
 
 /* Desktop navigation fits the viewport; admin-only entries may scroll. */
@@ -826,4 +1054,51 @@ html[data-theme="light"] .plus-theme-image[data-theme-image="light"] {
   .raceside-desktop-navigation:has(a[href="/admin"]) {
     grid-auto-rows: 36px;
   }
+}
+
+/* Native menus use the same inset chevron as the product selectors. */
+:root {
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8adb5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+select:not(.appearance-none):not([multiple]):not([size]) {
+  appearance: none;
+  padding-right: 40px;
+  background-image: var(--select-chevron);
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+/* Keep public panel grouping while softening dark fills and elevation. */
+html:not([data-theme="light"]) [data-public-ui] {
+  --card: #0b0b0b;
+  --secondary: #151515;
+  --muted: #141414;
+  --accent: #1b1b1b;
+  --border: rgb(255 255 255 / 0.065);
+  --panel-depth-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.035),
+    inset 0 -1px 0 rgb(0 0 0 / 0.2),
+    0 1px 2px rgb(0 0 0 / 0.28),
+    0 8px 20px -12px rgb(0 0 0 / 0.48);
+}
+
+html:not([data-theme="light"]) [data-public-ui] :is(.glass-card, .stitch-panel) {
+  background: var(--card);
+  backdrop-filter: none;
+}
+
+html:not([data-theme="light"]) [data-public-ui]
+  :is(
+    .glass-card,
+    .stitch-panel,
+    :is(section, article, aside, a).border.bg-card,
+    a.border.bg-primary\/10
+  ) {
+  box-shadow:
+    var(--tw-inset-shadow, 0 0 #0000),
+    var(--tw-inset-ring-shadow, 0 0 #0000),
+    var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000),
+    var(--panel-depth-shadow);
 }

@@ -1,0 +1,14 @@
+{
+  "yas-marina.glb": {
+    "bytes": 6471936,
+    "sha256": "7a3f0c0ab1bb1807a4a071133e382e8d18fdeee6d5d2504040a987fb93e81b54"
+  },
+  "yas-marina-preview.webp": {
+    "bytes": 313064,
+    "sha256": "d757ef0c5aa4d522d2c98adbea3d806bd5345147da457d8f3c529cab3e3934f8"
+  },
+  "yas-marina-metadata.json": {
+    "bytes": 396495,
+    "sha256": "654e6fc66192f5c303e36622c766e75dac5f0cea3d2ee8f181812d9e8e825ca2"
+  }
+}

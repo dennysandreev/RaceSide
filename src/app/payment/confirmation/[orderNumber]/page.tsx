@@ -33,7 +33,9 @@ export default async function ConfirmationPage({
   const description = paid
     ? "Доступ RaceSide Plus включён."
     : pending
-      ? "Если вы закрыли платёжный сервис, можно открыть эту же оплату ещё раз или отменить попытку."
+      ? order.provider === "lava"
+        ? "Если вы закрыли платёжный сервис, можно открыть эту же оплату ещё раз или отменить попытку."
+        : "Проверяем предыдущую оплату. Можно отменить попытку и оформить подписку через Lava.top."
       : "Можно вернуться к подписке и выбрать срок и способ оплаты заново.";
 
   return (
@@ -56,10 +58,10 @@ export default async function ConfirmationPage({
           </div>
           <dl className="grid gap-px bg-border sm:grid-cols-2">
             <OrderFact label="Заказ" value={order.orderNumber} />
-            <OrderFact label="Сумма" value={formatMoney(order.amountMinor)} />
+            <OrderFact label="Сумма" value={formatMoney(order.amountMinor, order.currency)} />
             <OrderFact
               label="Способ"
-              value={formatProvider(order.paymentMethod)}
+              value={formatProvider(order.provider, order.paymentMethod)}
             />
             <OrderFact
               label="Статус"
@@ -78,7 +80,7 @@ export default async function ConfirmationPage({
                 <Link href="/live">Открыть LIVE</Link>
               </Button>
             ) : pending ? (
-              <PaymentRecoveryActions orderNumber={order.orderNumber} />
+              <PaymentRecoveryActions orderNumber={order.orderNumber} canResume={order.provider === "lava"} />
             ) : (
               <Button asChild>
                 <Link href="/plus#checkout">Попробовать снова</Link>

@@ -45,8 +45,8 @@ export type Database = {
         user_id: string;
         plan_id: string;
         price_id: string;
-        provider: "tribute" | "yoomoney";
-        payment_method: "tribute" | "yoomoney_card" | "yoomoney_wallet";
+        provider: "tribute" | "yoomoney" | "lava";
+        payment_method: "tribute" | "yoomoney_card" | "yoomoney_wallet" | "lava" | "lava_rub";
         amount_minor: number;
         currency: string;
         duration_months: number;
@@ -54,6 +54,12 @@ export type Database = {
         price_name_snapshot: string;
         provider_label: string | null;
         provider_order_id: string | null;
+        buyer_email: string | null;
+        lava_parent_contract_id: string | null;
+        lava_auto_renew: boolean;
+        lava_cancelled_at: string | null;
+        refunded_amount_minor: number;
+        payment_dispute_status: string | null;
         checkout_url: string | null;
         idempotency_key: string;
         status: "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
@@ -68,7 +74,7 @@ export type Database = {
       payment_transactions: TableDefinition<{
         id: string;
         order_id: string;
-        provider: "tribute" | "yoomoney";
+        provider: "tribute" | "yoomoney" | "lava";
         provider_transaction_id: string;
         payment_method: string;
         gross_amount_minor: number;
@@ -105,7 +111,7 @@ export type Database = {
       }>;
       billing_notification_events: TableDefinition<{
         id: string;
-        provider: "tribute" | "yoomoney";
+        provider: "tribute" | "yoomoney" | "lava";
         provider_event_id: string;
         provider_event_type: string;
         provider_reference: string | null;
@@ -291,13 +297,15 @@ export type Database = {
       }>;
       user_error_reports: TableDefinition<{
         id: string;
+        report_kind: "news_error" | "feedback";
+        contact: string | null;
         article_id: string | null;
         reporter_user_id: string | null;
         message: string;
         status: "new" | "in_progress" | "resolved" | "dismissed";
         page_path: string;
-        article_slug: string;
-        article_title: string;
+        article_slug: string | null;
+        article_title: string | null;
         source_name: string | null;
         referrer_path: string | null;
         user_agent: string | null;
@@ -307,6 +315,9 @@ export type Database = {
         telegram_status: string;
         telegram_error: string | null;
         telegram_sent_at: string | null;
+        telegram_attempts: number;
+        telegram_last_attempt_at: string | null;
+        telegram_retry_at: string;
         admin_note: string | null;
         resolved_by: string | null;
         resolved_at: string | null;
@@ -1231,6 +1242,16 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      get_admin_operations_snapshot: { Args: Record<string, never>; Returns: Json };
+      get_admin_sport_season_counts: { Args: { p_season: number }; Returns: Json };
+      get_admin_billing_page: { Args: { p_search_pattern: string; p_status?: string | null; p_provider?: string | null; p_currency?: string | null; p_since?: string | null; p_until?: string | null; p_page: number; p_page_size: number }; Returns: Json };
+      get_admin_ai_prompt_history: { Args: { p_prompt_key: string; p_page: number; p_page_size: number }; Returns: Json };
+      get_admin_ai_prompt_history_overview: { Args: Record<string, never>; Returns: Database["public"]["Tables"]["ai_prompt_versions"]["Row"][] };
+      get_admin_ai_latest_drafts: { Args: Record<string, never>; Returns: Database["public"]["Tables"]["ai_prompt_versions"]["Row"][] };
+      admin_retry_telemetry_task: { Args: { p_task_id: string; p_previous_job_id: string; p_actor_user_id: string }; Returns: string };
+      admin_retry_failed_social_posts: { Args: { p_limit: number }; Returns: number };
+      get_admin_poll_vote_counts: { Args: { p_poll_ids: string[] }; Returns: Array<{ poll_id: string; vote_count: number }> };
+      get_admin_user_engagement_counts: { Args: { p_user_ids: string[] }; Returns: Array<{ user_id: string; favorite_teams: number; favorite_drivers: number; predictions: number; leagues: number }> };
       billing_apply_payment: {
         Args: {
           p_order_id: string;
@@ -1280,6 +1301,40 @@ export type Database = {
           p_payload_hash: string;
         };
         Returns: boolean;
+      };
+      billing_apply_lava_adjustment: {
+        Args: {
+          p_order_id: string;
+          p_event_id: string;
+          p_event_type: string;
+          p_amount_minor: number;
+          p_currency: string;
+          p_payload_hash: string;
+          p_safe_payload?: Json;
+        };
+        Returns: boolean;
+      };
+      billing_apply_lava_renewal: {
+        Args: {
+          p_parent_contract_id: string;
+          p_invoice_id: string;
+          p_amount_minor: number;
+          p_fee_minor: number;
+          p_currency: string;
+          p_occurred_at: string;
+          p_payload_hash: string;
+        };
+        Returns: string;
+      };
+      billing_mark_lava_cancelled: {
+        Args: {
+          p_invoice_id: string;
+          p_email: string;
+          p_event_id: string;
+          p_occurred_at: string;
+          p_payload_hash: string;
+        };
+        Returns: string;
       };
       billing_consume_rate_limit: {
         Args: {
@@ -1479,6 +1534,19 @@ export type Database = {
           monthly_post_count: number;
           allowed: boolean;
         }>;
+      };
+      submit_site_feedback: {
+        Args: {
+          p_message: string;
+          p_contact: string | null;
+          p_request_fingerprint: string;
+          p_user_id: string | null;
+        };
+        Returns: string;
+      };
+      claim_site_feedback_delivery: {
+        Args: Record<string, never>;
+        Returns: Database["public"]["Tables"]["user_error_reports"]["Row"][];
       };
       submit_news_error_report: {
         Args: {

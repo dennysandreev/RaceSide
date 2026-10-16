@@ -1,5 +1,14 @@
 [
   {
+    "name": "support.dispatch_feedback",
+    "title": "Отправить пожелания в Telegram",
+    "description": "Отправит новые пожелания в support-бот и повторит доставку после временных сбоев.",
+    "group": "notifications",
+    "expectedIntervalMinutes": 1,
+    "maxAttempts": 2,
+    "parameters": []
+  },
+  {
     "name": "rss.fetch_all",
     "title": "Проверить все RSS-источники",
     "description": "Загрузит свежие материалы из активных новостных источников.",
@@ -250,8 +259,8 @@
   },
   {
     "name": "social.refresh_metrics",
-    "title": "Обновить реакции",
-    "description": "Обновит доступные показатели популярности социальных постов.",
+    "title": "Обновить социальные источники",
+    "description": "Принудительно загрузит публикации из всех активных социальных источников. Запросы к X могут увеличить расходы.",
     "group": "social",
     "expectedIntervalMinutes": 60,
     "maxAttempts": 2,
@@ -267,13 +276,15 @@
     "parameters": [
       {
         "name": "limit",
-        "flag": "--limit",
+        "flag": "limit",
         "type": "integer",
+        "required": false,
         "min": 1,
-        "max": 100,
-        "required": false
+        "max": 100
       }
-    ]
+    ],
+    "danger": true,
+    "confirmation": "Посты вернутся на обработку с новыми попытками. Обработка использует AI и может увеличить расходы. Если количество не выбрано, вернутся до 50 постов."
   },
   {
     "name": "reports.check_latest",
@@ -540,17 +551,19 @@
   },
   {
     "name": "polls.generate_next_race",
-    "title": "Подготовить опросы этапа",
-    "description": "Создаст черновики опросов для ближайшего Гран-при.",
+    "title": "Опубликовать опросы ближайшей гонки",
+    "description": "Создаст и сразу опубликует опросы ближайшей гонки. Опросы завершённых гонок закроются.",
     "group": "community",
     "expectedIntervalMinutes": 1440,
     "maxAttempts": 2,
-    "parameters": []
+    "parameters": [],
+    "danger": true,
+    "confirmation": "Новые опросы сразу увидят читатели. Опросы завершённых гонок закроются."
   },
   {
     "name": "notifications.enqueue",
-    "title": "Собрать уведомления",
-    "description": "Соберёт и сразу отправит уведомления, для которых подошло время.",
+    "title": "Собрать и отправить уведомления",
+    "description": "Соберёт актуальные уведомления и сразу начнёт отправку через Telegram.",
     "group": "notifications",
     "expectedIntervalMinutes": 5,
     "maxAttempts": 2,
@@ -587,7 +600,7 @@
     "name": "billing.reconcile_tribute",
     "title": "Сверить оплаты Tribute",
     "description": "Проверит Shop API и подтвердит оплаченные заказы, для которых не пришёл webhook.",
-    "group": "billing",
+    "group": "legacy",
     "expectedIntervalMinutes": 2,
     "maxAttempts": 2,
     "parameters": []
@@ -596,7 +609,7 @@
     "name": "billing.reconcile_yoomoney",
     "title": "Сверить оплаты ЮMoney",
     "description": "Проверит историю кошелька и подтвердит оплаты, для которых не пришло уведомление.",
-    "group": "billing",
+    "group": "legacy",
     "expectedIntervalMinutes": 2,
     "maxAttempts": 2,
     "parameters": []
@@ -623,7 +636,7 @@
     "name": "billing.retry_failed_events",
     "title": "Повторить обработку оплат",
     "description": "Повторно применит уже проверенные события, которые не удалось завершить из-за внутренней ошибки.",
-    "group": "billing",
+    "group": "legacy",
     "expectedIntervalMinutes": 5,
     "maxAttempts": 2,
     "parameters": []

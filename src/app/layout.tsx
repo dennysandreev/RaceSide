@@ -63,7 +63,9 @@ export default function RootLayout({
               description: DEFAULT_SITE_DESCRIPTION,
               logo: {
                 "@type": "ImageObject",
-                url: `${SITE_URL}/icon.svg`,
+                height: 512,
+                url: `${SITE_URL}/brand/raceside/avatar-trajectory-dark.png`,
+                width: 512,
               },
               name: SITE_NAME,
               url: SITE_URL,

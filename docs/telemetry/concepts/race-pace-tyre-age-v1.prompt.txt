@@ -1,0 +1,27 @@
+Use case: ui-mockup.
+Create one polished, large landscape desktop UI concept for the existing Russian Formula 1 product RaceSide. This is an edit of the supplied RaceSide telemetry screenshot: preserve its recognizable RaceSide red RS wordmark, dark sidebar with existing navigation, Geist/Geist Mono typography, obsidian surfaces, thin borders, compact button vocabulary, and selected "Телеметрия" navigation item. Replace the comparison workspace with the proposed new race-pace analysis workspace. Full screen, straight-on, no device mockup, no perspective. Use a wide 16:10 composition with exceptionally readable Russian text and a large central graph. Existing shell, not a landing page. More restrained than the source's colored background; near-black background, no gradients, no glow, no decorative photo or map, no KPI cards.
+
+Product architecture and text:
+- Header at top of content: small red "Телеметрия · сезон 2026"; main title "Гран-при Италии"; secondary "Monza · 2026 · Гонка". Compact buttons "Изменить" and "Поделиться" top right.
+- Immediately beneath header a compact primary mode segmented control: "Пилоты и круги", "Сессии", "Прогресс", and "Темп гонки". The fourth "Темп гонки" is the active raised tab. Do NOT show the old two-driver lap-comparison header or speed/brake tabs.
+- Workspace title "Как менялся темп".
+- Toolbar: two-way view switch "По кругам гонки" / "По возрасту шин", second active. Beside it the compound filter "Все" "Soft" "Medium" "Hard", Medium selected with a small yellow M marker. A checked subtle control "Только чистые круги". Tiny clear context "22 пилота · выделены 3".
+
+Main analytical chart fills the majority of the content, about 72% width, with a narrower right driver selection rail about 26%. Make plot generous and very readable, not tiny.
+- X axis is "Возраст шин, кругов" with ticks 1, 5, 10, 15, 20, 25, 30.
+- Y axis "Время круга" has top-to-bottom ticks 1:27, 1:26, 1:25, 1:24, 1:23. Thus slower times are higher and faster times lower. Neutral fine horizontal gridlines, no grid overload.
+- Show a complete field of roughly 22 thin solid team-colored traces, muted to the background. Three selected traces stand out: Norris orange, Russell turquoise, Leclerc Ferrari red, with direct end labels NOR, RUS, LEC in those colors.
+- These selected traces represent MEDIUM tyre stints. Every tyre stint is its own discontinuous series; do not connect one stint to another across a pit stop. Mostly plausible gently rising trends with small fluctuations as tyre age increases, not exaggerated stock-market waves. Clearly separated sample dots with a cleaner subtle median-of-three-laps trend. Orange Norris lower/faster, turquoise Russell in the middle, red Leclerc slightly higher/slower. A few faint second-stint fragments to demonstrate multiple stints, but no impossible connections.
+- A precise hover state at tyre age 17 on Norris. A modest anchored tooltip: "NOR · серия 1", "Круг гонки 18", "Medium · 17 кругов", "Время круга 1:24,318". One vertical subtle guide. Avoid blocking most graph.
+- Beneath graph compact caption "Точки: чистые круги · линия: медиана 3 кругов".
+
+Right rail "Пилоты" with a search field placeholder "Найти пилота", checked "Показывать остальных". Rows are restrained selectable list items, driver acronym, surname, narrow team color swatch; highlighted Norris, Russell, Leclerc with selected checkbox, other drivers quieter. Show about 12-14 visible rows and subtle internal scrollbar indicating all 22 available. Suggested names: NOR Norris, RUS Russell, LEC Leclerc, VER Verstappen, PIA Piastri, HAM Hamilton, ANT Antonelli, ALO Alonso, SAI Sainz, ALB Albon, GAS Gasly, OCO Ocon, BEA Bearman, HUL Hulkenberg. Do not add lap times or positions to this list.
+
+Bottom content aligned beneath the plot: a compact integrated tyre-strategy timeline titled "Шины выбранных пилотов", three horizontal rows NOR, RUS, LEC against a shared race-lap axis with tick labels 1, 10, 20, 30, 40, 53 and caption "Круг гонки". Use yellow segments labeled M for Medium and light gray/white segments labeled H for Hard, each contiguous rectangle is a stint; pit-stop boundaries are fine vertical separators:
+- NOR: Medium from lap 1 to 24, Hard from 25 to 53.
+- RUS: Medium from 1 to 22, Hard from 23 to 53.
+- LEC: Medium from 1 to 20, Hard from 21 to 40, Medium from 41 to 53.
+These are chronological race strategies, independent of the tyre-age x-axis above, with clear axis labels.
+At very bottom include readable small neutral note "Темп зависит также от топлива, трафика и состояния трассы." and a discreet "Концепт · условные данные".
+
+Composition: all content fits one desktop viewport, sidebar and graph remain the visual anchor, no site footer. Calm, premium motorsport analysis tool, no generic SaaS cards, all Cyrillic spelled accurately, bold compact header, mostly 14-16px-equivalent body, numeric time labels are tabular monospace. This must make the location inside Telemetry and the tyre-age analytical idea immediately understandable. Preserve the original brand rather than inventing a new logo.

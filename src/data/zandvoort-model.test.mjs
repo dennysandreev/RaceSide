@@ -11,7 +11,7 @@ import { TRACK_MODEL_MAX_ZOOM } from "../lib/track-model-camera.ts";
 
 test("3D viewer supports close inspection at 800% zoom", async () => {
   const viewerSource = await readFile(
-    new URL("../components/racemate/track-model-3d.tsx", import.meta.url),
+    new URL("../components/racemate/track-model-viewer.tsx", import.meta.url),
     "utf8",
   );
   assert.ok(
@@ -19,7 +19,7 @@ test("3D viewer supports close inspection at 800% zoom", async () => {
     `expected at least 800% zoom, got ${TRACK_MODEL_MAX_ZOOM * 100}%`,
   );
   assert.match(viewerSource, /pinchTrackModelCamera/);
-  assert.match(viewerSource, /event\.button === 2 \|\| event\.shiftKey/);
+  assert.match(viewerSource, /\be\.button === 2 \|\| e\.shiftKey/);
   assert.doesNotMatch(viewerSource, /interactionMode/);
 });
 
@@ -60,7 +60,7 @@ test("bottom map information stays above projected 3D annotations", async () => 
 
   assert.match(
     viewerSource,
-    /<figcaption className="[^"]*\bz-30\b[^"]*"/,
+    /<div className=\{cn\(\s*"[^"]*\babsolute\b[^"]*\bbottom-\[[^"]*\bz-30\b[^"]*"/,
   );
   assert.match(
     replaySource,

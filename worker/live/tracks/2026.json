@@ -1,0 +1,285 @@
+[
+  {
+    "id": "albert-park",
+    "season": 2026,
+    "round": 1,
+    "circuitKey": 10,
+    "aliases": [
+      "albert_park",
+      "Albert Park Grand Prix Circuit",
+      "Melbourne"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "shanghai",
+    "season": 2026,
+    "round": 2,
+    "circuitKey": 49,
+    "aliases": [
+      "shanghai",
+      "Shanghai International Circuit",
+      "Shanghai"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "suzuka",
+    "season": 2026,
+    "round": 3,
+    "circuitKey": 46,
+    "aliases": [
+      "suzuka",
+      "Suzuka Circuit",
+      "Suzuka"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "miami",
+    "season": 2026,
+    "round": 4,
+    "circuitKey": 151,
+    "aliases": [
+      "miami",
+      "Miami International Autodrome",
+      "Miami",
+      "Miami Gardens"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "montreal",
+    "season": 2026,
+    "round": 5,
+    "circuitKey": 23,
+    "aliases": [
+      "villeneuve",
+      "Circuit Gilles Villeneuve",
+      "Montreal",
+      "Montréal"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "monaco",
+    "season": 2026,
+    "round": 6,
+    "circuitKey": 22,
+    "aliases": [
+      "monaco",
+      "Circuit de Monaco",
+      "Monte Carlo"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "catalunya",
+    "season": 2026,
+    "round": 7,
+    "circuitKey": 15,
+    "aliases": [
+      "catalunya",
+      "Circuit de Barcelona-Catalunya",
+      "Barcelona",
+      "Catalunya"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "red-bull-ring",
+    "season": 2026,
+    "round": 8,
+    "circuitKey": 19,
+    "aliases": [
+      "red_bull_ring",
+      "Red Bull Ring",
+      "Spielberg"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "silverstone",
+    "season": 2026,
+    "round": 9,
+    "circuitKey": 2,
+    "aliases": [
+      "silverstone",
+      "Silverstone Circuit",
+      "Silverstone"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "spa",
+    "season": 2026,
+    "round": 10,
+    "circuitKey": 7,
+    "aliases": [
+      "spa",
+      "Circuit de Spa-Francorchamps",
+      "Spa",
+      "Spa-Francorchamps"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "hungaroring",
+    "season": 2026,
+    "round": 11,
+    "circuitKey": 4,
+    "aliases": [
+      "hungaroring",
+      "Hungaroring",
+      "Budapest"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "zandvoort",
+    "season": 2026,
+    "round": 12,
+    "circuitKey": 55,
+    "aliases": [
+      "zandvoort",
+      "Circuit Park Zandvoort",
+      "Zandvoort"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "monza",
+    "season": 2026,
+    "round": 13,
+    "circuitKey": 39,
+    "aliases": [
+      "monza",
+      "Autodromo Nazionale di Monza",
+      "Monza"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "madring",
+    "season": 2026,
+    "round": 14,
+    "circuitKey": 153,
+    "aliases": [
+      "madring",
+      "Madring",
+      "Madrid"
+    ],
+    "preferBundled": true
+  },
+  {
+    "id": "baku",
+    "season": 2026,
+    "round": 15,
+    "circuitKey": 144,
+    "aliases": [
+      "baku",
+      "Baku City Circuit",
+      "Baku"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "sepang",
+    "season": 2026,
+    "round": 16,
+    "circuitKey": 12,
+    "aliases": [
+      "sepang",
+      "Sepang International Circuit",
+      "Kuala Lumpur"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "singapore",
+    "season": 2026,
+    "round": 17,
+    "circuitKey": 61,
+    "aliases": [
+      "marina_bay",
+      "Marina Bay Street Circuit",
+      "Marina Bay",
+      "Singapore"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "austin",
+    "season": 2026,
+    "round": 18,
+    "circuitKey": 9,
+    "aliases": [
+      "americas",
+      "Circuit of the Americas",
+      "Austin"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "mexico",
+    "season": 2026,
+    "round": 19,
+    "circuitKey": 65,
+    "aliases": [
+      "rodriguez",
+      "Autódromo Hermanos Rodríguez",
+      "Mexico City"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "interlagos",
+    "season": 2026,
+    "round": 20,
+    "circuitKey": 14,
+    "aliases": [
+      "interlagos",
+      "Autódromo José Carlos Pace",
+      "São Paulo",
+      "Interlagos"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "las-vegas",
+    "season": 2026,
+    "round": 21,
+    "circuitKey": 152,
+    "aliases": [
+      "vegas",
+      "Las Vegas Strip Street Circuit",
+      "Las Vegas"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "qatar",
+    "season": 2026,
+    "round": 22,
+    "circuitKey": 150,
+    "aliases": [
+      "losail",
+      "Lusail International Circuit",
+      "Lusail"
+    ],
+    "preferBundled": false
+  },
+  {
+    "id": "yas-marina",
+    "season": 2026,
+    "round": 23,
+    "circuitKey": 70,
+    "aliases": [
+      "yas_marina",
+      "Yas Marina Circuit",
+      "Abu Dhabi",
+      "Yas Marina"
+    ],
+    "preferBundled": false
+  }
+]

@@ -35,9 +35,7 @@ export default async function AdminOverviewPage() {
   }
 
   const overview = await loadAdminOverview(admin);
-  const urgentSignals = overview.signals.filter(
-    (signal) => signal.status === "failed" || signal.status === "stale",
-  ).length + overview.metrics.urgentFindings;
+  const urgentSignals = overview.urgentSignalsCount + overview.metrics.urgentFindings;
 
   return (
     <AdminPage>
@@ -75,8 +73,8 @@ export default async function AdminOverviewPage() {
           value={String(overview.metrics.activeFindings)}
         />
         <AdminMetric
-          helper={`${overview.metrics.failedJobs} с ошибкой`}
-          label="Задачи"
+          helper={`${overview.metrics.failedJobs} с ошибкой за 24 часа`}
+          label="В очереди и обработке"
           tone={overview.metrics.failedJobs ? "danger" : "default"}
           value={String(overview.metrics.queuedJobs)}
         />
@@ -144,7 +142,7 @@ export default async function AdminOverviewPage() {
               <Link href="/admin/systems">Все системы <ArrowRight data-icon="inline-end" /></Link>
             </Button>
           )}
-          description="Только реальные ошибки, паузы и проверки, которые не обновились по активному расписанию."
+          description={`Ошибки и проверки, которые не обновились по активному расписанию. Показано ${overview.signals.length} из ${overview.attentionSignalsCount}.`}
           title="Что требует внимания"
         >
           {overview.signals.length ? <div className="grid">
@@ -169,6 +167,8 @@ export default async function AdminOverviewPage() {
           )}
         </AdminSection>
       </div>
+
+      <details className="rounded-lg border border-border p-4"><summary className="cursor-pointer font-medium">На паузе: {overview.pausedSignals.length}</summary><p className="mt-2 text-xs text-muted-foreground">Сбор уведомлений уже включает отправку: пауза отдельной задачи доставки не останавливает Telegram. Историческая причина остальных пауз может быть не указана.</p><div className="mt-3 grid gap-2">{overview.pausedSignals.map(signal => <Link className="text-sm text-muted-foreground hover:text-foreground" href={signal.href ?? "/admin/systems"} key={signal.id}>{signal.label} — на паузе</Link>)}</div></details>
 
       <AdminSection
         description="Безопасные команды для самых частых проверок."

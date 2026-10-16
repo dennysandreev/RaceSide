@@ -15,6 +15,7 @@ import {
   preserveLockedPredictionValues,
 } from "@/lib/prediction-locks";
 import { consumeRateLimit } from "@/lib/rate-limit";
+import { invalidateServerTtlCache, invalidateServerTtlCachePrefix } from "@/lib/server-ttl-cache";
 import { createSupabaseAdminClient, createSupabaseServerClient } from "@/lib/supabase/server";
 
 const INVITE_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -185,6 +186,8 @@ export async function saveFantasyPrediction(formData: FormData) {
     });
   }
 
+  invalidateServerTtlCache("fantasy:global-leaderboard");
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/");
   revalidatePath("/fantasy");
   revalidatePath("/predictions");
@@ -249,6 +252,7 @@ export async function createFantasyLeague(formData: FormData) {
     redirect("/fantasy?message=create");
   }
 
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/fantasy");
   revalidatePath("/leagues");
   revalidatePath(`/fantasy/leagues/${data.id}`);
@@ -313,6 +317,7 @@ export async function joinFantasyLeague(formData: FormData) {
     redirect(`${returnPath}?message=join`);
   }
 
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/fantasy");
   revalidatePath("/leagues");
   revalidatePath(`/fantasy/leagues/${league.id}`);
@@ -366,6 +371,7 @@ export async function updateFantasyLeague(formData: FormData) {
     redirect(`/fantasy/leagues/${leagueId}?message=update`);
   }
 
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/fantasy");
   revalidatePath("/leagues");
   revalidatePath(`/fantasy/leagues/${leagueId}`);
@@ -420,6 +426,7 @@ export async function deleteFantasyLeague(formData: FormData) {
       .remove([getFantasyLeagueAvatarStoragePath(leagueId)]);
   }
 
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/fantasy");
   revalidatePath("/leagues");
   redirect("/fantasy/leagues?deleted=1");
@@ -471,6 +478,7 @@ export async function leaveFantasyLeague(formData: FormData) {
     redirect(`/fantasy/leagues/${leagueId}?message=leave`);
   }
 
+  invalidateServerTtlCachePrefix("fantasy:league-scores:");
   revalidatePath("/fantasy");
   revalidatePath(`/fantasy/leagues/${leagueId}`);
   redirect("/fantasy/leagues?left=1");

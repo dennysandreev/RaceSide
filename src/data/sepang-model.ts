@@ -1293,8 +1293,8 @@ export const SEPANG_TRACK_MODEL = {
     }
   },
   "webgl": {
-    "assetPath": "/f1/tracks/3d/sepang.glb?v=cc3b14f36751",
-    "previewPath": "/f1/tracks/3d/sepang-preview.webp?v=0cfe87cd6293",
+    "assetPath": "/f1/tracks/3d/sepang.glb?v=75ea9d36c8a0",
+    "previewPath": "/f1/tracks/3d/sepang-preview.webp?v=00bd6efe391f",
     "turnCount": 15,
     "elevationDatumLabel": "м DEM",
     "elevationApproximate": true,

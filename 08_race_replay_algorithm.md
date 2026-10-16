@@ -6,8 +6,8 @@
 
 ## Source Selection
 
-1. For `/weekend`, find the RaceSide weekend currently shown to the user.
-2. If that race has not happened yet, match it to the previous season race on the same circuit.
+1. For `/weekend` and calendar race pages, show a replay entry only when the displayed Grand Prix has completed. A ready replay record alone does not make an ongoing or upcoming Grand Prix eligible.
+2. Do not show previous-season reference replays on upcoming or ongoing Grand Prix pages.
 3. For completed RaceSide races, use the main race session from the same season and round context whenever OpenF1 has data.
 4. Use the OpenF1 main race session for that circuit and source season.
 4. Store the prepared link in `race_replay_sessions`.
@@ -64,6 +64,16 @@ frame by both 2D and 3D renderers, without the LIVE network jitter buffer.
 Lap-based motion follows the circuit, including long timed laps; pit entry and
 exit anchor the trajectory. The 3D model aligns those anchors to its own pit
 geometry. Seeking restores only events and timing available at that moment.
+
+Legacy snapshots without dedicated lap timings attach the **current** lap's
+number and archived duration to location samples from that lap's start. Do not
+subtract that duration from the first sample: that puts the map a lap ahead of
+the timing tower. Recover a shared start from the first `SESSION STARTED` event
+(or the earliest first-lap sample), then accumulate each driver's lap durations.
+Preserve missing lap numbers and re-anchor after an unknown duration to the next
+observed lap, so missing telemetry cannot shift the remaining race. Dedicated
+lap timings remain authoritative. The Miami 2026 fixture covers this clock,
+classification changes, the final position, and backward seeking.
 
 ## Pit Lane
 

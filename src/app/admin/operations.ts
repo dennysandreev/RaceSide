@@ -4,18 +4,21 @@ import { createHash, randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 
 import { finishAdminAudit, startAdminAudit } from "@/lib/admin-audit";
+import { parseMoscowPaymentDate } from "@/lib/admin-billing-policy";
+import { cancelUserLavaSubscription } from "@/lib/billing/repository";
 import {
   getAdminAiPromptDefinition,
   makeAdminAiPromptChecksum,
   validateAdminAiPromptContent,
   validateAdminAiRuntime,
 } from "@/lib/admin-ai-prompts";
-import { getAdminJobDefinition, makeAdminJobRequestKey } from "@/lib/admin-job-catalog";
+import { getAdminJobDefinition, makeAdminJobRequestKey, validateAdminJobRequest } from "@/lib/admin-job-catalog";
 import { enqueueAdminJob } from "@/lib/admin-jobs-server";
 import { canTransitionAdminStatus } from "@/lib/admin-policies";
 import { requireAdmin } from "@/lib/auth";
-import { invalidateSubscriptionAccess } from "@/lib/billing/access";
+import { getSubscriptionAccess, invalidateSubscriptionAccess } from "@/lib/billing/access";
 import { parseMinorUnits } from "@/lib/billing/money";
+import { normalizeDailyDigestBody } from "@/lib/daily-digest-content";
 import { loadOpenRouterModels } from "@/lib/openrouter-models";
 import { NEWS_ARTICLE_TYPE_OPTIONS } from "@/lib/news-editorial";
 import { consumeRateLimit } from "@/lib/rate-limit";
@@ -203,6 +206,8 @@ export async function retryAdminJobAction(
   const args = isRecord(previous.metadata) && isRecord(previous.metadata.args)
     ? previous.metadata.args
     : {};
+  const validation = validateAdminJobRequest(previous.job_name, args);
+  if (!validation.ok) return { ok: false, message: "Эта команда или её параметры больше недоступны. Выбери текущую задачу в каталоге." };
   const auditId = await startAdminAudit(admin, {
     actorUserId: user.id,
     action: "job.retry",
@@ -212,21 +217,25 @@ export async function retryAdminJobAction(
   });
 
   try {
-    const queued = await enqueueAdminJob(admin, {
-      args,
-      jobName: previous.job_name,
-      requestedBy: user.id,
-      retryOf: previous.id,
-    });
-    if (!queued.ok) {
-      await finishAdminAudit(admin, auditId, { outcome: "failed", error: queued.message });
-      return { ok: false, message: queued.message };
+    let queuedJobId: string;
+    if (previous.job_name === "telemetry.prepare") {
+      const { data, error: retryError } = await admin.rpc("admin_retry_telemetry_task", {
+        p_task_id: String(validation.args.taskId), p_previous_job_id: previous.id, p_actor_user_id: user.id,
+      });
+      if (retryError || !data) throw retryError ?? new Error("Запрос уже изменился. Обнови страницу.");
+      queuedJobId = data;
+    } else {
+      const queued = await enqueueAdminJob(admin, {
+        args: validation.args, jobName: previous.job_name, requestedBy: user.id, retryOf: previous.id,
+      });
+      if (!queued.ok) throw new Error(queued.message);
+      queuedJobId = queued.jobRunId;
     }
     await finishAdminAudit(admin, auditId, {
       outcome: "succeeded",
-      afterData: { jobRunId: queued.jobRunId },
+      afterData: { jobRunId: queuedJobId },
     });
-    revalidateAdminPaths(["/admin", "/admin/jobs"]);
+    revalidateAdminPaths(["/admin", "/admin/jobs", "/admin/systems"]);
     return { ok: true, message: "Повтор добавлен в очередь." };
   } catch (retryError) {
     await finishAdminAudit(admin, auditId, { outcome: "failed", error: retryError });
@@ -832,7 +841,7 @@ export async function saveDigestAction(
   const admin = createSupabaseAdminClient();
   const digestId = uuid(formData, "digestId");
   const title = text(formData, "title", 240);
-  const body = text(formData, "body", 20_000);
+  const body = normalizeDailyDigestBody(text(formData, "body", 20_000));
   const status = enumValue(formData, "status", ["draft", "published", "hidden"]);
   if (!admin || !digestId || !title || !body || !status) return { ok: false, message: "Проверь заголовок, текст и состояние сводки." };
   const { data: before } = await admin.from("digests").select("id, title, body_md, status").eq("id", digestId).maybeSingle();
@@ -927,14 +936,14 @@ export async function retryNotificationAction(
     entityId: queueId,
     beforeData: before,
   });
-  const { data: updated, error } = await admin.from("notification_queue").update({ status: "queued", available_at: new Date().toISOString(), last_error: null }).eq("id", queueId).eq("status", "failed").is("sent_at", null).select("id").maybeSingle();
+  const { data: updated, error } = await admin.from("notification_queue").update({ status: "pending", attempts: 0, available_at: new Date().toISOString(), last_error: null }).eq("id", queueId).eq("status", "failed").is("sent_at", null).select("id").maybeSingle();
   if (error || !updated) {
     await finishAdminAudit(admin, auditId, { outcome: "failed", error });
     return error
       ? actionError(error, "Не удалось вернуть уведомление в очередь.")
       : { ok: false, message: "Уведомление уже изменилось. Обнови страницу и попробуй снова." };
   }
-  await finishAdminAudit(admin, auditId, { outcome: "succeeded", afterData: { status: "queued" } });
+  await finishAdminAudit(admin, auditId, { outcome: "succeeded", afterData: { status: "pending", attempts: 0 } });
   revalidateAdminPaths(["/admin/notifications"]);
   return { ok: true, message: "Уведомление вернулось в очередь." };
 }
@@ -976,6 +985,13 @@ export async function sendTestNotificationAction(
   if (!admin || !targetUserId) return { ok: false, message: "Профиль не найден." };
   const { data: account } = await admin.from("telegram_accounts").select("user_id, is_active").eq("user_id", targetUserId).maybeSingle();
   if (!account?.is_active) return { ok: false, message: "Сначала подключи активный Telegram." };
+  const [{ data: preference, error: preferenceError }, access] = await Promise.all([
+    admin.from("notification_preferences").select("telegram_enabled").eq("user_id", targetUserId).maybeSingle(),
+    getSubscriptionAccess(targetUserId),
+  ]);
+  if (preferenceError) return actionError(preferenceError, "Не удалось проверить настройки уведомлений.");
+  if (!preference?.telegram_enabled) return { ok: false, message: "Сначала включи уведомления Telegram в профиле пользователя." };
+  if (!access.entitlements.telegram_notifications) return { ok: false, message: "Для отправки уведомлений нужен активный RaceSide Plus." };
   const now = new Date();
   const dedupeKey = `admin-test:${targetUserId}:${now.toISOString().slice(0, 16)}`;
   const auditId = await startAdminAudit(admin, {
@@ -991,7 +1007,7 @@ export async function sendTestNotificationAction(
     entity_id: targetUserId,
     payload: { kind: "admin_test", title: "Проверка RaceSide", body: "Telegram подключён и готов получать уведомления." },
     available_at: now.toISOString(),
-    status: "queued",
+    status: "pending",
     dedupe_key: dedupeKey,
     attempts: 0,
   });
@@ -1160,13 +1176,13 @@ export async function updateUserErrorReportAction(
   const reportId = uuid(formData, "reportId");
   const status = enumValue(formData, "status", ["new", "in_progress", "resolved", "dismissed"]);
   const adminNote = optionalText(formData, "adminNote", 2_000);
-  if (!admin || !reportId || !status) return { ok: false, message: "Сообщение об ошибке не найдено." };
+  if (!admin || !reportId || !status) return { ok: false, message: "Сообщение не найдено." };
   const { data: before, error } = await admin
     .from("user_error_reports")
     .select("id, status, admin_note, resolved_at")
     .eq("id", reportId)
     .maybeSingle();
-  if (error || !before) return { ok: false, message: "Сообщение об ошибке не найдено." };
+  if (error || !before) return { ok: false, message: "Сообщение не найдено." };
   const auditId = await startAdminAudit(admin, {
     actorUserId: user.id,
     action: "user_error_report.update",
@@ -1193,6 +1209,45 @@ export async function updateUserErrorReportAction(
   });
   revalidateAdminPaths(["/admin", "/admin/issues"]);
   return { ok: true, message: "Сообщение обновлено." };
+}
+
+export async function retryFeedbackDeliveryAction(
+  _previousState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  const user = await requireAdmin();
+  const admin = createSupabaseAdminClient();
+  const reportId = uuid(formData, "reportId");
+  if (!admin || !reportId) return { ok: false, message: "Пожелание не найдено." };
+  const { data: before, error } = await admin.from("user_error_reports")
+    .select("id, telegram_status, telegram_attempts, telegram_retry_at")
+    .eq("id", reportId).eq("report_kind", "feedback").maybeSingle();
+  if (error || !before) return { ok: false, message: "Пожелание не найдено." };
+  if (before.telegram_status === "sent") return { ok: true, message: "Пожелание уже доставлено." };
+  const now = new Date().toISOString();
+  if (before.telegram_status === "pending" || before.telegram_retry_at > now) {
+    return { ok: true, message: "Повторная доставка уже запланирована." };
+  }
+  const auditId = await startAdminAudit(admin, {
+    actorUserId: user.id,
+    action: "user_error_report.retry_delivery",
+    entityType: "user_error_report",
+    entityId: reportId,
+    beforeData: before,
+  });
+  const { data: updated, error: updateError } = await admin.from("user_error_reports").update({
+    telegram_status: "pending", telegram_error: null, telegram_attempts: 0,
+    telegram_last_attempt_at: null, telegram_retry_at: now,
+  }).eq("id", reportId).eq("report_kind", "feedback")
+    .in("telegram_status", ["failed", "not_configured"]).lte("telegram_retry_at", now)
+    .select("id").maybeSingle();
+  if (updateError) {
+    await finishAdminAudit(admin, auditId, { outcome: "failed", error: updateError });
+    return actionError(updateError, "Не удалось повторить доставку.");
+  }
+  await finishAdminAudit(admin, auditId, { outcome: "succeeded", afterData: { queued: Boolean(updated) } });
+  revalidateAdminPaths(["/admin/issues"]);
+  return { ok: true, message: updated ? "Пожелание снова в очереди отправки." : "Доставка уже обрабатывается." };
 }
 
 export async function saveAiPromptVersionAction(
@@ -1231,6 +1286,7 @@ export async function saveAiPromptVersionAction(
     model,
     maxTokens,
     availableModels,
+    definition.maxTokens,
   );
   if (!runtimeValidation.ok) {
     return runtimeValidation;
@@ -1331,18 +1387,10 @@ export async function saveAdminScheduleAction(
   const scheduleKind = enumValue(formData, "scheduleKind", ["interval", "daily", "adaptive"]);
   const intervalMinutes = Number(text(formData, "intervalMinutes", 10));
   const dailyTimeUtc = text(formData, "dailyTimeUtc", 5);
-  const maxAttempts = Number(text(formData, "maxAttempts", 2));
   const isEnabled = formData.get("isEnabled") === "on";
 
   if (!admin || !scheduleId || !scheduleKind) {
     return { ok: false, message: "Расписание не найдено." };
-  }
-  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 10) {
-    return {
-      ok: false,
-      message: "Проверь число повторов.",
-      fieldErrors: { maxAttempts: ["Можно выбрать от 1 до 10 попыток."] },
-    };
   }
   if (
     scheduleKind === "interval" &&
@@ -1411,7 +1459,7 @@ export async function saveAdminScheduleAction(
         ? 1_440
         : null,
     daily_time_utc: scheduleKind === "daily" ? dailyTimeUtc : null,
-    max_attempts: maxAttempts,
+    max_attempts: before.max_attempts,
     is_enabled: isEnabled,
     next_run_at: nextRunAt,
     updated_by: user.id,
@@ -1616,6 +1664,30 @@ export async function revokeSubscriptionAction(
   return { ok: true, message: "RaceSide Plus отозван." };
 }
 
+export async function cancelAdminLavaSubscriptionAction(
+  _previousState: AdminActionResult, formData: FormData,
+): Promise<AdminActionResult> {
+  const actor = await requireAdmin();
+  const admin = createSupabaseAdminClient();
+  const userId = uuid(formData, "userId"), orderId = uuid(formData, "orderId");
+  const reason = text(formData, "reason", 500);
+  if (!admin || !userId || !orderId || reason.length < 3) return { ok: false, message: "Добавь причину отключения автопродления." };
+  const { data: before, error } = await admin.from("billing_orders")
+    .select("id, user_id, provider, status, lava_auto_renew, lava_cancelled_at, lava_parent_contract_id")
+    .eq("id", orderId).eq("user_id", userId).eq("provider", "lava").is("lava_parent_contract_id", null).maybeSingle();
+  if (error || !before || !["paid", "partially_refunded", "refunded"].includes(before.status)) return { ok: false, message: "Договор автопродления не найден." };
+  const auditId = await startAdminAudit(admin, { actorUserId: actor.id, action: "billing.cancel_auto_renew", entityType: "billing_order", entityId: orderId, beforeData: before, metadata: { reason } });
+  try {
+    const result = await cancelUserLavaSubscription(userId, orderId);
+    await finishAdminAudit(admin, auditId, { outcome: "succeeded", afterData: { autoRenew: false, ...result } });
+    revalidateAdminPaths(["/admin/users", "/admin/billing", "/account/subscription"]);
+    return { ok: true, message: result.alreadyCancelled ? "Автопродление уже отключено. Оплаченный доступ сохранён." : "Автопродление отключено. Оплаченный доступ сохранён." };
+  } catch (cancelError) {
+    await finishAdminAudit(admin, auditId, { outcome: "failed", error: cancelError });
+    return { ok: false, message: "Платёжный сервис не подтвердил отключение. Проверь договор и попробуй снова." };
+  }
+}
+
 export async function resendBillingConfirmationAction(
   _previousState: AdminActionResult,
   formData: FormData,
@@ -1659,10 +1731,10 @@ export async function reconcileBillingPaymentAction(
   const reason = text(formData, "reason", 500);
   const paidAtRaw = text(formData, "paidAt", 40);
   const netAmountRaw = text(formData, "netAmount", 30);
-  const paidAt = paidAtRaw ? new Date(paidAtRaw) : new Date();
+  const paidAt = parseMoscowPaymentDate(paidAtRaw);
   let netAmountMinor = 0;
   try { netAmountMinor = parseMinorUnits(netAmountRaw); } catch { return { ok: false, message: "Проверьте зачисленную сумму." }; }
-  if (!admin || !orderId || operationReference.length < 3 || reason.length < 3 || Number.isNaN(paidAt.getTime())) {
+  if (!admin || !orderId || operationReference.length < 3 || reason.length < 3 || !paidAt) {
     return { ok: false, message: "Добавьте ссылку на операцию, дату и причину сверки." };
   }
   const { data: order } = await admin.from("billing_orders").select("id, user_id, provider, payment_method, amount_minor, currency, status, failure_reason").eq("id", orderId).maybeSingle();
@@ -1676,7 +1748,7 @@ export async function reconcileBillingPaymentAction(
     p_currency: order.currency,
     p_gross_amount_minor: Number(order.amount_minor),
     p_net_amount_minor: netAmountMinor,
-    p_occurred_at: paidAt.toISOString(),
+    p_occurred_at: paidAt,
     p_order_id: order.id,
     p_payload_hash: referenceHash,
     p_payment_method: order.payment_method,

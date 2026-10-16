@@ -1,0 +1,45 @@
+{
+  "cases": [
+    {
+      "width": 1440,
+      "overflow": false,
+      "canvas": {
+        "x": 675,
+        "y": 134,
+        "width": 715,
+        "height": 408.65625,
+        "top": 134,
+        "right": 1390,
+        "bottom": 542.65625,
+        "left": 675
+      },
+      "theme": "light"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 900,
+        "top": 0,
+        "right": 375,
+        "bottom": 900,
+        "left": 0
+      },
+      "theme": "light"
+    }
+  ],
+  "errors": [],
+  "responses": [
+    {
+      "url": "https://raceside.online/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+      "status": 200
+    },
+    {
+      "url": "https://raceside.online/f1/tracks/3d/qatar.glb?v=237f7c511fbc",
+      "status": 200
+    }
+  ]
+}

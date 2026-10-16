@@ -21,6 +21,29 @@ const RASTERS=[
   ['copernicus-dem.tif','https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N02_00_E101_00_DEM/Copernicus_DSM_COG_10_N02_00_E101_00_DEM.tif','Copernicus DEM GLO-30 public licence','© DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved','terrain height proxy; DSM, not surveyed bare-earth DTM','EPSG:4326 + EGM2008','30 m native DSM; clipped COG'],
 ];
 const hash=body=>createHash('sha256').update(body).digest('hex');
+export async function loadSepangBuildingColours() {
+  const body=await readFile(path.resolve(scripts,'../../docs/track-model-sepang-building-colours.json'));
+  return {...JSON.parse(body),auditSha256:hash(body)};
+}
+
+async function downloadBuildingColourSources(sourceDirectory) {
+  const audit=await loadSepangBuildingColours();
+  const sources=[];
+  for(const reference of audit.references) {
+    const target=path.join(sourceDirectory,reference.file);
+    let body;
+    try{body=await readFile(target);}catch(e){if(e.code!=='ENOENT')throw e;}
+    if(!body) {
+      const response=await fetch(reference.url,{signal:AbortSignal.timeout(45000)});
+      if(!response.ok)throw Error(`Sepang colour reference ${response.status}: ${reference.url}`);
+      body=Buffer.from(await response.arrayBuffer());
+    }
+    if(body.length!==reference.bytes||hash(body)!==reference.sha256)throw Error(`Sepang colour reference changed: ${reference.file}; review the photograph and its audit before updating`);
+    await writeFile(target,body);
+    sources.push({...reference,crs:'document reference',resolution:'official photograph; observed material colours, not measured reflectance',bbox:BBOX,bboxCrs:'EPSG:4326',verticalDatum:null});
+  }
+  return sources;
+}
 export async function verifySepangSources(sourceDirectory,manifest) {
   for(const source of manifest.sources) {
     const body=await readFile(path.join(sourceDirectory,source.file));
@@ -32,7 +55,14 @@ export async function downloadSepangData({force=false,sourceDirectory}) {
   const manifestPath=path.join(sourceDirectory,'source-manifest.json');
   let cached;
   try{cached=JSON.parse(await readFile(manifestPath,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}
-  if(cached&&!force){await verifySepangSources(sourceDirectory,cached);return cached;}
+  if(cached&&!force){
+    await verifySepangSources(sourceDirectory,cached);
+    const colours=await downloadBuildingColourSources(sourceDirectory);
+    const files=new Set(cached.sources.map(source=>source.file));
+    const manifest={...cached,sources:[...cached.sources,...colours.filter(source=>!files.has(source.file))]};
+    await writeFile(manifestPath,JSON.stringify(manifest,null,2)+'\n');
+    return manifest;
+  }
   let publishedManifest;
   if(!force) {
     try{publishedManifest=JSON.parse(await readFile(path.resolve(scripts,'../../public/f1/tracks/3d/sepang-metadata.json'),'utf8')).sourceManifest;}
@@ -56,9 +86,12 @@ export async function downloadSepangData({force=false,sourceDirectory}) {
   // A fresh checkout must not silently replace the checked-in source snapshot
   // with today's mutable OSM/venue content. An intentional refresh is explicit.
   if(publishedManifest) {
+    const colours=await downloadBuildingColourSources(sourceDirectory);
     await verifySepangSources(sourceDirectory,publishedManifest);
-    await writeFile(manifestPath,JSON.stringify(publishedManifest,null,2)+'\n');
-    return publishedManifest;
+    const files=new Set(publishedManifest.sources.map(source=>source.file));
+    const manifest={...publishedManifest,sources:[...publishedManifest.sources,...colours.filter(source=>!files.has(source.file))]};
+    await writeFile(manifestPath,JSON.stringify(manifest,null,2)+'\n');
+    return manifest;
   }
   const sources=[];
   for(const [file,url,license,attribution,role,crs,resolution] of [...REFERENCES,...RASTERS]) {
@@ -67,6 +100,8 @@ export async function downloadSepangData({force=false,sourceDirectory}) {
   }
   const derived=await readFile(path.join(sourceDirectory,'openstreetmap.json'));
   sources.push({file:'openstreetmap.json',url:REFERENCES[0][1],license:'ODbL 1.0',attribution:'© OpenStreetMap contributors',role:'lossless parsed vector snapshot with original IDs',crs:'EPSG:4326',resolution:'vector',bytes:derived.length,sha256:hash(derived),bbox:BBOX,verticalDatum:null,retrievedAt:new Date().toISOString()});
+  const colourSources=await downloadBuildingColourSources(sourceDirectory);
+  sources.push(...colourSources.filter(source=>!sources.some(existing=>existing.file===source.file)));
   const manifest={schemaVersion:1,generatedAt:new Date().toISOString(),bounds:SEPANG_BOUNDS,coordinateReferenceSystem:'EPSG:32647',verticalDatum:'EGM2008 orthometric metres',sources};
   await writeFile(manifestPath,JSON.stringify(manifest,null,2)+'\n');
   return manifest;

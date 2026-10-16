@@ -197,3 +197,11 @@ function isRecord(value) {
 function readBoolean(value, fallback) {
   return typeof value === "boolean" ? value : fallback;
 }
+export async function claimNotification(db, notification) {
+  const { data, error } = await db.from("notification_queue")
+    .update({ status: "sending", attempts: Number(notification.attempts ?? 0) + 1 })
+    .eq("id", notification.id).eq("status", "pending").is("sent_at", null)
+    .select("id").maybeSingle();
+  if (error) throw error;
+  return Boolean(data);
+}

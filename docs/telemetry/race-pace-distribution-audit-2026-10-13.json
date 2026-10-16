@@ -1,0 +1,24 @@
+{
+  "races": [
+    {
+      "session": 11388,
+      "drivers": 22,
+      "points": 1240
+    },
+    {
+      "session": 11731,
+      "drivers": 22,
+      "points": 1145
+    },
+    {
+      "session": 9912,
+      "drivers": 20,
+      "points": 976
+    }
+  ],
+  "filter_combinations": 54,
+  "driver_distributions": 454,
+  "max_numeric_difference_seconds": 5.684341886080802e-14,
+  "reference": "Python statistics.mean/median/pstdev/quantiles(method=inclusive)",
+  "source": "Existing cached race pace; no production changes"
+}

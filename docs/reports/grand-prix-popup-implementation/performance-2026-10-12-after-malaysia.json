@@ -1,0 +1,56 @@
+{
+  "slug": "2026-malaysian",
+  "coldMs": 2556,
+  "warmMs": 0,
+  "bounded": false,
+  "requests": 9,
+  "rows": 2073,
+  "timingPoints": 1142,
+  "metrics": [
+    {
+      "table": "driver_standings",
+      "ms": 217,
+      "rows": 23
+    },
+    {
+      "table": "constructor_standings",
+      "ms": 216,
+      "rows": 11
+    },
+    {
+      "table": "constructor_standings",
+      "ms": 216,
+      "rows": 11
+    },
+    {
+      "table": "driver_standings",
+      "ms": 217,
+      "rows": 23
+    },
+    {
+      "table": "race_replay_sessions",
+      "ms": 293,
+      "rows": 1
+    },
+    {
+      "table": "telemetry_cache",
+      "ms": 125,
+      "rows": 1
+    },
+    {
+      "table": "race_replay_events",
+      "ms": 2118,
+      "rows": 1000
+    },
+    {
+      "table": "race_replay_events",
+      "ms": 124,
+      "rows": 3
+    },
+    {
+      "table": "race_replay_events",
+      "ms": 125,
+      "rows": 1000
+    }
+  ]
+}

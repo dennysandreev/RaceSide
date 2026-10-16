@@ -7,6 +7,7 @@ import {
   runAdminScheduleNowAction,
   saveAdminScheduleAction,
 } from "@/app/admin/operations";
+import { AdminConfirmedAction } from "@/components/admin/admin-confirmed-action";
 import { AdminActionForm } from "@/components/admin/admin-action-form";
 import { AdminStatusBadge } from "@/components/admin/admin-ui";
 import { Button } from "@/components/ui/button";
@@ -37,39 +38,43 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { getAdminJobCopy } from "@/lib/admin-display";
-import { getAdminJobDefinition } from "@/lib/admin-job-catalog";
-import type { AdminSchedule } from "@/types/admin";
+import jobCatalog from "@/config/admin-jobs.json";
+import type { AdminJobDefinition, AdminSchedule } from "@/types/admin";
+
+const jobDefinitions = jobCatalog as AdminJobDefinition[];
 
 export function AdminScheduleList({
   schedules,
 }: {
   schedules: AdminSchedule[];
 }) {
+  const legacy = (schedule: AdminSchedule) => jobDefinitions.find(job => job.name === schedule.jobName)?.group === "legacy";
   return (
-    <div className="divide-y divide-border">
-      {schedules.map((schedule) => (
-        <ScheduleRow key={schedule.id} schedule={schedule} />
-      ))}
+    <div>
+      <div className="divide-y divide-border">{schedules.filter(schedule => !legacy(schedule)).map(schedule => <ScheduleRow key={schedule.id} schedule={schedule} />)}</div>
+      <details className="border-t border-border p-4"><summary className="cursor-pointer font-medium">Поддержка прошлых оплат</summary><p className="mt-2 text-xs text-muted-foreground">Сверка заказов ЮMoney и Tribute. Новые оплаты оформляются через Lava.top.</p><div className="mt-3 divide-y divide-border">{schedules.filter(legacy).map(schedule => <ScheduleRow key={schedule.id} schedule={schedule} />)}</div></details>
     </div>
   );
 }
 
 function ScheduleRow({ schedule }: { schedule: AdminSchedule }) {
   const copy = getAdminJobCopy(schedule.jobName);
+  const definition = jobDefinitions.find(job => job.name === schedule.jobName);
 
   return (
-    <article className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_13rem_auto] lg:items-center">
+    <article id={`schedule-${schedule.scheduleKey}`} className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_13rem_auto] lg:items-center">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-medium">{copy.title}</h3>
           <AdminStatusBadge status={schedule.isEnabled ? "scheduled" : "paused"} />
           {schedule.lastRun ? (
-            <AdminStatusBadge status={schedule.lastRun.status} />
+            <span className="flex items-center gap-2 text-xs text-muted-foreground">Последний запуск: <AdminStatusBadge status={schedule.lastRun.status} /></span>
           ) : null}
         </div>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
           {copy.description}
         </p>
+        {schedule.availability ? <p className="mt-2 text-xs text-muted-foreground">{schedule.availability.detail}</p> : null}
       </div>
       <dl className="grid gap-1 text-xs text-muted-foreground">
         <div className="flex justify-between gap-3">
@@ -92,13 +97,15 @@ function ScheduleRow({ schedule }: { schedule: AdminSchedule }) {
         ) : null}
       </dl>
       <div className="flex flex-wrap gap-2 lg:justify-end">
-        <AdminActionForm
-          action={runAdminScheduleNowAction}
-          submitLabel="Запустить"
-          submitVariant="secondary"
-        >
-          <input name="scheduleId" type="hidden" value={schedule.id} />
-        </AdminActionForm>
+        {schedule.availability?.available === false ? null : definition?.danger ? (
+          <AdminConfirmedAction action={runAdminScheduleNowAction} confirmLabel="Запустить" description={definition.confirmation ?? definition.description} title={`Запустить «${definition.title}»?`} triggerLabel="Запустить">
+            <input name="scheduleId" type="hidden" value={schedule.id} />
+          </AdminConfirmedAction>
+        ) : (
+          <AdminActionForm action={runAdminScheduleNowAction} submitLabel="Запустить" submitVariant="secondary">
+            <input name="scheduleId" type="hidden" value={schedule.id} />
+          </AdminActionForm>
+        )}
         <ScheduleEditor schedule={schedule} />
       </div>
     </article>
@@ -106,7 +113,7 @@ function ScheduleRow({ schedule }: { schedule: AdminSchedule }) {
 }
 
 function ScheduleEditor({ schedule }: { schedule: AdminSchedule }) {
-  const adaptiveDefinition = getAdminJobDefinition(schedule.jobName)?.adaptiveSchedule;
+  const adaptiveDefinition = jobDefinitions.find(job => job.name === schedule.jobName)?.adaptiveSchedule;
   const [kind, setKind] = useState<"interval" | "daily">(
     schedule.scheduleKind === "daily" ? "daily" : "interval",
   );
@@ -124,8 +131,8 @@ function ScheduleEditor({ schedule }: { schedule: AdminSchedule }) {
           <DialogTitle>{getAdminJobCopy(schedule.jobName).title}</DialogTitle>
           <DialogDescription>
             {schedule.scheduleKind === "adaptive"
-              ? "Частота автоматически меняется по расписанию сессий. Здесь можно поставить проверку на паузу или изменить число повторов при ошибке."
-              : "Можно изменить только время, паузу и число повторов. Команда и её параметры остаются защищёнными."}
+              ? "Частота автоматически меняется по расписанию сессий. Здесь можно поставить проверку на паузу."
+              : "Можно изменить время запуска и паузу. Команда и её параметры остаются защищёнными."}
           </DialogDescription>
         </DialogHeader>
         <AdminActionForm
@@ -207,23 +214,6 @@ function ScheduleEditor({ schedule }: { schedule: AdminSchedule }) {
               </Field>
             ) : null}
 
-            <Field data-invalid={Boolean(state.fieldErrors?.maxAttempts)}>
-              <FieldLabel htmlFor={`${schedule.id}-attempts`}>
-                Попыток при временной ошибке
-              </FieldLabel>
-              <Input
-                defaultValue={schedule.maxAttempts}
-                id={`${schedule.id}-attempts`}
-                max={10}
-                min={1}
-                name="maxAttempts"
-                aria-invalid={Boolean(state.fieldErrors?.maxAttempts)}
-                required
-                type="number"
-              />
-              <FieldError>{state.fieldErrors?.maxAttempts?.join(" ")}</FieldError>
-            </Field>
-
             <Field orientation="horizontal">
               <Switch
                 defaultChecked={schedule.isEnabled}
@@ -255,7 +245,7 @@ function ScheduleEditor({ schedule }: { schedule: AdminSchedule }) {
 
 function formatSchedule(schedule: AdminSchedule) {
   if (schedule.scheduleKind === "adaptive") {
-    return getAdminJobDefinition(schedule.jobName)?.adaptiveSchedule?.activeLabel
+    return jobDefinitions.find(job => job.name === schedule.jobName)?.adaptiveSchedule?.activeLabel
       ?? "По расписанию сессий";
   }
   if (schedule.scheduleKind === "daily") {

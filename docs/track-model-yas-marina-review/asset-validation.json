@@ -1,0 +1,170 @@
+{
+  "anchorNames": [
+    "HighPoint",
+    "LowPoint",
+    "SectorBoundary_02",
+    "SectorBoundary_03",
+    "SpeedTrap",
+    "StartFinish",
+    "Turn_01",
+    "Turn_02",
+    "Turn_03",
+    "Turn_04",
+    "Turn_05",
+    "Turn_06",
+    "Turn_07",
+    "Turn_08",
+    "Turn_09",
+    "Turn_10",
+    "Turn_11",
+    "Turn_12",
+    "Turn_13",
+    "Turn_14",
+    "Turn_15",
+    "Turn_16"
+  ],
+  "animations": 0,
+  "bytes": 5877268,
+  "drawCalls": 32,
+  "extensionsRequired": [
+    "EXT_meshopt_compression"
+  ],
+  "materialAlphaModes": {
+    "YasMarina_Chain_Link_Fence": "BLEND",
+    "YasMarina_Turquoise_Runoff": "OPAQUE",
+    "YasMarina_White_Paint": "OPAQUE",
+    "YasMarina_Source_Colored_Objects": "OPAQUE",
+    "YasMarina_Red_Kerbs": "OPAQUE",
+    "YasMarina_White_Membrane_And_Steel": "OPAQUE",
+    "YasMarina_Textured_Facades": "OPAQUE",
+    "YasMarina_Pit_Concrete": "OPAQUE",
+    "YasMarina_Asphalt": "OPAQUE",
+    "YasMarina_Sector_1": "OPAQUE",
+    "YasMarina_Sector_2": "OPAQUE",
+    "YasMarina_Sector_3": "OPAQUE",
+    "YasMarina_Sector_1_Glow": "BLEND",
+    "YasMarina_Sector_2_Glow": "BLEND",
+    "YasMarina_Sector_3_Glow": "BLEND",
+    "YasMarina_Copernicus_2026_Georeferenced_Ground": "OPAQUE",
+    "YasMarina_Checker_Black": "OPAQUE",
+    "YasMarina_Blue_Seat_Shells": "OPAQUE",
+    "YasMarina_Textured_Gridshell_Glass": "OPAQUE"
+  },
+  "materialNames": [
+    "YasMarina_Chain_Link_Fence",
+    "YasMarina_Turquoise_Runoff",
+    "YasMarina_White_Paint",
+    "YasMarina_Source_Colored_Objects",
+    "YasMarina_Red_Kerbs",
+    "YasMarina_White_Membrane_And_Steel",
+    "YasMarina_Textured_Facades",
+    "YasMarina_Pit_Concrete",
+    "YasMarina_Asphalt",
+    "YasMarina_Sector_1",
+    "YasMarina_Sector_2",
+    "YasMarina_Sector_3",
+    "YasMarina_Sector_1_Glow",
+    "YasMarina_Sector_2_Glow",
+    "YasMarina_Sector_3_Glow",
+    "YasMarina_Copernicus_2026_Georeferenced_Ground",
+    "YasMarina_Checker_Black",
+    "YasMarina_Blue_Seat_Shells",
+    "YasMarina_Textured_Gridshell_Glass"
+  ],
+  "materials": 19,
+  "meshNames": [
+    "YasMarina_Catch_Fences_Mesh",
+    "YasMarina_Current_Turquoise_Runoffs_Mesh",
+    "YasMarina_Edge_And_Pit_Markings_Mesh",
+    "YasMarina_Grandstand_Structures_Mesh",
+    "YasMarina_Kerbs_Mesh",
+    "YasMarina_Mapped_Barriers_And_Marina_Piers_Mesh",
+    "YasMarina_Mapped_Light_Masts_Mesh",
+    "YasMarina_Permanent_Buildings_Mesh",
+    "YasMarina_Pit_And_Gantry_Details_Mesh",
+    "YasMarina_Pit_Exit_Tunnel_Mesh",
+    "YasMarina_Pit_Lane_Mesh",
+    "YasMarina_Pit_Roof_Bays_Mesh",
+    "YasMarina_Pit_Wall_Mesh",
+    "YasMarina_Raceway_Mesh",
+    "YasMarina_Sector_Core_Mesh",
+    "YasMarina_Sector_Glow_Mesh",
+    "YasMarina_Source_Roofs_Mesh",
+    "YasMarina_Start_Finish_Mesh",
+    "YasMarina_Terrain_Mesh",
+    "YasMarina_Textured_Blue_Seats_Mesh",
+    "YasMarina_Vegetation_Mesh",
+    "YasMarina_W_Hotel_Diamond_Frame_Mesh",
+    "YasMarina_W_Hotel_Glass_Gridshell_Mesh",
+    "YasMarina_W_Hotel_Wings_And_Link_Mesh",
+    "YasMarina_White_Membrane_Canopies_Mesh"
+  ],
+  "meshes": 25,
+  "nodes": 48,
+  "previewBytes": 294438,
+  "triangles": 213679,
+  "decodedSurfaceAudit": {
+    "road": {
+      "triangles": 7349,
+      "minimumClearanceMeters": 0.24878451021492154,
+      "intersections": 0,
+      "missingSupport": 0,
+      "failures": [],
+      "maximumGradePercent": 14.116780311495408,
+      "maximumGradeTriangle": [
+        [
+          274.86328125,
+          3.578125,
+          100.05859375
+        ],
+        [
+          275.87109375,
+          3.578125,
+          107.99609375
+        ],
+        [
+          276.859375,
+          3.4375,
+          107.87109375
+        ]
+      ]
+    },
+    "paint": {
+      "triangles": 10896,
+      "minimumClearanceMeters": 0.15102997560602027,
+      "intersections": 0,
+      "missingSupport": 0,
+      "failures": []
+    },
+    "runoff": {
+      "triangles": 444,
+      "minimumClearanceMeters": 0.40358824535597115,
+      "intersections": 0,
+      "missingSupport": 0,
+      "failures": []
+    },
+    "undergroundPitTriangles": 189,
+    "tunnel": {
+      "samples": 737,
+      "missingRoof": 0,
+      "minimumHeadroomMeters": 4.794645097523796
+    },
+    "structuralConflicts": {},
+    "textures": {
+      "physicalPrimitives": 26,
+      "texturedPrimitives": 26,
+      "missingTextures": [],
+      "invalidUvs": []
+    },
+    "aerialProjection": {
+      "samples": 28343,
+      "maximumErrorMeters": 0.058738561338498564,
+      "meshes": [
+        "YasMarina_Source_Roofs_Mesh",
+        "YasMarina_Terrain_Mesh"
+      ]
+    },
+    "bridgeSamples": 38,
+    "minimumBridgeClearanceMeters": 8.312461607158
+  }
+}

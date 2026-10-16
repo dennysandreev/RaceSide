@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { Box, Map } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { TrackModel3DLazy } from "@/components/racemate/track-model-3d-lazy";
 import { Button } from "@/components/ui/button";
 import { getCircuitAsset } from "@/data/f1-assets";
 import { getThreeDimensionalTrackModelId } from "@/data/track-models";
+import { TRACK_MODEL_TOUCH_QUERY } from "@/lib/track-model-camera";
 import { cn } from "@/lib/utils";
 import type { TrackLayout } from "@/types/racemate";
 
@@ -42,6 +43,8 @@ export function TrackMap({
   const imageSrc = assetSrc ?? legacyAsset?.src ?? null;
   const trackModelId = getThreeDimensionalTrackModelId(circuit);
   const modelViewKey = trackModelId ? `${trackModelId}:${imageSrc ?? "no-image"}` : null;
+  const [mobileModelOpen, setMobileModelOpen] = useState(false);
+  const modelTriggerRef = useRef<HTMLButtonElement>(null);
   const [activeModelView, setActiveModelView] = useState<string | null>(null);
   const canShowModel3d = showModel3d && modelViewKey !== null;
   const useModel3d = canShowModel3d && activeModelView === modelViewKey;
@@ -64,17 +67,22 @@ export function TrackMap({
             "relative flex flex-wrap items-center gap-2",
             toolbarLeading ? (canShowModel3d ? "justify-between" : "justify-start") : "justify-end",
             fill && modelTogglePlacement === "top" && "mb-2",
-            fill && modelTogglePlacement === "bottom" && "absolute bottom-2 right-0 z-10",
-            fill && modelTogglePlacement === "mobile-bottom" && "order-2 mt-2 sm:order-none sm:mb-2 sm:mt-0",
+            fill && modelTogglePlacement === "bottom" && "absolute bottom-2 right-0 z-30",
+            fill && modelTogglePlacement === "mobile-bottom" && "order-2 mt-2 sm:static sm:order-none sm:mb-2 sm:mt-0",
           )}
         >
           {toolbarLeading ? <div className="min-w-0">{toolbarLeading}</div> : null}
           {canShowModel3d ? (
             <Button
+              ref={modelTriggerRef}
+              className={cn(fill && modelTogglePlacement === "mobile-bottom" && "sm:absolute sm:bottom-2 sm:right-0 sm:z-30")}
               aria-label={useModel3d ? "Схема" : undefined}
               aria-pressed={useModel3d}
               title={useModel3d ? "Схема" : undefined}
-              onClick={() => setActiveModelView(useModel3d ? null : modelViewKey)}
+              onClick={() => {
+                if (window.matchMedia(TRACK_MODEL_TOUCH_QUERY).matches) setMobileModelOpen(true);
+                else setActiveModelView(useModel3d ? null : modelViewKey);
+              }}
               size="sm"
               type="button"
               variant="secondary"
@@ -94,6 +102,15 @@ export function TrackMap({
               ) : null}
             </Button>
           ) : null}
+        </div>
+      ) : null}
+      {mobileModelOpen && trackModelId ? (
+        <div className="sr-only">
+          <TrackModel3DLazy circuit={circuit} compact fill modelId={trackModelId}
+            fullscreenOpen onFullscreenOpenChange={(open) => {
+              setMobileModelOpen(open);
+              if (!open) requestAnimationFrame(() => modelTriggerRef.current?.focus());
+            }} />
         </div>
       ) : null}
       {useModel3d && trackModelId ? (

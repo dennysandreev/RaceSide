@@ -2,12 +2,15 @@
 
 ## Provider
 
-OpenRouter.
+OpenRouter. Все текстовые задачи используют `openai/gpt-6-luna` из общего каталога.
+Исключение по согласованию с владельцем: аудио командного радио расшифровывает
+`openai/gpt-transcribe`; перевод расшифровки выполняет Luna.
 
 ## Что делает AI
 
 - переводит/адаптирует заголовок на русский;
 - делает короткое саммари новости;
+- пишет полноценный русский текст по доступному оригиналу;
 - оценивает важность;
 - делает дневную сводку;
 - делает предгоночную сводку;
@@ -20,22 +23,68 @@ OpenRouter.
 - не копирует полные статьи;
 - не заменяет правила тегирования, если хватает словарей.
 
-## Pipeline news (editorial version 1)
+## Pipeline news (algorithm version 3)
 
-1. RSS ingestion and technical URL/GUID/content deduplication.
-2. Source snapshot with URL, author, date and coverage.
-3. `news.extract`: attributed facts, exact evidence, caveats, article type and primary entities.
-4. Current RaceSide context from sporting tables, scoped by season and round/session.
-5. `news.article`: Russian draft using fact/context IDs, with no invented details or filler.
-6. Deterministic checks plus independent `news.verify`. One rewrite at most.
-7. Private provenance, blocking errors and editorial suggestions in `news_editorial_reviews`. Verification policy 2 blocks factual errors, unsupported claims, missing core conditions, source-author narration and unintelligible text. Scores are diagnostic; minor style suggestions and genre alone do not prevent publication. Sensitive material and unresolved factual errors still require manual review.
-8. Semantic deduplication under a publication lock, up to 10 candidates over 72 hours by default. New stages and independent angles remain separate.
-9. Same-stage updates can combine up to three sources, re-run verification and atomically update the original article while preserving URL and publication date.
-10. Only verified drafts proceed to automated publication; a database trigger prevents retry jobs from bypassing verification. Manual editing/publication remains audited.
+1. RSS ingestion устраняет технические дубли URL/GUID/текста. Worker загружает
+   оригинал; в рейтингах The Race сохраняет имена из графических заголовков,
+   сопоставляя инициалы с единственным пилотом из базы. Неоднозначное имя не
+   угадывается. Длинный оригинал заканчивается на границе абзаца без служебной
+   фразы об обрезке. Если остался только RSS, используются его законченные факты:
+   короткая новость допустима, недоступные подробности не выдумываются. Пустой
+   источник ждёт следующей попытки без платной генерации.
+2. Worker атомарно забирает запись и удерживает общую блокировку публикации.
+   Изменение редактором во время обработки защищено сравнением версии записи.
+3. К оригиналу добавляется компактный контекст пилотов, команд и Гран-при.
+   Спортивные значения сохраняют временную область и дату актуальности.
+   Историческую принадлежность не опровергают сегодняшним составом команды;
+   прямо датированный оригинал имеет приоритет над устаревшим снимком состава.
+4. До 10 похожих опубликованных материалов выбираются за последние 7 дней;
+   для пилотов из заголовка дополнительно проверяются старые объявления.
+5. `news.compose` сначала сравнивает событие с кандидатами. Уверенный дубль
+   завершается за один запрос. Новая статья пишется напрямую по всему доступному
+   оригиналу, без промежуточного списка фактов, цитат-доказательств и служебных ID.
+   Для содержательного источника ориентир — 250–550 слов, до 750 для длинного
+   анализа. Короткие источники не растягиваются. Метаданные нужны для тегов и
+   группировки; их формат не служит доказательством недостоверного текста.
+   `main_fact` для дублей и сводки берётся из итогового проверенного заголовка,
+   чтобы не сохранить утверждение, исправленное при проверке.
+6. Локально проверяются пригодность русского текста, ссылки/разметка и явный
+   пересказ мнений авторов источника. Сравнения наборов чисел и искусственных
+   `used_fact_ids` / `context_claims` больше не блокируют статью. Неизвестная
+   привязка к гонке удаляется, недостающие метаданные получают тему из заголовка.
+   Фамилия автора проверяется как отдельное имя, а не внутри слова «настройки».
+7. `news.verify` независимо сверяет смысл и значимые подробности с оригиналом:
+   участников, должности, единицы величин, сезоны, условия и причинные связи.
+   Ошибку можно исправить в этом же ответе заменой целого абзаца по его индексу;
+   дословное совпадение `from` и цитата для каждой правки не требуются.
+   PASS относится ко всему итоговому тексту. Проверка не требует отсутствующих
+   в источнике сведений и не описывает читателю недоступный фрагмент.
+   Небольшая вводная «автор оценки считал, что Ferrari могла…» удаляется локально
+   только при сохранении явно условного главного утверждения. Неусловное
+   утверждение таким способом не превращается в факт.
+8. Редактор нужен для конкретной существенной ошибки, которую нельзя надёжно
+   исправить по оригиналу, или непригодного ответа. Сам жанр, оценки качества,
+   здоровье/безопасность, штрафы и формат служебных данных не блокируют корректный
+   пересказ подтверждённых сведений. Источник, его изображение и подпись автора
+   сохраняются отдельно от читательского текста.
+9. Private provenance сохраняется в `news_editorial_reviews`; SQL trigger
+   допускает автоматическую публикацию только совпадающего с PASS текста.
+   Формат хранения остаётся `version=1`, алгоритм отмечается `algorithm_version=3`.
+   Миграции, новые зависимости и настройки не требуются.
+10. Если в пакете осталось место после новых новостей, worker один раз повторяет
+    неизменённые черновики версии 2 с известными служебными блокировками. Он
+    сверяет текущий текст с последним AI-черновиком и время последнего изменения.
+    Ручные правки, опубликованные записи, реальные замечания проверяющего и
+    обработанные уже версией 3 записи не попадают в автоматический повтор.
+    Это новый полный цикл с текущим лимитом, а не публикация старого текста без
+    проверки. Ранее потраченные на неудачную обработку токены не возвращаются.
 
-`src/config/ai-prompts.json` is the authoritative prompt/response contract for extraction, writing, verification, deduplication and daily digests. Published admin overrides must be checked when deploying a new contract.
+`src/config/ai-prompts.json` задаёт общий контракт. Максимум два запроса на
+новость; платных циклов исправления и отдельного AI-запроса на метаданные нет.
+Проверка использует `policy_version=3`, конкретные ошибки и замены абзацев;
+старые сохранённые проверки остаются историей.
 
-Daily digests group events and preserve article IDs. Code constructs links and rejects invented numbers or repeated events; an independent verifier checks the result. The fallback uses existing article text without generation.
+Daily digests group events and preserve article IDs for internal verification. Reader-facing text contains no article links or Markdown; code rejects invented numbers and repeated events, and an independent verifier checks the result. The fallback uses existing article text without generation. Older saved digests are cleaned when displayed or edited, without changing their stored history automatically.
 
 Public queries still require `status = processed`, `publication_status = published` and no `duplicate_of`. Existing history is preserved; there is no automatic mass regeneration. Pages show sources, exact publication/update times and verified statistical context. Original authors and classification remain in editorial metadata, admin and structured data. Reader-facing headlines and prose convey the actual idea without narrating a journalist's opinion; proposals stay conditional and official decisions retain their actual decision maker. Raw source snapshots and reviews stay private.
 
@@ -76,7 +125,23 @@ Rules:
 `estimated_cost_usd` берётся из `usage.cost`, а токены из нативных полей
 `usage.prompt_tokens` и `usage.completion_tokens`.
 
-Extraction, writing and verification use separate `google/gemini-2.5-flash` requests. Default token limits and runtime overrides are defined by the prompt catalog. Each call, including a retry, goes through the existing usage and budget guard. Model output is treated as untrusted structured input and validated before storage/publication.
+На новость выделяется бюджет 18 000 токенов и максимум два запроса. Перед запросом
+резервируется оценка входа и лимит ответа, после ответа — фактический usage.
+Оценка считает содержимое сообщений и схему, без экранирования транспортного
+JSON; коэффициент русского текста откалиброван для Luna. Служебные инструкции
+сокращены и записаны по-английски; результат остаётся русским. В запросах удалены
+повторяющиеся алиасы и служебные временные метки, при этом область времени,
+спортивные значения, исходный текст и полный контекст в истории сохраняются.
+Написание сохраняет полный лимит ответа. Для проверки лимит при необходимости
+снижается до остатка бюджета; менее 800 токенов для неё не выделяется. Это не
+сокращает написанную статью и не увеличивает бюджет.
+Оценка входа не является точным tokenizer: длинный вход может остановить проверку,
+а фактическое потребление отдельного ответа может отличаться от резерва.
+Остановленная уже новым алгоритмом запись не запускает автоматический платный повтор.
+`news.compose` ограничен 4800 токенами ответа, `news.verify` — 1800, включая
+обдумывание `low`. Остальные текстовые задачи используют `reasoning=none`.
+Старые модельные env-переменные и опубликованные версии не переопределяют общую
+модель. В админке лимит можно уменьшить, но нельзя поднять выше каталога.
 
 Админская статистика за период агрегируется функцией
 `get_admin_ai_usage_summary`, без ограничения PostgREST по числу строк. Старые
@@ -99,6 +164,9 @@ Extraction, writing and verification use separate `google/gemini-2.5-flash` requ
 Защищённый формат ответа не редактируется: worker всегда добавляет его к
 системной инструкции. Это сохраняет обязательные JSON-поля и продуктовую
 валидацию новостей, дублей, опросов и соцсетей.
+
+Модель в `/admin/ai` отображается без возможности смены для отдельной задачи.
+Редактор новости показывает число запросов и токены последней обработки.
 
 Каждая новая запись `ai_usage_logs` получает `prompt_key` и
 `prompt_version_id`. В журнал не попадают исходный материал, собранный prompt,

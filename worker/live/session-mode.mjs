@@ -45,23 +45,67 @@ export function chooseSession(rows, now = Date.now()) {
     previous: previous ?? null,
   };
 }
-export function sessionStillOngoing(session, controls, now = Date.now()) {
-  if (
-    !session ||
-    now - Date.parse(session.date_end) > 30 * 60000 ||
-    now < Date.parse(session.date_start)
-  )
-    return false;
-  const latest = [...controls]
-    .filter((row) =>
-      /SESSION (?:STARTED|RESUMED|WILL BE TEMPORARILY STOPPED|SUSPENDED|ABORTED)|GREEN LIGHT|SESSION FINISHED/i.test(
-        row.message ?? "",
-      ),
-    )
+function latestSessionControl(session, controls, now) {
+  const start = Date.parse(session?.date_start);
+  if (!Number.isFinite(start) || now < start) return null;
+  return [...controls]
+    .filter((row) => {
+      const at = Date.parse(row.date);
+      return (
+        Number.isFinite(at) && at >= start && at <= now &&
+        (row.session_key == null ||
+          Number(row.session_key) === Number(session.session_key)) &&
+        ((row.flag === "CHEQUERED" && row.scope !== "Driver") ||
+          /SESSION (?:STARTED|RESUMED|WILL BE TEMPORARILY STOPPED|SUSPENDED|ABORTED|FINISHED)|GREEN LIGHT/i.test(
+            row.message ?? "",
+          ))
+      );
+    })
     .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
-    .at(-1);
-  return Boolean(
-    latest && !/SESSION (?:FINISHED|ABORTED)/i.test(latest.message ?? ""),
+    .at(-1) ?? null;
+}
+const sessionControlFinished = (row) =>
+  Boolean(row && (row.flag === "CHEQUERED" ||
+    /SESSION (?:FINISHED|ABORTED)/i.test(row.message ?? "")));
+export function sessionStillOngoing(session, controls, now = Date.now()) {
+  const latest = latestSessionControl(session, controls, now);
+  return Boolean(latest && !sessionControlFinished(latest));
+}
+export async function chooseSessionWithControls(rows, {
+  loadControls, currentSession = null, currentStatus = null, now = Date.now(),
+}) {
+  const choice = chooseSession(rows, now);
+  const currentOngoing = ["live", "paused"].includes(currentStatus);
+  const candidate = currentOngoing && currentSession
+    ? rows.find((row) => Number(row.session_key) === Number(currentSession.session_key)) ?? currentSession
+    : choice.previous;
+  if (!candidate || (choice.active && Number(choice.session.session_key) === Number(candidate.session_key)))
+    return choice;
+  const controls = await loadControls(candidate.session_key).catch(() => null);
+  const latest = latestSessionControl(candidate, controls ?? [], now);
+  // Reconnects must retain a known live session when Race Control is temporarily
+  // unavailable. The scheduled end is never evidence that racing has stopped.
+  const ongoing = latest
+    ? !sessionControlFinished(latest)
+    : currentOngoing &&
+      Number(currentSession?.session_key) === Number(candidate.session_key);
+  if (!ongoing)
+    return choice;
+  // A scheduled next session may itself have been delayed. Switch only when its
+  // source confirms it has actually started, or the previous one has finished.
+  if (choice.active && Number(choice.session.session_key) !== Number(candidate.session_key)) {
+    const nextControls = await loadControls(choice.session.session_key).catch(() => []);
+    if (sessionStillOngoing(choice.session, nextControls, now)) return choice;
+  }
+  return { ...choice, session: candidate, active: true };
+}
+export function sessionHistoryEnd(session, controls, ongoing, now = Date.now()) {
+  const latest = latestSessionControl(session, controls, now);
+  return Math.min(
+    now,
+    sessionControlFinished(latest)
+      ? Date.parse(latest.date) + 120000
+      : ongoing ? now : Date.parse(session.date_end) + 120000,
   );
 }
 export function sessionLabel(session) {

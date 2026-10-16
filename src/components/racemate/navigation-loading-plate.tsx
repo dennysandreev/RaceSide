@@ -1,6 +1,6 @@
 import { TimerReset } from "lucide-react";
 
-import { RaceMateMark } from "@/components/racemate/racemate-logo";
+import { RaceMateLogo } from "@/components/racemate/racemate-logo";
 import { cn } from "@/lib/utils";
 
 type NavigationLoadingPlateProps = {
@@ -20,18 +20,9 @@ export function NavigationLoadingPlate({ className, label }: NavigationLoadingPl
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_0%,rgb(225_6_0_/_0.24),transparent_12rem),linear-gradient(135deg,rgb(255_255_255_/_0.08),transparent_45%)]" />
       <div className="relative grid gap-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center">
-              <RaceMateMark className="h-7 w-[3.75rem]" />
-            </span>
-            <div>
-              <p className="font-display text-lg font-extrabold leading-none tracking-[-0.03em]">
-                RaceSide
-              </p>
-              <p className="font-telemetry mt-1 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                переход запущен
-              </p>
-            </div>
+          <div className="grid gap-2">
+            <RaceMateLogo size="footer" />
+            <p className="text-xs text-muted-foreground">Открываем страницу</p>
           </div>
           <TimerReset aria-hidden="true" className="size-5 text-primary" />
         </div>

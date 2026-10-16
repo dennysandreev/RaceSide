@@ -1,0 +1,50 @@
+[
+  {
+    "id": "confirmation",
+    "label": "Подтверждение почты",
+    "subject": "Подтвердите почту для RaceSide",
+    "file": "confirmation.html"
+  },
+  {
+    "id": "recovery",
+    "label": "Восстановление пароля",
+    "subject": "Восстановление пароля в RaceSide",
+    "file": "recovery.html"
+  },
+  {
+    "id": "magic_link",
+    "label": "Вход по ссылке",
+    "subject": "Ваша ссылка для входа в RaceSide",
+    "file": "magic_link.html"
+  },
+  {
+    "id": "invite",
+    "label": "Приглашение",
+    "subject": "Вас пригласили в RaceSide",
+    "file": "invite.html"
+  },
+  {
+    "id": "email_change",
+    "label": "Подтверждение новой почты",
+    "subject": "Подтвердите смену почты в RaceSide",
+    "file": "email_change.html"
+  },
+  {
+    "id": "reauthentication",
+    "label": "Код подтверждения",
+    "subject": "Код подтверждения RaceSide",
+    "file": "reauthentication.html"
+  },
+  {
+    "id": "password_changed_notification",
+    "label": "Пароль изменён",
+    "subject": "Ваш пароль в RaceSide изменён",
+    "file": "password_changed_notification.html"
+  },
+  {
+    "id": "email_changed_notification",
+    "label": "Почта изменена",
+    "subject": "Почта вашего аккаунта RaceSide изменена",
+    "file": "email_changed_notification.html"
+  }
+]

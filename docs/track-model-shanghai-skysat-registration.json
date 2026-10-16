@@ -1,0 +1,1604 @@
+{
+  "schemaVersion": 2,
+  "source": "Planet Labs SkySat, 2018-04-07; CC BY-SA 4.0",
+  "coordinateReferenceSystem": "EPSG:32651",
+  "originMeters": [
+    330700,
+    3468700
+  ],
+  "method": "Regularized thin-plate spline, normalized UTM metres; reviewed raceway ground controls, independent checkpoints and Jacobian coverage checks. The source JPEG has no survey orthorectification metadata.",
+  "regularization": 5e-05,
+  "groundControlPoints": [
+    {
+      "wayId": 156328670,
+      "vertex": 4,
+      "pixel": [
+        1272,
+        1710
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 12,
+      "pixel": [
+        1192,
+        1698
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 22,
+      "pixel": [
+        1116,
+        1604
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 32,
+      "pixel": [
+        1195,
+        1517
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 40,
+      "pixel": [
+        1240,
+        1559
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 48,
+      "pixel": [
+        1226,
+        1620
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 55,
+      "pixel": [
+        1278,
+        1648
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 64,
+      "pixel": [
+        1335,
+        1594
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 68,
+      "pixel": [
+        1338,
+        1541
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 72,
+      "pixel": [
+        1313,
+        1493
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 80,
+      "pixel": [
+        991,
+        979
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 84,
+      "pixel": [
+        997,
+        945
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 96,
+      "pixel": [
+        1135,
+        1063
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 104,
+      "pixel": [
+        1287,
+        1296
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 112,
+      "pixel": [
+        1382,
+        1323
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 124,
+      "pixel": [
+        1530,
+        1238
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 135,
+      "pixel": [
+        1667,
+        1081
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 148,
+      "pixel": [
+        1828,
+        1240
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 160,
+      "pixel": [
+        1918,
+        1144
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 176,
+      "pixel": [
+        1597,
+        641
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 190,
+      "pixel": [
+        1510,
+        691
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 200,
+      "pixel": [
+        1456,
+        592
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 211,
+      "pixel": [
+        1560,
+        498
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 220,
+      "pixel": [
+        1700,
+        554
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 224,
+      "pixel": [
+        2009,
+        1051
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 235,
+      "pixel": [
+        2496,
+        1845
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 248,
+      "pixel": [
+        2217,
+        1515
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 232,
+      "pixel": [
+        2498,
+        1833
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 244,
+      "pixel": [
+        2421,
+        1824
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 228,
+      "pixel": [
+        2211,
+        1355
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 230,
+      "pixel": [
+        2490,
+        1815
+      ]
+    }
+  ],
+  "independentCheckPoints": [
+    {
+      "wayId": 156328670,
+      "vertex": 16,
+      "pixel": [
+        1146,
+        1674
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 36,
+      "pixel": [
+        1229,
+        1533
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 92,
+      "pixel": [
+        1092,
+        1000
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 108,
+      "pixel": [
+        1337,
+        1319
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 140,
+      "pixel": [
+        1740,
+        1110
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 192,
+      "pixel": [
+        1490,
+        674
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 216,
+      "pixel": [
+        1644,
+        515
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 229,
+      "pixel": [
+        2299,
+        1492
+      ]
+    },
+    {
+      "wayId": 156328670,
+      "vertex": 240,
+      "pixel": [
+        2473,
+        1847
+      ]
+    }
+  ],
+  "buildingCorrections": [
+    {
+      "wayId": 156346094,
+      "roofCenterPixel": [
+        1609.25,
+        1458.54
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346096,
+      "roofCenterPixel": [
+        1584.5,
+        1464.03
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346157,
+      "roofCenterPixel": [
+        1551.05,
+        1443.82
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346159,
+      "roofCenterPixel": [
+        1688.11,
+        1490.01
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346161,
+      "roofCenterPixel": [
+        1483.57,
+        1532.31
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346167,
+      "roofCenterPixel": [
+        1678.82,
+        1439.43
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346169,
+      "roofCenterPixel": [
+        1490.83,
+        1486.11
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346174,
+      "roofCenterPixel": [
+        1790.74,
+        1429.82
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346178,
+      "roofCenterPixel": [
+        1577.96,
+        1509.61
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346179,
+      "roofCenterPixel": [
+        1714.89,
+        1422.64
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346180,
+      "roofCenterPixel": [
+        1641.87,
+        1420.66
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346182,
+      "roofCenterPixel": [
+        1718.7,
+        1492.83
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346183,
+      "roofCenterPixel": [
+        1752.0,
+        1429.5
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346184,
+      "roofCenterPixel": [
+        1640.85,
+        1501.58
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346185,
+      "roofCenterPixel": [
+        1775.21,
+        1464.92
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346186,
+      "roofCenterPixel": [
+        1527.28,
+        1484.64
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346187,
+      "roofCenterPixel": [
+        1747.81,
+        1478.46
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346191,
+      "roofCenterPixel": [
+        1603.53,
+        1415.65
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346192,
+      "roofCenterPixel": [
+        1718.09,
+        1379.91
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346194,
+      "roofCenterPixel": [
+        1550.11,
+        1523.24
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346195,
+      "roofCenterPixel": [
+        1663.24,
+        1376.44
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346197,
+      "roofCenterPixel": [
+        1613.66,
+        1515.33
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346200,
+      "roofCenterPixel": [
+        1762.6,
+        1386.81
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346202,
+      "roofCenterPixel": [
+        1806.42,
+        1465.49
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346204,
+      "roofCenterPixel": [
+        1456.34,
+        1549.7
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    },
+    {
+      "wayId": 156346205,
+      "roofCenterPixel": [
+        1515.52,
+        1531.54
+      ],
+      "method": "OSM footprint translated to independently observed SkySat roof centre; footprint shape retained"
+    }
+  ],
+  "accuracy": "Visual registration of historical imagery; independent image checkpoints are reported separately from fitted residuals. OSM pavilion footprints corrected against observed roof centres; no engineering-survey accuracy is claimed.",
+  "roofFootprintCorrections": [
+    {
+      "wayId": 1372223262,
+      "roofFootprintPixels": [
+        [
+          2211,
+          1602
+        ],
+        [
+          2205,
+          1609
+        ],
+        [
+          2203,
+          1616
+        ],
+        [
+          2205,
+          1626
+        ],
+        [
+          2214,
+          1637
+        ],
+        [
+          2213,
+          1640
+        ],
+        [
+          2206,
+          1640
+        ],
+        [
+          2208,
+          1644
+        ],
+        [
+          2210,
+          1645
+        ],
+        [
+          2215,
+          1642
+        ],
+        [
+          2216,
+          1639
+        ],
+        [
+          2221,
+          1641
+        ],
+        [
+          2223,
+          1651
+        ],
+        [
+          2230,
+          1657
+        ],
+        [
+          2232,
+          1662
+        ],
+        [
+          2231,
+          1665
+        ],
+        [
+          2228,
+          1665
+        ],
+        [
+          2227,
+          1663
+        ],
+        [
+          2225,
+          1664
+        ],
+        [
+          2225,
+          1668
+        ],
+        [
+          2227,
+          1669
+        ],
+        [
+          2232,
+          1664
+        ],
+        [
+          2236,
+          1664
+        ],
+        [
+          2242,
+          1679
+        ],
+        [
+          2251,
+          1686
+        ],
+        [
+          2250,
+          1689
+        ],
+        [
+          2254,
+          1688
+        ],
+        [
+          2256,
+          1690
+        ],
+        [
+          2256,
+          1696
+        ],
+        [
+          2265,
+          1706
+        ],
+        [
+          2266,
+          1711
+        ],
+        [
+          2265,
+          1714
+        ],
+        [
+          2262,
+          1712
+        ],
+        [
+          2259,
+          1714
+        ],
+        [
+          2264,
+          1717
+        ],
+        [
+          2266,
+          1715
+        ],
+        [
+          2271,
+          1717
+        ],
+        [
+          2275,
+          1725
+        ],
+        [
+          2282,
+          1731
+        ],
+        [
+          2282,
+          1735
+        ],
+        [
+          2277,
+          1738
+        ],
+        [
+          2282,
+          1741
+        ],
+        [
+          2286,
+          1737
+        ],
+        [
+          2289,
+          1737
+        ],
+        [
+          2292,
+          1748
+        ],
+        [
+          2302,
+          1759
+        ],
+        [
+          2301,
+          1762
+        ],
+        [
+          2307,
+          1762
+        ],
+        [
+          2307,
+          1770
+        ],
+        [
+          2309,
+          1774
+        ],
+        [
+          2317,
+          1780
+        ],
+        [
+          2318,
+          1784
+        ],
+        [
+          2317,
+          1787
+        ],
+        [
+          2314,
+          1785
+        ],
+        [
+          2311,
+          1788
+        ],
+        [
+          2316,
+          1790
+        ],
+        [
+          2320,
+          1786
+        ],
+        [
+          2325,
+          1787
+        ],
+        [
+          2325,
+          1793
+        ],
+        [
+          2336,
+          1809
+        ],
+        [
+          2335,
+          1812
+        ],
+        [
+          2331,
+          1810
+        ],
+        [
+          2328,
+          1811
+        ],
+        [
+          2329,
+          1814
+        ],
+        [
+          2337,
+          1814
+        ],
+        [
+          2341,
+          1816
+        ],
+        [
+          2342,
+          1822
+        ],
+        [
+          2350,
+          1827
+        ],
+        [
+          2354,
+          1833
+        ],
+        [
+          2353,
+          1836
+        ],
+        [
+          2348,
+          1834
+        ],
+        [
+          2348,
+          1838
+        ],
+        [
+          2351,
+          1839
+        ],
+        [
+          2355,
+          1835
+        ],
+        [
+          2358,
+          1835
+        ],
+        [
+          2360,
+          1837
+        ],
+        [
+          2362,
+          1847
+        ],
+        [
+          2368,
+          1852
+        ],
+        [
+          2369,
+          1856
+        ],
+        [
+          2363,
+          1860
+        ],
+        [
+          2364,
+          1864
+        ],
+        [
+          2366,
+          1865
+        ],
+        [
+          2374,
+          1859
+        ],
+        [
+          2377,
+          1860
+        ],
+        [
+          2377,
+          1868
+        ],
+        [
+          2374,
+          1869
+        ],
+        [
+          2374,
+          1871
+        ],
+        [
+          2387,
+          1878
+        ],
+        [
+          2386,
+          1882
+        ],
+        [
+          2380,
+          1885
+        ],
+        [
+          2386,
+          1888
+        ],
+        [
+          2393,
+          1884
+        ],
+        [
+          2395,
+          1886
+        ],
+        [
+          2397,
+          1896
+        ],
+        [
+          2404,
+          1902
+        ],
+        [
+          2404,
+          1906
+        ],
+        [
+          2397,
+          1909
+        ],
+        [
+          2400,
+          1914
+        ],
+        [
+          2405,
+          1910
+        ],
+        [
+          2408,
+          1910
+        ],
+        [
+          2412,
+          1913
+        ],
+        [
+          2412,
+          1917
+        ],
+        [
+          2415,
+          1922
+        ],
+        [
+          2422,
+          1927
+        ],
+        [
+          2429,
+          1928
+        ],
+        [
+          2441,
+          1924
+        ],
+        [
+          2447,
+          1918
+        ],
+        [
+          2450,
+          1910
+        ],
+        [
+          2453,
+          1909
+        ],
+        [
+          2450,
+          1908
+        ],
+        [
+          2448,
+          1898
+        ],
+        [
+          2443,
+          1893
+        ],
+        [
+          2432,
+          1890
+        ],
+        [
+          2434,
+          1882
+        ],
+        [
+          2431,
+          1873
+        ],
+        [
+          2427,
+          1869
+        ],
+        [
+          2415,
+          1865
+        ],
+        [
+          2415,
+          1853
+        ],
+        [
+          2408,
+          1844
+        ],
+        [
+          2398,
+          1841
+        ],
+        [
+          2399,
+          1831
+        ],
+        [
+          2396,
+          1824
+        ],
+        [
+          2392,
+          1820
+        ],
+        [
+          2380,
+          1816
+        ],
+        [
+          2381,
+          1808
+        ],
+        [
+          2377,
+          1798
+        ],
+        [
+          2371,
+          1794
+        ],
+        [
+          2363,
+          1792
+        ],
+        [
+          2364,
+          1782
+        ],
+        [
+          2362,
+          1776
+        ],
+        [
+          2356,
+          1770
+        ],
+        [
+          2345,
+          1767
+        ],
+        [
+          2346,
+          1758
+        ],
+        [
+          2340,
+          1747
+        ],
+        [
+          2328,
+          1743
+        ],
+        [
+          2329,
+          1731
+        ],
+        [
+          2326,
+          1725
+        ],
+        [
+          2319,
+          1720
+        ],
+        [
+          2310,
+          1718
+        ],
+        [
+          2310,
+          1704
+        ],
+        [
+          2304,
+          1697
+        ],
+        [
+          2294,
+          1694
+        ],
+        [
+          2295,
+          1685
+        ],
+        [
+          2291,
+          1676
+        ],
+        [
+          2284,
+          1671
+        ],
+        [
+          2276,
+          1670
+        ],
+        [
+          2276,
+          1657
+        ],
+        [
+          2270,
+          1649
+        ],
+        [
+          2259,
+          1645
+        ],
+        [
+          2260,
+          1636
+        ],
+        [
+          2257,
+          1628
+        ],
+        [
+          2253,
+          1624
+        ],
+        [
+          2241,
+          1620
+        ],
+        [
+          2241,
+          1607
+        ],
+        [
+          2235,
+          1600
+        ],
+        [
+          2224,
+          1597
+        ],
+        [
+          2211,
+          1602
+        ]
+      ],
+      "method": "SkySat white lotus-canopy boundary, threshold 205, channel range <65, 3 px closing, 1.25 px contour simplification; manually reviewed against source"
+    },
+    {
+      "wayId": 1372223261,
+      "roofFootprintPixels": [
+        [
+          2349,
+          1507
+        ],
+        [
+          2338,
+          1519
+        ],
+        [
+          2338,
+          1532
+        ],
+        [
+          2342,
+          1538
+        ],
+        [
+          2347,
+          1540
+        ],
+        [
+          2354,
+          1550
+        ],
+        [
+          2353,
+          1553
+        ],
+        [
+          2356,
+          1560
+        ],
+        [
+          2367,
+          1570
+        ],
+        [
+          2370,
+          1582
+        ],
+        [
+          2383,
+          1595
+        ],
+        [
+          2386,
+          1600
+        ],
+        [
+          2387,
+          1608
+        ],
+        [
+          2395,
+          1619
+        ],
+        [
+          2399,
+          1620
+        ],
+        [
+          2398,
+          1624
+        ],
+        [
+          2406,
+          1638
+        ],
+        [
+          2415,
+          1645
+        ],
+        [
+          2417,
+          1649
+        ],
+        [
+          2416,
+          1652
+        ],
+        [
+          2421,
+          1662
+        ],
+        [
+          2431,
+          1670
+        ],
+        [
+          2430,
+          1674
+        ],
+        [
+          2439,
+          1690
+        ],
+        [
+          2444,
+          1694
+        ],
+        [
+          2444,
+          1696
+        ],
+        [
+          2449,
+          1698
+        ],
+        [
+          2448,
+          1702
+        ],
+        [
+          2453,
+          1712
+        ],
+        [
+          2462,
+          1719
+        ],
+        [
+          2462,
+          1724
+        ],
+        [
+          2466,
+          1733
+        ],
+        [
+          2471,
+          1740
+        ],
+        [
+          2479,
+          1745
+        ],
+        [
+          2482,
+          1750
+        ],
+        [
+          2481,
+          1754
+        ],
+        [
+          2483,
+          1755
+        ],
+        [
+          2484,
+          1760
+        ],
+        [
+          2497,
+          1773
+        ],
+        [
+          2501,
+          1789
+        ],
+        [
+          2508,
+          1796
+        ],
+        [
+          2512,
+          1797
+        ],
+        [
+          2511,
+          1800
+        ],
+        [
+          2515,
+          1801
+        ],
+        [
+          2515,
+          1806
+        ],
+        [
+          2520,
+          1816
+        ],
+        [
+          2529,
+          1822
+        ],
+        [
+          2533,
+          1837
+        ],
+        [
+          2536,
+          1841
+        ],
+        [
+          2542,
+          1844
+        ],
+        [
+          2551,
+          1845
+        ],
+        [
+          2560,
+          1842
+        ],
+        [
+          2569,
+          1832
+        ],
+        [
+          2570,
+          1820
+        ],
+        [
+          2564,
+          1811
+        ],
+        [
+          2554,
+          1807
+        ],
+        [
+          2555,
+          1797
+        ],
+        [
+          2553,
+          1791
+        ],
+        [
+          2547,
+          1785
+        ],
+        [
+          2537,
+          1782
+        ],
+        [
+          2538,
+          1771
+        ],
+        [
+          2532,
+          1761
+        ],
+        [
+          2521,
+          1757
+        ],
+        [
+          2522,
+          1745
+        ],
+        [
+          2520,
+          1740
+        ],
+        [
+          2515,
+          1735
+        ],
+        [
+          2504,
+          1731
+        ],
+        [
+          2504,
+          1716
+        ],
+        [
+          2499,
+          1710
+        ],
+        [
+          2489,
+          1706
+        ],
+        [
+          2490,
+          1700
+        ],
+        [
+          2495,
+          1699
+        ],
+        [
+          2490,
+          1698
+        ],
+        [
+          2488,
+          1690
+        ],
+        [
+          2482,
+          1684
+        ],
+        [
+          2472,
+          1681
+        ],
+        [
+          2473,
+          1669
+        ],
+        [
+          2467,
+          1660
+        ],
+        [
+          2456,
+          1656
+        ],
+        [
+          2456,
+          1640
+        ],
+        [
+          2449,
+          1633
+        ],
+        [
+          2439,
+          1631
+        ],
+        [
+          2441,
+          1623
+        ],
+        [
+          2439,
+          1615
+        ],
+        [
+          2434,
+          1609
+        ],
+        [
+          2424,
+          1605
+        ],
+        [
+          2425,
+          1593
+        ],
+        [
+          2422,
+          1587
+        ],
+        [
+          2415,
+          1582
+        ],
+        [
+          2407,
+          1580
+        ],
+        [
+          2408,
+          1567
+        ],
+        [
+          2406,
+          1563
+        ],
+        [
+          2400,
+          1557
+        ],
+        [
+          2391,
+          1555
+        ],
+        [
+          2392,
+          1549
+        ],
+        [
+          2398,
+          1548
+        ],
+        [
+          2393,
+          1546
+        ],
+        [
+          2390,
+          1537
+        ],
+        [
+          2386,
+          1533
+        ],
+        [
+          2375,
+          1529
+        ],
+        [
+          2376,
+          1517
+        ],
+        [
+          2372,
+          1510
+        ],
+        [
+          2362,
+          1505
+        ],
+        [
+          2349,
+          1507
+        ]
+      ],
+      "method": "SkySat white lotus-canopy boundary, threshold 205, channel range <65, 3 px closing, 1.25 px contour simplification; manually reviewed against source"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { numeric, SOURCE } from "./core.mjs";
+import { normalizeTelemetryMeeting } from "./track-geometry.mjs";
 export const slugify = (v) =>
   String(v)
     .normalize("NFKD")
@@ -28,7 +29,7 @@ export class OpenF1Provider {
   async getMeetings(season) {
     return (await this.fetchRows("meetings", { year: season }))
       .filter((r) => Date.parse(r.date_start) <= Date.now())
-      .map((r) => ({
+      .map((r) => normalizeTelemetryMeeting({
         id: r.meeting_key,
         season: r.year,
         name: r.meeting_name,
@@ -120,9 +121,11 @@ export class OpenF1Provider {
       pits: pits.rows,
       control: control.rows,
       weather: weather.rows,
+      classification: classification.rows,
+      sessionType: session.type,
       controlKnown: control.ok,
     });
-    return { session, drivers, laps, raceControl: control.rows, track: null };
+    return { session, drivers, laps, raceControl: control.rows, pitDataKnown: pits.ok, track: null };
   }
 }
 export function mapLaps(
@@ -132,9 +135,24 @@ export function mapLaps(
     pits = [],
     control = [],
     weather = [],
+    classification = [],
+    sessionType = null,
     controlKnown = false,
   } = {},
 ) {
+  const officialBestTimes = new Map();
+  if (String(sessionType).toLowerCase() !== "race") {
+    for (const result of classification) {
+      const durations = (Array.isArray(result.duration)
+        ? result.duration
+        : [result.duration]
+      )
+        .map(numeric)
+        .filter((value) => value != null && value > 0);
+      if (durations.length)
+        officialBestTimes.set(result.driver_number, Math.min(...durations));
+    }
+  }
   const ordered = [...control].sort(
     (a, b) => Date.parse(a.date) - Date.parse(b.date),
   );
@@ -172,7 +190,8 @@ export function mapLaps(
   return rows.map((r) => {
     const time = numeric(r.lap_duration),
       start = Date.parse(r.date_start),
-      end = start + (time ?? 0) * 1000;
+      end = start + (time ?? 0) * 1000,
+      officialBestTime = officialBestTimes.get(r.driver_number) ?? null;
     const stint = stints.find(
       (s) =>
         s.driver_number === r.driver_number &&
@@ -182,8 +201,9 @@ export function mapLaps(
     const pit = pits.some(
       (p) =>
         p.driver_number === r.driver_number &&
-        (p.lap_number === r.lap_number ||
-          (Date.parse(p.date) >= start && Date.parse(p.date) <= end)),
+        (Number.isInteger(p.lap_number) && p.lap_number > 0
+          ? p.lap_number === r.lap_number
+          : Date.parse(p.date) >= start && Date.parse(p.date) < end),
     );
     let deleted = false;
     for (const c of ordered) {
@@ -225,6 +245,11 @@ export function mapLaps(
       pitIn: pit,
       pitOut: r.is_pit_out_lap === true,
       deleted,
+      officialBestTime,
+      officialBest:
+        time != null &&
+        officialBestTime != null &&
+        Math.round(time * 1000) === Math.round(officialBestTime * 1000),
       complete: time > 0 && Number.isFinite(start),
       status: Number.isFinite(start) ? lapFlags(start, end) : ["UNKNOWN"],
       validityKnown: controlKnown,

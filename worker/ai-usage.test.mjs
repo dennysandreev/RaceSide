@@ -72,10 +72,12 @@ test("worker routes every OpenRouter completion through one accounting boundary"
   const calls = [...source.matchAll(/requestOpenRouterCompletion\(\{([\s\S]*?)\n\s*\}\);/g)]
     .slice(1)
     .map((match) => match[1]);
-  // Article extraction/writing/verification now share requestOpenRouterNewsJson.
+  // News requests prepare a body before reserving their per-article token budget.
   assert.ok(calls.length >= 6);
   for (const call of calls) {
     assert.match(call, /model: prompt\.model/);
-    assert.match(call, /max_completion_tokens: prompt\.maxTokens/);
+    assert.ok(/max_completion_tokens: prompt\.maxTokens/.test(call) || /body, onUsage/.test(call));
   }
+  assert.match(source, /tokenBudget\?\.reserve\(body\)/);
+  assert.match(source, /body: JSON\.stringify\(\{ \.\.\.textAiRequestOptions\(\), \.\.\.parameters, model \}\)/);
 });

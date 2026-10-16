@@ -42,6 +42,22 @@ export function historyRow(topic, row) {
     row: { ...common, id: eventKey(topic, row), topic, payload: row },
   };
 }
+function liveUsageRecord(payload, model, purpose) {
+  const usage = payload?.usage ?? {};
+  return {
+    table: "ai_usage_logs",
+    row: {
+      id: randomUUID(),
+      purpose,
+      provider: "openrouter",
+      model,
+      input_tokens: usage.input_tokens ?? usage.prompt_tokens ?? null,
+      output_tokens: usage.output_tokens ?? usage.completion_tokens ?? null,
+      estimated_cost_usd: usage.cost ?? null,
+    },
+  };
+}
+
 export class LiveWriter {
   constructor(db, directory) {
     this.db = db;
@@ -55,19 +71,19 @@ export class LiveWriter {
     if (record) this.pending.push(record);
   }
   enqueueUsage(payload, model, purpose) {
-    const usage = payload?.usage ?? {};
-    this.pending.push({
-      table: "ai_usage_logs",
-      row: {
-        id: randomUUID(),
-        purpose,
-        provider: "openrouter",
-        model,
-        input_tokens: usage.input_tokens ?? usage.prompt_tokens ?? null,
-        output_tokens: usage.output_tokens ?? usage.completion_tokens ?? null,
-        estimated_cost_usd: usage.cost ?? null,
-      },
-    });
+    this.pending.push(liveUsageRecord(payload, model, purpose));
+  }
+  async recordUsage(payload, model, purpose) {
+    const record = liveUsageRecord(payload, model, purpose);
+    try {
+      if (!this.db) throw new Error("Radio accounting unavailable");
+      const { error } = await this.db.from(record.table).insert(record.row).abortSignal(AbortSignal.timeout(8_000));
+      if (error) throw error;
+    } catch (error) {
+      // Preserve the same ID for the durable spool, but stop the next paid request.
+      this.pending.push(record);
+      throw error;
+    }
   }
   enqueueRadio(session, radio, cost = 0) {
     this.pending.push({

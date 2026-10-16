@@ -1,4 +1,5 @@
 import type { TrackMapDefinition } from "@/types/racemate";
+import type { TimelinePatch } from "../../../../worker/live/timeline.mjs";
 export type LiveSession = {
   session_key: number;
   meeting_key: number;
@@ -20,9 +21,11 @@ export type DriverLiveState = {
   interval: string | number | null;
   compound: string | null;
   tyreAge: number | null;
+  tyreAgeEstimated?: boolean;
   lap: number;
   lastLap: number | null;
   bestLap: number | null;
+  maxSpeed?: number | null;
   bestLapSectors?: (number | null)[];
   sectors: (number | null)[];
   bestSectors: (number | null)[];
@@ -89,8 +92,17 @@ export type WeatherState = {
   wind: number | null;
   humidity: number | null;
 };
+export type LiveStint = {
+  driverNumber: number;
+  stintNumber: number;
+  compound: string | null;
+  startLap: number;
+  endLap: number | null;
+  ageAtStart: number | null;
+};
 export type LiveSessionState = {
   session: LiveSession | null;
+  championship: LiveChampionship | null;
   drivers: Record<number, DriverLiveState>;
   locations: Record<number, LocationSample>;
   telemetry: Record<number, TelemetrySample>;
@@ -106,6 +118,7 @@ export type LiveSessionState = {
     before: string | null;
     after: string | null;
   }[];
+  stints?: LiveStint[];
   weather: WeatherState | null;
   track: TrackMapDefinition | null;
   trackSectorCount: number | null;
@@ -122,6 +135,37 @@ export type LiveSessionState = {
   replayReady: boolean;
   updatedAt: string | null;
 };
+export type ChampionshipEntry = {
+  id: string;
+  points: number;
+  position: number | null;
+  finishes: (number | null)[];
+};
+export type ChampionshipDriver = ChampionshipEntry & {
+  driverNumber: number | null;
+  acronym: string;
+  fullName: string;
+  teamId: string | null;
+};
+export type ChampionshipTeam = ChampionshipEntry & { name: string; colour: string };
+export type LiveChampionship = {
+  sessionKey: number;
+  season: number;
+  round: number;
+  drivers: ChampionshipDriver[];
+  teams: ChampionshipTeam[];
+  countbackComplete: boolean;
+  results?: {
+    driverId: string;
+    teamId: string | null;
+    position: number | null;
+    points: number;
+  }[] | null;
+  sprint: {
+    status: "none" | "pending" | "ready";
+    points: { driverId: string; teamId: string | null; points: number }[];
+  };
+};
 export type LiveHealth = {
   status: string;
   sourceConnected: boolean;
@@ -129,7 +173,10 @@ export type LiveHealth = {
   databaseWriterActive: boolean;
 };
 export type LiveMessage = {
-  type: "snapshot" | "state" | "samples";
+  type: "snapshot" | "state" | "samples" | "patch";
+  patch?: TimelinePatch[];
+  reset?: boolean;
+  presentation?: LivePresentation;
   data?: Partial<LiveSessionState>;
   health?: LiveHealth;
   serverTime: number;
@@ -137,4 +184,15 @@ export type LiveMessage = {
     | ({ type: "location"; driverNumber: number } & LocationSample)
     | ({ type: "telemetry"; driverNumber: number } & TelemetrySample)
   )[];
+};
+export type LiveView = { mode: "live" | "rewind"; delayMs?: number; pausedAt?: number };
+export type LivePresentation = {
+  mode: "live" | "rewind";
+  cursorTime: number;
+  earliestTime: number;
+  latestTime: number;
+  delayMs: number;
+  paused: boolean;
+  expired: boolean;
+  requestId: number;
 };

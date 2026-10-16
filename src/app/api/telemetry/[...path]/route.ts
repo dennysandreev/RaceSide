@@ -1,16 +1,19 @@
 import { consumeIpRateLimit, getRetryAfterSeconds } from "@/lib/rate-limit";
 import { parseConfig } from "../../../../../worker/telemetry/core.mjs";
 import { resultKey } from "../../../../../worker/telemetry/service.mjs";
+import { normalizeTelemetryMeeting } from "../../../../../worker/telemetry/track-geometry.mjs";
 import { telemetryFlags } from "@/features/telemetry/lib/flags";
 import {
   telemetryStore,
+  readSaved,
   queryTelemetry,
   present,
+  presentRacePace,
   getTelemetryBootstrap,
   toTelemetrySetupCatalog,
   userError,
 } from "@/features/telemetry/lib/server";
-import type { Comparison, Catalog } from "@/features/telemetry/lib/types";
+import type { Comparison, Catalog, Meeting, RacePace } from "@/features/telemetry/lib/types";
 import { getSessionUser } from "@/lib/auth";
 import { getSubscriptionAccess } from "@/lib/billing/access";
 import { billingFlags } from "@/lib/billing/config";
@@ -37,8 +40,6 @@ async function handle(
   const user = await getSessionUser();
   if (!user && billingFlags.entitlementsEnforced) return subscriptionResponse(401, "Войдите, чтобы открыть демо телеметрии.");
   const access = await getSubscriptionAccess(user?.id ?? null);
-  const demoScope = access.entitlements.telemetry_full ? null : await getTelemetryDemoScope();
-  if (!access.entitlements.telemetry_full && !demoScope) return subscriptionResponse(503, "Демо телеметрии пока готовится.");
   const limit = await consumeIpRateLimit("api:telemetry", request, 60, 60000);
   if (!limit.ok)
     return Response.json(
@@ -48,6 +49,21 @@ async function handle(
         headers: { "Retry-After": getRetryAfterSeconds(limit.resetAt) },
       },
     );
+  const demoScope = access.entitlements.telemetry_full ? null : await getTelemetryDemoScope();
+  if (!access.entitlements.telemetry_full && !demoScope) {
+    if (request.method === "GET" && new URL(request.url).pathname.endsWith("/bootstrap"))
+      return Response.json(
+        {
+          status: 202,
+          data: {
+            seasons: [], season: null, meetings: [], meeting: null,
+            sessions: [], session: null, catalog: null, stage: "demo",
+          },
+        },
+        { status: 202, headers: { "Cache-Control": "no-store", "Retry-After": "3" } },
+      );
+    return subscriptionResponse(503, "Демо телеметрии пока готовится.");
+  }
   const { path } = await context.params,
     route = path.join("/"),
     url = new URL(request.url),
@@ -130,7 +146,7 @@ async function handle(
           season: optional("season"),
           meeting: optional("meeting"),
           session: optional("session"),
-          waitMs: 8_000,
+          waitMs: 0,
         });
         const status = data.stage === "ready" ? 200 : 202;
         return Response.json(
@@ -139,7 +155,7 @@ async function handle(
             status,
             headers: {
               "Cache-Control": "no-store",
-              ...(status === 202 ? { "Retry-After": "1" } : {}),
+              ...(status === 202 ? { "Retry-After": "3" } : {}),
             },
           },
         );
@@ -162,14 +178,20 @@ async function handle(
         if (task.status === "ready" && task.result_key) {
           const result = await store.get(task.result_key);
           if (result) {
-            const data =
+            const kind =
               task.task &&
               typeof task.task === "object" &&
-              "kind" in task.task &&
-              task.task.kind === "compare"
+              "kind" in task.task ? task.task.kind : null;
+            const data = kind === "compare"
                 ? present(result as Comparison)
-                : result;
-            return Response.json({ status: 200, data });
+                : kind === "race-pace" ? presentRacePace(result as RacePace)
+                : kind === "meetings"
+                  ? (result as Meeting[]).map(normalizeTelemetryMeeting)
+                  : result;
+            return Response.json(
+              { status: 200, data },
+              { headers: { "Cache-Control": "no-store" } },
+            );
           }
         }
         return Response.json(
@@ -181,7 +203,7 @@ async function handle(
         );
       }
       if (route.startsWith("comparison/")) {
-        const saved = await telemetryStore().getComparison(path[1]);
+        const saved = await readSaved(path[1]);
         if (!saved)
           return Response.json(
             { error: "Сравнение не найдено." },
@@ -196,10 +218,22 @@ async function handle(
           data: present(saved.comparison, { from, to, points: 1500 }),
         });
       }
+      if (route === "race-pace") {
+        if (demoScope && !demoScope.sessions.some((session) => session.id === get("session")))
+          return subscriptionResponse(403, "Эта гонка доступна с RaceSide Plus.");
+        const result = await queryTelemetry({
+          kind: "race-pace",
+          session: get("session"),
+        });
+        return Response.json(result, {
+          status: result.status,
+          headers: { "Cache-Control": "no-store", "Retry-After": "3" },
+        });
+      }
       if (route === "seasons" || route === "meetings" || route === "sessions") {
         if (demoScope) {
           if (route === "seasons") return Response.json({ status: 200, data: [demoScope.meeting.season] });
-          if (route === "meetings") return Response.json({ status: 200, data: get("season") === demoScope.meeting.season ? [demoScope.meeting] : [] });
+          if (route === "meetings") return Response.json({ status: 200, data: get("season") === demoScope.meeting.season ? [normalizeTelemetryMeeting(demoScope.meeting)] : [] });
           return Response.json({ status: 200, data: get("meeting") === demoScope.meeting.id ? demoScope.sessions : [] });
         }
         const result = await queryTelemetry(
@@ -279,7 +313,7 @@ function subscriptionResponse(status: number, error: string) {
 function taskAllowedInDemo(task: unknown, scope: TelemetryDemoScope) {
   if (!task || typeof task !== "object" || !("kind" in task)) return false;
   if (task.kind === "compare" && "config" in task) return configUsesDemoSessions(task.config, scope);
-  if (task.kind === "catalog" && "session" in task && typeof task.session === "number") return scope.sessions.some((session) => session.id === task.session);
+  if ((task.kind === "catalog" || task.kind === "race-pace") && "session" in task && typeof task.session === "number") return scope.sessions.some((session) => session.id === task.session);
   if (task.kind === "sessions" && "meeting" in task) return task.meeting === scope.meeting.id;
   if (task.kind === "meetings" && "season" in task) return task.season === scope.meeting.season;
   return task.kind === "seasons";

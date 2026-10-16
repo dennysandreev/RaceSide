@@ -1,4 +1,4 @@
-export const VERSION = "telemetry-2";
+export const VERSION = "telemetry-3";
 export const CHANNELS = ["speed", "throttle", "brake", "gear", "rpm", "drs"];
 export const SOURCE = {
   provider: "OpenF1",
@@ -76,28 +76,47 @@ export function parseConfig(input) {
   if (input.window) config.window = input.window;
   return config;
 }
+const hasNeutralization = (lap) =>
+  lap.status.some((status) => ["RED", "SC", "VSC"].includes(status));
+const isCompleteRacingLap = (lap) =>
+  lap.complete && lap.time > 0 && !lap.pitIn && !lap.pitOut;
+export function bestLapCandidates(laps) {
+  return laps
+    .filter(
+      (lap) =>
+        isCompleteRacingLap(lap) &&
+        (lap.officialBest ||
+          (lap.validityKnown && !lap.deleted && !hasNeutralization(lap))) &&
+        (lap.officialBestTime == null ||
+          Math.round(lap.time * 1000) >=
+            Math.round(lap.officialBestTime * 1000)),
+    )
+    .sort(
+      (a, b) =>
+        Number(Boolean(b.officialBest)) - Number(Boolean(a.officialBest)) ||
+        a.time - b.time ||
+        a.number - b.number,
+    );
+}
 export function bestLap(laps) {
-  return (
-    laps
-      .filter(
-        (l) =>
-          l.complete &&
-          l.time > 0 &&
-          !l.deleted &&
-          !l.pitIn &&
-          !l.pitOut &&
-          l.validityKnown &&
-          !l.status.some((s) => ["RED", "SC", "VSC", "YELLOW"].includes(s)),
-      )
-      .sort((a, b) => a.time - b.time || a.number - b.number)[0] ?? null
-  );
+  return bestLapCandidates(laps)[0] ?? null;
 }
 export function raceAverageLaps(laps) {
   const pitExitNumbers = new Set(
     laps.filter((lap) => lap.pitIn).map((lap) => lap.number + 1),
   );
   return laps
-    .filter((lap) => bestLap([lap]) && !pitExitNumbers.has(lap.number))
+    .filter(
+      (lap) =>
+        isCompleteRacingLap(lap) &&
+        lap.number > 1 &&
+        !lap.deleted &&
+        lap.validityKnown &&
+        !lap.status.some((status) =>
+          ["RED", "SC", "VSC", "YELLOW", "START", "UNKNOWN"].includes(status),
+        ) &&
+        !pitExitNumbers.has(lap.number),
+    )
     .sort((a, b) => a.number - b.number);
 }
 export function drsValue(value) {
@@ -475,7 +494,7 @@ export function calculateMetrics(points, lapTime) {
     latestBraking: braking.at(-1)?.start ?? null,
   };
 }
-function cornerMetrics(points, corner) {
+export function cornerMetrics(points, corner) {
   const section = points.filter(
     (p) => p.distance >= corner.start && p.distance <= corner.end,
   );
@@ -496,6 +515,85 @@ function cornerMetrics(points, corner) {
     time: a != null && b != null ? b - a : null,
   };
 }
+const sectorTimingRules = Object.freeze({
+  maxGap: 0.6,
+  maxTimeShift: 0.35,
+  maxDistanceScale: 0.06,
+  sumTolerance: 0.005,
+  interpolationTolerance: 0.01,
+});
+const sectorTimingMethod = "speed-integral/sector-timing";
+
+function sectorTimingAnchors(trace, length) {
+  const { lap, points } = trace;
+  if (lap.kind === "race_average" || !trace.quality.comparable ||
+    lap.sectors?.length !== 3 || !Number.isFinite(lap.time) ||
+    lap.sectors.some((time) => !Number.isFinite(time) || time <= 0) ||
+    Math.abs(lap.sectors.reduce((sum, time) => sum + time, 0) - lap.time) > sectorTimingRules.sumTolerance ||
+    points.length < 2 || points[0].distance !== 0 || points[0].elapsed !== 0 ||
+    Math.abs(points.at(-1).distance - length) > 0.001 ||
+    Math.abs(points.at(-1).elapsed - lap.time) > sectorTimingRules.sumTolerance) return null;
+  const anchors = [{ distance: 0, elapsed: 0 }];
+  let elapsed = 0;
+  for (const time of lap.sectors.slice(0, 2)) {
+    elapsed += time;
+    const index = points.findIndex((point) => point.elapsed >= elapsed);
+    if (index <= 0) return null;
+    const a = points[index - 1], b = points[index];
+    if (b.elapsed <= a.elapsed || b.elapsed - a.elapsed > sectorTimingRules.maxGap || b.distance <= a.distance) return null;
+    anchors.push({ elapsed, distance: a.distance + (b.distance - a.distance) * (elapsed - a.elapsed) / (b.elapsed - a.elapsed) });
+  }
+  anchors.push({ distance: length, elapsed: lap.time });
+  return anchors.every((a, i) => Number.isFinite(a.distance) && (!i || a.distance > anchors[i - 1].distance)) ? anchors : null;
+}
+
+function projectSectorTiming(trace, track, anchors) {
+  const targets = [0, ...track.sectors, track.length];
+  if (targets.length !== 4 || targets.some((d, i) => !Number.isFinite(d) || i && d <= targets[i - 1])) return null;
+  const shifts = track.sectors.map((distance, i) => {
+    const elapsed = interpolate(trace.points, distance, "elapsed", sectorTimingRules.maxGap);
+    return elapsed == null ? null : elapsed - anchors[i + 1].elapsed;
+  });
+  const scales = targets.slice(1).map((distance, i) => (distance - targets[i]) / (anchors[i + 1].distance - anchors[i].distance));
+  if (shifts.some((shift) => shift == null || !Number.isFinite(shift) || Math.abs(shift) > sectorTimingRules.maxTimeShift) ||
+    scales.some((scale) => !Number.isFinite(scale) || Math.abs(1 - scale) > sectorTimingRules.maxDistanceScale)) return null;
+  // Rebuilding a saved comparison must not repeatedly shift its samples.
+  if (trace.quality.method === sectorTimingMethod && shifts.every((shift) => Math.abs(shift) <= sectorTimingRules.interpolationTolerance)) return trace;
+  const points = trace.points.map((point) => {
+    const i = point.elapsed <= anchors[1].elapsed ? 0 : point.elapsed <= anchors[2].elapsed ? 1 : 2;
+    const distance = point.elapsed === trace.lap.time ? track.length : targets[i] + (point.distance - anchors[i].distance) * scales[i];
+    return { ...point, distance };
+  });
+  // Do not insert control-line samples: that would conceal an original data gap.
+  return { ...trace, points, quality: { ...trace.quality, method: sectorTimingMethod },
+    metrics: calculateMetrics(points, trace.lap.time), corners: track.corners.map((corner) => cornerMetrics(points, corner)) };
+}
+
+export function alignLapToSectorTiming(trace, track) {
+  const anchors = sectorTimingAnchors(trace, track.length);
+  return anchors ? projectSectorTiming(trace, track, anchors) : null;
+}
+
+function alignComparisonTiming(traces, track) {
+  const anchors = traces.map((trace) => sectorTimingAnchors(trace, track.length));
+  if (anchors.some((value) => value == null)) return { traces, track };
+  const alreadyAligned = traces.every((trace) => trace.quality.method === sectorTimingMethod);
+  const sectors = alreadyAligned ? track.sectors : [1, 2].map((i) => {
+    // A shared median avoids favouring the reference lap or forcing samples to
+    // potentially inaccurate sector positions in the static circuit geometry.
+    const distances = anchors.map((values) => values[i].distance).sort((a, b) => a - b);
+    const middle = Math.floor(distances.length / 2);
+    return distances.length % 2 ? distances[middle] : (distances[middle - 1] + distances[middle]) / 2;
+  });
+  const alignedTrack = { ...track, sectors };
+  const aligned = traces.map((trace, i) => projectSectorTiming(trace, alignedTrack, anchors[i]));
+  return aligned.some((trace) => trace == null) ? { traces, track } : { traces: aligned, track: alignedTrack };
+}
+
+export function rebuildComparisonTiming(comparison) {
+  return { ...comparison, ...buildComparison(comparison.traces, comparison.track, comparison.config), analysis: undefined };
+}
+
 export function buildComparison(traces, track, config) {
   if (traces.length < 2 || traces.length > 4)
     throw new Error("INVALID_COMPARISON");
@@ -516,6 +614,7 @@ export function buildComparison(traces, track, config) {
     throw new Error("INCOMPATIBLE_LAPS");
   if (traces.some((t) => !t.quality.comparable))
     throw new Error("INCOMPLETE_TELEMETRY");
+  ({ traces, track } = alignComparisonTiming(traces, track));
   const distance = Array.from(
     { length: Math.ceil(track.length / 5) + 1 },
     (_, i) => Math.min(track.length, i * 5),
@@ -544,14 +643,12 @@ export function buildComparison(traces, track, config) {
       gain: local(from, Math.min(from + 100, track.length)),
     });
   const boundaries = [0, ...track.sectors, track.length];
-  const sectorDelta = boundaries.slice(1).map((to, i) => {
+  const sectorDelta = boundaries.slice(1).map((_, i) => {
     const officialTimes = traces.map((trace) => trace.lap.sectors[i]);
-    const officialTimingAvailable = officialTimes.every(
-      (value) => value != null && value > 0 && Number.isFinite(value),
-    );
-    if (!officialTimingAvailable) return local(boundaries[i], to);
     const referenceTime = officialTimes[config.reference ?? 0];
-    return officialTimes.map((value) => round(value - referenceTime));
+    return officialTimes.map((value) =>
+      Number.isFinite(referenceTime) && referenceTime > 0 && Number.isFinite(value) && value > 0
+        ? round(value - referenceTime) : null);
   });
   const cornerDelta = track.corners.map((c) => local(c.start, c.end));
   const straightDelta = traces.map((_, i) => {

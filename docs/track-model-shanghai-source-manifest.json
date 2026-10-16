@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "modelId": "shanghai",
+  "bbox": [
+    121.207,
+    31.326,
+    121.236,
+    31.353
+  ],
+  "coordinateReferenceSystem": "EPSG:32651",
+  "sources": [
+    {
+      "file": "osm.xml",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=121.207,31.326,121.236,31.353",
+      "role": "raceway, pit, permanent buildings, grandstands, water, barriers and vegetation",
+      "license": "ODbL 1.0",
+      "crs": "EPSG:4326",
+      "resolution": "OSM vector snapshot",
+      "acquisitionDate": "2026-10-03",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "ODbL 1.0",
+      "redistributed": false,
+      "sha256": "91926cb39f07f4ba87dec04ef45091ef105effc13399e1c432d6df877104f94c",
+      "bytes": 3811823,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "skysat-2018.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Shanghai_International_Circuit%2C_April_7%2C_2018_SkySat.jpg",
+      "role": "licensed ground texture and permanent roof colors; historical capture",
+      "license": "CC BY-SA 4.0; Planet Labs, Inc.; georegistered and cropped",
+      "crs": "image pixels; registered separately",
+      "resolution": "3454 x 2591 SkySat image",
+      "acquisitionDate": "2018-04-07",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "CC BY-SA 4.0; Planet Labs, Inc.; georegistered and cropped",
+      "redistributed": true,
+      "sha256": "627c2d2f0ba8615ddcad3c8471519339b18d5c5f605dbe49af2f95aa50dcf422",
+      "bytes": 3497514,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "fia-2026-map.pdf",
+      "url": "https://www.fia.com/system/files/decision-document/2026_chinese_grand_prix_-_competition_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_battery_containment_area_and_red_zone.pdf",
+      "role": "2026 sporting controls, pit garages and event layout; reference only",
+      "license": "FIA/FOWC copyright; reference only, not embedded",
+      "crs": "diagram",
+      "resolution": "official vector map",
+      "acquisitionDate": "2026-03-12",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "FIA/FOWC copyright; reference only, not embedded",
+      "redistributed": false,
+      "sha256": "7fba64c20346a9055e92251359c44720410578b42545d62458c1609f20d2a331",
+      "bytes": 4304808,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "fia-2026-media-kit.pdf",
+      "url": "https://www.fia.com/sites/default/files/media_kit-formula_1_heineken_chinese_grand_prix_2026.pdf",
+      "role": "current permanent architecture and material reference",
+      "license": "FIA/Juss copyright; reference only, not embedded",
+      "crs": "document",
+      "resolution": "official media kit",
+      "acquisitionDate": "2026-03",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "FIA/Juss copyright; reference only, not embedded",
+      "redistributed": false,
+      "sha256": "ff851c539f606ce7e20545c0b4912c424a0c54aab15bf89a78bf1c07c6641cdc",
+      "bytes": 4114389,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "event-2026-stands.png",
+      "url": "https://english.shanghai.gov.cn/cmsres/59/596077c5ef8441e09eb5239fd740b25b/29a1050812c99e3abd007407e8a1b81a.png",
+      "role": "2026 promoter grandstand locations including upgraded E",
+      "license": "Shanghai government/Juss copyright; reference only, not embedded",
+      "crs": "diagram",
+      "resolution": "official event map",
+      "acquisitionDate": "2026-03-11",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "Shanghai government/Juss copyright; reference only, not embedded",
+      "redistributed": false,
+      "sha256": "3298d55793da732ec8a869a5b14e8861cacbfbce74f56397159b7db39ea3f535",
+      "bytes": 3369513,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "tilke-main-complex.jpg",
+      "url": "https://www.tilkeandpartners.com/Images/shanghaicircuit/99.jpg",
+      "role": "architect's main grandstand, bridges, roofs and colors",
+      "license": "Tilke & Partners copyright; reference only, not embedded",
+      "crs": "photograph",
+      "resolution": "architect photograph",
+      "acquisitionDate": "capture date unknown",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "verticalDatum": null,
+      "attribution": "Tilke & Partners copyright; reference only, not embedded",
+      "redistributed": false,
+      "sha256": "18b29c43aac31b5f00b1382f23ba2b164e866b6eaf6377af182f2c7d365829bb",
+      "bytes": 66172,
+      "retrievedAt": "2026-10-03"
+    },
+    {
+      "file": "gedtm30-native.tif",
+      "url": "https://s3.opengeohub.org/global/edtm/gedtm_rf_m_30m_s_20060101_20151231_go_epsg.4326.3855_v20250611.tif",
+      "role": "bare-earth height estimate, native unresampled COG window",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "OpenGeoHub / Ho et al. (2025), GEDTM30; cropped for RaceSide",
+      "crs": "EPSG:4326",
+      "verticalDatum": "EGM2008 orthometric metres (EPSG:3855)",
+      "resolution": "1 arc-second / approximately 30 m native DTM",
+      "bbox": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "cropBounds": [
+        121.207,
+        31.326,
+        121.236,
+        31.353
+      ],
+      "downloadMethod": "native-cog-window",
+      "redistributed": true,
+      "acquisitionDate": "2006-2015 composite; v20250611",
+      "sha256": "161df6c46eec410b73512b13d6e4dd8495c82212ee7e4f2bd7087b4457a528c7",
+      "bytes": 13466,
+      "retrievedAt": "2026-10-03"
+    }
+  ]
+}

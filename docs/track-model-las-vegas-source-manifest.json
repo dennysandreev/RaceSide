@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "modelId": "las-vegas",
+  "sources": [
+    {
+      "file": "naip-service.json",
+      "url": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer?f=pjson",
+      "bytes": 8580,
+      "sha256": "b366ed805aa7d4fadee33def15c3e952a763134c4c9c2d07f4ad1bfabd033172",
+      "retrievedAt": "2026-10-04T08:37:25.260786+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "service metadata",
+      "license": "USDA NAIP public domain",
+      "attribution": "USDA FSA / USGS",
+      "role": "actual surface and roof colours, image acquisition provenance"
+    },
+    {
+      "file": "fia-2025.pdf",
+      "url": "https://www.fia.com/system/files/decision-document/2025_las_vegas_grand_prix_-_event_notes_-_circuit_map_v2_pit_lane_drawing_emergency_map_exits_quarantine_zone_and_red_zones.pdf",
+      "bytes": 4429891,
+      "sha256": "5725f5e2c9085a0d593ffea2c67c15f71f8943353b974fc379c58070df8ab9b4",
+      "retrievedAt": "2026-10-04T08:37:25.555123+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "sporting controls and garage layout"
+    },
+    {
+      "file": "osm-0-0.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.185000,36.103000,-115.169500,36.113000",
+      "bytes": 3824062,
+      "sha256": "c78e38f649c6c8ec075a54d6997e2dfa17cd8da3f64a80a50b72cf2fdf82d9fe",
+      "retrievedAt": "2026-10-04T08:38:17.024246+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "osm-0-1.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.169500,36.103000,-115.154000,36.113000",
+      "bytes": 2695189,
+      "sha256": "5ef84315718bf8b46ff8e1ead5ef91080f21f40259a2ce811f40696806ebdccd",
+      "retrievedAt": "2026-10-04T08:38:16.776597+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "osm-1-0.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.185000,36.113000,-115.169500,36.123000",
+      "bytes": 3817848,
+      "sha256": "5beca50e71038daec35d99ee00ddccdf6f45780f5f5dfff4ed581d2124bdb5de",
+      "retrievedAt": "2026-10-04T08:38:17.024387+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "osm-1-1.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.169500,36.113000,-115.154000,36.123000",
+      "bytes": 3619274,
+      "sha256": "5bd8d6b3525fee88b783bc1037e575c984d0a7a6280c36c274bb5e603f9c71d7",
+      "retrievedAt": "2026-10-04T08:38:17.908840+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "osm-2-0.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.185000,36.123000,-115.169500,36.133000",
+      "bytes": 3527625,
+      "sha256": "47a9ced558b77e1444657d995937de231b59d777ac031c198fe92dd62a78ae0b",
+      "retrievedAt": "2026-10-04T08:38:17.024016+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "osm-2-1.xml",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=-115.169500,36.123000,-115.154000,36.133000",
+      "bytes": 5094349,
+      "sha256": "48e157137222d8a9b1ffe894cae82170168c4f61be8476b3da6110c84bf75294",
+      "retrievedAt": "2026-10-04T08:38:19.427603+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "vector",
+      "license": "ODbL 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "role": "current native circuit, pit lane, building parts, footprints and landmarks"
+    },
+    {
+      "file": "naip-catalog.json",
+      "url": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/query?f=json&where=1%3D1&geometry=-115.185%2C36.103%2C-115.154%2C36.133&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+      "bytes": 66751,
+      "sha256": "49a1d81109685df88e4b9b2ffd9c513bc094447914b1bf8fa7fcc83a71520ac6",
+      "retrievedAt": "2026-10-04T08:38:17.953279+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "service metadata",
+      "license": "USDA NAIP public domain",
+      "attribution": "USDA FSA / USGS",
+      "role": "actual surface and roof colours, image acquisition provenance"
+    },
+    {
+      "file": "event-map-2026.png",
+      "url": "https://www.f1lasvegasgp.com/app/uploads/2026/05/2867-Website-Track-Map.png",
+      "bytes": 115220,
+      "sha256": "c4fbc099abe5d10686e2805fd27a81b80b7ffd24ee68e72637bd82f9d5a3ec8b",
+      "retrievedAt": "2026-10-04T08:39:27.548669+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "2026 grandstand placement and structural/colour references"
+    },
+    {
+      "file": "usgs-service.json",
+      "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer?f=pjson",
+      "bytes": 12981,
+      "sha256": "a300a739a6e47627d1cd6921fca368004d88a8ac62d6d32c64571c669e4349bb",
+      "retrievedAt": "2026-10-04T08:39:27.953807+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": "NAVD88 orthometric metres",
+      "resolution": "service metadata",
+      "license": "USGS public domain",
+      "attribution": "USGS 3DEP",
+      "role": "bare-earth elevations and 3DEP provenance"
+    },
+    {
+      "file": "ortho-final.jpg",
+      "url": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage?bbox=663650%2C3997200%2C666250%2C4000000&bboxSR=32611&imageSR=32611&size=3120%2C3360&format=jpg&f=image",
+      "bytes": 1952531,
+      "sha256": "1673eb7df54adcecd3be4d5e9c2855dac59c5a5e2e34480d1c114c77aa731cd2",
+      "retrievedAt": "2026-10-04T08:47:29.594213+00:00",
+      "bbox": [
+        663650,
+        3997200,
+        666250,
+        4000000
+      ],
+      "crs": "EPSG:32611",
+      "verticalDatum": null,
+      "resolution": "2022-06-11, 0.6 m source; export 0.833 m/px",
+      "license": "USDA NAIP public domain",
+      "attribution": "USDA FSA / USGS",
+      "role": "actual surface and roof colours, image acquisition provenance"
+    },
+    {
+      "file": "usgs-dtm-final.tif",
+      "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox=663650%2C3997200%2C666250%2C4000000&bboxSR=32611&imageSR=32611&size=520%2C560&format=tiff&f=image&pixelType=F32&interpolation=RSP_BilinearInterpolation&renderingRule=%7B%22rasterFunction%22%3A%22None%22%7D",
+      "bytes": 1639721,
+      "sha256": "01135809c3687eba3f47e179c7f8397902572ffec8c1a2446aa392c1c4e47dbd",
+      "retrievedAt": "2026-10-04T08:47:23.660609+00:00",
+      "bbox": [
+        663650,
+        3997200,
+        666250,
+        4000000
+      ],
+      "crs": "EPSG:32611",
+      "verticalDatum": "NAVD88 orthometric metres",
+      "resolution": "5 m export of multi-resolution 3DEP",
+      "license": "USGS public domain",
+      "attribution": "USGS 3DEP",
+      "role": "bare-earth elevations and 3DEP provenance"
+    },
+    {
+      "file": "main-grandstand-map-2026.jpg",
+      "url": "https://www.f1lasvegasgp.com/app/uploads/2026/07/Website-Maps_2_MAINGRANDSTAND-1-scaled.jpg",
+      "bytes": 485371,
+      "sha256": "3d3b229b96f1eb2a6f748d9609feb5e663310a724f1555ee57f4c492d9689a1d",
+      "retrievedAt": "2026-10-04T08:43:02.291616+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "2026 grandstand placement and structural/colour references"
+    },
+    {
+      "file": "sphere-grandstand-map-2026.png",
+      "url": "https://www.f1lasvegasgp.com/app/uploads/2026/03/TMOGRANDSTAND-1.png",
+      "bytes": 507778,
+      "sha256": "9d38fb315538a44b63f05702ed9cc58d9a6d91632547c6fb411c6587f61421f6",
+      "retrievedAt": "2026-10-04T08:43:02.290049+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "2026 grandstand placement and structural/colour references"
+    },
+    {
+      "file": "turn3-map-2026.jpg",
+      "url": "https://www.f1lasvegasgp.com/app/uploads/2026/07/Website-Maps_2_TURN3GRANDSTAND-1-scaled.jpg",
+      "bytes": 474200,
+      "sha256": "51a03096763fe8ec7ae9d2ad7cf0c14b172b15903e64da1ec8a1ca03682ce71e",
+      "retrievedAt": "2026-10-04T08:43:02.334927+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "2026 grandstand placement and structural/colour references"
+    },
+    {
+      "file": "main-grandstand-photo-2025.jpg",
+      "url": "https://www.f1lasvegasgp.com/app/uploads/2024/02/20251122_LVGP_Sat_437-1-819x1024.jpg",
+      "bytes": 149444,
+      "sha256": "7674845a86ec8e273e61ab410e6a741445bbc60ec94c7932db5236f56e26ee57",
+      "retrievedAt": "2026-10-04T08:43:02.048372+00:00",
+      "bbox": [
+        -115.185,
+        36.103,
+        -115.154,
+        36.133
+      ],
+      "crs": "EPSG:4326",
+      "verticalDatum": null,
+      "resolution": "reference",
+      "license": "All rights reserved; reference only, not embedded in the model",
+      "attribution": "FIA / Las Vegas Grand Prix",
+      "role": "2026 grandstand placement and structural/colour references"
+    },
+    {
+      "file": "f1-logo-official.svg",
+      "url": "https://www.formula1.com/",
+      "bytes": 1766,
+      "sha256": "3767e5792e25de137ac0fcb09a07fd4209eb5040f6479972adc4198f4ff2e016",
+      "retrievedAt": "2026-10-04T10:50:34.029185+00:00",
+      "bbox": null,
+      "crs": "not applicable",
+      "verticalDatum": null,
+      "resolution": "official vector 1600 × 400",
+      "license": "Formula One Licensing BV trademark; display on Sphere at user request, no affiliation implied",
+      "attribution": "F1 logo © Formula One Licensing BV",
+      "role": "Official F1 display artwork for Sphere; user-directed visual, not claimed as a verified 2026 event screen",
+      "extraction": "inline-f1-svg"
+    },
+    {
+      "file": "hard-rock-permit-2025.pdf",
+      "url": "https://clark.legistar.com/View.ashx?GUID=13691ECB-D8CF-4783-97F6-D496E81FFD7D&ID=14205876&M=F",
+      "bytes": 217254,
+      "sha256": "3ff79f9c9ba5d5fee12e6c7c1c80551eafea7b86533eadca7a296a8856534fa3",
+      "retrievedAt": "2026-10-04T10:59:37.679349+00:00",
+      "bbox": [
+        -115.176,
+        36.115,
+        -115.172,
+        36.122
+      ],
+      "crs": "reference",
+      "verticalDatum": null,
+      "resolution": "municipal approved project description, 9 pages",
+      "license": "Clark County public planning record; reference only",
+      "attribution": "Clark County Board of County Commissioners",
+      "role": "Guitar Tower footprint context, 542 ft occupied height and 660 ft architectural features"
+    }
+  ]
+}

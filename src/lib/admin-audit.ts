@@ -91,8 +91,8 @@ export async function finishAdminAudit(
       after_data: sanitizeAdminAuditPayload(
         failed ? { error: errorMessage } : input.afterData ?? {},
       ),
-      metadata: sanitizeAdminAuditPayload(input.metadata ?? {}),
       error_code: errorCode?.slice(0, 120) ?? null,
+      ...(input.metadata === undefined ? {} : { metadata: sanitizeAdminAuditPayload(input.metadata) }),
       finished_at: new Date().toISOString(),
     })
     .eq("id", auditId);

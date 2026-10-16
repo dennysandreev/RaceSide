@@ -1,0 +1,66 @@
+{
+  "url": "https://raceside.online/calendar/2026/23",
+  "errors": [],
+  "canvas": 1,
+  "text": true,
+  "modelDate": "2026-10-04",
+  "source": "sentinel-20261004.tif",
+  "water": {
+    "method": "current OSM directed coastlines and closed water polygons; land on left; geographic mask",
+    "coastlineWayIds": [
+      168410972,
+      188205155,
+      188205156,
+      188215353,
+      188215354,
+      226044426,
+      312181485,
+      820460596,
+      390452620
+    ],
+    "regions": [
+      {
+        "pixels": 193043,
+        "water": true
+      },
+      {
+        "pixels": 4558132,
+        "water": false
+      },
+      {
+        "pixels": 834589,
+        "water": true
+      },
+      {
+        "pixels": 124967,
+        "water": false
+      }
+    ],
+    "coveragePercent": 17.808075659362725,
+    "hotelQuayCorrection": {
+      "osmWingId": 520940413,
+      "coarseCoastWayId": 188205155,
+      "source": "sentinel-20261004.tif native georeferenced RGB; connected dry platform beside Marina Wing",
+      "searchRadiusMeters": 22,
+      "smoothingMeters": 3,
+      "dryBrightnessThresholdSrgb": 90,
+      "restoredDryAreaSquareMeters": 7021.185060859961,
+      "method": "local native-image dry region touching the mapped wing; no historical image geometry",
+      "shoreAccuracy": "native 10 m optical resolution; not a surveyed coast"
+    },
+    "featherMeters": 1.4,
+    "protectedRoadBuildingsPiersMaximumAlpha": 0,
+    "material": "authored teal water texture, imagegen; earlier Planet SkySat colours as reference only",
+    "historicalGeographyEmbedded": false
+  },
+  "north": [
+    {
+      "id": 1455866679,
+      "rows": 18,
+      "method": "continuous rows interpolated between both mapped bowl boundaries"
+    }
+  ],
+  "resources": [
+    "https://raceside.online/f1/tracks/3d/yas-marina.glb?v=7a3f0c0ab1bb"
+  ]
+}

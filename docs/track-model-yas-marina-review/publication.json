@@ -1,0 +1,12 @@
+{
+  "publishedAtUtc": "2026-10-05T09:37:05.504781+00:00",
+  "baseImageId": "sha256:24ac797ae9574005634d6829f528fdeb18cb124787f8718897903a0370d016f7",
+  "imageId": "sha256:73d8c9fd76c7951800f3fe554e47134e18dc7183b6ee4c3fd0901d07aa15b088",
+  "imageTag": "raceside:yas-marina-20261005-85436f491702",
+  "health": "healthy",
+  "environmentUnchanged": true,
+  "previousTracksUnchanged": true,
+  "glbSha256": "85436f491702157fd9615a00c30a24cdb3947ecddb97e0cb750785948a88e0db",
+  "previewSha256": "f6e879ff90467dbf2389e86b62c5d1245634cdc5d99db7abfb18674d2c0d7032",
+  "backup": "/home/racemate/releases/yas-marina-20261005-85436f491702/publication-backup"
+}

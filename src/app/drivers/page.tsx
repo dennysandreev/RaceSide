@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { GitCompareArrows, UsersRound } from "lucide-react";
 
@@ -83,13 +84,22 @@ export default async function DriversPage({
       />
 
       <div className="grid gap-5 pb-6 sm:pb-8">
-        <header className="stitch-panel relative overflow-hidden p-4 sm:p-5 lg:h-40">
+        <header className="stitch-panel relative min-h-[11.5rem] overflow-hidden p-4 sm:p-5 lg:h-40 lg:min-h-0">
+          <Image
+            alt=""
+            className="object-cover object-right opacity-80 lg:object-center"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 72rem"
+            src="/stitch/drivers-hero.webp"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/76 to-background/18" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgb(225_6_0_/_0.2),transparent_22rem),linear-gradient(135deg,rgb(255_255_255_/_0.04),transparent_48%)]" />
           <div className="relative z-10 grid gap-3 lg:h-full lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
             <div className="min-w-0">
               <p className="stitch-label flex items-center gap-2 text-primary">
                 <UsersRound aria-hidden="true" className="size-4" />
-                Пилоты <span aria-hidden="true">/</span> сезон {season}
+                Пилоты · сезон {season}
               </p>
               <PageTitle className="mt-2">Пилоты Формулы-1</PageTitle>
               <SeasonSwitcher

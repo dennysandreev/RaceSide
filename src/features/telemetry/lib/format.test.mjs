@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   compactLapLabel,
+  displayedDelta,
   gearAnalysisRows,
   getTraceColors,
   lapAnalysisRows,
@@ -10,6 +11,13 @@ import {
   sectorGapRows,
   teamColor,
 } from "./format.ts";
+
+test("displayed gap is negative while the reference driver leads", () => {
+  assert.equal(displayedDelta(0.32), -0.32);
+  assert.equal(displayedDelta(-0.14), 0.14);
+  assert.equal(displayedDelta(0), 0);
+  assert.equal(displayedDelta(null), null);
+});
 
 test("race averages show their source lap count instead of a synthetic lap number", () => {
   const average = { kind: "race_average", number: 0, sampleCount: 43 };
@@ -109,7 +117,7 @@ test("sector gaps use official lap timing even when a saved telemetry estimate d
   ]);
 });
 
-test("sector gaps fall back to the stored telemetry estimate when official timing is missing", () => {
+test("missing official sector timing cannot display a stored telemetry estimate as a sector win", () => {
   const comparison = {
     config: { reference: 0 },
     traces: [
@@ -124,8 +132,8 @@ test("sector gaps fall back to the stored telemetry estimate when official timin
   };
   assert.deepEqual(sectorGapRows(comparison)[1], {
     index: 1,
-    delta: -0.25,
-    winner: 1,
+    delta: null,
+    winner: null,
   });
 });
 

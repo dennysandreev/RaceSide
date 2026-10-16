@@ -29,6 +29,16 @@ const baseArticle = {
   ingestedAt: "2026-07-19T12:00:00.000Z",
 };
 
+test("broad articles retain distinct fingerprints when entity names fill the storage limit", () => {
+  const entities = Array.from({ length: 12 }, (_, index) => ({ type: "driver", name: `A very long driver name ${index}` }));
+  const metadata = { event_type: "race_analysis", event_stage: "post_race", entities };
+  const first = parseNewsEditorialMetadata({ ...metadata, main_fact: "Отдельный разбор стратегии первого пилота." });
+  const second = parseNewsEditorialMetadata({ ...metadata, main_fact: "Отдельный разбор стратегии другого пилота." });
+  assert.equal(first.eventFingerprint.length, 240);
+  assert.notEqual(first.eventFingerprint, second.eventFingerprint);
+  assert.match(first.eventFingerprint, /_[a-f0-9]{12}$/);
+});
+
 test("classification keeps an opinion separate from an announcement with the same fingerprint", () => {
   assert.equal(isNewsDedupIdentityMatch({ ...baseArticle, articleType: "opinion" }, { ...baseArticle, articleType: "news" }), false);
 });
@@ -44,14 +54,14 @@ test("the same fingerprint cannot suppress a different stage or an independent a
   assert.equal(isNewsDedupIdentityMatch(baseArticle, { ...baseArticle, eventType: "technical_analysis" }), false);
 });
 
-test("empty dedup model falls back to the configured summary model", () => {
+test("retired environment models cannot override Luna for deduplication", () => {
   assert.equal(
     resolveNewsDedupModel({
       NEWS_DEDUP_AI_MODEL: "",
       AI_SUMMARY_MODEL: "google/gemini-2.5-flash-lite",
       OPENROUTER_MODEL: "openai/gpt-4.1-mini",
     }),
-    "google/gemini-2.5-flash-lite",
+    "openai/gpt-6-luna",
   );
 });
 
@@ -101,6 +111,10 @@ test("technical video draft feed items are rejected before ingestion", () => {
   );
 });
 
+test("promoted feed stories are rejected before paid editorial requests", () => {
+  assert.equal(isNewsFeedItemPublishable({ title: "Unique items from Schumacher and Senna's careers auctioned", link: "https://www.the-race.com/promoted/unique-f1-items-auctioned" }), false);
+});
+
 test("parseNewsEditorialMetadata prepares normalized entities", () => {
   assert.deepEqual(
     parseNewsEditorialMetadata({
@@ -126,6 +140,37 @@ test("parseNewsEditorialMetadata prepares normalized entities", () => {
       ],
     },
   );
+});
+
+test("human-readable entity keys are normalized without vetoing verified content", () => {
+  const metadata = parseNewsEditorialMetadata({
+    main_fact: "Пилоты могут высказываться откровенно.", event_type: "driver_comments", event_stage: "public_reaction",
+    entities: [
+      { type: "person", name: "Ландо Норрис", normalized_name: "Lando Norris" },
+      { type: "person", name: "Франко Колапинто", normalized_name: "Franco-Colapinto" },
+      { type: "person", name: "Нико Хюлькенберг", normalized_name: "Nico Hülkenberg" },
+      { type: "reader", name: "@GongTong", normalized_name: "@GongTong" },
+    ],
+  });
+  assert.ok(metadata);
+  assert.deepEqual(metadata.normalizedEntities.map(entity => entity.normalized_name), ["lando_norris", "franco_colapinto", "nico_hulkenberg", "gongtong"]);
+  assert.equal(parseNewsEditorialMetadata({ main_fact: "Новость", event_type: "news", event_stage: "announcement", entities: [{ name: "", normalized_name: "!!!" }] }), null);
+});
+
+test("Russian event labels and spaced English labels do not block a verified article", () => {
+  const payload = { main_fact: "Леклер возглавил пятничные тренировки.", event_type: "practice_day_analysis", event_fingerprint: "malaysia_friday_practice", entities: [{ type: "race", name: "Гран-при Малайзии", normalized_name: "malaysian_grand_prix" }] };
+  for (const [stage, key] of [
+    ["пятничные тренировки", "пятничные_тренировки"],
+    ["пятничные свободные тренировки", "пятничные_свободные_тренировки"],
+    ["Friday practice", "friday_practice"],
+  ]) {
+    const parsed = parseNewsEditorialMetadata({ ...payload, event_stage: stage });
+    assert.equal(parsed?.eventStage, key);
+    assert.equal(parsed?.eventFingerprint, payload.event_fingerprint);
+  }
+  assert.equal(parseNewsEditorialMetadata({ ...payload, event_type: "Анализ тренировок", event_stage: "Практика" }).eventType, "анализ_тренировок");
+  assert.equal(parseNewsEditorialMetadata({ ...payload, event_stage: "!!!" }), null);
+  assert.equal(parseNewsEditorialMetadata({ ...payload, event_stage: "practice", entities: [] }), null);
 });
 
 test("rankNewsDedupCandidates keeps the same fact and rejects a new event stage", () => {
@@ -171,6 +216,41 @@ test("rankNewsDedupCandidates keeps the same fact and rejects a new event stage"
   ], { windowHours: 24, maxCandidates: 10 });
 
   assert.deepEqual(candidates.map((candidate) => candidate.id), ["same-fact", "older-rumor"]);
+});
+
+test("preflight finds cross-source originals before Russian metadata exists", () => {
+  const article = {
+    id: "incoming",
+    original_title: "Alonso extends F1 career into 2027",
+    original_description: "Aston Martin retains Fernando Alonso for another season.",
+    ingested_at: "2026-10-02T12:00:00.000Z",
+  };
+  const candidates = rankNewsDedupCandidates(article, [{
+    id: "published",
+    original_title: "Aston Martin retains Alonso and Stroll for F1 2027",
+    original_description: "Fernando Alonso will stay for another season.",
+    event_type: "contract_signing",
+    ingested_at: "2026-10-01T12:00:00.000Z",
+    publication_status: "published",
+  }], { preflight: true, windowHours: 168 });
+  assert.deepEqual(candidates.map(candidate => candidate.id), ["published"]);
+});
+
+test("preflight retains archived driver matches but excludes unrelated old stories", () => {
+  const article = { ...baseArticle, ingestedAt: "2026-10-02T12:00:00.000Z" };
+  const older = {
+    id: "archived-contract",
+    title: baseArticle.title,
+    normalizedEntities: baseArticle.normalizedEntities,
+    ingestedAt: "2026-08-02T12:00:00.000Z",
+    publicationStatus: "published",
+  };
+  const unrelated = { ...older, id: "unrelated", normalizedEntities: [] };
+  const candidates = rankNewsDedupCandidates(article, [older, unrelated], {
+    preflight: true, windowHours: 168,
+  });
+  assert.deepEqual(candidates.map(candidate => candidate.id), ["archived-contract"]);
+  assert.deepEqual(rankNewsDedupCandidates(article, [older], { windowHours: 168 }), []);
 });
 
 test("parseNewsDedupDecision rejects a duplicate target outside the candidate set", () => {

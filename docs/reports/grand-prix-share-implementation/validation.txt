@@ -1,0 +1,50 @@
+RaceSide Grand Prix recap and report pace — 2026-10-05
+
+Implemented the approved 1080 x 1350 recap: compact podium, all-driver
+position chart, four aligned statistics, points-scoring top ten and exact
+after-round championship top three. Names and colours use existing assets.
+Team-of-the-weekend points include the sprint if present. Missing timing
+breaks traces and does not create synthetic positions.
+
+The report's race-pace chart shows minutes and seconds on the axis and
+minutes, seconds and milliseconds in its tooltip (98.22 -> 1:38.220).
+
+Validation:
+- 33 relevant tests passed, including two actual ImageResponse PNG renders,
+  all-22-driver geometry, missing timing, points and minute-boundary rounding.
+- pnpm typecheck passed.
+- Source lint passed: pnpm exec eslint . --ignore-pattern '.track-model-build/**'.
+  Unfiltered lint includes unrelated generated .track-model-build output.
+- Production build passed in an isolated copy using next build --webpack
+  with the existing dependencies and webpack cache disabled only in the copy.
+  The first attempt ran out of disk space after compilation and type checking;
+  temporary build output was removed and the second attempt completed.
+- Browser checked at desktop size and 375 x 812: pace labels fit, tooltip
+  shows 1:41.102 / 1:41.415 / 1:42.498 at lap 19, share preview loads at
+  1080 x 1350, image and action buttons fit the mobile popup.
+- Downloaded and visually reviewed malaysia-2026.png from the actual local
+  API route. All 22 drivers are in the two-row legend; retirement traces stop
+  at their last stored observations. Values: 1:38.220, +12, 19 of 22 / 3
+  retirements, Red Bull 35 points; championship 320 / 236 / 214 points.
+- git diff --check passed for the touched files.
+
+Native OS sharing and publication were not exercised.
+
+Compact footer and season label — 2026-10-06
+- Red footer reduced from 74 to 48 pixels; footer text reduced proportionally.
+- Season / round label reduced from 21 to 16 pixels.
+- Canvas remains 1080 x 1350. Actual downloaded PNG visually reviewed in
+  the share popup and at full size; footer height measured as 48 pixels.
+- Targeted lint, typecheck, 20 relevant tests and isolated production
+  Webpack build passed. No additional tests or dependencies were added.
+- Output: malaysia-2026-compact-footer.png.
+
+Section headings removed — 2026-10-06
+- Removed «Позиции по кругам» and «Очковая десятка» from the shared PNG.
+- Reassigned the freed heading space to the position chart (400 -> 464 px),
+  keeping the 1080 x 1350 canvas and the remaining content aligned.
+- Targeted lint, typecheck, 20 relevant tests and isolated production
+  Webpack build passed. No new tests or dependencies were added.
+- Downloaded the actual PNG from the local image route and visually reviewed
+  the whole card. Both headings are absent, all 22 drivers and rows fit.
+- Output: malaysia-2026-without-section-titles.png.

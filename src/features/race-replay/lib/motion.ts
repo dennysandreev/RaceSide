@@ -24,7 +24,10 @@ type BuildDriverMotionOptions = {
   lapTimings?: ReplayLapTiming[];
 };
 
-export function inferLapTimingsFromPositions(events: ReplayPositionEvent[]): ReplayLapTiming[] {
+export function inferLapTimingsFromPositions(
+  events: ReplayPositionEvent[],
+  raceStartOffsetMs?: number,
+): ReplayLapTiming[] {
   const firstEventByLap = new Map<string, ReplayPositionEvent>();
 
   for (const event of [...events].sort((a, b) => a.offsetMs - b.offsetMs)) {
@@ -49,24 +52,38 @@ export function inferLapTimingsFromPositions(events: ReplayPositionEvent[]): Rep
     byDriver.set(event.driverNumber, driverEvents);
   }
 
+  // The worker attaches the CURRENT lap (including its known archive duration)
+  // from its start, not after its completion. Subtracting that duration runs
+  // every marker a lap early and gives each driver a different clock origin.
+  const firstLapOffsets = [...firstEventByLap.values()]
+    .filter((event) => event.lapNumber === 1)
+    .map((event) => event.offsetMs);
+  const sharedStartMs = typeof raceStartOffsetMs === "number" && Number.isFinite(raceStartOffsetMs)
+    ? Math.max(0, raceStartOffsetMs)
+    : firstLapOffsets.length ? Math.max(0, Math.min(...firstLapOffsets)) : null;
+
   return [...byDriver.entries()].flatMap(([driverNumber, driverEvents]) => {
     const ordered = driverEvents.sort((a, b) => a.offsetMs - b.offsetMs);
-    const firstDurationMs = replayLapDurationMs(ordered[0]);
-    let cursorMs = Math.max(0, ordered[0].offsetMs - (firstDurationMs ?? 0));
+    const firstLapNumber = ordered[0].lapNumber!;
+    let cursorMs = firstLapNumber === 1 && sharedStartMs !== null
+      ? sharedStartMs
+      : Math.max(0, ordered[0].offsetMs);
 
     return ordered.map((event, index) => {
       const durationMs = replayLapDurationMs(event);
       const timing = {
         driverNumber,
         durationMs,
-        lapNumber: index + 1,
+        lapNumber: event.lapNumber!,
         startOffsetMs: Math.round(cursorMs),
       };
       const nextEvent = ordered[index + 1];
-      const fallbackDurationMs = nextEvent
-        ? Math.max(1, nextEvent.offsetMs - event.offsetMs)
-        : 0;
-      cursorMs += durationMs ?? fallbackDurationMs;
+      // A missing lap or duration breaks the cumulative clock. Resume at the
+      // next observed lap start; never relabel lap 3 as lap 2 or count grid time
+      // as part of an unknown first lap.
+      cursorMs = nextEvent && (durationMs === null || nextEvent.lapNumber !== event.lapNumber! + 1)
+        ? nextEvent.offsetMs
+        : cursorMs + (durationMs ?? 0);
 
       return timing;
     });
@@ -131,7 +148,7 @@ export function mergeLapTimingsWithInferred(
 }
 
 function replayLapDurationMs(event: ReplayPositionEvent) {
-  return typeof event.lastLapDuration === "number" && event.lastLapDuration > 0
+  return typeof event.lastLapDuration === "number" && Number.isFinite(event.lastLapDuration) && event.lastLapDuration > 0
     ? Math.round(event.lastLapDuration * 1_000)
     : null;
 }

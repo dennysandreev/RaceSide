@@ -2,12 +2,12 @@ import { ImageResponse } from "next/og";
 import { createElement } from "react";
 
 import { GrandPrixRecapShareImage } from "@/components/racemate/grand-prix-recap-share-image";
+import { getGrandPrixReportAnalytics } from "@/data/grand-prix-report-analytics";
 import {
   getRaceDetail,
   getRaceGrandPrixReport,
   getRaceSessions,
   getSessionResultsBySessionIds,
-  getTeamProfiles,
 } from "@/data/racemate-repository";
 import {
   buildGrandPrixRecapData,
@@ -40,34 +40,28 @@ export async function GET(
     return new Response("Invalid race", { status: 400 });
   }
 
-  const [race, report, sessions, teamProfiles] = await Promise.all([
+  const [race, report, sessions] = await Promise.all([
     getRaceDetail(season, round),
     getRaceGrandPrixReport(season, round),
     getRaceSessions(season, round),
-    getTeamProfiles(season),
   ]);
 
   if (!race || !report || !sessions.length) {
     return new Response("Recap is not ready", { status: 404 });
   }
 
-  const resultsBySession = await getSessionResultsBySessionIds(
-    sessions.map((session) => session.id),
-    season,
-  );
-  const data = buildGrandPrixRecapData({ race, report, resultsBySession, sessions, teamProfiles });
+  const [resultsBySession, analytics] = await Promise.all([
+    getSessionResultsBySessionIds(sessions.map((session) => session.id), season),
+    getGrandPrixReportAnalytics(report).catch(() => null),
+  ]);
+  const data = buildGrandPrixRecapData({ race, report, resultsBySession, sessions, analytics });
 
   if (!data) {
     return new Response("Recap is not ready", { status: 404 });
   }
 
-  const [fonts, carImageUrl, trackImageUrl, dhlLogoUrl, timerIconUrl, breakthroughIconUrl, ...avatarUrls] = await Promise.all([
+  const [fonts, ...avatarUrls] = await Promise.all([
     getPredictionShareFonts(),
-    embedPublicImage(data.bestTeam.carImagePath),
-    embedPublicImage(data.track.imagePath),
-    embedPublicImage("/brand/dhl-logo.svg"),
-    embedPublicImage("/brand/icons/timer.svg"),
-    embedPublicImage("/brand/icons/trending-up.svg"),
     ...data.podium.map((entry) => embedPublicImage(entry.avatarPath)),
   ]);
 
@@ -75,15 +69,10 @@ export async function GET(
     createElement(GrandPrixRecapShareImage, {
       data: {
         ...data,
-        bestTeam: { ...data.bestTeam, carImageUrl },
-        breakthroughIconUrl,
-        dhlLogoUrl,
         podium: data.podium.map((entry, index) => ({
           ...entry,
           avatarUrl: avatarUrls[index] ?? null,
         })),
-        track: { ...data.track, imageUrl: trackImageUrl },
-        timerIconUrl,
       },
     }),
     {

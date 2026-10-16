@@ -1,0 +1,560 @@
+[
+  {
+    "name": "VER 1700-2350",
+    "source": "Public OpenF1 normalized telemetry, Spa qualifying 2026 session 11330; fixed regression excerpts.",
+    "points": [
+      {
+        "distance": 1705.7338276218816,
+        "elapsed": 24.217,
+        "speed": 328,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1724.0700852044881,
+        "elapsed": 24.417,
+        "speed": 328,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1753.4080973366586,
+        "elapsed": 24.737,
+        "speed": 328,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1779.0005934382357,
+        "elapsed": 25.017,
+        "speed": 326,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1800.8363928643519,
+        "elapsed": 25.257,
+        "speed": 325,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1815.3712311920276,
+        "elapsed": 25.417,
+        "speed": 325,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1833.511827489454,
+        "elapsed": 25.617,
+        "speed": 324,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1851.596520562543,
+        "elapsed": 25.817,
+        "speed": 323,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1876.8759586078318,
+        "elapsed": 26.097,
+        "speed": 323,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1894.9047484565835,
+        "elapsed": 26.297,
+        "speed": 322,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1920.066789730764,
+        "elapsed": 26.577,
+        "speed": 321,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1948.7339631708878,
+        "elapsed": 26.897,
+        "speed": 320,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 1973.739475416924,
+        "elapsed": 27.177,
+        "speed": 319,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2059.159043171945,
+        "elapsed": 28.138,
+        "speed": 317,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2101.6231323784937,
+        "elapsed": 28.618,
+        "speed": 316,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2122.8216350471653,
+        "elapsed": 28.858,
+        "speed": 316,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2143.898408444843,
+        "elapsed": 29.097,
+        "speed": 315,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2164.996285309708,
+        "elapsed": 29.337,
+        "speed": 314,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2189.3756814431677,
+        "elapsed": 29.617,
+        "speed": 309,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2216.745900078668,
+        "elapsed": 29.937,
+        "speed": 303,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2243.624170340001,
+        "elapsed": 30.257,
+        "speed": 298,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2279.9053629348537,
+        "elapsed": 30.697,
+        "speed": 292,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2312.049716928752,
+        "elapsed": 31.097,
+        "speed": 283,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 2333.2202679852553,
+        "elapsed": 31.377,
+        "speed": 258,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 8,
+        "drs": null
+      }
+    ],
+    "sections": [
+      {
+        "category": "straight",
+        "from": 1287.663520518749,
+        "to": 2330.576721424031
+      },
+      {
+        "category": "medium",
+        "from": 2330.576721424031,
+        "to": 2451.676658
+      }
+    ],
+    "expected": [
+      [
+        1753.408097,
+        2312.049717,
+        328,
+        283
+      ]
+    ]
+  },
+  {
+    "name": "ANT 5690-6150",
+    "source": "Public OpenF1 normalized telemetry, Spa qualifying 2026 session 11330; fixed regression excerpts.",
+    "points": [
+      {
+        "distance": 5719.713874844005,
+        "elapsed": 83.949,
+        "speed": 336,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5734.72228061037,
+        "elapsed": 84.109,
+        "speed": 334,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5749.685885165492,
+        "elapsed": 84.269,
+        "speed": 334,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5783.202791326574,
+        "elapsed": 84.629,
+        "speed": 331,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5820.163790601951,
+        "elapsed": 85.029,
+        "speed": 329,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5849.553385177281,
+        "elapsed": 85.349,
+        "speed": 327,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5867.837879515781,
+        "elapsed": 85.549,
+        "speed": 326,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5979.639302172393,
+        "elapsed": 86.789,
+        "speed": 318,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 5997.419782884412,
+        "elapsed": 86.989,
+        "speed": 317,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 6032.756738252235,
+        "elapsed": 87.389,
+        "speed": 314,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 6060.844997644744,
+        "elapsed": 87.71,
+        "speed": 311,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 6081.744762689548,
+        "elapsed": 87.95,
+        "speed": 311,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 6102.610926825921,
+        "elapsed": 88.19,
+        "speed": 310,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      },
+      {
+        "distance": 6130.208472951535,
+        "elapsed": 88.51,
+        "speed": 306,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 8,
+        "drs": null
+      }
+    ],
+    "sections": [
+      {
+        "category": "straight",
+        "from": 5184.364536,
+        "to": 5863.42288
+      },
+      {
+        "category": "fast",
+        "from": 5863.42288,
+        "to": 5979.639302172393
+      },
+      {
+        "category": "straight",
+        "from": 5979.639302172393,
+        "to": 6142.441228000001
+      },
+      {
+        "category": "fast",
+        "from": 6142.441228000001,
+        "to": 6221.415679735544
+      }
+    ],
+    "expected": [
+      [
+        5719.713875,
+        6130.208473,
+        336,
+        306
+      ]
+    ]
+  },
+  {
+    "name": "VER 2750-3000",
+    "source": "Public OpenF1 normalized telemetry, Spa qualifying 2026 session 11330; fixed regression excerpts.",
+    "points": [
+      {
+        "distance": 2771.0494294621944,
+        "elapsed": 39.497,
+        "speed": 230,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 5,
+        "drs": null
+      },
+      {
+        "distance": 2791.8454289156384,
+        "elapsed": 39.817,
+        "speed": 235,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2815.643431515991,
+        "elapsed": 40.177,
+        "speed": 238,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2829.0043021325855,
+        "elapsed": 40.377,
+        "speed": 240,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2839.7824437848008,
+        "elapsed": 40.537,
+        "speed": 242,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2856.05028206693,
+        "elapsed": 40.777,
+        "speed": 243,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2874.9793933436326,
+        "elapsed": 41.058,
+        "speed": 239,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2896.2226185917743,
+        "elapsed": 41.378,
+        "speed": 236,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2911.9202439856645,
+        "elapsed": 41.618,
+        "speed": 232,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2924.8338888075614,
+        "elapsed": 41.818,
+        "speed": 230,
+        "throttle": 100,
+        "brake": 0,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2944.6012689332006,
+        "elapsed": 42.138,
+        "speed": 212,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2955.977575085824,
+        "elapsed": 42.338,
+        "speed": 195,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2970.443792205626,
+        "elapsed": 42.617,
+        "speed": 176,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 6,
+        "drs": null
+      },
+      {
+        "distance": 2983.866156368991,
+        "elapsed": 42.897,
+        "speed": 167,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 4,
+        "drs": null
+      },
+      {
+        "distance": 2996.4667431345997,
+        "elapsed": 43.177,
+        "speed": 155,
+        "throttle": 0,
+        "brake": 100,
+        "gear": 3,
+        "drs": null
+      }
+    ],
+    "sections": [
+      {
+        "category": "straight",
+        "from": 2722.192384,
+        "to": 2945.738308739895
+      },
+      {
+        "category": "slow",
+        "from": 2945.738308739895,
+        "to": 3126.094460375039
+      }
+    ],
+    "expected": []
+  }
+]

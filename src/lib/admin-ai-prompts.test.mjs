@@ -7,17 +7,27 @@ import {
   makeAdminAiPromptChecksum,
   validateAdminAiPromptCatalog,
   validateAdminAiPromptContent,
+  validateAdminAiRuntime,
 } from "./admin-ai-prompts.ts";
 
 test("AI prompt catalog covers every declared task and validates its templates", () => {
   const validation = validateAdminAiPromptCatalog();
 
   assert.equal(validation.ok, true);
-  assert.equal(adminAiPromptCatalog.length, 11);
+  assert.equal(adminAiPromptCatalog.length, 10);
+  assert.ok(adminAiPromptCatalog.every(item => item.modelFallback === "openai/gpt-6-luna"));
+  assert.ok(adminAiPromptCatalog.some(item => item.key === "news.compose"));
+  assert.ok(!adminAiPromptCatalog.some(item => item.key === "news.extract" || item.key === "news.article"));
   assert.deepEqual(
     [...new Set(adminAiPromptCatalog.map((definition) => definition.key))].length,
     adminAiPromptCatalog.length,
   );
+});
+
+test("admin cannot publish a retired model or exceed the task answer limit", () => {
+  assert.equal(validateAdminAiRuntime("google/gemini-2.5-flash", 1000).ok, false);
+  assert.equal(validateAdminAiRuntime("openai/gpt-6-luna", 1000, [], 900).ok, false);
+  assert.equal(validateAdminAiRuntime("openai/gpt-6-luna", 900, [], 900).ok, true);
 });
 
 test("AI prompt validation keeps the exact runtime variables", () => {

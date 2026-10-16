@@ -1,122 +1,207 @@
 import { createHash } from "node:crypto";
+import { parseNewsEditorialMetadata } from "./news-deduplication.mjs";
 
 export const NEWS_EDITORIAL_VERSION = 1;
+// Keep the existing database trigger: only the exact verified text can publish.
+export const NEWS_PIPELINE_VERSION = 3;
 export const NEWS_ARTICLE_TYPES = ["breaking_news", "news", "report", "interview", "opinion", "column", "analysis", "rumour", "legal", "historical", "technical_analysis"];
-const FACT_KINDS = new Set(["fact", "quote", "opinion", "allegation", "uncertain"]);
 const SCORE_KEYS = ["fact_grounding", "source_fidelity", "attribution", "headline_fidelity", "information_density", "language_quality"];
 const text = value => typeof value === "string" ? value.trim() : "";
-const comparable = value => text(value).normalize("NFKC").replace(/\s+/g, " ").toLowerCase();
 const strings = value => Array.isArray(value) && value.every(item => typeof item === "string");
-const evidenceFragments = value => strings(value) ? value : typeof value === "string" ? value.split(/\n\s*\n/) : [];
-const evidenceMatches = (value, original) => {
-  const fragments = evidenceFragments(value);
-  return fragments.length > 0 && fragments.every(fragment => {
-    // A model may wrap an excerpt in quotes even when the original quote
-    // continues into another paragraph. Only outer punctuation is optional.
-    const excerpt = comparable(fragment).replace(/^["“”'‘’]+|["“”'‘’]+$/g, "");
-    return excerpt.length >= 8 && original.includes(excerpt);
-  });
-};
 
 export function sourceSnapshotHash(source) {
   return createHash("sha256").update(JSON.stringify(source)).digest("hex");
 }
 
-export function parseSourceFacts(payload, source) {
-  if (!payload || !NEWS_ARTICLE_TYPES.includes(payload.article_type) || typeof payload.relevant !== "boolean" ||
-      !["normal", "high"].includes(payload.risk) || !strings(payload.source_authors) || !strings(payload.caveats) ||
-      (payload.source_author_aliases != null && !strings(payload.source_author_aliases)) ||
-      !Array.isArray(payload.facts) || payload.facts.length > 40 || !Array.isArray(payload.entities) ||
-      !text(payload.main_fact) || !text(payload.event_type) || (payload.event_stage != null && typeof payload.event_stage !== "string")) return null;
-  const original = comparable([source.title, source.description, source.text].filter(Boolean).join("\n"));
-  const ids = new Set();
-  for (const fact of payload.facts) {
-    if (!fact || !/^f\d+$/.test(fact.id) || ids.has(fact.id) || !FACT_KINDS.has(fact.kind) ||
-        !text(fact.text) || !evidenceMatches(fact.evidence, original) ||
-        typeof fact.essential !== "boolean" ||
-        (fact.kind !== "fact" && !text(fact.attribution))) return null;
-    ids.add(fact.id);
-    if (source.sources?.length) {
-      const origin = source.sources.find(item => item.url === fact.source_url);
-      if (!origin || !evidenceMatches(fact.evidence, comparable(`${origin.title}\n${origin.description ?? ""}\n${origin.text}`))) return null;
-    }
-  }
-  if (payload.relevant && !payload.facts.length) return null;
-  if (payload.entities.some(entity => !entity || !text(entity.name) || !text(entity.normalized_name) || !["primary", "secondary", "mention"].includes(entity.role))) return null;
-  return { ...payload, event_stage: text(payload.event_stage) || "unknown" };
+// Recover only untouched drafts held by the retired algorithm's system checks.
+// A new algorithm version makes this a one-time retry, not a paid retry loop.
+export function canRetryNewsSystemHold(article, review) {
+  if (article.publication_status !== "draft" || article.published_manually || article.duplicate_of ||
+      article.editorial_meta?.algorithm_version !== 2 || !review ||
+      !Array.isArray(review.issues) || !review.issues.length) return false;
+  const systemIssues = new Set(["invalid_review_edits", "news_token_budget_exceeded", "invalid_duplicate_decision",
+    "invalid_extraction", "invalid_event_metadata", "source_meta_narration", "context_claim_mismatch",
+    "race_context_mismatch", "team_context_mismatch", "unknown_source_fact", "essential_fact_missing"]);
+  if (!review.issues.every(issue => systemIssues.has(issue) || (typeof issue === "string" && issue.startsWith("invented_number:")))) return false;
+  const attempt = Array.isArray(review.attempts) ? review.attempts.at(-1) : null;
+  if (attempt?.review && attempt.review.decision !== "PASS") return false;
+  const checked = Date.parse(article.ai_processed_at);
+  const updated = Date.parse(article.updated_at);
+  if (!Number.isFinite(checked) || !Number.isFinite(updated) || updated > checked + 5_000) return false;
+  return [["ai_title_ru", "title_ru"], ["ai_summary_ru", "summary_ru"], ["ai_summary_long_ru", "details_ru"]]
+    .every(([field, draftField]) => (article[field] ?? "") === (attempt?.draft?.[draftField] ?? ""));
 }
 
-export function checkNewsDraft(draft, extraction, source, context) {
+export function newsDraftParagraphs(draft) {
+  return text(draft?.details_ru).split(/\n\s*\n/).map(text).filter(Boolean);
+}
+
+function normalizeConditionalSourceFraming(draft) {
+  if (!draft) return draft;
+  const normalize = value => typeof value === "string" ? value.replace(
+    /автор(?:ы)? (?:оценки|разбора|статьи|материала) (?:считал[аи]?|считает|считают|полагал[аи]?|полагает|полагают),? что\s+/gi,
+    (framing, offset, full) => {
+      const remaining = full.slice(offset + framing.length);
+      // Only remove the editorial introducer when the principal claim itself
+      // starts with an explicit conditional. Never turn a belief into a fact.
+      return /^(?:[A-ZА-ЯЁ][\p{L}\d-]*(?:\s+[A-ZА-ЯЁ][\p{L}\d-]*){0,2})\s+(?:не\s+)?(?:мог(?:ла|ло|ли)?|может|могут)\s/u.test(remaining) ? "" : framing;
+    }) : value;
+  return { ...draft, title_ru: normalize(draft.title_ru), summary_ru: normalize(draft.summary_ru), details_ru: normalize(draft.details_ru) };
+}
+
+// Structural checks only. Quantities, actors and historical affiliations need
+// semantic comparison with the original, not scalar sets or generated fact IDs.
+export function checkNewsDraft(draft, metadata = {}, source = {}) {
+  if (!draft || !["title_ru", "summary_ru", "details_ru"].every(key => text(draft[key]))) return ["incomplete_draft"];
+  const body = `${draft.title_ru}\n${draft.summary_ru}\n${draft.details_ru}`;
   const issues = [];
-  if (![draft?.title_ru, draft?.summary_ru, draft?.details_ru].every(value => text(value))) return ["incomplete_draft"];
-  const body = [draft.title_ru, draft.summary_ru, draft.details_ru].join("\n");
   if (!/[а-яё]/i.test(body)) issues.push("non_russian_draft");
-  const authorAliases = [...extraction.source_authors, ...(extraction.source_author_aliases ?? [])]
-    .flatMap(name => [name, name.trim().split(/\s+/).at(-1)]).filter(name => name.length >= 4);
-  if (authorAliases.some(name => new RegExp(`(?<![\\p{L}])${escapeRegExp(name)}${/[а-яё]/i.test(name) ? "(?:а|у|ом|е|ой|ей|ы|и|ю)?" : ""}(?![\\p{L}])`, "iu").test(body))) issues.push("source_meta_narration");
-  if (/RaceSide/i.test(body) && !/RaceSide/i.test(`${source.title} ${source.text}`)) issues.push("raceside_opinion");
-  const allowedNumbers = new Set(numbers([source.title, source.description, source.text, ...context.facts.map(fact => String(fact.value))].join("\n")));
-  for (const number of numbers(body)) if (!allowedNumbers.has(number)) issues.push(`invented_number:${number}`);
-  if (!strings(draft.used_fact_ids) || draft.used_fact_ids.some(id => !extraction.facts.some(fact => fact.id === id))) issues.push("unknown_source_fact");
-  if (extraction.facts.some(fact => fact.essential && !draft.used_fact_ids?.includes(fact.id))) issues.push("essential_fact_missing");
-  if (!Array.isArray(draft.context_claims) || draft.context_claims.some(claim =>
-    !claim || !context.facts.some(fact => fact.id === claim.id && comparable(String(fact.value)) === comparable(String(claim.value))))) issues.push("context_claim_mismatch");
-  const sourceNames = [...new Set([source.name, ...(source.sources ?? []).map(item => item.name)].filter(Boolean))];
-  const sourceVoice = sourceNames.some(name => new RegExp(`(?:по мнению|как (?:пишет|отмечает|считает))\\s+${escapeRegExp(name)}|${escapeRegExp(name)}\\s+(?:считает|предлагает|анализирует|рассуждает)`, "iu").test(body));
-  if (sourceVoice || /по мнению\s+(?:автора|журналиста|издания|портала|редакции)|в (?:своей колонке|материале[^.!?\n]{0,60}(?:говорится|отмечается|рассматривается))|(?:автор[а-яё]*|журналист[а-яё]*|обозревател[а-яё]*|редакци[а-яё]*|издани[а-яё]*|портал[а-яё]*)[^.!?\n]{0,60}\s(?:счита[а-яё]*|предлага[а-яё]*|анализиру[а-яё]*|отмеча[а-яё]*|полага[а-яё]*|рассужда[а-яё]*)/i.test(body)) issues.push("source_meta_narration");
-  if (/по одному из мнений|другое мнение (?:предполагает|состоит|заключается)|по мнению одного из авторов/i.test(body)) issues.push("source_meta_narration");
-  if (/\b(?:some|one|a single) (?:fans?|readers?|viewers?)\b/i.test(`${source.title} ${source.description}`) &&
-      /фанат|болельщик|зрител/i.test(draft.title_ru) &&
-      !/част[ьи]|некотор|один|одного|одним|может|могут|риск|(?:болельщик|фанат|зритель)(?![а-яё])/i.test(draft.title_ru)) issues.push("headline_scope_changed");
-  if (extraction.article_type === "rumour" && !/(?:по данным|сообщает|может|предполож|слух|не подтвержд)/i.test(`${draft.title_ru}\n${draft.summary_ru}`)) issues.push("rumour_attribution_missing");
-  // Deliberately narrow: adjacency alone is never proof of a team mismatch.
-  // Historical, future and negated sentences go to the semantic verifier.
-  for (const sentence of body.split(/[.!?\n]+/)) {
-    if (/(?:выступал|ранее|раньше|бывш|перейд[её]т|будет|не выступает|не является|до \d{4}|в \d{4} году)/i.test(sentence)) continue;
-    for (const fact of context.facts.filter(fact => fact.kind === "driver_team" && fact.scope === "current")) {
-      for (const alias of fact.aliases ?? [fact.subject]) {
-        const expression = new RegExp(`${escapeRegExp(alias)}[^.!?\\n]{0,35}?(?:выступает за|является пилотом|drives for)\\s+([A-Za-z][A-Za-z -]{1,35})`, "i");
-        const claimed = sentence.match(expression)?.[1]?.trim();
-        if (claimed && !comparable(claimed).startsWith(comparable(String(fact.value)))) issues.push("driver_team_conflict");
-      }
-    }
+  if (/https?:\/\/|\[[^\]]+\]\(|\*\*|^#{1,6}\s/m.test(body)) issues.push("reader_markup");
+  if (/автор[а-яё]* (?:стать|материал|источник|портал|оценк|разбор)|(?:автор|издание|редакция|журналист|подкаст|портал)[^.!?\n]{0,35}(?:The Race|RaceFans|Autosport)|(?:редакция|журналист|читатель|комментатор)[а-яё]*[^.!?\n]{0,45}(?:счита|предлага|отмеча|полага|пишет)|по (?:оценке|мнению) (?:автор|материал|источник|издани|читател|комментатор)[а-яё]*|(?:доступн|исходн|предоставленн)[а-яё]* (?:фрагмент|отрывок|текст)|(?:в|из) (?:статье|материале|источнике|публикации|разборе)\s+(?:The Race|RaceFans|Autosport|говорится|указано|отмечается|сказано|е[её] |его )/i.test(body)) issues.push("source_meta_narration");
+  for (const author of [...(source.authors ?? []), ...(metadata.source_authors ?? []), ...(metadata.source_author_aliases ?? [])]) {
+    if (typeof author !== "string" || author.length < 4) continue;
+    const surname = author.split(/\s+/).at(-1);
+    const stem = /[а-яё]/i.test(surname) ? surname.replace(/[ая]$/i, "") : surname;
+    const escaped = stem.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const ending = /[а-яё]/i.test(stem) && stem.length >= 5 ? "(?:а|у|ом|е|ой|ых|ым|ами)?" : "";
+    if (new RegExp(`(?<![\\p{L}])${escaped}${ending}(?![\\p{L}])`, "iu").test(body)) issues.push("source_meta_narration");
   }
-  const lead = comparable(draft.summary_ru).replace(/[.!?]$/, "");
-  if (comparable(draft.details_ru).startsWith(lead)) issues.push("repeated_lead");
-  const words = value => new Set(comparable(value).split(/[.!?;]/)[0].match(/[\p{L}\d]+/gu)?.filter(word => word.length > 2).map(word => word.slice(0, 6)) ?? []);
-  const openingWords = words(draft.details_ru);
-  for (const sentence of draft.summary_ru.split(/[.!?]/)) {
-    const leadWords = words(sentence);
-    const shared = [...leadWords].filter(word => openingWords.has(word)).length;
-    if ((leadWords.size >= 8 && shared >= 7 && shared / leadWords.size >= 0.75) ||
-        (openingWords.size >= 8 && shared / openingWords.size >= 0.85)) issues.push("repeated_lead");
-  }
-  if (/сезон[ -]открывающ|правил[а-яё]* инцидентов|часть оценки сводится|для повышения справедливости|улучшить справедливость|закусочн[а-яё]* верси|делает[^.!?]{0,45}формат более сильным/i.test(body)) issues.push("unnatural_language");
+  if (/RaceSide[^.!?\n]{0,30}(?:счита|предлага|полага)|(?:мы считаем|на наш взгляд)/i.test(body) && !/RaceSide/i.test(source.text ?? "")) issues.push("raceside_opinion");
   return [...new Set(issues)];
 }
 
-function numbers(value) {
-  const numberWords = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
-  const normalized = String(value)
-    // The disease name is not a quantitative claim (sources often say Covid).
-    .replace(/\bCOVID[-\s]?19\b/gi, "COVID")
-    .replace(/\b(1[0-2]|0?[1-9])(?:[.:]([0-5]\d))?\s*([ap])m\b/gi, (match, hour, minute, period) =>
-      `${match} ${Number(hour) % 12 + (period.toLowerCase() === "p" ? 12 : 0)}:${minute ?? "00"}`)
-    .replace(/(\d)(?:million|billion|thousand|km|mph|bhp|hp|ms|bn|m|k|s)\b/gi, "$1 ")
-    .replace(/\b\d{1,3}(?:[ \u00a0\u202f]\d{3})+\b/g, match => match.replace(/\s/g, ""))
-    .replace(new RegExp(`\\b(${numberWords.join("|")})\\b`, "gi"), word => String(numberWords.indexOf(word.toLowerCase())));
-  return [...normalized.matchAll(/(?<![\p{L}\d])\d+(?:[.,]\d+)?(?![\p{L}\d])/gu)].map(match => String(Number(match[0].replace(",", "."))));
+// Shared with the worker and diagnostics; tags and audit metadata do not decide
+// whether a reader can use the article.
+export function isUsableRussianNewsPayload({ details, summary, title }) {
+  return [[title, 4, 0.25], [summary, 32, 0.45], [details, 64, 0.45]].every(([value, minimum, ratio]) => {
+    const prose = text(value);
+    const cyrillic = (prose.match(/[А-Яа-яЁё]/g) ?? []).length;
+    const latin = (prose.match(/[A-Za-z]/g) ?? []).length;
+    return cyrillic >= minimum && cyrillic >= latin * ratio;
+  });
 }
 
-function escapeRegExp(value) {
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export function verificationPasses(review, { allowEdits = false } = {}) {
+  if (review?.decision !== "PASS" || review.checked_claims !== true) return false;
+  if (review.policy_version === 3) {
+    const corrections = review.corrections;
+    return Array.isArray(review.blocking_issues) && review.blocking_issues.length === 0 &&
+      corrections && [corrections.title_ru, corrections.summary_ru].every(value => value === null || typeof value === "string") &&
+      Array.isArray(corrections.paragraphs) && (allowEdits ||
+        (corrections.title_ru === null && corrections.summary_ru === null && corrections.paragraphs.length === 0));
+  }
+  // Existing saved reviews and daily digests remain readable during rollout.
+  const legacy = review.policy_version == null && review.blocking_issues == null && review.suggestions == null;
+  const current = review.policy_version === 2 && Array.isArray(review.blocking_issues) && !review.blocking_issues.length && strings(review.suggestions);
+  return Array.isArray(review.issues) && !review.issues.length && (legacy || current) &&
+    (review.edits == null || (Array.isArray(review.edits) && (allowEdits || !review.edits.length))) &&
+    SCORE_KEYS.every(key => typeof review.scores?.[key] === "number" && review.scores[key] >= (current ? 0 : 0.9) && review.scores[key] <= 1);
 }
 
-export function verificationPasses(review) {
-  const legacy = review?.policy_version == null && review?.blocking_issues == null && review?.suggestions == null;
-  const current = review?.policy_version === 2 && Array.isArray(review.blocking_issues) && !review.blocking_issues.length && strings(review.suggestions);
-  return review?.decision === "PASS" && review.checked_claims === true && Array.isArray(review.issues) && !review.issues.length &&
-    (legacy || current) && SCORE_KEYS.every(key => typeof review.scores?.[key] === "number" && review.scores[key] >= (current ? 0 : 0.9) && review.scores[key] <= 1);
+export function applyNewsReviewCorrections(draft, review) {
+  const corrections = review?.corrections;
+  if (!corrections || ![corrections.title_ru, corrections.summary_ru].every(value => value === null || typeof value === "string") ||
+      !Array.isArray(corrections.paragraphs) || corrections.paragraphs.length > 16) return null;
+  const paragraphs = newsDraftParagraphs(draft);
+  const seen = new Set();
+  for (const correction of corrections.paragraphs) {
+    if (!correction || !Number.isInteger(correction.index) || correction.index < 0 || correction.index >= paragraphs.length ||
+        seen.has(correction.index) || typeof correction.text !== "string") return null;
+    seen.add(correction.index);
+    paragraphs[correction.index] = text(correction.text);
+  }
+  const final = { ...draft, title_ru: corrections.title_ru ?? draft.title_ru,
+    summary_ru: corrections.summary_ru ?? draft.summary_ru, details_ru: paragraphs.filter(Boolean).join("\n\n") };
+  const body = `${final.summary_ru}\n${final.details_ru}`;
+  final.highlight_phrases_ru = (draft.highlight_phrases_ru ?? []).filter(phrase => typeof phrase === "string" && body.includes(phrase));
+  return final;
+}
+
+function normalizeNewsMetadata(payload, draft, source, context) {
+  const value = payload && typeof payload === "object" ? payload : {};
+  const entities = Array.isArray(value.entities) ? value.entities.filter(entity => entity && text(entity.name)) : [];
+  const mainFact = draft.title_ru;
+  // A missing routing tag is not a missing source fact. The title provides a
+  // stable topic fallback; semantic duplicates are still compared before writing.
+  const candidate = { ...value, main_fact: mainFact, event_type: text(value.event_type) || "news",
+    event_stage: text(value.event_stage) || "unknown", event_date: value.event_date ?? null,
+    entities: entities.length ? entities : [{ type: "other", name: mainFact, role: "primary" }] };
+  const parsed = parseNewsEditorialMetadata(candidate) ?? parseNewsEditorialMetadata({
+    main_fact: draft.title_ru, event_type: "news", event_stage: "unknown",
+    entities: [{ type: "other", name: draft.title_ru }],
+  });
+  draft.race_round = (context.races ?? []).some(race => race.round === draft.race_round) ? draft.race_round : null;
+  draft.race_confidence = draft.race_round === null ? 0 : 0.95;
+  draft.context_claims = [];
+  return { article_type: NEWS_ARTICLE_TYPES.includes(value.article_type) ? value.article_type : "news",
+    main_fact: parsed.mainFact, event_type: parsed.eventType, event_stage: parsed.eventStage,
+    event_date: parsed.eventDate, event_fingerprint: parsed.eventFingerprint,
+    entities: parsed.normalizedEntities.map(entity => ({ ...entity,
+      role: candidate.entities.find(item => item.name === entity.name)?.role ?? "primary" })),
+    source_authors: [...new Set([...(source.authors ?? []), ...(strings(value.source_authors) ? value.source_authors : [])])].filter(author => typeof author === "string"),
+    source_author_aliases: strings(value.source_author_aliases) ? value.source_author_aliases : [] };
+}
+
+function compactRequestContext(context) {
+  return { ...context, teams: undefined, facts: (context.facts ?? []).map(fact => {
+    const value = { ...fact }; delete value.id; delete value.aliases; delete value.reference;
+    return value;
+  }) };
+}
+
+/** One writing/dedup request, one independent verification, no paid repair loop. */
+export async function runNewsEditorialPipeline({ source, context, request, candidates = [], confidenceThreshold = 0.9 }) {
+  const result = { version: NEWS_EDITORIAL_VERSION, algorithm_version: NEWS_PIPELINE_VERSION,
+    source, source_hash: sourceSnapshotHash(source), context, extraction: null, attempts: [], decision: "MANUAL_REVIEW", issues: [] };
+  const requestSource = { ...source }; delete requestSource.article_id; delete requestSource.retrieved_at;
+  let composed;
+  try { composed = await request("news.compose", { source: requestSource, context: compactRequestContext(context), candidates }); }
+  catch (error) {
+    if (!["news_token_budget_exceeded", "news_invalid_response"].includes(error?.code)) throw error;
+    return { ...result, issues: [error.code] };
+  }
+  if (composed?.decision === "DUPLICATE") {
+    const candidate = candidates.find(item => item.id === composed.duplicate_of);
+    const confidence = composed.duplicate_confidence;
+    if (!candidate || typeof confidence !== "number" || confidence < Math.max(0.9, confidenceThreshold) || confidence > 1)
+      return { ...result, issues: ["invalid_duplicate_decision"] };
+    return { ...result, decision: "DUPLICATE", duplicate: { duplicateOf: candidate.id, confidence, relation: "duplicate", reason: text(composed.reason).slice(0, 1000) } };
+  }
+  if (composed?.decision === "REJECT") return { ...result, decision: "REJECT", issues: [text(composed.reason) || "irrelevant_source"] };
+  const draft = removeExactLeadRepeat(normalizeConditionalSourceFraming(normalizeRussianLetters(composed?.decision === "ARTICLE" ? composed.draft : null)));
+  const usable = value => value && isUsableRussianNewsPayload({ title: value.title_ru, summary: value.summary_ru, details: value.details_ru });
+  if (!usable(draft)) return { ...result, draft, issues: ["incomplete_draft"] };
+  const metadata = normalizeNewsMetadata(composed.extraction, draft, source, context);
+  result.extraction = metadata;
+  const checks = checkNewsDraft(draft, metadata ?? {}, source);
+  let review;
+  try {
+    review = await request("news.verify", { source: requestSource, context: compactRequestContext(context),
+      draft: { title_ru: draft.title_ru, summary_ru: draft.summary_ru, paragraphs: newsDraftParagraphs(draft) },
+      hard_issues: checks, allow_edits: true });
+  } catch (error) {
+    if (!["news_token_budget_exceeded", "news_invalid_response"].includes(error?.code)) throw error;
+    result.attempts.push({ draft, review: null, hard_issues: [error.code] });
+    return { ...result, draft, issues: [error.code] };
+  }
+  const final = review?.decision === "PASS" && review.policy_version === 3
+    ? normalizeConditionalSourceFraming(normalizeRussianLetters(applyNewsReviewCorrections(draft, review))) : draft;
+  const issues = final ? checkNewsDraft(final, metadata ?? {}, source) : ["invalid_review_edits"];
+  if (final && !usable(final)) issues.push("incomplete_draft");
+  if (Array.isArray(review?.blocking_issues)) issues.push(...review.blocking_issues.map(issue => text(issue?.reason ?? issue?.explanation_ru)).filter(Boolean));
+  if (Array.isArray(review?.issues)) issues.push(...review.issues.filter(issue => typeof issue === "string"));
+  result.draft = final ?? draft; result.review = review;
+  if (final && metadata && text(final.title_ru)) {
+    // Candidate matching and digests must not inherit an unverified generated
+    // assertion after the reviewer corrected the headline.
+    metadata.main_fact = final.title_ru;
+    metadata.event_fingerprint = parseNewsEditorialMetadata({ ...metadata, event_fingerprint: null }).eventFingerprint;
+  }
+  result.attempts.push({ draft: result.draft, original_draft: final && JSON.stringify(final) !== JSON.stringify(draft) ? draft : undefined,
+    review, hard_issues: [...new Set(issues)] });
+  if (!issues.length && metadata && review?.policy_version === 3 && verificationPasses(review, { allowEdits: true }))
+    return { ...result, decision: "PASS", issues: [] };
+  return { ...result, issues: [...new Set(issues.length ? issues : ["invalid_verification"])] };
 }
 
 function removeExactLeadRepeat(draft) {
@@ -129,46 +214,46 @@ function removeExactLeadRepeat(draft) {
   return remainder ? { ...draft, details_ru: remainder } : draft;
 }
 
-/** Separate requests/contexts. No public write happens before the final decision. */
-export async function runNewsEditorialPipeline({ source, context, request, extraction: savedExtraction }) {
-  let extractionResponse = savedExtraction ?? await request("news.extract", { source });
-  let extraction = parseSourceFacts(extractionResponse, source);
-  if (!extraction) {
-    extractionResponse = await request("news.extract", { source, feedback: "Предыдущий ответ не прошёл проверку структуры или evidence. main_fact и event_type обязательны и должны быть строками, event_stage может быть unknown. Каждый элемент массива evidence — короткий точный непрерывный фрагмент оригинала: не склеивай абзацы внутри одного элемента, не сокращай цитату многоточием. Для каждого мнения укажи attribution. Пересобери JSON по схеме." });
-    extraction = parseSourceFacts(extractionResponse, source);
-  }
-  const result = { version: NEWS_EDITORIAL_VERSION, source, source_hash: sourceSnapshotHash(source), context, extraction, extraction_response: extractionResponse, attempts: [], decision: "MANUAL_REVIEW", issues: [] };
-  if (!extraction) return { ...result, issues: ["invalid_extraction"] };
-  if (!extraction.relevant) return { ...result, decision: "REJECT", issues: ["irrelevant_source"] };
-  let feedback = [];
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    // The writer receives the evidence-backed ideas, not the original column's
-    // narrative voice. The independent verifier still reads the complete source.
-    const draft = removeExactLeadRepeat(await request("news.article", { source: { published_at: source.published_at, coverage: source.coverage }, extraction, context, previous_draft: result.draft ?? null, feedback }));
-    const checks = checkNewsDraft(draft, extraction, source, context);
-    const suggestions = checks.filter(issue => issue === "repeated_lead");
-    const hardIssues = checks.filter(issue => issue !== "repeated_lead");
-    const review = await request("news.verify", { source, extraction, context, draft, hard_issues: hardIssues, editorial_suggestions: suggestions });
-    result.attempts.push({ draft, review, hard_issues: hardIssues, editorial_suggestions: suggestions });
-    result.draft = draft;
-    result.review = review;
-    const corrections = {
-      source_meta_narration: `Удали из заголовка, лида и текста имена журналистов и пересказ их мнений: ${[...extraction.source_authors, ...(extraction.source_author_aliases ?? [])].join(", ")}. Передай саму идею условно, не приписывая её FIA.`,
-      headline_scope_changed: "Источник описывает одного или часть болельщиков. Не объявляй общий отток аудитории: сохрани ограничение масштаба в заголовке или изложи риск условно.",
-      unnatural_language: "Замени кальки и туманные обороты естественным русским языком. Например: «спринт на первом этапе сезона», «действия при инцидентах».",
-      context_claim_mismatch: "В context_claims допустимы только id/value из context.facts. Факты f1/f2 указываются в used_fact_ids. Неиспользованный контекст не перечисляй.",
-      essential_fact_missing: "Сохрани все существенные факты и перечисли их id в used_fact_ids.",
-      raceside_opinion: "Не упоминай RaceSide и не приписывай нам журналистов или собственные мнения.",
-    };
-    feedback = [...new Set([...hardIssues.map(issue => corrections[issue] ?? issue), ...(strings(review?.issues) ? review.issues : ["invalid_verification"]),
-      ...(Array.isArray(review?.blocking_issues) ? review.blocking_issues.map(issue => text(issue?.explanation_ru)).filter(Boolean) : [])])];
-    if (!hardIssues.length && verificationPasses(review)) {
-      const sensitive = extraction.risk === "high" || extraction.article_type === "legal" || extraction.facts.some(fact => fact.kind === "allegation");
-      return { ...result, decision: sensitive ? "MANUAL_REVIEW" : "PASS", issues: sensitive ? ["sensitive_material"] : [] };
-    }
-    if (["REJECT", "MANUAL_REVIEW"].includes(review?.decision)) break;
-  }
-  return { ...result, issues: feedback.length ? feedback : ["quality_threshold_not_met"] };
+function normalizeRussianLetters(draft) {
+  if (!draft) return draft;
+  const lookalikes = { a: "а", c: "с", e: "е", o: "о", p: "р", x: "х", y: "у", A: "А", B: "В", C: "С", E: "Е", H: "Н", K: "К", M: "М", O: "О", P: "Р", T: "Т", X: "Х", Y: "У" };
+  const normalize = value => typeof value === "string" ? value.replace(/(?:\\n\s*){2,}/g, "\n\n").replace(/[\p{L}]+/gu, word => {
+    const latin = word.match(/[A-Za-z]/g);
+    // Correct isolated visually identical letters inside Russian words. Keep
+    // Latin names, model codes and mixed tokens with other letters unchanged.
+    return /[а-яё]/i.test(word) && latin?.every(letter => lookalikes[letter])
+      ? word.replace(/[A-Za-z]/g, letter => lookalikes[letter]) : word;
+  }) : value;
+  return { ...draft, title_ru: normalize(draft.title_ru), summary_ru: normalize(draft.summary_ru),
+    details_ru: normalize(draft.details_ru), highlight_phrases_ru: draft.highlight_phrases_ru?.map(normalize) };
+}
+
+function numbers(value) {
+  const numberWords = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+  const wordPattern = numberWords.join("|");
+  const english = !/[а-яё]/i.test(String(value));
+  const normalized = String(value)
+    .replace(/(?:Формул[а-яё]*|Formula)\s*[- ]?[123]\b/giu, "формульной серии")
+    // The disease name is not a quantitative claim (sources often say Covid).
+    .replace(/\bCOVID[-\s]?19\b/gi, "COVID")
+    // English thousands and Russian decimal commas have different meanings.
+    .replace(/\b\d{1,3}(?:,\d{3})+\b/g, match => english ? match.replaceAll(",", "") : match)
+    .replace(/\b(\d+)(?:st|nd|rd|th)\b/gi, "$1")
+    .replace(new RegExp(`\\b(${wordPattern}) and a half(?:[- ](tenths?))?\\b`, "gi"), (_, word, tenths) =>
+      String((numberWords.indexOf(word.toLowerCase()) + 0.5) / (tenths ? 10 : 1)))
+    .replace(new RegExp(`\\b(${wordPattern})[- ]tenths?\\b`, "gi"), (_, word) => String(numberWords.indexOf(word.toLowerCase()) / 10))
+    .replace(/\bhalf (?:a |an |one )?(?:second|tenth)\b/gi, match => match.toLowerCase().includes("tenth") ? "0.05" : "0.5")
+    // Expand compact lap-time notation, including the abbreviated range 44.7-8.
+    .replace(/\b(\d+)m(\d{1,2})\.(\d+)[-–](\d+)s\b/g, (_, minute, second, start, end) =>
+      `${minute}:${second}.${start} ${minute}:${second}.${start.slice(0, -end.length)}${end}`)
+    .replace(/\b(\d+)m\s*(\d{1,2})(?:[.,](\d+))?\s*(?:s|seconds?)\b/gi, (_, minute, second, fraction) =>
+      `${minute}:${second}${fraction == null ? "" : `.${fraction}`}`)
+    .replace(/\b(1[0-2]|0?[1-9])(?:[.:]([0-5]\d))?\s*([ap])m\b/gi, (match, hour, minute, period) =>
+      `${match} ${Number(hour) % 12 + (period.toLowerCase() === "p" ? 12 : 0)}:${minute ?? "00"}`)
+    .replace(/(\d)(?:million|billion|thousand|km|kg|mph|bhp|hp|ms|bn|m|k|s)\b/gi, "$1 ")
+    .replace(/\b\d{1,3}(?:[ \u00a0\u202f]\d{3})+\b/g, match => match.replace(/\s/g, ""))
+    .replace(new RegExp(`\\b(${numberWords.join("|")})\\b`, "gi"), word => String(numberWords.indexOf(word.toLowerCase())));
+  return [...normalized.matchAll(/(?<![\p{L}\d])\d+(?:[.,]\d+)?(?![\p{L}\d])/gu)].map(match => String(Number(match[0].replace(",", "."))));
 }
 
 export function buildDigestInput(articles) {
@@ -179,14 +264,6 @@ export function buildDigestInput(articles) {
     events.get(key).articles.push({ id: article.id, title: article.ai_title_ru ?? article.original_title, summary: article.ai_summary_ru, main_fact: article.main_fact, type: article.editorial_meta?.article_type ?? "news", source: article.canonical_url, source_name: article.news_sources?.name, source_authors: article.editorial_meta?.source_authors ?? [] });
   }
   return [...events.values()];
-}
-
-export function combineNewsSources(previous, incoming) {
-  const sources = [...(previous.sources ?? [previous]), incoming];
-  const unique = [...new Map(sources.map(source => [source.url, source])).values()];
-  if (unique.length > 3) return null;
-  return { ...incoming, name: unique.map(source => source.name).join(" · "), authors: [...new Set(unique.flatMap(source => source.authors ?? []))], sources: unique,
-    text: unique.map(source => `SOURCE: ${source.name}\nURL: ${source.url}\nPUBLISHED: ${source.published_at ?? "unknown"}\n${source.title}\n${source.description ?? ""}\n${source.text}`).join("\n\n") };
 }
 
 export function renderVerifiedDigest(payload, articles) {
@@ -200,14 +277,16 @@ export function renderVerifiedDigest(payload, articles) {
     const events = references.map(article => article.event_fingerprint || article.id);
     if (events.some(event => seen.has(event))) return null;
     events.forEach(event => seen.add(event));
+    const headline = plainDigestText(item.headline);
+    const summary = plainDigestText(item.summary);
+    if (!headline || !summary) return null;
     const allowedNumbers = new Set(numbers(references.map(article => `${article.ai_title_ru} ${article.ai_summary_ru} ${article.ai_summary_long_ru}`).join("\n")));
-    if (numbers(`${item.headline} ${item.summary}`).some(value => !allowedNumbers.has(value))) return null;
-    const links = references.map(article => `[Подробнее](https://raceside.online/news/${encodeURIComponent(article.slug || article.id)})`).join(" · ");
-    lines.push(`- **${escapeMarkdown(item.headline)}** ${escapeMarkdown(item.summary)} ${links}`);
+    if (numbers(`${headline} ${summary}`).some(value => !allowedNumbers.has(value))) return null;
+    lines.push(`• ${headline}\n${summary}`);
   }
   return lines.join("\n\n");
 }
 
-function escapeMarkdown(value) {
-  return text(value).replace(/\s+/g, " ").replace(/([\\`*_{}[\]()<>#!|])/g, "\\$1");
+function plainDigestText(value) {
+  return text(value).replace(/\[[^\]]+\]\(https?:\/\/[^)\s]+\)|https?:\/\/\S+/giu, "").replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
 }

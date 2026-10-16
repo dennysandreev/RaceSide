@@ -1,3 +1,4 @@
+import { requireAiBudget } from "../ai-budget.mjs";
 import "../load-env.mjs";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -10,11 +11,15 @@ import { LiveWriter } from "./persistence.mjs";
 import { allowedRecording, transcribeRadio } from "./radio.mjs";
 import { buildReplayFromHistory } from "./replay-adapter.mjs";
 import { normalizeMessage, hydrationMessages } from "./normalize.mjs";
-import { chooseSession, sessionStillOngoing } from "./session-mode.mjs";
+import { chooseSessionWithControls, sessionStillOngoing, sessionHistoryEnd, sessionCapabilities } from "./session-mode.mjs";
 import { queueSessionResultSync } from "./result-sync.mjs";
 import { findOpenF1SessionMatch } from "../index.mjs";
 import { upsertServiceHeartbeat } from "../ops-heartbeat.mjs";
 import { verifyAndConsumeLiveTicket } from "./access-ticket.mjs";
+import { resolveSessionTrack } from "./track-registry.mjs";
+import { loadLiveChampionship } from "./championship.mjs";
+import { LiveTimeline, TimelineViewer, parseTimelineView } from "./timeline.mjs";
+import { readTimelineCache, writeTimelineCache } from "./timeline-cache.mjs";
 
 const simulated = process.env.LIVE_DATA_SOURCE === "replay";
 if (simulated && process.env.NODE_ENV === "production")
@@ -28,12 +33,31 @@ const db =
       })
     : null;
 const live = new LiveState();
+const timeline = new LiveTimeline();
+const timelineCacheDirectory = process.env.LIVE_SPOOL_DIR ?? ".live-spool";
+let timelineCacheTimer, timelineCacheFlight;
 const writer = simulated
   ? null
   : new LiveWriter(db, process.env.LIVE_SPOOL_DIR ?? ".live-spool");
 const audioUrls = new Map();
 const usedAccessTickets = new Map();
 const savedRadio = new Map();
+let championshipBusy = false;
+async function refreshChampionship() {
+  const session = live.state.session;
+  if (!db || !session || championshipBusy) return;
+  championshipBusy = true;
+  try {
+    const championship = await loadLiveChampionship(db, session);
+    if (live.state.session?.session_key === session.session_key && championship)
+      live.state.championship = championship;
+  } catch {
+    console.error("[live] championship cache unavailable; retry scheduled");
+  } finally {
+    championshipBusy = false;
+  }
+}
+const championshipTimer = setInterval(() => void refreshChampionship(), 60000);
 const radioRetryTimers = new Set();
 const radioRetryDelays = [15000, 30000, 60000, 120000, 300000];
 let sourceConnected = false,
@@ -153,8 +177,9 @@ async function processRadio() {
       try {
         await checkRadioBudget();
         const result = await transcribeRadio(audioUrls.get(job.id), {
+          beforePaidRequest: (purpose) => requireAiBudget(db, purpose),
           onUsage: (payload, model, purpose) =>
-            writer?.enqueueUsage(payload, model, purpose),
+            writer.recordUsage(payload, model, purpose),
         });
         Object.assign(r, {
           original: result.original,
@@ -179,48 +204,44 @@ async function processRadio() {
   }
 }
 async function checkRadioBudget() {
-  if (!db) throw new Error("Radio accounting unavailable");
-  const now = new Date(),
-    monthStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1),
-    ).toISOString(),
-    dayStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-    ).toISOString();
-  let daily = 0,
-    monthly = 0;
-  for (let from = 0; ; from += 1000) {
-    const { data, error } = await db
-      .from("ai_usage_logs")
-      .select("created_at,estimated_cost_usd")
-      .gte("created_at", monthStart)
-      .order("created_at")
-      .order("id")
-      .range(from, from + 999);
-    if (error) throw new Error("Radio accounting unavailable");
-    for (const row of data) {
-      monthly += Number(row.estimated_cost_usd ?? 0);
-      if (row.created_at >= dayStart)
-        daily += Number(row.estimated_cost_usd ?? 0);
-    }
-    if (data.length < 1000) break;
-  }
-  if (
-    daily >= Number(process.env.AI_DAILY_COST_LIMIT_USD ?? 5) ||
-    monthly >= Number(process.env.AI_MONTHLY_COST_LIMIT_USD ?? 100)
-  )
-    throw new Error("AI spending limit reached");
+  if (!writer) throw new Error("Radio accounting unavailable");
+  await requireAiBudget(db, "live_radio_transcription");
 }
 function broadcast(message) {
+  if (message.data) timeline.captureState(message.data, message.serverTime);
+  if (message.samples) {
+    if (timeline.state?.session?.session_key !== live.state.session?.session_key)
+      timeline.captureState(live.snapshot(), message.serverTime);
+    timeline.captureSamples(message.samples, live.state.session?.session_key, message.serverTime);
+  }
   const encoded = JSON.stringify(message);
   for (const client of wss.clients)
-    if (client.readyState === WebSocket.OPEN) {
+    if (client.readyState === WebSocket.OPEN && !client.viewer) {
       if (client.bufferedAmount > 2 * 1024 * 1024) {
         client.close(1013, "Slow connection");
         continue;
       }
       client.send(encoded);
     }
+}
+function ensureTimeline() {
+  if (!timeline.state) timeline.captureState(live.snapshot());
+}
+function sendView(client, message) {
+  if (client.readyState !== WebSocket.OPEN) return;
+  if (client.bufferedAmount > 2 * 1024 * 1024) {
+    client.close(1013, "Slow connection");
+    return;
+  }
+  client.send(JSON.stringify({ ...message, health: health() }));
+  client.lastViewMessageAt = Date.now();
+}
+function saveTimeline() {
+  if (simulated || timelineCacheFlight || !timeline.state) return timelineCacheFlight;
+  timelineCacheFlight = writeTimelineCache(timeline, timelineCacheDirectory)
+    .catch(() => console.error("[live] rewind cache write failed; keeping the in-memory window"))
+    .finally(() => { timelineCacheFlight = null; });
+  return timelineCacheFlight;
 }
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");
@@ -238,6 +259,12 @@ const server = createServer(async (req, res) => {
     }
     if (url.pathname === "/snapshot") {
       res.setHeader("Content-Type", "application/json");
+      if (url.searchParams.get("timeline") === "1") {
+        ensureTimeline();
+        const viewer = new TimelineViewer(timeline, parseTimelineView(url.searchParams));
+        res.end(JSON.stringify({ ...viewer.snapshot(), health: health() }));
+        return;
+      }
       res.end(
         JSON.stringify({
           type: "snapshot",
@@ -248,10 +275,24 @@ const server = createServer(async (req, res) => {
       );
       return;
     }
-    if (url.pathname === "/history" && db && live.state.session) {
+    if (url.pathname === "/history" && live.state.session) {
       const topic =
         url.searchParams.get("topic") === "radio" ? "radio" : "events";
       const before = url.searchParams.get("before");
+      if (url.searchParams.has("at")) {
+        const at = Number(url.searchParams.get("at"));
+        const history = Number.isFinite(at) ? timeline.historyAt(Math.min(Date.now(), at), topic, before) : null;
+        if (!history || Number(history.sessionKey) !== Number(url.searchParams.get("session_key"))) {
+          res.writeHead(409).end();
+          return;
+        }
+        // Published frames are the authority during rewind. Database rows can
+        // contain later corrections with an older source timestamp.
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify(history));
+        return;
+      }
+      if (!db) { res.writeHead(503).end(); return; }
       let query = db
         .from(topic === "radio" ? "live_radio_text" : "live_events")
         .select("*")
@@ -308,23 +349,33 @@ server.on("upgrade", (req, socket, head) => {
       socket.destroy();
       return;
     }
-    const billingEnforced = ["1", "true"].includes(String(process.env.BILLING_ENTITLEMENTS_ENFORCED ?? "").toLowerCase());
+    const billingEnforced = ["1", "true"].includes(
+      String(process.env.BILLING_ENTITLEMENTS_ENFORCED ?? "").toLowerCase(),
+    );
     if (billingEnforced) {
       const secret = process.env.LIVE_ACCESS_SECRET?.trim();
-      const ticket = new URL(req.url ?? "", "http://live.internal").searchParams.get("ticket");
-      const claims = secret && secret.length >= 32
-        ? verifyAndConsumeLiveTicket(ticket, secret, usedAccessTickets)
-        : null;
+      const ticket = new URL(
+        req.url ?? "",
+        "http://live.internal",
+      ).searchParams.get("ticket");
+      const claims =
+        secret && secret.length >= 32
+          ? verifyAndConsumeLiveTicket(ticket, secret, usedAccessTickets)
+          : null;
       if (!claims) {
         socket.destroy();
         return;
       }
       accessUserId = claims.userId;
-      const configuredConnectionLimit = Number(process.env.LIVE_MAX_CONNECTIONS_PER_USER ?? 3);
+      const configuredConnectionLimit = Number(
+        process.env.LIVE_MAX_CONNECTIONS_PER_USER ?? 3,
+      );
       const maxConnections = Number.isSafeInteger(configuredConnectionLimit)
         ? Math.max(1, Math.min(configuredConnectionLimit, 10))
         : 3;
-      const activeConnections = [...wss.clients].filter((client) => client.userId === accessUserId).length;
+      const activeConnections = [...wss.clients].filter(
+        (client) => client.userId === accessUserId,
+      ).length;
       if (activeConnections >= maxConnections) {
         socket.destroy();
         return;
@@ -343,12 +394,36 @@ server.on("upgrade", (req, socket, head) => {
     wss.emit("connection", ws, req);
   });
 });
-wss.on("connection", (ws) => {
+wss.on("connection", (ws, req) => {
   ws.isAlive = true;
   ws.on("pong", () => {
     ws.isAlive = true;
   });
   ws.on("error", () => {});
+  const params = new URL(req.url, "http://localhost").searchParams;
+  if (params.get("timeline") === "1") {
+    try {
+      ensureTimeline();
+      ws.viewer = new TimelineViewer(timeline, parseTimelineView(params));
+      sendView(ws, ws.viewer.snapshot());
+      let seekCount = 0, seekWindow = Date.now();
+      ws.on("message", (payload) => {
+        try {
+          const now = Date.now();
+          if (now - seekWindow > 10000) { seekCount = 0; seekWindow = now; }
+          if (++seekCount > 30) throw new Error("Too many seeks");
+          const message = JSON.parse(payload.toString());
+          if (message.type !== "seek" || !["live", "rewind"].includes(message.mode) ||
+              !Number.isSafeInteger(message.requestId) ||
+              (message.delayMs != null && !Number.isFinite(message.delayMs)) ||
+              (message.pausedAt != null && !Number.isFinite(message.pausedAt)))
+            throw new Error("Invalid seek");
+          sendView(ws, ws.viewer.seek(message, message.requestId, now));
+        } catch { ws.close(1008, "Invalid timeline request"); }
+      });
+    } catch { ws.close(1008, "Invalid timeline view"); }
+    return;
+  }
   ws.send(
     JSON.stringify({
       type: "snapshot",
@@ -359,12 +434,21 @@ wss.on("connection", (ws) => {
   );
 });
 const fastTimer = setInterval(() => {
-  if (samples.length) {
+  if (samples.length && !hydrating && !changing) {
     broadcast({ type: "samples", samples, serverTime: Date.now() });
     samples = [];
   }
+  const now = Date.now();
+  for (const client of wss.clients) if (client.viewer && client.readyState === WebSocket.OPEN) {
+    const messages = client.viewer.next(now);
+    if (messages.length > 64) sendView(client, client.viewer.snapshot(now));
+    else for (const message of messages) sendView(client, message);
+    if (now - (client.lastViewMessageAt ?? 0) >= 1000)
+      sendView(client, { type: "state", serverTime: now, presentation: client.viewer.presentation(now) });
+  }
 }, 100);
 const stateTimer = setInterval(() => {
+  if (hydrating || changing || (!live.state.session && timeline.state?.session)) return;
   for (const d of Object.values(live.state.drivers))
     if (
       live.state.status === "live" &&
@@ -374,11 +458,19 @@ const stateTimer = setInterval(() => {
       live.state.locations[d.driverNumber]?.pitLaneProgress == null
     )
       d.status = "OUT LAP";
-  const data = live.snapshot();
+  const full = live.snapshot();
+  timeline.captureState(full);
+  const data = { ...full };
   delete data.locations;
   delete data.telemetry;
   delete data.track;
-  broadcast({ type: "state", data, health: health(), serverTime: Date.now() });
+  // The timeline keeps the full frame; legacy clients retain their existing
+  // compact state protocol. Do not capture this partial frame a second time.
+  const encoded = JSON.stringify({ type: "state", data, health: health(), serverTime: Date.now() });
+  for (const client of wss.clients) if (!client.viewer && client.readyState === WebSocket.OPEN) {
+    if (client.bufferedAmount > 2 * 1024 * 1024) client.close(1013, "Slow connection");
+    else client.send(encoded);
+  }
 }, 1000);
 const heartbeat = setInterval(() => {
   for (const ws of wss.clients) {
@@ -407,9 +499,13 @@ const writeServiceHeartbeat = async () => {
   });
 };
 const serviceHeartbeatTimer = setInterval(() => {
-  void writeServiceHeartbeat().catch(() => console.error("[live] service heartbeat failed"));
+  void writeServiceHeartbeat().catch(() =>
+    console.error("[live] service heartbeat failed"),
+  );
 }, 60000);
-void writeServiceHeartbeat().catch(() => console.error("[live] initial service heartbeat failed"));
+void writeServiceHeartbeat().catch(() =>
+  console.error("[live] initial service heartbeat failed"),
+);
 async function loadReplay(key) {
   // Uses the existing repository adapter, including chunked replay event rows.
   const origin = process.env.LIVE_WEB_ORIGIN ?? "http://127.0.0.1:3000";
@@ -420,10 +516,10 @@ async function loadReplay(key) {
   return response.json();
 }
 async function sessionTrack(session) {
-  if (!db) return null;
+  if (!db) return resolveSessionTrack(session);
   const { data: maps } = await db
     .from("track_maps")
-    .select("definition,circuit_id,circuit_key")
+    .select("definition,circuit_id,circuit_key,season_source")
     .order("season_source", { ascending: false });
   let { data: local } = await db
     .from("sessions")
@@ -453,27 +549,14 @@ async function sessionTrack(session) {
     session.race_id = local.race_id;
     session.race_name = local.races?.race_name ?? session.race_name;
   }
-  const map =
-    maps?.find((m) => m.circuit_id === local?.races?.circuit_id) ??
-    maps?.find((m) => String(m.circuit_key) === String(session.circuit_key));
-  if (
-    Number(session.circuit_key) === 153 &&
-    Number(session.year ?? session.date_start?.slice(0, 4)) === 2026
-  ) {
-    return JSON.parse(
-      await readFile(
-        new URL("./tracks/madring-2026.json", import.meta.url),
-        "utf8",
-      ),
-    );
-  }
-  if (!map)
+  const track = await resolveSessionTrack(session, maps ?? [], local?.races?.circuit_id);
+  if (!track)
     console.error(
       "[live] missing session track mapping",
       session.session_key,
       session.circuit_key,
     );
-  return map?.definition ?? null;
+  return track;
 }
 async function discover(force = false) {
   if (changing || stopping) return;
@@ -483,33 +566,28 @@ async function discover(force = false) {
     const rows = await source.rest("sessions", {
       year: new Date().getUTCFullYear(),
     });
-    let choice = chooseSession(rows, now);
-    if (
-      !choice.active &&
-      choice.previous &&
-      !live.state.session &&
-      now - Date.parse(choice.previous.date_end) <= 30 * 60000
-    ) {
-      const controls = await source
-        .rest("race_control", { session_key: choice.previous.session_key })
-        .catch(() => []);
-      if (sessionStillOngoing(choice.previous, controls, now))
-        choice = { ...choice, session: choice.previous, active: true };
-    }
+    const controlStreams = new Map();
+    const choice = await chooseSessionWithControls(rows, {
+      currentSession: live.state.session,
+      currentStatus: live.state.status,
+      now,
+      loadControls: async (key) => {
+        const controls = await source.rest("race_control", { session_key: key });
+        controlStreams.set(Number(key), controls);
+        return controls;
+      },
+    });
     const session = choice.session;
     if (!session) return;
-    if (
-      !choice.active &&
-      ["live", "paused"].includes(live.state.status) &&
-      streamFresh() &&
-      !force
-    )
-      return;
+    // REST may carry the finish missed during an MQTT disconnect. Apply it to
+    // the old session before changing context, including its result-sync trigger.
+    for (const row of controlStreams.get(Number(live.state.session?.session_key)) ?? [])
+      receive("race_control", row);
     const sameSession = session.session_key === live.state.session?.session_key;
     if (sameSession) {
       if (choice.active && live.state.status === "waiting")
         live.state.status = "live";
-      if (!force) return;
+      if (!force && live.state.track) return;
     }
     if (!sameSession && live.state.session && writer) {
       live.state.status = "finished";
@@ -534,6 +612,9 @@ async function discover(force = false) {
         );
       });
     const track = await sessionTrack(session);
+    if (sameSession && session.race_id)
+      Object.assign(live.state.session, { race_id: session.race_id, race_name: session.race_name });
+    if (sameSession && !force && !track) return;
     if (!sameSession)
       live.setSession(
         {
@@ -545,6 +626,10 @@ async function discover(force = false) {
         },
         track,
       );
+    else if (track && !live.state.track) {
+      live.state.track = track;
+      live.state.trackSectorCount = track.marshalSectorCount ?? null;
+    }
     if (!choice.active && Date.parse(session.date_end) < now)
       live.state.status = "finished";
     if (!sameSession) {
@@ -563,6 +648,7 @@ async function discover(force = false) {
       if (data?.snapshot?.session)
         live.state = {
           ...data.snapshot,
+          session: { ...data.snapshot.session, ...session },
           track: track ?? data.snapshot.track,
           radio: (data.snapshot.radio ?? []).map((r) => ({
             ...r,
@@ -570,8 +656,8 @@ async function discover(force = false) {
           })),
         };
     }
-    const historyEnd = Math.min(now, Date.parse(session.date_end) + 120000);
     const historyStarts = {};
+    void refreshChampionship();
     for (const [topic, field] of [
       ["location", "locations"],
       ["car_data", "telemetry"],
@@ -585,6 +671,15 @@ async function discover(force = false) {
           ? Math.min(...timestamps) - 15000
           : Date.parse(session.date_start),
       );
+      // Older snapshots have no session maximum. Re-read their car telemetry
+      // once; new snapshots retain the maximum across worker restarts.
+      if (
+        topic === "car_data" &&
+        Object.values(live.state.drivers).some(
+          (driver) => driver.maxSpeed === undefined,
+        )
+      )
+        historyStarts[topic] = Date.parse(session.date_start);
     }
     console.info("[live] session selected", session.session_key);
     hydrating = true;
@@ -624,6 +719,10 @@ async function discover(force = false) {
         (x) => !["sessions", "location", "car_data"].includes(x),
       )) {
         if (topic === "team_radio" && !radioHistoryAvailable) continue;
+        if (topic === "race_control" && controlStreams.has(Number(session.session_key))) {
+          streams.set(topic, controlStreams.get(Number(session.session_key)));
+          continue;
+        }
         try {
           const query = { session_key: session.session_key };
           streams.set(topic, await source.rest(topic, query));
@@ -631,15 +730,36 @@ async function discover(force = false) {
           console.error("[live] snapshot stream unavailable", topic);
         }
       }
+      if (
+        choice.active &&
+        live.state.status === "finished" &&
+        sessionStillOngoing(session, streams.get("race_control") ?? [], now)
+      ) {
+        // A persisted ABORTED can be followed by STARTED in the same session.
+        // Rebuild the clock and flag from ordered Race Control history below.
+        live.state.status = "live";
+        live.state.flag = null;
+        live.state.yellowSectors = [];
+        live.state.timerPausedAt = null;
+        live.state.timerOffsetMs = 0;
+      }
       const roster = streams.get("drivers") ?? [];
       if (roster.length)
         live.retainDrivers(roster.map((row) => row.driver_number));
+      if (
+        sessionCapabilities(session).showQualifyingPhase && streams.has("laps") &&
+        (streams.get("race_control") ?? []).some((row) => /^SESSION STARTED\b/i.test(row.message ?? ""))
+      )
+        live.resetQualifying();
       hydrating = false;
       for (const [topic, row] of hydrationMessages(streams, session))
         receive(topic, row);
       // Fill initial and reconnect gaps in bounded time windows. These rows are
       // persisted before moving to the next chunk, keeping memory bounded.
       hydrating = true;
+      const historyEnd = sessionHistoryEnd(
+        session, streams.get("race_control") ?? [], choice.active, now,
+      );
       for (const topic of ["location", "car_data"]) {
         for (
           let start = historyStarts[topic];
@@ -688,6 +808,8 @@ async function discover(force = false) {
 }
 let discoverTimer, finishTimer;
 async function start() {
+  if (!simulated) await readTimelineCache(timeline, timelineCacheDirectory);
+  timelineCacheTimer = setInterval(() => void saveTimeline(), 10000);
   server.listen(
     Number(process.env.LIVE_PORT ?? 3002),
     process.env.LIVE_HOST ?? "127.0.0.1",
@@ -824,9 +946,14 @@ async function stop() {
   clearInterval(heartbeat);
   clearInterval(writerTimer);
   clearInterval(serviceHeartbeatTimer);
+  clearInterval(championshipTimer);
+  clearInterval(timelineCacheTimer);
   for (const timer of radioRetryTimers) clearTimeout(timer);
   radioRetryTimers.clear();
   await source?.stop();
+  if (timelineCacheFlight) await timelineCacheFlight;
+  if (live.state.session) timeline.captureState(live.snapshot());
+  await saveTimeline();
   if (writer) await writer.drain(live.snapshot()).catch(() => {});
   for (const ws of wss.clients) ws.close(1001, "Restarting");
   wss.close();

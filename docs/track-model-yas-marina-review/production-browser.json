@@ -1,0 +1,11 @@
+{
+  "url": "https://raceside.online/calendar/2026/23",
+  "errors": [],
+  "canvas": 1,
+  "text": true,
+  "modelDate": "2026-10-04",
+  "source": "sentinel-20261004.tif",
+  "resources": [
+    "https://raceside.online/f1/tracks/3d/yas-marina.glb?v=85436f491702"
+  ]
+}

@@ -3,9 +3,11 @@ import { LockKeyhole } from "lucide-react";
 import { runAdminJobAction, savePollAction } from "@/app/admin/operations";
 import { AdminActionForm } from "@/components/admin/admin-action-form";
 import { AdminConfirmedForm } from "@/components/admin/admin-confirmed-form";
+import { AdminFilters } from "@/components/admin/admin-filters";
 import { AdminUrlTabs } from "@/components/admin/admin-url-tabs";
 import {
   AdminMetric,
+  AdminPagination,
   AdminPage,
   AdminPageHeader,
   AdminSection,
@@ -34,15 +36,15 @@ export default async function AdminCommunityPage({ searchParams }: PageProps) {
   return (
     <AdminPage>
       <AdminPageHeader
-        actions={<AdminActionForm action={runAdminJobAction} submitLabel="Подготовить опросы" submitVariant="secondary"><input name="jobName" type="hidden" value="polls.generate_next_race" /></AdminActionForm>}
+        actions={<AdminConfirmedForm action={runAdminJobAction} confirmLabel="Создать и опубликовать" description="Задача создаст и сразу опубликует опросы ближайшей гонки, а завершённые закроет. Новые опросы увидят читатели." submitLabel="Опубликовать опросы гонки" submitVariant="secondary" title="Опубликовать опросы ближайшей гонки?"><input name="jobName" type="hidden" value="polls.generate_next_race" /></AdminConfirmedForm>}
         description="Опросы можно создавать и закрывать. Лиги, прогнозы и начисления доступны для диагностики без ручной правки."
         title="Сообщество"
       />
       <section className="grid grid-cols-2 gap-y-5 border-b border-border pb-5 lg:grid-cols-4">
-        <AdminMetric label="Опросы" value={String(data.polls.length)} />
+        <AdminMetric label="Опросы" value={String(data.pollsCount)} />
         <AdminMetric label="Лиги" value={String(data.leaguesCount)} />
         <AdminMetric label="Прогнозы" value={String(data.predictionsCount)} />
-        <AdminMetric label="Ожидают подсчёта" value={String(data.predictions.filter((prediction) => prediction.score === null).length)} />
+        <AdminMetric label="Не посчитаны — все прогнозы" value={String(data.pendingPredictionsCount)} />
       </section>
       <Alert>
         <LockKeyhole aria-hidden="true" />
@@ -67,6 +69,7 @@ export default async function AdminCommunityPage({ searchParams }: PageProps) {
               </AdminConfirmedForm>
             </AdminSection>
             <AdminSection description="Публикуй, закрывай и обновляй вопрос без удаления истории." title="Все опросы">
+              <AdminFilters query={query} search={query.search} />
               <div className="grid gap-4 p-4">
                 {data.polls.map((poll) => (
                   <AdminConfirmedForm action={savePollAction} className="rounded-md border border-border p-4" confirmLabel="Сохранить" description="Изменение публикации или закрытие опроса сразу отразится на сайте." key={poll.id} submitLabel="Сохранить опрос" submitVariant="secondary" title="Сохранить изменения опроса?">
@@ -110,11 +113,13 @@ export default async function AdminCommunityPage({ searchParams }: PageProps) {
                   </AdminConfirmedForm>
                 ))}
               </div>
+              <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/community" total={data.pollsTotal} />
             </AdminSection>
           </div>
         </TabsContent>
         <TabsContent value="leagues">
-          <AdminSection description="Поиск и диагностика без изменения участников и результатов." title="Последние лиги">
+          <AdminSection description="Поиск и диагностика без изменения участников и результатов." title="Все лиги">
+            <AdminFilters query={query} search={query.search} />
             <div className="grid">
               {data.leagues.map((league) => (
                 <div className="grid gap-2 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto]" key={league.id}>
@@ -126,14 +131,16 @@ export default async function AdminCommunityPage({ searchParams }: PageProps) {
                 </div>
               ))}
             </div>
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/community" total={data.leaguesTotal} />
           </AdminSection>
         </TabsContent>
         <TabsContent value="predictions">
           <AdminSection
             actions={<AdminActionForm action={runAdminJobAction} submitLabel="Пересчитать по результатам" submitVariant="secondary"><input name="jobName" type="hidden" value="predictions.score" /></AdminActionForm>}
-            description="Последние прогнозы показаны только как диагностические записи."
+            description="Все прогнозы доступны по страницам. Число не посчитанных учитывает все записи, включая ещё открытые гонки."
             title="Состояние прогнозов"
           >
+
             <div className="grid">
               {data.predictions.map((prediction) => (
                 <div className="grid gap-2 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto_auto]" key={prediction.id}>
@@ -143,6 +150,7 @@ export default async function AdminCommunityPage({ searchParams }: PageProps) {
                 </div>
               ))}
             </div>
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/community" total={data.predictionsTotal} />
           </AdminSection>
         </TabsContent>
       </AdminUrlTabs>

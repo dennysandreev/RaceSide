@@ -1,0 +1,221 @@
+{
+  "name": "ANT Monza 53: recovery 295 to 299 breaks the apparent decline",
+  "source": "Public OpenF1 normalized telemetry, Monza race 2026 session 11361; fixed regression excerpt.",
+  "points": [
+    {
+      "distance": 1498.2547912474213,
+      "elapsed": 22.397,
+      "speed": 300,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1518.4184616497628,
+      "elapsed": 22.637,
+      "speed": 301,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1538.6156822524408,
+      "elapsed": 22.877,
+      "speed": 301,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1552.0804959875597,
+      "elapsed": 23.037,
+      "speed": 301,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1568.8835546561775,
+      "elapsed": 23.237,
+      "speed": 300,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1589.0136748581824,
+      "elapsed": 23.477,
+      "speed": 300,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1619.1585298606847,
+      "elapsed": 23.837,
+      "speed": 299,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1649.2027342621768,
+      "elapsed": 24.197,
+      "speed": 298,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1675.7297593283743,
+      "elapsed": 24.517,
+      "speed": 295,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1702.1225835932253,
+      "elapsed": 24.837,
+      "speed": 295,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1715.341362525875,
+      "elapsed": 24.997,
+      "speed": 296,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1728.5825082587496,
+      "elapsed": 25.157,
+      "speed": 296,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1751.7545132912796,
+      "elapsed": 25.437,
+      "speed": 296,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1771.6497820909278,
+      "elapsed": 25.677,
+      "speed": 297,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1788.2571312575817,
+      "elapsed": 25.877,
+      "speed": 297,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1811.5465619912902,
+      "elapsed": 26.157,
+      "speed": 298,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1831.5424813919483,
+      "elapsed": 26.397,
+      "speed": 298,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1854.9101959264422,
+      "elapsed": 26.677,
+      "speed": 299,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1885.0047256284397,
+      "elapsed": 27.037,
+      "speed": 299,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1914.8149173825836,
+      "elapsed": 27.396,
+      "speed": 295,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1931.3086152455971,
+      "elapsed": 27.597,
+      "speed": 292,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1957.254103505959,
+      "elapsed": 27.917,
+      "speed": 288,
+      "throttle": 100,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    },
+    {
+      "distance": 1976.4112678982003,
+      "elapsed": 28.157,
+      "speed": 283,
+      "throttle": 55,
+      "brake": 0,
+      "gear": 7,
+      "drs": null
+    }
+  ],
+  "sections": [
+    {
+      "category": "straight",
+      "from": 1479.354516,
+      "to": 1986.2152852192498
+    }
+  ],
+  "expected": []
+}

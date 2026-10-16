@@ -11,9 +11,7 @@ export const billingFlags = {
   ads: enabled(process.env.BILLING_ADS_ENABLED),
   checkout: enabled(process.env.BILLING_CHECKOUT_ENABLED),
   entitlementsEnforced: enabled(process.env.BILLING_ENTITLEMENTS_ENFORCED),
-  tribute: enabled(process.env.BILLING_TRIBUTE_ENABLED),
-  yoomoney: enabled(process.env.BILLING_YOOMONEY_ENABLED),
-  yoomoneyWallet: enabled(process.env.BILLING_YOOMONEY_WALLET_ENABLED),
+  lava: enabled(process.env.BILLING_LAVA_ENABLED),
 } as const;
 
 export function getTrustedSiteOrigin() {
@@ -49,4 +47,13 @@ export function getYooMoneyConfig() {
 export function getTributeConfig() {
   const apiKey = process.env.TRIBUTE_API_KEY?.trim();
   return apiKey ? { apiKey } : null;
+}
+
+export function getLavaConfig() {
+  const apiKey = process.env.LAVA_API_KEY?.trim();
+  const webhookSecret = process.env.LAVA_WEBHOOK_SECRET?.trim();
+  const offerId = process.env.LAVA_OFFER_ID?.trim();
+  const apiBase = process.env.LAVA_API_BASE?.trim() || "https://gate.lava.top";
+  if (!apiKey || !webhookSecret || !offerId || !/^https:\/\/gate\.lava\.top\/?$/.test(apiBase)) return null;
+  return { apiKey, webhookSecret, offerId, apiBase: new URL(apiBase).origin };
 }

@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#0b0b0b"/>
-  <g fill="none" stroke="#e10600" stroke-linecap="square" stroke-linejoin="round" stroke-width="10" transform="translate(3 18.35) scale(.42647)">
-    <path d="M5 59 18 7h27c12 0 19 6 19 15 0 10-8 17-20 17H27l23 20"/>
-    <path d="M129 8H95c-10 0-16 5-16 13 0 7 6 11 15 11h19c10 0 16 5 16 13 0 8-6 13-16 13H76"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="RaceSide"><title>RaceSide</title><rect width="64" height="64" rx="12" fill="#131313"/><g fill="#E10600" transform="translate(12 12) scale(0.4)"><path d="M52 0H100L65 24C63 26 61 27 58 27H40C29 27 22 31 22 37C22 44 39 49 53 56L62 61C66 63 65 67 60 67L29 61C9 57 1 50 1 39C1 27 15 19 32 9L46 1C48 0 50 0 52 0Z"/><path d="M48 100H0L35 76C37 74 39 73 42 73H60C71 73 78 69 78 63C78 56 61 51 47 44L38 39C34 37 35 33 40 33L71 39C91 43 99 50 99 61C99 73 85 81 68 91L54 99C52 100 50 100 48 100Z"/></g></svg>

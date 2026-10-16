@@ -1,0 +1,62 @@
+{
+  "modelId": "singapore",
+  "publicationReady": false,
+  "coordinateReferenceSystem": "EPSG:32648",
+  "bboxWgs84": [
+    103.848,
+    1.282,
+    103.869,
+    1.299
+  ],
+  "centerline": {
+    "relationId": 421263,
+    "wayCount": 99,
+    "pointCount": 225,
+    "closed": true,
+    "geometryMeters": 4953.75050302139,
+    "officialFiaMeters": 4927.0,
+    "relativeErrorPercent": 0.5429369397481166,
+    "controlLineProjectionGapMeters": 0.0,
+    "lengthWithinHalfPercent": false
+  },
+  "pitLane": [
+    {
+      "wayId": 100484287,
+      "lengthMeters": 822.0521263437864,
+      "endpointGapsMeters": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "buildingCoverage": {
+    "wayFootprintsAndParts": 1543,
+    "buildingRelations": 17,
+    "withPositiveHeight": 1228,
+    "withRoofShape": 279,
+    "roofShapes": {
+      "unrecorded": 1264,
+      "flat": 70,
+      "skillion": 64,
+      "mansard": 1,
+      "many": 1,
+      "round": 8,
+      "dome": 4,
+      "round hipped": 2,
+      "gabled": 4,
+      "side_hipped": 2,
+      "pyramidal": 99,
+      "equal_hipped": 22,
+      "hipped": 2
+    },
+    "withSurveyedFacades": 0
+  },
+  "blockers": [
+    "OSM centreline exceeds the 0.5% lap-length tolerance; do not rescale the city to conceal this.",
+    "No acquired textured or surveyed 3D buildings: exact windows and facades cannot be certified.",
+    "No acquired bare-earth DTM or verified vertical datum.",
+    "FIA 2025 timing controls are provisional for 2026; current-event operational map not acquired.",
+    "Promoter event map is illustrative, not a survey of temporary structures.",
+    "No Blender asset or browser acceptance has been completed."
+  ]
+}

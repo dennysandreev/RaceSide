@@ -19,6 +19,7 @@ import {
 import type { ComponentType, SVGProps } from "react";
 
 import { AppShell } from "@/components/racemate/app-shell";
+import { RaceMateMark } from "@/components/racemate/racemate-logo";
 import { PageTitle } from "@/components/racemate/page-title";
 import { signOut } from "@/app/auth/actions";
 import { DriverAvatarBadge } from "@/components/racemate/driver-avatar-badge";
@@ -144,10 +145,13 @@ export default async function AccountPage() {
                   <span className="min-w-0 break-words">{displayName}</span>
                   {subscription.active ? (
                     <Badge
+                      aria-label="RaceSide Plus"
                       className="h-6 shrink-0 px-2 text-[0.64rem] tracking-[0.08em]"
                       title="Подписка RaceSide Plus активна"
                     >
-                      RS+
+                      <span aria-hidden="true" className="inline-flex items-center gap-0.5">
+                        <RaceMateMark className="h-3.5 w-[1.125rem] text-primary-foreground" plus />
+                      </span>
                     </Badge>
                   ) : null}
                 </PageTitle>

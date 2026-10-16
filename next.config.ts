@@ -11,7 +11,7 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "base-uri 'self'",
-      "form-action 'self' https://yoomoney.ru",
+      "form-action 'self'",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "img-src 'self' data: blob: https:",
@@ -102,7 +102,17 @@ const nextConfig: NextConfig = {
       { pathname: "/f1/circuits/**" },
       { pathname: "/f1/tracks/3d/sepang-preview.webp" },
       { pathname: "/f1/tracks/3d/miami-preview.webp" },
+      { pathname: "/f1/tracks/3d/singapore-preview.webp" },
+      { pathname: "/f1/tracks/3d/austin-preview.webp" },
+      { pathname: "/f1/tracks/3d/mexico-preview.webp" },
       { pathname: "/f1/tracks/3d/monaco-preview.webp" },
+      { pathname: "/f1/tracks/3d/suzuka-preview.webp" },
+      { pathname: "/f1/tracks/3d/interlagos-preview.webp" },
+      { pathname: "/f1/tracks/3d/las-vegas-preview.webp" },
+      { pathname: "/f1/tracks/3d/shanghai-preview.webp" },
+      { pathname: "/f1/tracks/3d/albert-park-preview.webp" },
+      { pathname: "/f1/tracks/3d/qatar-preview.webp" },
+      { pathname: "/f1/tracks/3d/yas-marina-preview.webp" },
     ],
     remotePatterns: [
       {

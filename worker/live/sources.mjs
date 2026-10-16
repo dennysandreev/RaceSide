@@ -192,9 +192,17 @@ export function replayMessages(replay) {
         gap_to_leader: p.gapToLeader,
         interval: p.intervalToAhead,
       });
-    if (p.compound && stintSeen.get(n)?.compound !== p.compound) {
-      const stint = (stintSeen.get(n)?.number ?? 0) + 1;
-      stintSeen.set(n, { compound: p.compound, number: stint });
+    const previousStint = stintSeen.get(n);
+    if (
+      p.compound &&
+      (previousStint?.compound !== p.compound ||
+        (!p.tyreAgeEstimated &&
+          p.tyreAge != null &&
+          previousStint?.age != null &&
+          p.tyreAge < previousStint.age))
+    ) {
+      const stint = (previousStint?.number ?? 0) + 1;
+      stintSeen.set(n, { compound: p.compound, number: stint, age: p.tyreAge });
       add(p.offsetMs, "stints", {
         driver_number: n,
         compound: p.compound,
@@ -203,6 +211,8 @@ export function replayMessages(replay) {
         tyre_age_at_start: p.tyreAge ?? 0,
       });
     }
+    if (!p.tyreAgeEstimated && p.tyreAge != null && stintSeen.has(n))
+      stintSeen.get(n).age = p.tyreAge;
     if (p.isPitLane && !pitSeen.get(n))
       add(p.offsetMs, "pit", {
         driver_number: n,

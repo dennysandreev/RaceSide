@@ -17,6 +17,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { makeAdminPageHref } from "@/lib/admin-table-query";
+import type { AdminTableQuery } from "@/types/admin";
 import { cn } from "@/lib/utils";
 
 export function AdminPageHeader({
@@ -169,6 +171,7 @@ export function AdminPagination({
   page,
   pageSize,
   total,
+  query,
   search,
   status,
 }: {
@@ -176,13 +179,14 @@ export function AdminPagination({
   page: number;
   pageSize: number;
   total: number;
+  query?: AdminTableQuery;
   search?: string;
   status?: string;
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
   if (pages <= 1) return null;
-  const previousHref = makePageHref(pathname, Math.max(1, page - 1), search, status);
-  const nextHref = makePageHref(pathname, Math.min(pages, page + 1), search, status);
+  const previousHref = makeAdminPageHref(pathname, Math.max(1, page - 1), query ?? { search, status, pageSize });
+  const nextHref = makeAdminPageHref(pathname, Math.min(pages, page + 1), query ?? { search, status, pageSize });
 
   return (
     <Pagination className="border-t border-border px-4 py-3">
@@ -198,7 +202,7 @@ export function AdminPagination({
         <PaginationItem>
           <PaginationLink
             className="min-w-28 whitespace-nowrap px-4"
-            href={makePageHref(pathname, page, search, status)}
+            href={makeAdminPageHref(pathname, page, query ?? { search, status, pageSize })}
             isActive
             size="default"
           >
@@ -228,6 +232,10 @@ export function AdminTechnicalValue({ value }: { value: unknown }) {
 }
 
 const statusLabels: Record<string, string> = {
+  dismissed: "Закрыто без действий",
+  private: "По приглашению",
+  suppressed: "Пропущено",
+  missing: "Нет данных",
   active: "Активно",
   acknowledged: "Принято",
   action_pending: "Ждёт действия",
@@ -307,12 +315,4 @@ function formatDigestDate(dateKey: string | null) {
     dateStyle: "long",
     timeZone: "Europe/Moscow",
   }).format(new Date(`${dateKey}T12:00:00Z`))}`;
-}
-
-function makePageHref(pathname: string, page: number, search?: string, status?: string) {
-  const params = new URLSearchParams();
-  params.set("page", String(page));
-  if (search) params.set("search", search);
-  if (status && status !== "all") params.set("status", status);
-  return `${pathname}?${params.toString()}`;
 }

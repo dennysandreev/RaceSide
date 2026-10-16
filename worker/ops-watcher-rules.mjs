@@ -5,7 +5,7 @@ const severityOrder = new Map([
   ["P3", 3],
 ]);
 
-export const OPS_WATCHER_RULESET_VERSION = "2026-09-14.1";
+export const OPS_WATCHER_RULESET_VERSION = "2026-10-04.1";
 
 export function evaluateOpsSnapshot(snapshot, now = new Date()) {
   const findings = [];
@@ -41,15 +41,29 @@ export function evaluateOpsSnapshot(snapshot, now = new Date()) {
   }
 
   const failedTelemetry = (snapshot.telemetryTasks ?? []).filter((task) => task.status === "failed");
-  if (failedTelemetry.length > 0) {
+  const failedTelemetryCount = snapshot.telemetrySummary ? Number(snapshot.telemetrySummary.failed24h ?? 0) : failedTelemetry.length;
+  if (failedTelemetryCount > 0) {
     findings.push(makeFinding({
       ruleKey: "telemetry-task-failed",
       subject: "telemetry",
       category: "data",
-      severity: failedTelemetry.length >= 3 ? "P1" : "P2",
+      severity: failedTelemetryCount >= 3 ? "P1" : "P2",
       title: "Подготовка телеметрии завершается ошибкой",
-      description: `Не удалось подготовить запросов: ${failedTelemetry.length}.`,
-      evidence: { failedCount: failedTelemetry.length },
+      description: `Не удалось подготовить запросов: ${failedTelemetryCount}.`,
+      evidence: { failedCount: failedTelemetryCount },
+      route: "/admin/systems#service-telemetry",
+    }));
+  }
+
+  if (!failedTelemetryCount && Number(snapshot.telemetrySummary?.queuedErrors ?? 0) > 0) {
+    findings.push(makeFinding({
+      ruleKey: "telemetry-history-inconsistent",
+      subject: "telemetry",
+      category: "data",
+      severity: "P3",
+      title: "Прежние запросы телеметрии требуют сверки",
+      description: "Ошибки остались в старых записях очереди. Новых ошибок за последние 24 часа нет.",
+      evidence: { queuedErrors: Number(snapshot.telemetrySummary.queuedErrors) },
       route: "/admin/systems#service-telemetry",
     }));
   }

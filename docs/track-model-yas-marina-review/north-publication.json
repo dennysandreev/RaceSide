@@ -1,0 +1,12 @@
+{
+  "publishedAtUtc": "2026-10-05T16:39:11.106347+00:00",
+  "baseImageId": "sha256:56d14b0f2c2b42fccceb76b43daa450277c409473793fb5a112db6caf459e87d",
+  "imageId": "sha256:ccd1c6b024fe51510b66cdb79f4403e382807b61e81ed4695914da18ff784dee",
+  "imageTag": "raceside:yas-marina-north-20261005-7a3f0c0ab1bb",
+  "health": "healthy",
+  "environmentUnchanged": true,
+  "previousTracksUnchanged": true,
+  "glbSha256": "7a3f0c0ab1bb1807a4a071133e382e8d18fdeee6d5d2504040a987fb93e81b54",
+  "previewSha256": "d757ef0c5aa4d522d2c98adbea3d806bd5345147da457d8f3c529cab3e3934f8",
+  "backup": "/home/racemate/releases/yas-marina-north-20261005-7a3f0c0ab1bb/publication-backup"
+}

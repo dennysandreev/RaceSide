@@ -9,6 +9,8 @@ import type {
   NormalizedLap,
   Metric,
   Insight,
+  Corner,
+  CornerMetric,
 } from "./types";
 export const VERSION: string;
 export const CHANNELS: readonly [
@@ -23,6 +25,7 @@ export const SOURCE: { provider: string; url: string; license: string };
 export function numeric(v: unknown): number | null;
 export function parseConfig(input: unknown): CompareConfig;
 export function bestLap(laps: Lap[]): Lap | null;
+export function bestLapCandidates(laps: Lap[]): Lap[];
 export function raceAverageLaps(laps: Lap[]): Lap[];
 export function drsValue(value: unknown): number | null;
 export function cleanSamples(rows: Record<string, unknown>[]): Point[];
@@ -53,6 +56,9 @@ export function detectEvents(
   minDistance?: number,
 ): { start: number; end: number }[];
 export function calculateMetrics(points: Point[], lapTime: number): Metric;
+export function cornerMetrics(points: Point[], corner: Corner): CornerMetric;
+export function alignLapToSectorTiming(trace: NormalizedLap, track: Track): NormalizedLap | null;
+export function rebuildComparisonTiming(comparison: Comparison): Comparison;
 export function buildComparison(
   traces: NormalizedLap[],
   track: Track,

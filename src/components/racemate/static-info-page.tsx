@@ -1,27 +1,16 @@
 import Link from "next/link";
 import { ArrowRight, FileText, Flag } from "lucide-react";
 
+import { InfoPageHeader } from "@/components/racemate/info-page-header";
 import { Button } from "@/components/ui/button";
 import type { StaticDocumentPage, StaticPlaceholderPage } from "@/content/static-pages";
 import { cn } from "@/lib/utils";
 
 export function StaticDocumentPageView({ page }: { page: StaticDocumentPage }) {
   return (
-    <section className="grid gap-5 py-5">
-      <header className="stitch-panel relative overflow-hidden p-5 sm:p-7">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_0%,rgb(225_6_0_/_0.2),transparent_20rem),linear-gradient(135deg,rgb(255_255_255_/_0.08),transparent_42%)]" />
-        <div className="relative max-w-4xl">
-          <p className="stitch-label mb-3 text-primary">Документы RaceSide</p>
-          <h1 className="font-display text-balance text-3xl font-extrabold leading-tight tracking-[-0.04em] sm:text-5xl">
-            {page.title}
-          </h1>
-          <p className="mt-4 max-w-[70ch] text-base leading-7 text-muted-foreground">
-            {page.description}
-          </p>
-        </div>
-      </header>
-
-      <article className="stitch-panel p-5 sm:p-7">
+    <section className="pb-8">
+      <article className="stitch-panel grid gap-6 p-5 sm:p-7">
+        <InfoPageHeader description={page.description} title={page.title} />
         <MarkdownContent content={page.body} />
       </article>
     </section>
@@ -84,12 +73,12 @@ function MarkdownContent({ content }: { content: string }) {
   const blocks = parseMarkdownBlocks(content);
 
   return (
-    <div className="grid max-w-[76ch] gap-5 text-base leading-7 text-muted-foreground">
+    <div className="grid max-w-[76ch] gap-4 text-sm leading-6 text-muted-foreground">
       {blocks.map((block, index) => {
         if (block.type === "h2") {
           return (
             <h2
-              className="pt-4 font-display text-2xl font-bold leading-tight text-foreground"
+              className="pt-3 font-display text-lg font-bold leading-tight text-foreground"
               key={index}
             >
               {renderInline(block.value)}
@@ -99,7 +88,7 @@ function MarkdownContent({ content }: { content: string }) {
 
         if (block.type === "h3") {
           return (
-            <h3 className="pt-2 text-lg font-bold leading-tight text-foreground" key={index}>
+            <h3 className="pt-2 text-base font-bold leading-tight text-foreground" key={index}>
               {renderInline(block.value)}
             </h3>
           );

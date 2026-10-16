@@ -163,9 +163,6 @@ async function loadSettings(client) {
 
 async function loadOpsSnapshot(client, options) {
   const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1_000).toISOString();
-  const monthStart = new Date();
-  monthStart.setUTCDate(1);
-  monthStart.setUTCHours(0, 0, 0, 0);
   const [
     heartbeats,
     jobs,
@@ -183,8 +180,8 @@ async function loadOpsSnapshot(client, options) {
     client.from("social_sources").select("id, name, is_active, fetch_interval_minutes, last_success_at, last_error").eq("is_active", true),
     client.from("notification_queue").select("id", { count: "exact", head: true }).eq("status", "failed"),
     client.from("admin_ai_budgets").select("monthly_limit_usd").eq("scope", "default").maybeSingle(),
-    client.rpc("get_ops_ai_monthly_spend", { p_since: monthStart.toISOString() }),
-    client.from("telemetry_tasks").select("id, status, updated_at").gte("updated_at", dayAgo).order("updated_at", { ascending: false }).limit(100),
+    client.rpc("get_ops_ai_monthly_spend", { p_since: new Date(Date.now() - 30 * 86_400_000).toISOString() }),
+    client.rpc("get_admin_operations_snapshot", {}),
     checkPublicHealth(options.healthUrl),
   ]);
 
@@ -200,7 +197,8 @@ async function loadOpsSnapshot(client, options) {
     notificationFailedCount: notificationFailures.count ?? 0,
     aiBudget: aiBudget.data,
     aiMonthlySpend: Number(aiSpend.data ?? 0),
-    telemetryTasks: telemetryTasks.data ?? [],
+    telemetrySummary: telemetryTasks.data?.telemetry ?? null,
+    telemetryTasks: [],
     publicHealth,
   };
 }

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { RaceSideLogoSvg } from "@/components/racemate/racemate-logo";
 import type {
   PredictionShareDriverPick,
   PredictionShareTeamPick,
@@ -189,55 +190,11 @@ function ShareHeader({
 
 function ShareLogo({ compact }: { compact: boolean }) {
   return (
-    <div style={{ alignItems: "center", display: "flex", gap: compact ? 12 : 15 }}>
-      <svg
-        aria-hidden="true"
-        height={compact ? 38 : 48}
-        viewBox="0 0 136 64"
-        width={compact ? 81 : 102}
-      >
-        <path
-          d="M5 59 18 7h27c12 0 19 6 19 15 0 10-8 17-20 17H27l23 20"
-          fill="none"
-          stroke={colors.primary}
-          strokeLinecap="square"
-          strokeLinejoin="round"
-          strokeWidth="10"
-        />
-        <path
-          d="M129 8H95c-10 0-16 5-16 13 0 7 6 11 15 11h19c10 0 16 5 16 13 0 8-6 13-16 13H76"
-          fill="none"
-          stroke={colors.primary}
-          strokeLinecap="square"
-          strokeLinejoin="round"
-          strokeWidth="10"
-        />
-      </svg>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <span
-          style={{
-            fontSize: compact ? 27 : 35,
-            fontWeight: 900,
-            letterSpacing: "-0.035em",
-            lineHeight: 1,
-          }}
-        >
-          RaceSide
-        </span>
-        <span
-          style={{
-            color: colors.muted,
-            fontFamily: monoFont,
-            fontSize: compact ? 9 : 11,
-            fontWeight: 700,
-            letterSpacing: compact ? 1.6 : 2.1,
-            marginTop: compact ? 5 : 7,
-          }}
-        >
-          ГОНОЧНЫЙ ЦЕНТР
-        </span>
-      </div>
-    </div>
+    <RaceSideLogoSvg
+      palette="dark"
+      variant={compact ? "horizontal" : "signature"}
+      width={compact ? 242 : 324}
+    />
   );
 }
 

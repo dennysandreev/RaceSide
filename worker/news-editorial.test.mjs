@@ -1,192 +1,221 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseSourceFacts, checkNewsDraft, runNewsEditorialPipeline, buildDigestInput, renderVerifiedDigest, combineNewsSources, verificationPasses } from "./news-editorial.mjs";
+import { NEWS_PIPELINE_VERSION, runNewsEditorialPipeline, checkNewsDraft, verificationPasses, applyNewsReviewCorrections, newsDraftParagraphs, buildDigestInput, renderVerifiedDigest, isUsableRussianNewsPayload, canRetryNewsSystemHold } from "./news-editorial.mjs";
+import { parseNewsEditorialMetadata } from "./news-deduplication.mjs";
 
-const source = { title: "Hamilton at Ferrari", text: "Lewis Hamilton drives for Ferrari. Some fans may stop watching. The gap is 145 points.", url: "https://example.com/f1", name: "The Race", authors: ["Gary Anderson"] };
-const extraction = () => ({ article_type: "news", relevant: true, risk: "normal", source_authors: ["Gary Anderson"], main_fact: "Хэмилтон выступает за Ferrari.", event_type: "driver_transfer", event_stage: "announcement", event_date: null, event_fingerprint: "hamilton_ferrari", entities: [{ type: "person", name: "Lewis Hamilton", normalized_name: "lewis_hamilton", role: "primary" }], facts: [{ id: "f1", kind: "fact", text: "Хэмилтон выступает за Ferrari.", evidence: "Lewis Hamilton drives for Ferrari.", attribution: null, essential: true }], caveats: [] });
-const draft = () => ({ title_ru: "Хэмилтон выступает за Ferrari", summary_ru: "Хэмилтон продолжает выступать за Ferrari.", details_ru: "Отрыв составляет 145 очков.", used_fact_ids: ["f1"], context_claims: [], team_slugs: [], highlight_phrases_ru: [] });
-const pass = () => ({ decision: "PASS", issues: [], scores: { fact_grounding: 1, source_fidelity: 1, attribution: 1, headline_fidelity: 1, information_density: 1, language_quality: 1 }, checked_claims: true });
-const context = { current_date: "2026-09-22", season: 2026, facts: [{ id: "driver:ham:team", kind: "driver_team", subject: "Lewis Hamilton", aliases: ["Хэмилтон", "Hamilton"], value: "Ferrari", scope: "current" }] };
+const source = { title: "Hamilton at Ferrari", text: "Lewis Hamilton drives for Ferrari. The gap is a quarter of a second. He joined in 2025.", url: "https://example.com/f1", name: "The Race", authors: ["Gary Anderson"] };
+const context = { current_date: "2026-10-05", season: 2026, facts: [{ id: "driver:ham:team", kind: "driver_team", subject: "Lewis Hamilton", value: "Ferrari", scope: "current", as_of: "2026-10-05" }], races: [{ round: 16 }], teams: [] };
+const draft = () => ({ title_ru: "Хэмилтон продолжает выступать за Ferrari", summary_ru: "Льюис Хэмилтон продолжает выступать за Ferrari после перехода в команду.", details_ru: "Пилот присоединился к команде в 2025 году. Отрыв составляет четверть секунды; впереди работа над настройками машины.", highlight_phrases_ru: ["четверть секунды"], race_round: 16 });
+const metadata = () => ({ article_type: "news", source_authors: ["Gary Anderson"], source_author_aliases: ["Гэри Андерсон"], main_fact: "Хэмилтон выступает за Ferrari", event_type: "driver_transfer", event_stage: "announcement", event_date: null, entities: [{ type: "driver", name: "Lewis Hamilton", role: "primary" }] });
+const composed = (article = draft(), extraction = metadata()) => ({ decision: "ARTICLE", duplicate_of: null, duplicate_confidence: 0, extraction, draft: article });
+const pass = () => ({ policy_version: 3, blocking_issues: [], corrections: { title_ru: null, summary_ru: null, paragraphs: [] }, checked_claims: true, decision: "PASS" });
+const run = (writer = composed(), review = pass()) => runNewsEditorialPipeline({ source, context, request: async key => key === "news.compose" ? writer : review });
 
-test("extraction rejects fabricated source fragments and unattributed opinions", () => {
-  const fake = extraction(); fake.facts[0].evidence = "Hamilton drives for Mercedes";
-  assert.equal(parseSourceFacts(fake, source), null);
-  const opinion = extraction(); opinion.facts[0].kind = "opinion";
-  assert.equal(parseSourceFacts(opinion, source), null);
-  assert.ok(parseSourceFacts(extraction(), source));
-});
-
-test("several evidence fragments are all checked against the original", () => {
-  const value = extraction();
-  value.facts[0].evidence = ["Lewis Hamilton drives for Ferrari.", "Some fans may stop watching."];
-  assert.ok(parseSourceFacts(value, source));
-  value.facts[0].evidence.push("FIA approved the change.");
-  assert.equal(parseSourceFacts(value, source), null);
-});
-
-test("evidence permits outer quotation marks but no changed content", () => {
-  const value = extraction();
-  value.facts[0].evidence = ['"Lewis Hamilton drives for Ferrari."'];
-  assert.ok(parseSourceFacts(value, source));
-  value.facts[0].evidence = ['"Lewis Hamilton drives for Mercedes."'];
-  assert.equal(parseSourceFacts(value, source), null);
-});
-
-test("hard checks reject wrong current team without rejecting historical context", () => {
-  const wrong = { ...draft(), details_ru: "Хэмилтон выступает за Mercedes." };
-  assert.ok(checkNewsDraft(wrong, extraction(), source, context).includes("driver_team_conflict"));
-  assert.ok(!checkNewsDraft({ ...draft(), details_ru: "До 2025 года Хэмилтон выступал за Mercedes." }, extraction(), source, context).includes("driver_team_conflict"));
-});
-
-test("hard checks reject invented numbers, false attribution and context values", () => {
-  const wrong = { ...draft(), details_ru: "Эксперты RaceSide считают, что отрыв составляет 146 очков.", context_claims: [{ id: "driver:ham:team", value: "Mercedes" }] };
-  const issues = checkNewsDraft(wrong, extraction(), source, context);
-  assert.ok(issues.includes("invented_number:146"));
-  assert.ok(issues.includes("raceside_opinion"));
-  assert.ok(issues.includes("context_claim_mismatch"));
-});
-
-test("a translated byline cannot enter the article as its subject", () => {
-  const value = { ...extraction(), source_author_aliases: ["Гэри Андерсон"] };
-  const result = checkNewsDraft({ ...draft(), summary_ru: "Гэри Андерсон предлагает изменить правила." }, value, source, context);
-  assert.ok(result.includes("source_meta_narration"));
-  assert.ok(checkNewsDraft({ ...draft(), summary_ru: "Предложение Андерсона касается новых правил." }, value, source, context).includes("source_meta_narration"));
-  assert.ok(!checkNewsDraft({ ...draft(), summary_ru: "FIA рассматривает изменение правил." }, value, source, context).includes("source_meta_narration"));
-});
-
-test("compact financial units are source numbers, not invented values", () => {
-  const input = { ...source, text: "$19million spending boost: $11m allowance and $8m loan." };
-  const issues = checkNewsDraft({ ...draft(), details_ru: "Бюджет увеличен на 19 миллионов долларов: 11 миллионов дополнительного лимита и 8 миллионов займа." }, extraction(), input, context);
-  assert.ok(!issues.some(issue => issue.startsWith("invented_number:")));
-});
-
-test("source narration is blocked with and without journalist names", () => {
-  for (const details_ru of [
-    "В материале The Race говорится о выступлениях Хэмилтона.",
-    "Автор считает, что формат можно изменить.",
-    "По мнению автора, формат стоит изменить.",
-    "По мнению The Race, формат стоит изменить.",
-    "Журналисты портала предлагают изменить формат.",
-    "The Race анализирует возможные изменения.",
-    "По одному из мнений, формат стоит изменить.",
-    "Другое мнение предполагает изменение формата.",
-  ]) assert.ok(checkNewsDraft({ ...draft(), details_ru }, extraction(), source, context).includes("source_meta_narration"), details_ru);
-  assert.ok(!checkNewsDraft({ ...draft(), details_ru: "FIA рассматривает изменения. Формат можно было бы сократить." }, extraction(), source, context).includes("source_meta_narration"));
-});
-
-test("an individual fan's story cannot become a general audience exodus", () => {
-  const limited = { ...source, title: "Why some fans switch off", description: "How one fan stopped watching" };
-  assert.ok(checkNewsDraft({ ...draft(), title_ru: "Спринты вызывают отток фанатов" }, extraction(), limited, context).includes("headline_scope_changed"));
-  assert.ok(!checkNewsDraft({ ...draft(), title_ru: "Почему часть болельщиков теряет интерес к спринтам" }, extraction(), limited, context).includes("headline_scope_changed"));
-  assert.ok(!checkNewsDraft({ ...draft(), title_ru: "Давний болельщик перестал смотреть спринты" }, extraction(), limited, context).includes("headline_scope_changed"));
-});
-
-test("a shorter opening sentence cannot repeat a longer lead", () => {
-  const value = { ...draft(), summary_ru: "Стефано Доменикали неоднократно заявлял о популярности спринтерских гонок среди фанатов, но опросы читателей показывают противоположную картину.", details_ru: "Стефано Доменикали неоднократно заявлял о популярности спринтерских гонок среди фанатов." };
-  assert.ok(checkNewsDraft(value, extraction(), source, context).includes("repeated_lead"));
-  assert.ok(checkNewsDraft({ ...value, summary_ru: `Количество спринтов выросло. ${value.summary_ru}` }, extraction(), source, context).includes("repeated_lead"));
-});
-
-test("extractor gets one correction attempt without admitting unsupported evidence", async () => {
-  let extractions = 0;
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => {
-    if (key === "news.extract") return ++extractions === 1 ? { ...extraction(), main_fact: { id: "f1" } } : extraction();
-    return key === "news.article" ? draft() : pass();
-  } });
-  assert.equal(extractions, 2);
-  assert.equal(result.decision, "PASS");
-});
-
-test("independent verifier blocks a headline which generalizes some fans", async () => {
+test("the simplified article flow uses the complete original and two requests", async () => {
   const calls = [];
-  const result = await runNewsEditorialPipeline({ source, context, request: async (key) => {
-    calls.push(key);
-    if (key === "news.extract") return extraction();
-    if (key === "news.article") return { ...draft(), title_ru: "Болельщики уходят из Формулы-1" };
-    return { ...pass(), decision: "REWRITE", issues: ["headline_scope_changed"] };
+  const result = await runNewsEditorialPipeline({ source, context, request: async (key, payload) => {
+    calls.push(key); assert.equal(payload.source.text, source.text);
+    if (key === "news.compose") return composed();
+    assert.deepEqual(payload.draft.paragraphs, newsDraftParagraphs(draft()));
+    assert.equal(payload.context.facts[0].value, "Ferrari");
+    assert.equal(payload.context.facts[0].as_of, "2026-10-05");
+    assert.equal(payload.context.facts[0].id, undefined);
+    return pass();
   } });
-  assert.equal(result.decision, "MANUAL_REVIEW");
-  assert.deepEqual(calls, ["news.extract", "news.article", "news.verify", "news.article", "news.verify"]);
+  assert.equal(NEWS_PIPELINE_VERSION, 3);
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(calls, ["news.compose", "news.verify"]);
+  assert.ok(parseNewsEditorialMetadata(result.extraction));
+  assert.deepEqual(result.context, context);
+  assert.deepEqual(result.attempts[0].draft, result.draft);
 });
 
-test("opinion is substantive conditional text and legal risk requires review", async () => {
-  const opinion = extraction(); opinion.article_type = "opinion";
-  assert.ok(checkNewsDraft({ ...draft(), title_ru: "Авторы The Race предлагают пересмотреть формат" }, opinion, source, context).includes("source_meta_narration"));
-  assert.ok(!checkNewsDraft({ ...draft(), title_ru: "Как можно изменить формат квалификации", details_ru: "Один из вариантов — сократить квалификацию." }, opinion, source, context).includes("source_meta_narration"));
-  const legal = extraction(); legal.article_type = "legal"; legal.risk = "high";
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? legal : key === "news.article" ? draft() : pass() });
-  assert.equal(result.decision, "MANUAL_REVIEW");
+test("audit IDs, source quote formatting and numeric units do not override a semantic pass", async () => {
+  const article = { ...draft(), context_claims: [{ id: "bad-id", value: "Ferrari" }], used_fact_ids: ["missing-id"], details_ru: "Пилот присоединился к команде в 2025 году. Отрыв составляет 250 миллисекунд, что соответствует четверти секунды." };
+  const result = await run(composed(article, { ...metadata(), facts: [{ evidence: "A malformed audit quotation." }] }));
+  assert.equal(result.decision, "PASS");
+  assert.deepEqual(result.draft.context_claims, []);
 });
 
-test("missing verification dimensions and missing essential facts prevent publication", async () => {
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? extraction() : key === "news.article" ? draft() : { decision: "PASS" } });
+test("a real unsupported claim still prevents publication after local checks are simplified", async () => {
+  const review = { ...pass(), decision: "MANUAL_REVIEW", blocking_issues: [{ excerpt: "FIA отменила гонку", reason: "Отмена гонки не подтверждается оригиналом." }] };
+  const result = await run(composed({ ...draft(), details_ru: draft().details_ru + " FIA отменила гонку." }), review);
   assert.equal(result.decision, "MANUAL_REVIEW");
-  assert.ok(checkNewsDraft({ ...draft(), used_fact_ids: [] }, extraction(), source, context).includes("essential_fact_missing"));
+  assert.ok(result.issues.includes("Отмена гонки не подтверждается оригиналом."));
 });
 
-test("a verified analysis can publish; genre alone is not a review reason", async () => {
-  for (const article_type of ["opinion", "column", "analysis", "technical_analysis"]) {
-    const value = { ...extraction(), article_type };
-    const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? value : key === "news.article" ? draft() : pass() });
+test("missing or malformed routing metadata gets a usable topic fallback", async () => {
+  for (const value of [null, {}, { entities: [null], event_type: null }, { ...metadata(), event_type: "!!!", event_stage: "???", main_fact: "" }]) {
+    const result = await run(composed(draft(), value));
     assert.equal(result.decision, "PASS");
-    assert.deepEqual(result.issues, []);
+    assert.ok(parseNewsEditorialMetadata(result.extraction));
+    assert.equal(result.extraction.main_fact, draft().title_ru);
   }
 });
 
-test("COVID-19 is a name, while a separate unsupported 19 remains blocked", () => {
-  const input = { ...source, text: "The race returned during the Covid pandemic in 2020 and 2021." };
-  const valid = { ...draft(), details_ru: "Гонка возвращалась во время пандемии COVID-19 в 2020 и 2021 годах." };
-  assert.ok(!checkNewsDraft(valid, extraction(), input, context).includes("invented_number:19"));
-  assert.ok(checkNewsDraft({ ...valid, details_ru: `${valid.details_ru} Бюджет составил 19 миллионов.` }, extraction(), input, context).includes("invented_number:19"));
+test("primary participant roles survive normalization for driver and team tags", async () => {
+  const result = await run();
+  assert.equal(result.extraction.entities[0].role, "primary");
 });
 
-test("nonblocking editorial suggestions do not override a verified factual pass", () => {
-  const review = { ...pass(), policy_version: 2, blocking_issues: [], suggestions: ["Можно сократить историческую справку."], scores: { ...pass().scores, information_density: 0.8, language_quality: 0.8 } };
-  assert.equal(verificationPasses(review), true);
-  assert.equal(verificationPasses({ ...review, blocking_issues: [{ category: "factual_error", explanation_ru: "Неверная команда." }] }), false);
-  assert.equal(verificationPasses({ ...review, checked_claims: false }), false);
-  assert.equal(verificationPasses({ ...review, policy_version: undefined, blocking_issues: [{ category: "factual_error" }] }), false);
-});
-
-test("12-hour source times allow the equivalent 24-hour time, not a different hour", () => {
-  const input = { ...source, text: "Practice at 1.30pm, qualifying at 4pm, race at 3pm." };
-  const valid = { ...draft(), details_ru: "Практика в 13:30, квалификация в 16:00, гонка в 15:00." };
-  assert.ok(!checkNewsDraft(valid, extraction(), input, context).some(issue => issue.startsWith("invented_number:")));
-  assert.ok(checkNewsDraft({ ...valid, details_ru: "Гонка в 17:00." }, extraction(), input, context).includes("invented_number:17"));
-});
-
-test("a factual error still blocks a high-scoring analysis with suggestions", async () => {
-  const review = { ...pass(), policy_version: 2, suggestions: ["Сократить текст."], blocking_issues: [{ category: "factual_error", draft_excerpt: "Ferrari", source_quote: "Ferrari", explanation_ru: "Нужно исправить фактическое утверждение." }] };
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? { ...extraction(), article_type: "analysis" } : key === "news.article" ? draft() : review });
-  assert.equal(result.decision, "MANUAL_REVIEW");
-  assert.ok(result.issues.includes("Нужно исправить фактическое утверждение."));
-  for (const patch of [{ policy_version: 3 }, { blocking_issues: null }, { suggestions: null }, { scores: {} }]) {
-    assert.equal(verificationPasses({ ...pass(), policy_version: 2, suggestions: [], blocking_issues: [], ...patch }), false);
-  }
-});
-
-test("an exact repeated lead is removed without deleting the new detail", async () => {
-  const lead = "Хэмилтон продолжает выступать за Ferrari.";
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? extraction() : key === "news.article" ? { ...draft(), details_ru: `${lead}\n\nОтрыв составляет 145 очков.` } : pass() });
+test("candidates and digests receive the corrected verified headline as their main fact", async () => {
+  const result = await run(composed(draft(), { ...metadata(), main_fact: "FIA отменила гонку." }),
+    { ...pass(), corrections: { title_ru: "Хэмилтон продолжает работу в Ferrari", summary_ru: null, paragraphs: [] } });
   assert.equal(result.decision, "PASS");
-  assert.equal(result.draft.details_ru, "Отрыв составляет 145 очков.");
+  assert.equal(result.extraction.main_fact, result.draft.title_ru);
+  assert.equal(buildDigestInput([{ id: "article", main_fact: result.extraction.main_fact }])[0].articles[0].main_fact, result.draft.title_ru);
 });
 
-test("irrelevant materials stop before writer and verifier", async () => {
+test("recovery retries system holds once and protects manual edits and factual holds", () => {
+  const generated = draft();
+  const article = { publication_status: "draft", published_manually: false, editorial_meta: { algorithm_version: 2 },
+    ai_processed_at: "2026-10-05T12:00:00Z", updated_at: "2026-10-05T12:00:01Z",
+    ai_title_ru: generated.title_ru, ai_summary_ru: generated.summary_ru, ai_summary_long_ru: generated.details_ru };
+  const review = { issues: ["invalid_review_edits"], attempts: [{ draft: generated, review: { decision: "PASS" } }] };
+  assert.equal(canRetryNewsSystemHold(article, review), true);
+  for (const patch of [{ editorial_meta: { algorithm_version: 3 } }, { published_manually: true },
+    { publication_status: "published" }, { ai_summary_long_ru: "Правка редактора" }, { updated_at: "2026-10-05T12:01:00Z" }]) {
+    assert.equal(canRetryNewsSystemHold({ ...article, ...patch }, review), false);
+  }
+  assert.equal(canRetryNewsSystemHold(article, { ...review, issues: ["Неподтверждённое обвинение в мошенничестве."] }), false);
+  assert.equal(canRetryNewsSystemHold(article, { ...review, attempts: [{ draft: generated, review: { decision: "MANUAL_REVIEW" } }] }), false);
+  assert.equal(canRetryNewsSystemHold(article, { issues: ["news_token_budget_exceeded"], attempts: [{ draft: generated, review: null }] }), true);
+});
+
+test("unknown race tags are removed without blocking supported prose", async () => {
+  const result = await run(composed({ ...draft(), race_round: 100, team_slugs: ["unknown"] }));
+  assert.equal(result.decision, "PASS");
+  assert.equal(result.draft.race_round, null);
+});
+
+test("a confirmed duplicate from another outlet takes one request", async () => {
   const calls = [];
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => { calls.push(key); return { ...extraction(), relevant: false }; } });
-  assert.equal(result.decision, "REJECT");
-  assert.deepEqual(calls, ["news.extract"]);
+  const result = await runNewsEditorialPipeline({ source, context, candidates: [{ id: "published" }], request: async key => {
+    calls.push(key); return { decision: "DUPLICATE", duplicate_of: "published", duplicate_confidence: 0.98, extraction: null, draft: null };
+  } });
+  assert.equal(result.decision, "DUPLICATE");
+  assert.equal(result.duplicate.duplicateOf, "published");
+  assert.deepEqual(calls, ["news.compose"]);
 });
 
-test("API failure never becomes a pass", async () => {
-  await assert.rejects(runNewsEditorialPipeline({ source, context, request: async () => { throw new Error("API unavailable"); } }), /API unavailable/);
+test("invented or uncertain duplicate targets cannot suppress news", async () => {
+  for (const [duplicate_of, duplicate_confidence] of [["invented", 1], ["published", 0.89]]) {
+    const result = await runNewsEditorialPipeline({ source, context, candidates: [{ id: "published" }], request: async () => ({ decision: "DUPLICATE", duplicate_of, duplicate_confidence }) });
+    assert.equal(result.decision, "MANUAL_REVIEW"); assert.equal(result.duplicate, undefined);
+  }
 });
 
-test("successful independent verification yields a publishable result", async () => {
-  const result = await runNewsEditorialPipeline({ source, context, request: async key => key === "news.extract" ? extraction() : key === "news.article" ? draft() : pass() });
+test("paragraph corrections support long replacements, deletions and repeated phrases", async () => {
+  const first = "Отрыв составляет 146 очков. ".repeat(13);
+  const second = "Отрыв составляет 146 очков. Это важная подробность второго абзаца, которую нужно сохранить.";
+  const article = { ...draft(), details_ru: first + "\n\n" + second };
+  const replacement = first.replaceAll("146", "145");
+  const review = { ...pass(), corrections: { title_ru: null, summary_ru: null, paragraphs: [{ index: 0, text: replacement }, { index: 1, text: second.replace("146", "145") }] } };
+  const result = await run(composed(article), review);
   assert.equal(result.decision, "PASS");
-  assert.equal(result.attempts.length, 1);
+  assert.equal(newsDraftParagraphs(result.draft)[0], replacement.trim());
+  assert.ok(result.draft.details_ru.includes("важная подробность второго абзаца"));
+  assert.equal(result.attempts[0].original_draft.details_ru, article.details_ru);
+  assert.equal(applyNewsReviewCorrections(article, { ...pass(), corrections: { title_ru: null, summary_ru: null, paragraphs: [{ index: 0, text: "" }] } }).details_ru, second);
+});
+
+test("corrections never select an invented paragraph or apply conflicting edits", async () => {
+  for (const paragraphs of [[{ index: 3, text: "Новая подробность" }], [{ index: -1, text: "Новая подробность" }], [{ index: 0, text: "a" }, { index: 0, text: "b" }], [null]]) {
+    const review = { ...pass(), corrections: { title_ru: null, summary_ru: null, paragraphs } };
+    assert.equal(applyNewsReviewCorrections(draft(), review), null);
+    assert.equal((await run(composed(), review)).decision, "MANUAL_REVIEW");
+  }
+});
+
+test("writer and verifier cannot publish source-author narration", async () => {
+  const article = { ...draft(), summary_ru: "Гэри Андерсон считает, что Хэмилтон продолжает выступать за Ferrari." };
+  assert.ok(checkNewsDraft(article, metadata(), source).includes("source_meta_narration"));
+  assert.equal((await run(composed(article))).decision, "MANUAL_REVIEW");
+  const review = { ...pass(), corrections: { title_ru: null, summary_ru: draft().summary_ru, paragraphs: [] } };
+  assert.equal((await run(composed(article), review)).decision, "PASS");
+  for (const phrase of ["Авторы The Race предлагают пересмотреть правила.", "В подкасте The Race разбирают старт гонки.", "В доступном фрагменте не уточняются последствия."]) {
+    assert.ok(checkNewsDraft({ ...draft(), details_ru: phrase }, metadata(), source).includes("source_meta_narration"));
+  }
+});
+
+test("a byline surname is a whole name, not a substring in technical Russian words", () => {
+  const byline = { ...metadata(), source_author_aliases: ["Эдд Стро", "Джон Ноубл"] };
+  const prose = { ...draft(), details_ru: "Команды установили настройки энергоменеджмента. Строительство объекта продолжается." };
+  assert.ok(!checkNewsDraft(prose, byline, source).includes("source_meta_narration"));
+  assert.ok(checkNewsDraft({ ...prose, details_ru: "Эдд Стро предложил изменить настройки." }, byline, source).includes("source_meta_narration"));
+});
+
+test("regulatory articles and physical power sources are not publication narration", () => {
+  const prose = { ...draft(), details_ru: "В статье B1.8.1 регламента сказано, что пилот должен управлять машиной самостоятельно. В источнике питания выявили неисправность." };
+  assert.ok(!checkNewsDraft(prose, metadata(), source).includes("source_meta_narration"));
+});
+
+test("conditional source framing is removed without changing its claim or adding a paid call", async () => {
+  const article = { ...draft(), details_ru: "Льюису Хэмилтону помогла сильная гонка, хотя автор оценки считал, что Ferrari могла претендовать на лучший результат благодаря выбору промежуточных шин на старте." };
+  const result = await run(composed(article));
+  assert.equal(result.decision, "PASS");
+  assert.equal(result.draft.details_ru, article.details_ru.replace("автор оценки считал, что ", ""));
+  const corrected = await run(composed(), { ...pass(), corrections: { title_ru: null, summary_ru: null, paragraphs: [{ index: 0, text: article.details_ru }] } });
+  assert.equal(corrected.decision, "PASS");
+  const unsafe = await run(composed({ ...article, details_ru: article.details_ru.replace("Ferrari могла претендовать", "FIA официально утвердила") }));
+  assert.equal(unsafe.decision, "MANUAL_REVIEW");
+});
+
+test("links and Markdown cannot survive a final factual pass", async () => {
+  const result = await run(composed({ ...draft(), details_ru: draft().details_ru + " [Подробнее](https://example.com)" }));
+  assert.equal(result.decision, "MANUAL_REVIEW"); assert.ok(result.issues.includes("reader_markup"));
+});
+
+test("a supported analysis or sensitive sporting report has no blanket genre hold", async () => {
+  for (const article_type of ["analysis", "opinion", "legal", "technical_analysis"]) {
+    const result = await run(composed(draft(), { ...metadata(), article_type, risk: "high" }));
+    assert.equal(result.decision, "PASS");
+  }
+});
+
+test("a bare PASS and legacy reviews cannot approve a new article", async () => {
+  for (const review of [{ decision: "PASS" }, { ...pass(), checked_claims: false }, { ...pass(), policy_version: 2 }, { ...pass(), corrections: null }]) {
+    assert.equal((await run(composed(), review)).decision, "MANUAL_REVIEW");
+  }
+});
+
+test("an empty corrected headline is held without crashing metadata normalization", async () => {
+  const result = await run(composed(), { ...pass(), corrections: { title_ru: "", summary_ru: null, paragraphs: [] } });
+  assert.equal(result.decision, "MANUAL_REVIEW");
+  assert.ok(result.issues.includes("incomplete_draft"));
+});
+
+test("digest verification must leave the checked text unchanged", () => {
+  assert.equal(verificationPasses(pass()), true);
+  const changed = { ...pass(), corrections: { title_ru: "Новый заголовок", summary_ru: null, paragraphs: [] } };
+  assert.equal(verificationPasses(changed), false);
+  assert.equal(verificationPasses(changed, { allowEdits: true }), true);
+});
+
+test("unusable text and irrelevant material do not incur a verification call", async () => {
+  for (const writer of [composed({ ...draft(), details_ru: "" }), { decision: "REJECT", reason: "Реклама" }]) {
+    const calls = []; const result = await runNewsEditorialPipeline({ source, context, request: async key => { calls.push(key); return writer; } });
+    assert.notEqual(result.decision, "PASS"); assert.deepEqual(calls, ["news.compose"]);
+  }
+});
+
+test("API failure or exhausted budget cannot become a pass or a paid repair loop", async () => {
+  await assert.rejects(runNewsEditorialPipeline({ source, context, request: async () => { throw new Error("API unavailable"); } }), /API unavailable/);
+  for (const code of ["news_token_budget_exceeded", "news_invalid_response"]) {
+    const calls = []; const result = await runNewsEditorialPipeline({ source, context, request: async key => {
+      calls.push(key); if (key === "news.compose") return composed(); throw Object.assign(new Error(code), { code });
+    } });
+    assert.equal(result.decision, "MANUAL_REVIEW"); assert.equal(result.draft.title_ru, draft().title_ru);
+    assert.deepEqual(result.issues, [code]); assert.equal(calls.length, 2);
+  }
+});
+
+test("Russian prose normalization preserves brand names and usable paragraphs", async () => {
+  const article = { ...draft(), details_ru: "Льюис Хэмилтoн продолжает работу в Ferrari. Команда улучшает настройки.\\n\\nПодготовка продолжается, пилот изучает новые данные." };
+  const result = await run(composed(article));
+  assert.equal(result.decision, "PASS"); assert.ok(result.draft.details_ru.includes("Хэмилтон"));
+  assert.equal(newsDraftParagraphs(result.draft).length, 2);
+  assert.ok(isUsableRussianNewsPayload({ title: result.draft.title_ru, summary: result.draft.summary_ru, details: result.draft.details_ru }));
 });
 
 test("digest groups the same event but retains source references", () => {
@@ -198,30 +227,10 @@ test("digest groups the same event but retains source references", () => {
 test("digest rejects invented references, numbers and repeated events", () => {
   const articles = [{ id: "a", slug: "one", event_fingerprint: "event", ai_title_ru: "Отрыв 145 очков", ai_summary_ru: "Отрыв 145 очков" }];
   const item = { headline: "Отрыв 145 очков", summary: "Отрыв 145 очков", article_ids: ["a"] };
-  assert.match(renderVerifiedDigest({ items: [item] }, articles), /https:\/\/raceside.online\/news\/one/);
+  assert.equal(renderVerifiedDigest({ items: [item] }, articles), "• Отрыв 145 очков\nОтрыв 145 очков");
   assert.equal(renderVerifiedDigest({ items: [{ ...item, article_ids: ["fake"] }] }, articles), null);
   assert.equal(renderVerifiedDigest({ items: [{ ...item, summary: "Отрыв 146 очков" }] }, articles), null);
   assert.equal(renderVerifiedDigest({ items: [item, item] }, articles), null);
-});
-
-test("multi-source facts must point to the original that actually supports them", () => {
-  const other = { ...source, url: "https://other.test", text: "Other independent reporting on the same event.", title: "Different details" };
-  const combined = combineNewsSources(source, other);
-  const extracted = extraction();
-  extracted.facts[0].source_url = other.url;
-  assert.equal(parseSourceFacts(extracted, combined), null);
-  extracted.facts[0].source_url = source.url;
-  assert.ok(parseSourceFacts(extracted, combined));
-  assert.equal(combineNewsSources({ sources: [source, other, { ...other, url: "https://third.test" }] }, { ...other, url: "https://fourth.test" }), null);
-});
-
-test("malformed nested output is held instead of crashing or publishing", () => {
-  assert.equal(parseSourceFacts({ ...extraction(), facts: [null] }, source), null);
-  assert.equal(parseSourceFacts({ ...extraction(), entities: [null] }, source), null);
-  assert.ok(checkNewsDraft({ ...draft(), context_claims: [null] }, extraction(), source, context).includes("context_claim_mismatch"));
-});
-
-test("an unknown event stage is explicit and source numbers can be written as digits", () => {
-  assert.equal(parseSourceFacts({ ...extraction(), event_stage: null }, source).event_stage, "unknown");
-  assert.ok(!checkNewsDraft({ ...draft(), details_ru: "Команда не выиграла 4 квалификации." }, extraction(), { ...source, text: `${source.text} Four qualifying sessions without pole.` }, context).includes("invented_number:4"));
+  assert.equal(renderVerifiedDigest({ items: [{ ...item, summary: "**Отрыв 145 очков** [Подробнее](https://raceside.online/news/one)" }] }, articles), "• Отрыв 145 очков\nОтрыв 145 очков");
+  assert.equal(renderVerifiedDigest({ items: [{ ...item, summary: "[Подробнее](https://raceside.online/news/one)" }] }, articles), null);
 });

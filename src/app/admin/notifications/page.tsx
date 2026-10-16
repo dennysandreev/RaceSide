@@ -58,14 +58,15 @@ export default async function AdminNotificationsPage({ searchParams }: PageProps
         </TabsList>
         <TabsContent value="queue">
           <AdminSection description={`${data.total} записей по текущему запросу.`} title="Очередь Telegram">
-            <AdminFilters
+            <AdminFilters query={query}
               search={query.search}
               status={query.status}
               statuses={[
-                { value: "queued", label: "В очереди" },
-                { value: "processing", label: "Отправляются" },
+                { value: "pending", label: "В очереди" },
+                { value: "sending", label: "Отправляются" },
                 { value: "sent", label: "Отправлены" },
                 { value: "failed", label: "С ошибкой" },
+                { value: "cancelled", label: "Отменены" },
               ]}
             />
             {data.queue.length ? (
@@ -122,7 +123,7 @@ export default async function AdminNotificationsPage({ searchParams }: PageProps
                     </article>
                   ))}
                 </div>
-                <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/notifications" search={query.search} status={query.status} total={data.total} />
+                <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/notifications" search={query.search} status={query.status} total={data.total} />
               </>
             ) : <AdminEmpty description="Измени фильтр или собери уведомления для ближайших событий." title="Очередь пуста" />}
           </AdminSection>

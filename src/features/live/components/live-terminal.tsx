@@ -8,21 +8,30 @@ import {
   Minimize,
   Wifi,
   CloudRain,
+  DropletOff,
+  Droplets,
+  Wind,
+  ChevronDown,
   FastForward,
   Flag,
   Pause,
   Play,
   Rewind,
 } from "lucide-react";
+import { Popover } from "radix-ui";
 import { Button } from "@/components/ui/button";
-import { RaceMateMark } from "@/components/racemate/racemate-logo";
+import { RaceSideLogoSvg } from "@/components/racemate/racemate-logo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LiveProvider,
   useConnection,
   useLive,
   useLiveReplay,
+  useLiveViewingMode,
+  useLiveSeekRevision,
+  useLiveNow,
 } from "./live-provider";
+import { LiveViewSwitch, LiveRewindControls } from "./live-rewind";
 import {
   TimingTower,
   SelectedDriver,
@@ -30,6 +39,8 @@ import {
   ordered,
 } from "./live-timing";
 import { LiveTrack } from "./live-track";
+import { PitStops } from "./live-pit-stops";
+import { ChampionshipPoints } from "./live-points";
 import { Analytics, DriverPanel, EventFeed, RadioFeed } from "./live-panels";
 import { sessionCapabilities, sessionLabel } from "../lib/session";
 import { gapText, lapTime } from "../lib/format";
@@ -60,6 +71,7 @@ export function LiveTerminal({
 }
 function Terminal({ returnUrl }: { returnUrl: string }) {
   const replay = useLiveReplay();
+  const viewingMode = useLiveViewingMode(), seekRevision = useLiveSeekRevision();
   const [selected, setSelected] = useState<number | null>(null),
     [mode, setMode] = useState("track"),
     [feed, setFeed] = useState("events"),
@@ -92,7 +104,7 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
             e.target.isContentEditable))
       )
         return;
-      const tab = ["track", "timing", "driver", "analytics"][Number(e.key) - 1];
+      const tab = ["track", "timing", "driver", "pits", "analytics", ...(!replay ? ["points"] : [])][Number(e.key) - 1];
       if (tab) {
         e.preventDefault();
         setMode(tab);
@@ -100,12 +112,11 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
-  const openRadio = () => {
-    setFilter(selectedNumber);
-    setFeed("radio");
-    setSeenRadio(readyRadio.map((message) => message.id));
-    if (matchMedia("(max-width: 1199px)").matches) setMode("radio");
+  }, [replay]);
+  const openEvents = () => {
+    setEventFilter(selectedNumber);
+    setFeed("events");
+    if (matchMedia("(max-width: 1199px)").matches) setMode("events");
   };
   const unseen = readyRadio.filter(
     (message) => !seenRadio.includes(message.id),
@@ -115,6 +126,7 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
       className="live-terminal"
       data-flag={flag}
       data-replay={replay ? "true" : undefined}
+      data-rewind={viewingMode === "rewind" ? "true" : undefined}
     >
       <Hud returnUrl={returnUrl} />
       <div className="live-body">
@@ -122,7 +134,7 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
           <TimingTower selected={selectedNumber} onSelect={onSelect} />
           <SelectedDriver
             selected={selectedNumber}
-            onRadio={openRadio}
+            onEvents={openEvents}
             onDetails={() => setMode("driver")}
           />
         </aside>
@@ -140,14 +152,16 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
               ["track", "Трасса"],
               ["timing", "Тайминг"],
               ["driver", "Пилот"],
+              ["pits", "Пит-стопы"],
               ["analytics", "Аналитика"],
+              ...(!replay ? [["points", "Очки"]] : []),
               ["events", "События"],
               ["radio", "Радио"],
-            ].map(([key, title], i) => (
+            ].map(([key, title]) => (
               <TabsTrigger
                 key={key}
                 value={key}
-                className={i > 3 ? "live-mobile-tab" : ""}
+                className={key === "events" || key === "radio" ? "live-mobile-tab" : ""}
               >
                 {title}
               </TabsTrigger>
@@ -166,16 +180,22 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
           <TabsContent value="analytics" className="live-central-panel">
             <Analytics />
           </TabsContent>
+          <TabsContent value="pits" className="live-central-panel">
+            <PitStops key={session?.session_key} selected={selectedNumber} onSelect={onSelect} />
+          </TabsContent>
+          {!replay ? <TabsContent value="points" className="live-central-panel">
+            <ChampionshipPoints selected={selectedNumber} onSelect={onSelect} />
+          </TabsContent> : null}
           <TabsContent value="events" className="live-central-panel">
             <EventFeed
-              key={session?.session_key}
+              key={`${session?.session_key}:${seekRevision}`}
               filter={eventFilter}
               onFilter={setEventFilter}
             />
           </TabsContent>
           <TabsContent value="radio" className="live-central-panel">
             <RadioFeed
-              key={session?.session_key}
+              key={`${session?.session_key}:${seekRevision}`}
               filter={filter}
               onFilter={setFilter}
             />
@@ -201,20 +221,21 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
           </TabsList>
           <TabsContent value="events">
             <EventFeed
-              key={session?.session_key}
+              key={`${session?.session_key}:${seekRevision}`}
               filter={eventFilter}
               onFilter={setEventFilter}
             />
           </TabsContent>
           <TabsContent value="radio">
             <RadioFeed
-              key={session?.session_key}
+              key={`${session?.session_key}:${seekRevision}`}
               filter={filter}
               onFilter={setFilter}
             />
           </TabsContent>
         </Tabs>
       </div>
+      {!replay ? <LiveRewindControls /> : null}
       {replay ? <ReplayControls /> : null}
     </main>
   );
@@ -222,13 +243,13 @@ function Terminal({ returnUrl }: { returnUrl: string }) {
 function Hud({ returnUrl }: { returnUrl: string }) {
   const router = useRouter();
   const replay = useLiveReplay();
+  const rewinding = useLiveViewingMode() === "rewind";
   const session = useLive("session"),
     status = useLive("status"),
     flag = useLive("flag"),
     lap = useLive("currentLap"),
     total = useLive("totalLaps"),
     phase = useLive("phase"),
-    weather = useLive("weather"),
     replayReady = useLive("replayReady"),
     connection = useConnection();
   const capabilities = sessionCapabilities(session);
@@ -271,18 +292,17 @@ function Hud({ returnUrl }: { returnUrl: string }) {
             <ArrowLeft />
           </Link>
         </Button>
-        <span className="live-wordmark">
-          <RaceMateMark className="live-logo" />
-          <span>
-            RaceSide <b>{replay ? "REPLAY" : "LIVE"}</b>
-          </span>
+        <span aria-label={`RaceSide ${replay ? "Replay" : "LIVE"}`} className="live-wordmark" role="img">
+          <RaceSideLogoSvg className="live-logo" width={128} />
+          <b aria-hidden="true">{replay ? "REPLAY" : "LIVE"}</b>
         </span>
         <strong className="live-grand-prix">
           {session?.race_name ?? session?.circuit_short_name ?? "Текущий этап"}
         </strong>
       </div>
+      {!replay ? <LiveViewSwitch /> : null}
       <div className="live-session-hud">
-        <span className="live-indicator" data-active={status === "live"}>
+        <span className="live-indicator" data-active={status === "live" && !rewinding}>
           {replay
             ? replay.isPlaying
               ? "Повтор"
@@ -293,7 +313,7 @@ function Hud({ returnUrl }: { returnUrl: string }) {
               ? "Скоро"
               : status === "paused"
                 ? "Пауза"
-                : "LIVE"}
+                : rewinding ? "Перемотка" : "LIVE"}
         </span>
         <span>{session ? sessionLabel(session) : "Сессия"}</span>
         {capabilities.showQualifyingPhase && phase ? (
@@ -313,10 +333,7 @@ function Hud({ returnUrl }: { returnUrl: string }) {
         )}
       </div>
       <div className="live-hud-end">
-        <span className="live-hud-weather" title="Воздух / трасса">
-          {weather?.air ?? "—"}° / {weather?.track ?? "—"}°{" "}
-          {weather?.rain === 1 && <CloudRain />}
-        </span>
+        <HudWeather />
         {replay ? (
           <span className="live-replay-clock">
             {formatReplayClock(replay.elapsedMs)} / {formatReplayClock(replay.durationMs)}
@@ -336,7 +353,7 @@ function Hud({ returnUrl }: { returnUrl: string }) {
             <Wifi />
             <span>
               {connection === "connected"
-                ? "В эфире"
+                ? rewinding ? "На связи" : "В эфире"
                 : connection === "offline"
                   ? "Нет связи"
                   : "Подключение…"}
@@ -364,6 +381,44 @@ function Hud({ returnUrl }: { returnUrl: string }) {
         )}
       </div>
     </header>
+  );
+}
+
+function HudWeather() {
+  const weather = useLive("weather");
+  const wind = weather?.wind == null ? "—" : `${(weather.wind * 3.6).toFixed(1).replace(".", ",")} км/ч`;
+  const humidity = weather?.humidity == null ? "—" : `${weather.humidity}%`;
+  const rain = weather?.rain === 1 ? "Дождь" : weather?.rain === 0 ? "Без дождя" : "Дождь —";
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <button type="button" className="live-hud-weather" aria-label="Погода на трассе" title="Погода на трассе">
+          <span title="Температура воздуха / трассы">{weather?.air ?? "—"}° / {weather?.track ?? "—"}°</span>
+          <span className="live-hud-weather-extra">
+            <span title="Влажность"><Droplets aria-hidden="true" />{humidity}</span>
+            <span title="Ветер"><Wind aria-hidden="true" />{wind}</span>
+            <span>
+              {weather?.rain === 1 ? <CloudRain aria-hidden="true" /> : weather?.rain === 0 ? <DropletOff aria-hidden="true" /> : null}
+              {rain}
+            </span>
+          </span>
+          <ChevronDown className="live-weather-chevron" aria-hidden="true" />
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content className="live-weather-popover" side="bottom" align="end" sideOffset={8} collisionPadding={12} aria-label="Погода на трассе">
+          <h2>Погода на трассе</h2>
+          <dl className="live-weather">
+            <div><dt>Воздух</dt><dd>{weather?.air ?? "—"}°C</dd></div>
+            <div><dt>Трасса</dt><dd>{weather?.track ?? "—"}°C</dd></div>
+            <div><dt>Влажность</dt><dd>{humidity}</dd></div>
+            <div><dt>Ветер</dt><dd>{wind}</dd></div>
+            <div><dt>Осадки</dt><dd>{rain}</dd></div>
+          </dl>
+          {weather && <p>Обновлено в {new Date(weather.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}</p>}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
 
@@ -475,11 +530,7 @@ function SessionWorkspace({
 }) {
   const session = useLive("session"),
     status = useLive("status");
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const now = useLiveNow();
   if (!session || status === "waiting") {
     const seconds = session
       ? Math.max(0, Math.floor((Date.parse(session.date_start) - now) / 1000))
@@ -563,11 +614,7 @@ function SessionCountdown() {
     timerPausedAt = useLive("timerPausedAt"),
     timerOffsetMs = useLive("timerOffsetMs"),
     status = useLive("status");
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const now = useLiveNow();
   const capabilities = sessionCapabilities(session);
   const end = capabilities.mode === "practice" ? session?.date_end : phaseEnd;
   if (!end || !["live", "paused"].includes(status)) return null;

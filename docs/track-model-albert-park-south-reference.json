@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "crs": "EPSG:7855",
+  "referenceYear": 2026,
+  "source": "Pinned OSM relation 280443 native public-road axes, FIA 2022 changes and FIA 2026 circuit map; historical photo is registered independently",
+  "fia2022": "https://www.fia.com/sites/default/files/doc_5_-_2022_australian_grand_prix_-_race_directors_event_notes.pdf",
+  "fia2026": "https://www.fia.com/system/files/decision-document/2026_australian_grand_prix_-_competition_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_and_quarantine_zone.pdf",
+  "entryNodeId": "1668416901",
+  "cornerNodeId": "7318990955",
+  "controlNodeId": "9123374386",
+  "turn11CentreRadiusMeters": 12,
+  "turn11RadiusStatus": "Reconstructed estimate constrained by current tight right-angle FIA layout, not surveyed engineering radius",
+  "turn13ApexNodeId": "7324121901",
+  "turn13CentreShiftMeters": 1,
+  "turn13ShiftStatus": "Centre estimate for FIA-confirmed 2 m outward apex kerb change; not a whole-sector translation",
+  "reviewControls": {
+    "11": [
+      {
+        "world": [
+          322147.6994072933,
+          5808610.245962577
+        ],
+        "before": [
+          322124.82209903316,
+          5808696.425170516
+        ],
+        "after": [
+          322169.391548563,
+          5808528.531298778
+        ],
+        "osmNodeId": "7324121878",
+        "historicalWorld": [
+          322151.07957463234,
+          5808611.143268691
+        ],
+        "reference": "Modern straightened T11 approach between native source endpoint controls; historical intervening public-road nodes are not the modern racing axis"
+      },
+      {
+        "world": [
+          322155.9937830121,
+          5808579.000908673
+        ],
+        "before": [
+          322124.82209903316,
+          5808696.425170516
+        ],
+        "after": [
+          322169.391548563,
+          5808528.531298778
+        ],
+        "osmNodeId": "7324020558",
+        "historicalWorld": [
+          322159.53700725833,
+          5808579.941500206
+        ],
+        "reference": "Modern straightened T11 approach between native source endpoint controls; historical intervening public-road nodes are not the modern racing axis"
+      },
+      {
+        "world": [
+          322166.81798941566,
+          5808533.691411175
+        ],
+        "before": [
+          322167.02449586266,
+          5808534.4216682585
+        ],
+        "after": [
+          322166.56573669956,
+          5808532.975667585
+        ],
+        "reference": "Reconstructed tight T11 centre arc; native source tangent intersection and FIA 2026 topology"
+      },
+      {
+        "world": [
+          322165.5454795234,
+          5808530.943784909
+        ],
+        "before": [
+          322165.92820687016,
+          5808531.599101701
+        ],
+        "after": [
+          322165.1220952431,
+          5808530.313970595
+        ],
+        "reference": "Reconstructed tight T11 centre arc; native source tangent intersection and FIA 2026 topology"
+      },
+      {
+        "world": [
+          322163.625705598,
+          5808528.602161626
+        ],
+        "before": [
+          322164.1602849258,
+          5808529.140812962
+        ],
+        "after": [
+          322163.05814736994,
+          5808528.098377964
+        ],
+        "reference": "Reconstructed tight T11 centre arc; native source tangent intersection and FIA 2026 topology"
+      }
+    ],
+    "12": [
+      {
+        "world": [
+          321986.67440474307,
+          5808478.987723315
+        ],
+        "before": [
+          322000.4101504114,
+          5808483.692951236
+        ],
+        "after": [
+          321976.46848635835,
+          5808475.502497802
+        ],
+        "osmNodeId": "12627864832"
+      },
+      {
+        "world": [
+          321929.73592923075,
+          5808464.919306556
+        ],
+        "before": [
+          321936.5671682281,
+          5808464.900927722
+        ],
+        "after": [
+          321925.8415953809,
+          5808465.489858197
+        ],
+        "osmNodeId": "9652554528"
+      },
+      {
+        "world": [
+          321892.0210446063,
+          5808480.543163532
+        ],
+        "before": [
+          321897.4165679745,
+          5808476.508098401
+        ],
+        "after": [
+          321887.8059610645,
+          5808484.5372208
+        ],
+        "osmNodeId": "12627864844"
+      }
+    ],
+    "13": [
+      {
+        "world": [
+          321782.15819105005,
+          5808654.390630878
+        ],
+        "before": [
+          321789.29781594954,
+          5808643.8211668115
+        ],
+        "after": [
+          321778.00807500165,
+          5808659.440728011
+        ],
+        "osmNodeId": "7324121819"
+      },
+      {
+        "world": [
+          321765.9872163657,
+          5808664.94169049
+        ],
+        "before": [
+          321770.84095942706,
+          5808664.380931171
+        ],
+        "after": [
+          321762.1767648499,
+          5808664.481515923
+        ],
+        "osmNodeId": "7324121901"
+      },
+      {
+        "world": [
+          321756.51009991165,
+          5808661.127861916
+        ],
+        "before": [
+          321759.17867190123,
+          5808663.095312999
+        ],
+        "after": [
+          321751.66819711716,
+          5808655.871481091
+        ],
+        "osmNodeId": "7324121890"
+      }
+    ],
+    "14": [
+      {
+        "world": [
+          321683.39321697294,
+          5808580.073027982
+        ],
+        "before": [
+          321689.6296621416,
+          5808583.938696211
+        ],
+        "after": [
+          321677.0321558179,
+          5808577.081697959
+        ],
+        "osmNodeId": "7324121816"
+      },
+      {
+        "world": [
+          321650.5269569851,
+          5808571.410260225
+        ],
+        "before": [
+          321659.3828252567,
+          5808571.802445112
+        ],
+        "after": [
+          321641.91914034646,
+          5808572.566617543
+        ],
+        "osmNodeId": "7324121827"
+      },
+      {
+        "world": [
+          321618.46141118003,
+          5808582.215278877
+        ],
+        "before": [
+          321624.68746681436,
+          5808578.4537683185
+        ],
+        "after": [
+          321611.3322215205,
+          5808587.433716736
+        ],
+        "osmNodeId": "7324121911"
+      },
+      {
+        "world": [
+          321605.86476041074,
+          5808592.74376123
+        ],
+        "before": [
+          321611.3322215205,
+          5808587.433716736
+        ],
+        "after": [
+          321522.7856599353,
+          5808673.258992256
+        ],
+        "osmNodeId": "7324121841"
+      }
+    ]
+  },
+  "mainStraightAxisWorld": [
+    [
+      321522.7856599353,
+      5808673.258992256
+    ],
+    [
+      321310.4506248215,
+      5808877.568045267
+    ]
+  ],
+  "turn14ExitRangeRelativeToControlMeters": [
+    -400,
+    -250
+  ],
+  "turn11StraightApproachNodeId": "7324020547",
+  "turn11ApproachReference": "https://www.grandprix.com.au/community/track-evolution",
+  "turn11ApproachStatus": "Post-2022 straightened final approach from native node 7324020547 to tangent fillet; old intervening public-road jogs omitted"
+}

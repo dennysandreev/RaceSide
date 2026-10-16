@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useId, useState } from "react";
 import { FilePenLine, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
@@ -107,13 +108,13 @@ function PromptRow({
             <div className="flex gap-2">
               <dt>Модель:</dt>
               <dd className="font-mono">
-                {activeVersion?.model ?? item.definition.modelFallback}
+                {item.definition.modelFallback}
               </dd>
             </div>
             <div className="flex gap-2">
               <dt>Лимит ответа:</dt>
               <dd className="font-mono tabular-nums">
-                {activeVersion?.maxTokens ?? item.definition.maxTokens} токенов
+                {Math.min(activeVersion?.maxTokens ?? item.definition.maxTokens, item.definition.maxTokens)} токенов
               </dd>
             </div>
           </dl>
@@ -156,13 +157,10 @@ function PromptEditorForm({
   const [userTemplate, setUserTemplate] = useState(
     activeVersion?.userTemplate ?? item.definition.defaultUserTemplate,
   );
-  const [model, setModel] = useState(
-    activeVersion?.model ?? item.definition.modelFallback,
-  );
+  const model = item.definition.modelFallback;
   const [maxTokens, setMaxTokens] = useState(
-    activeVersion?.maxTokens ?? item.definition.maxTokens,
+    Math.min(activeVersion?.maxTokens ?? item.definition.maxTokens, item.definition.maxTokens),
   );
-  const modelListId = `${formId}-models`;
   const [state, formAction, pending] = useActionState(
     saveAiPromptVersionAction,
     initialState,
@@ -177,7 +175,6 @@ function PromptEditorForm({
   function restoreDefault() {
     setSystemPrompt(item.definition.defaultSystemPrompt);
     setUserTemplate(item.definition.defaultUserTemplate);
-    setModel(item.definition.modelFallback);
     setMaxTokens(item.definition.maxTokens);
   }
 
@@ -211,24 +208,14 @@ function PromptEditorForm({
                   aria-invalid={Boolean(state.fieldErrors?.model)}
                   autoComplete="off"
                   id={`${formId}-model`}
-                  list={modelListId}
                   maxLength={160}
                   name="model"
-                  onChange={(event) => setModel(event.target.value)}
+                  readOnly
                   required
                   value={model}
                 />
-                <datalist id={modelListId}>
-                  {models.map((availableModel) => (
-                    <option
-                      key={availableModel.id}
-                      label={availableModel.name}
-                      value={availableModel.id}
-                    />
-                  ))}
-                </datalist>
                 <FieldDescription>
-                  Начни вводить название и выбери доступную модель.
+                  Одна модель для всех текстовых задач.
                 </FieldDescription>
                 <FieldError>{state.fieldErrors?.model?.join(" ")}</FieldError>
               </Field>
@@ -240,7 +227,7 @@ function PromptEditorForm({
                 <Input
                   aria-invalid={Boolean(state.fieldErrors?.maxTokens)}
                   id={`${formId}-max-tokens`}
-                  max={getSelectedModel(models, model)?.maxCompletionTokens ?? 32_768}
+                  max={item.definition.maxTokens}
                   min={16}
                   name="maxTokens"
                   onChange={(event) => setMaxTokens(Number(event.target.value))}
@@ -260,7 +247,7 @@ function PromptEditorForm({
               </p>
             ) : models.length ? (
               <p className="text-xs leading-5 text-warning">
-                Выбери модель из списка OpenRouter.
+                Каталог OpenRouter пока не подтвердил доступность модели.
               </p>
             ) : (
               <p className="text-xs leading-5 text-warning">
@@ -344,9 +331,10 @@ function PromptEditorForm({
             <Separator />
 
             <section>
-              <h4 className="text-sm font-medium">История версий</h4>
+              <h4 className="text-sm font-medium">Последние версии</h4>
               <div className="mt-3 flex flex-col gap-3">
-                {item.history.length ? item.history.slice(0, 6).map((version) => (
+                <Link className="text-xs font-medium text-primary" href={`/admin/ai?tab=history&promptKey=${encodeURIComponent(item.definition.key)}`}>Открыть всю историю</Link>
+                {item.history.length ? item.history.map((version) => (
                   <div className="grid gap-1 text-xs" key={version.id}>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-medium">Версия {version.version}</span>

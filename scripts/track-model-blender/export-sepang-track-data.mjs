@@ -1,7 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { downloadSepangData } from './download-sepang-data.mjs';
+import { downloadSepangData, loadSepangBuildingColours } from './download-sepang-data.mjs';
 import { SEPANG_BOUNDS,MAIN_WAYS,PIT_WAYS,assembleWays,utm47nFromWgs84,cumulativeDistances,nearestDistance,rotateClosedLine,distance } from './sepang-geometry.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 // OSM apex vertices checked against FIA Document 1 (2017), page 2. Distances
@@ -9,6 +9,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const TURN_VERTICES=[[1561055755,7],[1561055755,23],[1561055769,11],[1561055757,4],[144359489,9],[144359489,23],[1561055760,3],[1561055760,7],[1561055762,4],[1561055763,5],[1561055764,3],[1561055771,3],[1561055765,7],[1561055766,3],[1561055768,5]];
 export async function exportSepangTrackData({forceSources=false,outputPath,sourceDirectory=path.join(root,'.track-model-build/sepang-source')}) {
   const manifest=await downloadSepangData({force:forceSources,sourceDirectory});
+  const buildingAppearance=await loadSepangBuildingColours();
   const osm=JSON.parse(await readFile(path.join(sourceDirectory,'openstreetmap.json'),'utf8'));
   const source=assembleWays(osm,MAIN_WAYS,{closed:true});
   const finish=osm.elements.find(f=>f.tags.raceway==='start-finish');
@@ -32,7 +33,7 @@ export async function exportSepangTrackData({forceSources=false,outputPath,sourc
     const t=.5+(i-16.5)*8/frontageLength;
     return nearestDistance(pitCenterline,a.map((v,axis)=>v+(b[axis]-v)*t)).distance;
   }).sort((a,b)=>a-b);
-  const payload={vectors,schemaVersion:4,generatorVersion:'1.0.0',sourceDirectory,sourceManifest:manifest,
+  const payload={vectors,schemaVersion:4,generatorVersion:'1.0.0',sourceDirectory,sourceManifest:manifest,buildingAppearance,
     model:{id:'sepang',bounds,center:{x:(bounds.minX+bounds.maxX)/2,y:(bounds.minY+bounds.maxY)/2},lapLengthMeters:5543,mainCircuitWayIds:MAIN_WAYS,pitLaneWayIds:PIT_WAYS,centerline,pitCenterline,pitGarageMarkDistancesMeters,sourceStartFinishOffsetMeters:offset.distance,startFinishDistanceMeters:0,trackWidthMeters:16,pitLaneWidthMeters:8,pitBoxes:33,turns},
     officialControlPoints:{referenceYear:2017,currentEventVerified:false,sectorBoundaries:[{sector:2,absoluteDistanceMeters:turns[3].distanceMeters-151},{sector:3,absoluteDistanceMeters:turns[8].distanceMeters+80}],speedTrap:{turn:15,beforeTurnMeters:207},drs:[]},
     officialSources:manifest.sources.filter(s=>s.file==='fia-2017-circuit-map.pdf'||s.file.startsWith('official-')).map(({url,role})=>({url,role})),

@@ -1,0 +1,40 @@
+{
+  "modelId": "qatar",
+  "crs": "EPSG:32639",
+  "bounds": { "minX": 544760, "minY": 2818410, "maxX": 546420, "maxY": 2820250 },
+  "officialLengthMeters": 5419,
+  "mainWayIds": [152483595, 1553605580],
+  "pitWayIds": [1037707300, 196193732],
+  "finishNodeId": 14134811030,
+  "pitBuildingId": 152483597,
+  "mainGrandstandId": 152483596,
+  "turnNodes": [
+    [152483595, 13], [152483595, 34], [152483595, 49], [152483595, 66],
+    [152483595, 80], [152483595, 99], [152483595, 119], [152483595, 140],
+    [152483595, 152], [152483595, 167], [152483595, 185], [152483595, 203],
+    [152483595, 217], [152483595, 230], [152483595, 239], [1553605580, 15]
+  ],
+  "grandstands": [
+    { "id": 152483596, "name": "Main Grandstand", "covered": true, "reference": "OSM footprint, LIC 2026 event map and current grandstand photo" },
+    { "id": 1436401469, "name": "T2 Grandstand", "covered": false, "reference": "OSM terrace footprint and LIC 2026 event map" },
+    { "id": 1436401470, "name": "T3 Grandstand", "covered": false, "reference": "OSM terrace footprint and LIC 2026 event map" },
+    { "id": 1316027537, "name": "Permanent northeast terrace", "covered": false, "reference": "OSM permanent terrace; not asserted as an active 2026 F1 ticket category" }
+  ],
+  "reviewedEventStands": [
+    { "name": "North Grandstand", "startMeters": 310, "endMeters": 465, "side": 1, "frontOffsetMeters": 31, "depthMeters": 18, "reference": "LIC 2026 event map; approximate metric reconstruction alongside the north end of the pit straight" },
+    { "name": "T16 Grandstand", "fromTurn": 16, "startOffsetMeters": -220, "endOffsetMeters": -85, "side": 1, "frontOffsetMeters": 30, "depthMeters": 18, "reference": "LIC 2026 event map and Sentinel footprint; approximate metric reconstruction outside the T16 approach" }
+  ],
+  "referenceYear": 2025,
+  "currentEventVerified": false,
+  "garageBays": 50,
+  "trackWidthMeters": 12,
+  "pitWidthMeters": 8,
+  "limitations": [
+    "FIA 2025 sporting map is the latest published control reference at acquisition; 2026 controls and team garage assignments need a later event update.",
+    "The promoter's August 2026 event map confirms grandstand categories; manually reconstructed North and T16 footprints and all stand heights are estimates, not survey data.",
+    "Sentinel true colour has native 10 m resolution. Fine ground boundaries come from OSM; authored material detail is not aerial photogrammetry.",
+    "GEDTM30 is a 30 m historical bare-earth estimate in EGM2008. Small berms, local banking and the 2023 earthworks are not surveyed.",
+    "No public LoD2/DSM was located. Building heights, facade rhythm, seat row patterns and floodlight dimensions are source-informed estimates.",
+    "Permanent team hospitality pavilions are modelled from current mapped footprints. Unconfirmed 2026 motorhomes, transporters and small temporary tents are omitted."
+  ]
+}

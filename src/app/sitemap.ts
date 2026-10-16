@@ -28,6 +28,7 @@ const staticPaths = [
   "/fantasy/leaderboard",
   "/leagues",
   "/polls",
+  "/feedback",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

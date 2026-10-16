@@ -18,8 +18,10 @@ const initialCancelState: CancelCheckoutState = {};
 
 export function PaymentRecoveryActions({
   orderNumber,
+  canResume,
 }: {
   orderNumber: string;
+  canResume: boolean;
 }) {
   const router = useRouter();
   const [repeatState, repeatAction, repeating] = useActionState(
@@ -49,7 +51,7 @@ export function PaymentRecoveryActions({
   return (
     <div className="w-full sm:w-auto">
       <div className="flex flex-col gap-2 sm:flex-row">
-        <form action={repeatAction}>
+        {canResume ? <form action={repeatAction}>
           <input name="orderNumber" type="hidden" value={orderNumber} />
           <Button className="w-full sm:w-auto" disabled={busy} type="submit">
             {repeating ? (
@@ -63,7 +65,7 @@ export function PaymentRecoveryActions({
             )}
             {repeating ? "Открываем оплату" : "Повторить оплату"}
           </Button>
-        </form>
+        </form> : null}
         <form action={cancelAction}>
           <input name="orderNumber" type="hidden" value={orderNumber} />
           <Button
@@ -95,20 +97,5 @@ export function PaymentRecoveryActions({
 }
 
 function submitHostedCheckout(checkout: HostedCheckout) {
-  if (checkout.kind === "redirect") {
-    window.location.assign(checkout.url);
-    return;
-  }
-  const form = document.createElement("form");
-  form.action = checkout.action;
-  form.method = "POST";
-  for (const [name, value] of Object.entries(checkout.fields)) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.append(input);
-  }
-  document.body.append(form);
-  form.submit();
+  window.location.assign(checkout.url);
 }

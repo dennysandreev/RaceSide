@@ -124,3 +124,27 @@ test("Madring pit route lies on the actual delivered GLB surface and agrees with
     previous = mapped;
   }
 });
+
+test("Baku LIVE map follows an independent FP1 lap", async () => {
+  const track = JSON.parse(
+    await readFile(new URL("./tracks/baku-2026.json", import.meta.url)),
+  );
+  const lap = [
+    { x: 2552, y: 3549 },
+    { x: -5360, y: -264 },
+    { x: -11397, y: -4470 },
+    { x: -14235, y: -10992 },
+    { x: -6729, y: -3769 },
+  ];
+  const projected = lap.map((point) => {
+    const location = mapLocation(track, point);
+    const distanceMeters =
+      projectLocation(track.centerline, location.x, location.y).distance /
+      track.transform.scale /
+      10;
+    assert.ok(distanceMeters < 10);
+    return location.progress;
+  });
+  assert.ok(projected.every((progress, index) => index === 0 || progress > projected[index - 1]));
+  assert.ok(Math.abs(track.centerline.at(-1).distanceM / 10 - 6003) < 300);
+});

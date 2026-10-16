@@ -76,6 +76,8 @@
     "preview:cleanup": "node scripts/cleanup-preview-engagement.mjs",
     "telegram:authorize": "node scripts/telegram-authorize.mjs",
     "lint": "eslint .",
+    "check:repository": "node scripts/check-repository-hygiene.mjs",
+    "test:repository": "node --test scripts/check-repository-hygiene.test.mjs",
     "test:fantasy-assets": "node --test src/data/fantasy-track-assets.test.mjs",
     "test:fantasy-scoring": "node scripts/check-fantasy-scoring.mjs",
     "test:fantasy-league-avatar": "node --experimental-strip-types --test src/lib/fantasy-league-avatar.test.mjs",
@@ -88,7 +90,7 @@
     "test:season-points": "node --experimental-strip-types --test src/lib/f1-points.test.mjs",
     "test:polymarket": "node --experimental-strip-types --test src/lib/polymarket-race-match.test.mjs",
     "test:security": "node --experimental-strip-types --test src/lib/admin-security-boundary.test.mjs src/lib/social-media-storage.test.mjs",
-    "test:admin": "node --experimental-strip-types --test src/lib/admin-operations.test.mjs src/lib/admin-security-boundary.test.mjs src/lib/admin-ai-prompts.test.mjs worker/adaptive-job-schedule.test.mjs worker/ai-prompt-registry.test.mjs worker/ai-usage.test.mjs",
+    "test:admin": "node --experimental-strip-types --test src/lib/admin-corrections.test.mjs worker/ai-budget.test.mjs src/lib/admin-operations.test.mjs src/lib/admin-security-boundary.test.mjs src/lib/admin-ai-prompts.test.mjs worker/adaptive-job-schedule.test.mjs worker/ai-prompt-registry.test.mjs worker/ai-usage.test.mjs",
     "test:ops": "node --experimental-strip-types --test src/lib/admin-agent/findings.test.mjs src/lib/admin-agent/health.test.mjs src/lib/admin-agent/schema.test.mjs worker/cli-loop.test.mjs worker/ops-heartbeat.test.mjs worker/ops-watcher.test.mjs worker/support-report.test.mjs worker/support-telegram.test.mjs",
     "assets:history:teams": "node scripts/check-f1-historical-team-assets.mjs",
     "assets:history:circuits": "python3 scripts/review-f1-circuit-maps.py --require-approved",
@@ -107,8 +109,8 @@
     "live": "node worker/live/server.mjs",
     "live:replay": "LIVE_DATA_SOURCE=replay node worker/live/server.mjs",
     "test:live": "node --test worker/live/*.test.mjs",
-    "test:telemetry": "node --experimental-strip-types --test worker/telemetry/*.test.mjs src/features/telemetry/lib/client.test.mjs src/features/telemetry/lib/demo-selection.test.mjs",
-    "test:billing": "node --experimental-strip-types --test src/lib/billing/access-policy.test.mjs src/lib/billing/billing.test.mjs src/lib/billing/order-state.test.mjs src/lib/billing/subscription-display.test.mjs worker/tribute-reconciliation.test.mjs worker/yoomoney-reconciliation.test.mjs supabase/functions/yoomoney-webhook/logic.test.mjs"
+    "test:telemetry": "node --experimental-strip-types --test worker/telemetry/*.test.mjs src/features/telemetry/lib/*.test.mjs",
+    "test:billing": "node --experimental-strip-types --test src/lib/billing/access-policy.test.mjs src/lib/billing/billing.test.mjs src/lib/billing/order-state.test.mjs src/lib/billing/providers/lava-event.test.mjs src/lib/billing/providers/lava.test.mjs src/lib/billing/subscription-display.test.mjs worker/tribute-reconciliation.test.mjs worker/yoomoney-reconciliation.test.mjs supabase/functions/yoomoney-webhook/logic.test.mjs"
   },
   "dependencies": {
     "@dnd-kit/dom": "0.5.0",

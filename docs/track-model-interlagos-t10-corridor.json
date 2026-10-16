@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "wayId": 138566993,
+  "turnNumber": 10,
+  "crs": "EPSG:31983",
+  "sourceFile": "orthophoto-2020.jpg",
+  "sourceBounds": {
+    "minX": 325600,
+    "minY": 7377000,
+    "maxX": 327750,
+    "maxY": 7379100
+  },
+  "sourceLicense": "CC BY-SA 4.0",
+  "reviewedAt": "2026-10-04",
+  "method": "Paired visible asphalt/kerb edges traced on locked GeoSampa 2020 orthophoto; centre is the paired midpoint; actual local width is the edge separation; unchanged OSM endpoints and nominal-width transitions outside T10. This is imagery interpretation, not a survey.",
+  "estimatedEdgeUncertaintyMeters": 0.75,
+  "turnAnchorSourceNodeIndex": 27,
+  "stations": [
+    {
+      "sourceNodeId": 165492110,
+      "sourceNodeIndex": 0,
+      "innerEdgeWorld": [
+        326785.604,
+        7377967.371
+      ],
+      "outerEdgeWorld": [
+        326777.255,
+        7377958.751
+      ],
+      "method": "unchanged endpoint"
+    },
+    {
+      "sourceNodeId": 11735562664,
+      "sourceNodeIndex": 3,
+      "innerEdgeWorld": [
+        326749.767,
+        7378005.174
+      ],
+      "outerEdgeWorld": [
+        326740.525,
+        7377997.52
+      ],
+      "method": "transition station"
+    },
+    {
+      "sourceNodeId": 1517708192,
+      "sourceNodeIndex": 8,
+      "innerEdgeWorld": [
+        326736.75,
+        7378029.937
+      ],
+      "outerEdgeWorld": [
+        326725.946,
+        7378024.715
+      ],
+      "method": "transition station"
+    },
+    {
+      "sourceNodeId": 2007747970,
+      "sourceNodeIndex": 10,
+      "innerEdgeWorld": [
+        326733.192,
+        7378042.586
+      ],
+      "outerEdgeWorld": [
+        326721.863,
+        7378039.285
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 165492113,
+      "sourceNodeIndex": 11,
+      "innerEdgeWorld": [
+        326726.277,
+        7378068.268
+      ],
+      "outerEdgeWorld": [
+        326714.658,
+        7378065.269
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336458,
+      "sourceNodeIndex": 12,
+      "innerEdgeWorld": [
+        326722.101,
+        7378087.95
+      ],
+      "outerEdgeWorld": [
+        326709.662,
+        7378085.149
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562651,
+      "sourceNodeIndex": 13,
+      "innerEdgeWorld": [
+        326721.459,
+        7378092.466
+      ],
+      "outerEdgeWorld": [
+        326708.137,
+        7378090.611
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562652,
+      "sourceNodeIndex": 14,
+      "innerEdgeWorld": [
+        326720.432,
+        7378096.377
+      ],
+      "outerEdgeWorld": [
+        326707.358,
+        7378095.54
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336444,
+      "sourceNodeIndex": 15,
+      "innerEdgeWorld": [
+        326719.927,
+        7378100.187
+      ],
+      "outerEdgeWorld": [
+        326706.127,
+        7378100.1
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336436,
+      "sourceNodeIndex": 16,
+      "innerEdgeWorld": [
+        326720.045,
+        7378103.82
+      ],
+      "outerEdgeWorld": [
+        326705.517,
+        7378105.269
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562653,
+      "sourceNodeIndex": 17,
+      "innerEdgeWorld": [
+        326719.956,
+        7378106.154
+      ],
+      "outerEdgeWorld": [
+        326705.641,
+        7378109.912
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562654,
+      "sourceNodeIndex": 18,
+      "innerEdgeWorld": [
+        326719.98,
+        7378107.447
+      ],
+      "outerEdgeWorld": [
+        326706.923,
+        7378113.637
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336428,
+      "sourceNodeIndex": 19,
+      "innerEdgeWorld": [
+        326720.139,
+        7378109.247
+      ],
+      "outerEdgeWorld": [
+        326708.036,
+        7378117.141
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562655,
+      "sourceNodeIndex": 20,
+      "innerEdgeWorld": [
+        326721.101,
+        7378111.755
+      ],
+      "outerEdgeWorld": [
+        326709.845,
+        7378121.054
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336426,
+      "sourceNodeIndex": 21,
+      "innerEdgeWorld": [
+        326721.697,
+        7378113.433
+      ],
+      "outerEdgeWorld": [
+        326712.458,
+        7378124.479
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336422,
+      "sourceNodeIndex": 22,
+      "innerEdgeWorld": [
+        326724.21,
+        7378117.216
+      ],
+      "outerEdgeWorld": [
+        326715.182,
+        7378130.426
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562657,
+      "sourceNodeIndex": 23,
+      "innerEdgeWorld": [
+        326726.587,
+        7378119.854
+      ],
+      "outerEdgeWorld": [
+        326718.742,
+        7378134.369
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336416,
+      "sourceNodeIndex": 24,
+      "innerEdgeWorld": [
+        326729.462,
+        7378121.479
+      ],
+      "outerEdgeWorld": [
+        326723.37,
+        7378137.081
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562656,
+      "sourceNodeIndex": 25,
+      "innerEdgeWorld": [
+        326731.802,
+        7378122.642
+      ],
+      "outerEdgeWorld": [
+        326727.923,
+        7378138.783
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336412,
+      "sourceNodeIndex": 26,
+      "innerEdgeWorld": [
+        326733.818,
+        7378123.3
+      ],
+      "outerEdgeWorld": [
+        326732.507,
+        7378139.748
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562658,
+      "sourceNodeIndex": 27,
+      "innerEdgeWorld": [
+        326736.29,
+        7378123.485
+      ],
+      "outerEdgeWorld": [
+        326737.17,
+        7378139.861
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336398,
+      "sourceNodeIndex": 28,
+      "innerEdgeWorld": [
+        326738.784,
+        7378124.132
+      ],
+      "outerEdgeWorld": [
+        326742.04,
+        7378139.695
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336401,
+      "sourceNodeIndex": 29,
+      "innerEdgeWorld": [
+        326741.672,
+        7378123.467
+      ],
+      "outerEdgeWorld": [
+        326746.83,
+        7378137.552
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 11735562649,
+      "sourceNodeIndex": 30,
+      "innerEdgeWorld": [
+        326744.07,
+        7378122.825
+      ],
+      "outerEdgeWorld": [
+        326750.434,
+        7378135.07
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336414,
+      "sourceNodeIndex": 31,
+      "innerEdgeWorld": [
+        326746.512,
+        7378121.963
+      ],
+      "outerEdgeWorld": [
+        326754.16,
+        7378132.352
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 2001336420,
+      "sourceNodeIndex": 32,
+      "innerEdgeWorld": [
+        326751.489,
+        7378118.952
+      ],
+      "outerEdgeWorld": [
+        326758.907,
+        7378127.608
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 165492117,
+      "sourceNodeIndex": 33,
+      "innerEdgeWorld": [
+        326757.562,
+        7378113.28
+      ],
+      "outerEdgeWorld": [
+        326765.151,
+        7378121.38
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 165492118,
+      "sourceNodeIndex": 34,
+      "innerEdgeWorld": [
+        326765.963,
+        7378104.71
+      ],
+      "outerEdgeWorld": [
+        326774.371,
+        7378112.7
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 1519118782,
+      "sourceNodeIndex": 35,
+      "innerEdgeWorld": [
+        326780.572,
+        7378083.403
+      ],
+      "outerEdgeWorld": [
+        326789.782,
+        7378092.002
+      ],
+      "method": "GeoSampa RGB cross-section edge trace"
+    },
+    {
+      "sourceNodeId": 1517636536,
+      "sourceNodeIndex": 36,
+      "innerEdgeWorld": [
+        326803.832,
+        7378056.82
+      ],
+      "outerEdgeWorld": [
+        326812.543,
+        7378065.074
+      ],
+      "method": "unchanged endpoint"
+    }
+  ],
+  "sourceSha256": "fed73f069a4cc510081cee21f89b1efdf1b90bd0ab32eae52ab0d147626cc228"
+}

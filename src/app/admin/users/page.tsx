@@ -3,6 +3,7 @@ import { BellRing, Crown } from "lucide-react";
 import {
   disconnectTelegramAction,
   sendTestNotificationAction,
+  cancelAdminLavaSubscriptionAction,
   grantSubscriptionAction,
   revokeSubscriptionAction,
 } from "@/app/admin/operations";
@@ -49,7 +50,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         title="Пользователи"
       />
       <AdminSection description={`${data.total} профилей по текущему запросу.`} title="Поддержка пользователей">
-        <AdminFilters search={query.search} />
+        <AdminFilters query={query} search={query.search} />
         {data.items.length ? (
           <>
             <div className="hidden overflow-x-auto xl:block">
@@ -83,12 +84,12 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                       <TableCell>
                         <AdminStatusBadge status={profile.telegram?.is_active ? "active" : profile.telegram ? "warning" : "unknown"} />
                       </TableCell>
-                      <TableCell><SubscriptionStatus subscription={profile.subscription} /></TableCell>
+                      <TableCell><SubscriptionStatus subscription={profile.subscription} /><p className="mt-1 text-xs text-muted-foreground">{subscriptionLabel(profile.subscription)}</p><AutoRenewStatus contract={profile.lavaContract} userId={profile.id} userName={profile.display_name || profile.email || "Пользователь"} /></TableCell>
                       <TableCell>
                         <div className="flex flex-col items-end gap-2">
                           {profile.telegram?.is_active ? (
                             <>
-                              <AdminActionForm action={sendTestNotificationAction} submitLabel="Проверить" submitVariant="secondary">
+                              <AdminActionForm action={sendTestNotificationAction} submitLabel="Отправить тест" submitVariant="secondary">
                                 <input name="userId" type="hidden" value={profile.id} />
                               </AdminActionForm>
                               <AdminConfirmedAction
@@ -161,12 +162,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                       </div>
                     ) : null}
                   </div>
+                  <AutoRenewStatus contract={profile.lavaContract} userId={profile.id} userName={profile.display_name || profile.email || "Пользователь"} />
                   <GrantSubscriptionForm email={profile.email} name={profile.display_name} subscription={profile.subscription} userId={profile.id} />
                   {isActiveSubscription(profile.subscription) ? <RevokeSubscriptionForm userId={profile.id} /> : null}
                 </article>
               ))}
             </div>
-            <AdminPagination page={query.page} pageSize={query.pageSize} pathname="/admin/users" search={query.search} total={data.total} />
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/users" search={query.search} total={data.total} />
           </>
         ) : (
           <AdminEmpty description="Проверь имя или email в строке поиска." title="Профиль не найден" />
@@ -188,7 +190,7 @@ function GrantSubscriptionForm({ email, name, subscription, userId }: { email: s
 }
 
 function RevokeSubscriptionForm({ userId }: { userId: string }) {
-  return <AdminConfirmedForm action={revokeSubscriptionAction} confirmLabel="Отозвать Plus" description="LIVE, полная телеметрия и Telegram-уведомления закроются сразу. Действие сохранится в журнале админки." submitLabel="Отозвать" submitVariant="outline" title="Отозвать подписку?">
+  return <AdminConfirmedForm action={revokeSubscriptionAction} confirmLabel="Отозвать Plus" description="LIVE, полная телеметрия и Telegram-уведомления закроются сразу. Автопродление в Lava продолжит действовать: его можно отключить отдельно. Действие сохранится в журнале админки." submitLabel="Отозвать" submitVariant="outline" title="Отозвать подписку?">
     <input name="userId" type="hidden" value={userId} />
     <label className="grid gap-1 text-sm"><span className="text-xs text-muted-foreground">Причина</span><input className="h-9 rounded-md border border-border bg-background px-3" maxLength={500} minLength={3} name="reason" placeholder="Например, подписка выдана по ошибке" required /></label>
   </AdminConfirmedForm>;
@@ -210,4 +212,17 @@ function isActiveSubscription(subscription: { status: string; current_period_end
 function subscriptionActionLabel(subscription: { status: string; current_period_end: string | null } | null) {
   if (isActiveSubscription(subscription)) return "Продлить Plus";
   return subscription ? "Выдать снова" : "Выдать Plus";
+}
+
+function AutoRenewStatus({ contract, userId, userName }: { contract: { id: string; lava_auto_renew: boolean; lava_cancelled_at: string | null } | null; userId: string; userName: string }) {
+  if (!contract) return <p className="mt-2 text-xs text-muted-foreground">Договор автопродления не найден</p>;
+  return <div className="mt-2 grid gap-2 text-xs">
+    <p>{contract.lava_auto_renew ? "Автопродление включено" : contract.lava_cancelled_at ? `Автопродление отключено ${new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow" }).format(new Date(contract.lava_cancelled_at))}` : "Автопродление отключено"}</p>
+    {contract.lava_auto_renew ? <details><summary className="cursor-pointer font-medium">Отключить автопродление</summary>
+      <AdminConfirmedForm action={cancelAdminLavaSubscriptionAction} confirmFields={[{ name: "reason", label: "Причина" }]} className="mt-2 max-w-64" confirmLabel="Отключить автопродление" description={`${userName}. Новые списания прекратятся после подтверждения Lava. Уже оплаченный доступ сохранится до конца срока.`} submitLabel="Отключить" submitVariant="outline" title="Отключить будущие списания?">
+        <input name="userId" type="hidden" value={userId} /><input name="orderId" type="hidden" value={contract.id} />
+        <label className="grid gap-1">Причина<input className="h-9 rounded-md border border-input bg-background px-2" name="reason" minLength={3} maxLength={500} required /></label>
+      </AdminConfirmedForm>
+    </details> : null}
+  </div>;
 }

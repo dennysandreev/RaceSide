@@ -1,0 +1,4027 @@
+[
+  {
+    "session": {
+      "id": 11234,
+      "end": "2026-03-08T06:00:00+00:00",
+      "name": "Race",
+      "slug": "race-11234",
+      "type": "Race",
+      "start": "2026-03-08T04:00:00+00:00",
+      "season": 2026,
+      "circuit": "Melbourne",
+      "country": "Australia",
+      "meetingId": 1279,
+      "circuitKey": 10
+    },
+    "drivers": [
+      {
+        "id": "11234:63",
+        "code": "RUS",
+        "name": "George RUSSELL",
+        "team": "Mercedes",
+        "color": "#00D7B6",
+        "number": 63,
+        "portrait": null,
+        "position": 1
+      }
+    ],
+    "laps": [
+      {
+        "driverNumber": 63,
+        "number": 1,
+        "time": null,
+        "start": "2026-03-08T04:03:26.365000+00:00",
+        "complete": false,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": true,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 3,
+        "time": 84.789,
+        "start": "2026-03-08T04:07:50.924000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 4,
+        "time": 84.017,
+        "start": "2026-03-08T04:09:15.734000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 5,
+        "time": 84.639,
+        "start": "2026-03-08T04:10:39.836000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 6,
+        "time": 84.099,
+        "start": "2026-03-08T04:12:04.440000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 7,
+        "time": 85.19,
+        "start": "2026-03-08T04:13:28.475000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 8,
+        "time": 85.978,
+        "start": "2026-03-08T04:14:53.683000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 9,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 9,
+        "time": 84.112,
+        "start": "2026-03-08T04:16:19.651000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 10,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 10,
+        "time": 83.967,
+        "start": "2026-03-08T04:17:43.806000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 11,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 11,
+        "time": 125.94,
+        "start": "2026-03-08T04:19:07.725000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": null,
+        "tyreAge": 12,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 12,
+        "time": 117.659,
+        "start": "2026-03-08T04:21:13.659000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 0,
+        "pitIn": true,
+        "pitOut": true,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 13,
+        "time": 87.094,
+        "start": "2026-03-08T04:23:11.320000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 1,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 14,
+        "time": 82.825,
+        "start": "2026-03-08T04:24:38.378000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 15,
+        "time": 82.923,
+        "start": "2026-03-08T04:26:01.293000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 3,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 16,
+        "time": 82.765,
+        "start": "2026-03-08T04:27:24.168000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 17,
+        "time": 88.979,
+        "start": "2026-03-08T04:28:47.004000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 18,
+        "time": 115.257,
+        "start": "2026-03-08T04:30:16.008000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 19,
+        "time": 90.936,
+        "start": "2026-03-08T04:32:11.146000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 20,
+        "time": 82.67,
+        "start": "2026-03-08T04:33:42.181000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 21,
+        "time": 82.892,
+        "start": "2026-03-08T04:35:04.740000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 9,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 22,
+        "time": 82.828,
+        "start": "2026-03-08T04:36:27.643000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 10,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 23,
+        "time": 83.466,
+        "start": "2026-03-08T04:37:50.553000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 11,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 24,
+        "time": 82.879,
+        "start": "2026-03-08T04:39:13.948000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 12,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 25,
+        "time": 83.093,
+        "start": "2026-03-08T04:40:36.767000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 13,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 26,
+        "time": 83.188,
+        "start": "2026-03-08T04:41:59.979000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 14,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 27,
+        "time": 83.39,
+        "start": "2026-03-08T04:43:23.159000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 15,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 28,
+        "time": 83.486,
+        "start": "2026-03-08T04:44:46.426000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 16,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 29,
+        "time": 83.272,
+        "start": "2026-03-08T04:46:10.063000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 17,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 30,
+        "time": 83.147,
+        "start": "2026-03-08T04:47:33.244000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 18,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 31,
+        "time": 83.54,
+        "start": "2026-03-08T04:48:56.487000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 19,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 32,
+        "time": 83.838,
+        "start": "2026-03-08T04:50:20.016000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 20,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 33,
+        "time": 97.592,
+        "start": "2026-03-08T04:51:43.768000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 21,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 34,
+        "time": 83.017,
+        "start": "2026-03-08T04:53:21.464000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 22,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 35,
+        "time": 82.729,
+        "start": "2026-03-08T04:54:44.478000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 23,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 36,
+        "time": 82.839,
+        "start": "2026-03-08T04:56:07.141000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 24,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 37,
+        "time": 82.863,
+        "start": "2026-03-08T04:57:30.005000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 25,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 38,
+        "time": 82.738,
+        "start": "2026-03-08T04:58:52.749000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 26,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 39,
+        "time": 82.915,
+        "start": "2026-03-08T05:00:15.645000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 27,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 40,
+        "time": 83.073,
+        "start": "2026-03-08T05:01:38.520000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 28,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 41,
+        "time": 83.054,
+        "start": "2026-03-08T05:03:01.644000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 29,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 42,
+        "time": 82.893,
+        "start": "2026-03-08T05:04:24.599000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 30,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 43,
+        "time": 82.856,
+        "start": "2026-03-08T05:05:47.509000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 31,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 44,
+        "time": 83.477,
+        "start": "2026-03-08T05:07:10.417000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 32,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 45,
+        "time": 83.751,
+        "start": "2026-03-08T05:08:33.934000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 33,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 46,
+        "time": 83.033,
+        "start": "2026-03-08T05:09:57.719000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 34,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 47,
+        "time": 83.034,
+        "start": "2026-03-08T05:11:20.592000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 35,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 48,
+        "time": 82.844,
+        "start": "2026-03-08T05:12:43.648000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 36,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 49,
+        "time": 83.087,
+        "start": "2026-03-08T05:14:06.605000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 37,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 50,
+        "time": 82.762,
+        "start": "2026-03-08T05:15:29.675000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 38,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 51,
+        "time": 83.106,
+        "start": "2026-03-08T05:16:52.327000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 39,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 52,
+        "time": 83.069,
+        "start": "2026-03-08T05:18:15.459000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 40,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 53,
+        "time": 83.1,
+        "start": "2026-03-08T05:19:38.526000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 41,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 54,
+        "time": 82.67,
+        "start": "2026-03-08T05:21:01.730000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 42,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 55,
+        "time": 82.757,
+        "start": "2026-03-08T05:22:24.384000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 43,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 56,
+        "time": 83.188,
+        "start": "2026-03-08T05:23:47.071000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 44,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 57,
+        "time": 83.351,
+        "start": "2026-03-08T05:25:10.333000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 45,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 63,
+        "number": 58,
+        "time": null,
+        "start": "2026-03-08T05:26:33.622000+00:00",
+        "complete": false,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 46,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      }
+    ],
+    "raceControl": [
+      {
+        "date": "2026-03-08T03:20:00+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:21:22+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 6,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 6",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:21:25+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 6,
+        "message": "CLEAR IN TRACK SECTOR 6",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:21:26+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 7,
+        "message": "YELLOW IN TRACK SECTOR 7",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:21:50+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 6,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 6",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:21:51+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 7,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 7",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:29:59+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "YELLOW IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:30:15+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:30:25+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "CLEAR IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:32:26+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "CLEAR IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:37:53+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 7,
+        "message": "CLEAR IN TRACK SECTOR 7",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:37:54+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 6,
+        "message": "CLEAR IN TRACK SECTOR 6",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:40:23+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 15,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T03:40:40+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 15,
+        "message": "CLEAR IN TRACK SECTOR 15",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:03:26+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:19:08+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC DEPLOYED",
+        "category": "SafetyCar",
+        "lap_number": 12,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:19:16+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "YELLOW IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 12,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:19:19+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 12,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:23:05+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "CLEAR IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 14,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:23:07+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC ENDING",
+        "category": "SafetyCar",
+        "lap_number": 14,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:23:19+00:00",
+        "flag": "CLEAR",
+        "scope": "Track",
+        "sector": null,
+        "message": "TRACK CLEAR",
+        "category": "Flag",
+        "lap_number": 14,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:29:38+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "YELLOW IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 18,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:29:55+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC DEPLOYED",
+        "category": "SafetyCar",
+        "lap_number": 18,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:31:17+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "CLEAR IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 19,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:32:26+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC ENDING",
+        "category": "SafetyCar",
+        "lap_number": 20,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:32:39+00:00",
+        "flag": "CLEAR",
+        "scope": "Track",
+        "sector": null,
+        "message": "TRACK CLEAR",
+        "category": "Flag",
+        "lap_number": 20,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:20+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC DEPLOYED",
+        "category": "SafetyCar",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:20+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "CLEAR IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:23+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:37+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 12,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 12",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:55+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 13,
+        "message": "CLEAR IN TRACK SECTOR 13",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:56+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 12,
+        "message": "CLEAR IN TRACK SECTOR 12",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:52:58+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "VSC ENDING",
+        "category": "SafetyCar",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T04:53:11+00:00",
+        "flag": "CLEAR",
+        "scope": "Track",
+        "sector": null,
+        "message": "TRACK CLEAR",
+        "category": "Flag",
+        "lap_number": 34,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T05:32:13+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 19,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 19",
+        "category": "Flag",
+        "lap_number": 58,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-08T05:33:37+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 19,
+        "message": "CLEAR IN TRACK SECTOR 19",
+        "category": "Flag",
+        "lap_number": 58,
+        "meeting_key": 1279,
+        "session_key": 11234,
+        "driver_number": null,
+        "qualifying_phase": null
+      }
+    ]
+  },
+  {
+    "session": {
+      "id": 11245,
+      "end": "2026-03-15T09:00:00+00:00",
+      "name": "Race",
+      "slug": "race-11245",
+      "type": "Race",
+      "start": "2026-03-15T07:00:00+00:00",
+      "season": 2026,
+      "circuit": "Shanghai",
+      "country": "China",
+      "meetingId": 1280,
+      "circuitKey": 49
+    },
+    "drivers": [
+      {
+        "id": "11245:12",
+        "code": "ANT",
+        "name": "Kimi ANTONELLI",
+        "team": "Mercedes",
+        "color": "#00D7B6",
+        "number": 12,
+        "portrait": null,
+        "position": 1
+      }
+    ],
+    "laps": [
+      {
+        "driverNumber": 12,
+        "number": 1,
+        "time": 100.643,
+        "start": "2026-03-15T07:03:59.830000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 0,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 2,
+        "time": 98.305,
+        "start": "2026-03-15T07:05:40.472000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 1,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 3,
+        "time": 98.013,
+        "start": "2026-03-15T07:07:18.779000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 4,
+        "time": 97.394,
+        "start": "2026-03-15T07:08:56.676000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 3,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 5,
+        "time": 97.535,
+        "start": "2026-03-15T07:10:34.091000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 6,
+        "time": 97.172,
+        "start": "2026-03-15T07:12:11.736000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 7,
+        "time": 97.412,
+        "start": "2026-03-15T07:13:48.823000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 8,
+        "time": 97.322,
+        "start": "2026-03-15T07:15:26.248000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 9,
+        "time": 97.356,
+        "start": "2026-03-15T07:17:03.619000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 10,
+        "time": 106.671,
+        "start": "2026-03-15T07:18:40.894000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN",
+          "SC"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 9,
+        "pitIn": true,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 11,
+        "time": 167.222,
+        "start": "2026-03-15T07:20:27.639000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "SC"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 0,
+        "pitIn": true,
+        "pitOut": true,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 12,
+        "time": 149.91,
+        "start": "2026-03-15T07:23:14.898000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 1,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 13,
+        "time": 150.521,
+        "start": "2026-03-15T07:25:44.750000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 14,
+        "time": 98.957,
+        "start": "2026-03-15T07:28:15.332000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 3,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 15,
+        "time": 98.222,
+        "start": "2026-03-15T07:29:54.178000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 16,
+        "time": 96.604,
+        "start": "2026-03-15T07:31:32.378000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 17,
+        "time": 96.555,
+        "start": "2026-03-15T07:33:09.065000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 18,
+        "time": 97.059,
+        "start": "2026-03-15T07:34:45.631000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 19,
+        "time": 96.816,
+        "start": "2026-03-15T07:36:22.750000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 20,
+        "time": 96.762,
+        "start": "2026-03-15T07:37:59.534000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 9,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 21,
+        "time": 96.929,
+        "start": "2026-03-15T07:39:36.298000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 10,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 22,
+        "time": 96.612,
+        "start": "2026-03-15T07:41:13.210000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 11,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 23,
+        "time": 96.806,
+        "start": "2026-03-15T07:42:49.784000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 12,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 24,
+        "time": 96.513,
+        "start": "2026-03-15T07:44:26.643000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 13,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 25,
+        "time": 96.514,
+        "start": "2026-03-15T07:46:03.134000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 14,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 26,
+        "time": 96.588,
+        "start": "2026-03-15T07:47:39.655000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 15,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 27,
+        "time": 96.59,
+        "start": "2026-03-15T07:49:16.229000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 16,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 28,
+        "time": 96.589,
+        "start": "2026-03-15T07:50:52.734000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 17,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 29,
+        "time": 96.381,
+        "start": "2026-03-15T07:52:29.335000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 18,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 30,
+        "time": 96.166,
+        "start": "2026-03-15T07:54:05.698000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 19,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 31,
+        "time": 96.108,
+        "start": "2026-03-15T07:55:41.896000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 20,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 32,
+        "time": 95.983,
+        "start": "2026-03-15T07:57:18.022000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 21,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 33,
+        "time": 96.443,
+        "start": "2026-03-15T07:58:54.101000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 22,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 34,
+        "time": 96.021,
+        "start": "2026-03-15T08:00:30.472000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 23,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 35,
+        "time": 96.037,
+        "start": "2026-03-15T08:02:06.509000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 24,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 36,
+        "time": 96.014,
+        "start": "2026-03-15T08:03:42.492000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 25,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 37,
+        "time": 96.159,
+        "start": "2026-03-15T08:05:18.478000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 26,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 38,
+        "time": 95.526,
+        "start": "2026-03-15T08:06:54.618000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 27,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 39,
+        "time": 95.494,
+        "start": "2026-03-15T08:08:30.232000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 28,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 40,
+        "time": 96.15,
+        "start": "2026-03-15T08:10:05.753000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 29,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 41,
+        "time": 95.343,
+        "start": "2026-03-15T08:11:41.896000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 30,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 42,
+        "time": 95.93,
+        "start": "2026-03-15T08:13:17.263000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 31,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 43,
+        "time": 95.936,
+        "start": "2026-03-15T08:14:53.151000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 32,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 44,
+        "time": 95.332,
+        "start": "2026-03-15T08:16:29.063000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 33,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 45,
+        "time": 95.528,
+        "start": "2026-03-15T08:18:04.441000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 34,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 46,
+        "time": 95.282,
+        "start": "2026-03-15T08:19:39.886000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 35,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 47,
+        "time": 95.501,
+        "start": "2026-03-15T08:21:15.227000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 36,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 48,
+        "time": 95.706,
+        "start": "2026-03-15T08:22:50.770000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 37,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 49,
+        "time": 95.523,
+        "start": "2026-03-15T08:24:26.483000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 38,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 50,
+        "time": 95.659,
+        "start": "2026-03-15T08:26:01.983000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 39,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 51,
+        "time": 96.011,
+        "start": "2026-03-15T08:27:37.655000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 40,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 52,
+        "time": 95.275,
+        "start": "2026-03-15T08:29:13.592000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 41,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 53,
+        "time": 97.53,
+        "start": "2026-03-15T08:30:48.893000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 42,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": true
+      },
+      {
+        "driverNumber": 12,
+        "number": 54,
+        "time": 96.176,
+        "start": "2026-03-15T08:32:26.433000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 43,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": true
+      },
+      {
+        "driverNumber": 12,
+        "number": 55,
+        "time": 96.378,
+        "start": "2026-03-15T08:34:02.630000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 44,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 56,
+        "time": 96.929,
+        "start": "2026-03-15T08:35:39.028000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 45,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      }
+    ],
+    "raceControl": [
+      {
+        "date": "2026-03-15T06:20:01+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T06:32:39+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 11,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 11",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T06:33:35+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 12,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 12",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T06:34:35+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 12,
+        "message": "CLEAR IN TRACK SECTOR 12",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T06:34:45+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 11,
+        "message": "CLEAR IN TRACK SECTOR 11",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:04:00+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:04:26+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 4,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 4",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:04:27+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "YELLOW IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:04:30+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "CLEAR IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:04:33+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 4,
+        "message": "CLEAR IN TRACK SECTOR 4",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:05:18+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 15,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:05:20+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 15,
+        "message": "YELLOW IN TRACK SECTOR 15",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:05:24+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 15,
+        "message": "CLEAR IN TRACK SECTOR 15",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:06:22+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 4,
+        "message": "CLEAR IN TRACK SECTOR 4",
+        "category": "Flag",
+        "lap_number": 2,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:19:39+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "YELLOW IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 10,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:19:57+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 2,
+        "message": "YELLOW IN TRACK SECTOR 2",
+        "category": "Flag",
+        "lap_number": 10,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:20:04+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "SAFETY CAR DEPLOYED",
+        "category": "SafetyCar",
+        "lap_number": 10,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:22:39+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 11,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:25:19+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 2,
+        "message": "CLEAR IN TRACK SECTOR 2",
+        "category": "Flag",
+        "lap_number": 12,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:25:23+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "CLEAR IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 12,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:26:11+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "SAFETY CAR IN THIS LAP",
+        "category": "SafetyCar",
+        "lap_number": 13,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:27:50+00:00",
+        "flag": "CLEAR",
+        "scope": "Track",
+        "sector": null,
+        "message": "TRACK CLEAR",
+        "category": "Flag",
+        "lap_number": 13,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:34:55+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 16,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 16",
+        "category": "Flag",
+        "lap_number": 18,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:35:28+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 16,
+        "message": "CLEAR IN TRACK SECTOR 16",
+        "category": "Flag",
+        "lap_number": 18,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:51:19+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 17,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 17",
+        "category": "Flag",
+        "lap_number": 28,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T07:51:25+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 17,
+        "message": "CLEAR IN TRACK SECTOR 17",
+        "category": "Flag",
+        "lap_number": 28,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:00:11+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 33,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:00:23+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "CLEAR IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 33,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:02:17+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 3,
+        "message": "CLEAR IN TRACK SECTOR 3",
+        "category": "Flag",
+        "lap_number": 35,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:03:28+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 5,
+        "message": "CLEAR IN TRACK SECTOR 5",
+        "category": "Flag",
+        "lap_number": 35,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:06:24+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 9,
+        "message": "CLEAR IN TRACK SECTOR 9",
+        "category": "Flag",
+        "lap_number": 37,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:32:12+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 17,
+        "message": "YELLOW IN TRACK SECTOR 17",
+        "category": "Flag",
+        "lap_number": 53,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-15T08:32:14+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 17,
+        "message": "CLEAR IN TRACK SECTOR 17",
+        "category": "Flag",
+        "lap_number": 53,
+        "meeting_key": 1280,
+        "session_key": 11245,
+        "driver_number": null,
+        "qualifying_phase": null
+      }
+    ]
+  },
+  {
+    "session": {
+      "id": 11253,
+      "end": "2026-03-29T07:00:00+00:00",
+      "name": "Race",
+      "slug": "race-11253",
+      "type": "Race",
+      "start": "2026-03-29T05:00:00+00:00",
+      "season": 2026,
+      "circuit": "Suzuka",
+      "country": "Japan",
+      "meetingId": 1281,
+      "circuitKey": 46
+    },
+    "drivers": [
+      {
+        "id": "11253:12",
+        "code": "ANT",
+        "name": "Kimi ANTONELLI",
+        "team": "Mercedes",
+        "color": "#00D7B6",
+        "number": 12,
+        "portrait": null,
+        "position": 1
+      }
+    ],
+    "laps": [
+      {
+        "driverNumber": 12,
+        "number": 1,
+        "time": 99.215,
+        "start": "2026-03-29T05:14:02.078000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 0,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 2,
+        "time": 94.475,
+        "start": "2026-03-29T05:15:41.292000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 1,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 3,
+        "time": 95.536,
+        "start": "2026-03-29T05:17:15.625000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 4,
+        "time": 95.523,
+        "start": "2026-03-29T05:18:51.404000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 3,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 5,
+        "time": 95.24,
+        "start": "2026-03-29T05:20:26.878000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 6,
+        "time": 94.962,
+        "start": "2026-03-29T05:22:02.092000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 7,
+        "time": 95.076,
+        "start": "2026-03-29T05:23:36.975000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 8,
+        "time": 95.203,
+        "start": "2026-03-29T05:25:12.157000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 9,
+        "time": 95.534,
+        "start": "2026-03-29T05:26:47.344000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 10,
+        "time": 95.41,
+        "start": "2026-03-29T05:28:22.806000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 9,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 11,
+        "time": 95.115,
+        "start": "2026-03-29T05:29:58.316000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 10,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 12,
+        "time": 95.027,
+        "start": "2026-03-29T05:31:33.245000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 11,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 13,
+        "time": 94.944,
+        "start": "2026-03-29T05:33:08.367000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 12,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 14,
+        "time": 95.261,
+        "start": "2026-03-29T05:34:43.344000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 13,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 15,
+        "time": 95.377,
+        "start": "2026-03-29T05:36:18.653000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 14,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 16,
+        "time": 96.164,
+        "start": "2026-03-29T05:37:54.016000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 15,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 17,
+        "time": 94.686,
+        "start": "2026-03-29T05:39:30.216000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 16,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 18,
+        "time": 94.095,
+        "start": "2026-03-29T05:41:04.739000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 17,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 19,
+        "time": 94.343,
+        "start": "2026-03-29T05:42:38.833000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 18,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 20,
+        "time": 94.241,
+        "start": "2026-03-29T05:44:13.163000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 19,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 21,
+        "time": 93.948,
+        "start": "2026-03-29T05:45:47.450000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 20,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 22,
+        "time": 113.376,
+        "start": "2026-03-29T05:47:21.494000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "GREEN",
+          "SC"
+        ],
+        "stint": 1,
+        "compound": "MEDIUM",
+        "tyreAge": 21,
+        "pitIn": true,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 23,
+        "time": 159.827,
+        "start": "2026-03-29T05:49:14.884000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW",
+          "SC"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 0,
+        "pitIn": true,
+        "pitOut": true,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 24,
+        "time": 150.266,
+        "start": "2026-03-29T05:51:54.668000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 1,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 25,
+        "time": 150.634,
+        "start": "2026-03-29T05:54:24.865000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 2,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 26,
+        "time": 146.03,
+        "start": "2026-03-29T05:56:55.509000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN",
+          "YELLOW"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 3,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 27,
+        "time": 146.237,
+        "start": "2026-03-29T05:59:21.598000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 4,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 28,
+        "time": 93.649,
+        "start": "2026-03-29T06:01:47.875000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 5,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 29,
+        "time": 93.367,
+        "start": "2026-03-29T06:03:21.559000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 6,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 30,
+        "time": 92.859,
+        "start": "2026-03-29T06:04:54.846000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 7,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 31,
+        "time": 93.258,
+        "start": "2026-03-29T06:06:27.773000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 8,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 32,
+        "time": 92.868,
+        "start": "2026-03-29T06:08:00.949000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 9,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 33,
+        "time": 92.999,
+        "start": "2026-03-29T06:09:33.956000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 10,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 34,
+        "time": 92.909,
+        "start": "2026-03-29T06:11:06.877000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 11,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 35,
+        "time": 92.912,
+        "start": "2026-03-29T06:12:39.700000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 12,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 36,
+        "time": 92.933,
+        "start": "2026-03-29T06:14:12.623000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 13,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 37,
+        "time": 92.984,
+        "start": "2026-03-29T06:15:45.600000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 14,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 38,
+        "time": 92.955,
+        "start": "2026-03-29T06:17:18.599000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 15,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 39,
+        "time": 92.731,
+        "start": "2026-03-29T06:18:51.622000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 16,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 40,
+        "time": 92.993,
+        "start": "2026-03-29T06:20:24.232000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 17,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 41,
+        "time": 92.736,
+        "start": "2026-03-29T06:21:57.207000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 18,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 42,
+        "time": 92.826,
+        "start": "2026-03-29T06:23:29.953000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 19,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 43,
+        "time": 92.538,
+        "start": "2026-03-29T06:25:02.817000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 20,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 44,
+        "time": 92.57,
+        "start": "2026-03-29T06:26:35.683000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 21,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 45,
+        "time": 92.819,
+        "start": "2026-03-29T06:28:07.918000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 22,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 46,
+        "time": 92.722,
+        "start": "2026-03-29T06:29:40.696000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 23,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 47,
+        "time": 93.211,
+        "start": "2026-03-29T06:31:13.517000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 24,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 48,
+        "time": 93.589,
+        "start": "2026-03-29T06:32:46.682000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 25,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 49,
+        "time": 92.432,
+        "start": "2026-03-29T06:34:20.337000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 26,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 50,
+        "time": 93.352,
+        "start": "2026-03-29T06:35:52.777000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 27,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 51,
+        "time": 92.889,
+        "start": "2026-03-29T06:37:26.043000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 28,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 52,
+        "time": 92.925,
+        "start": "2026-03-29T06:38:58.920000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 29,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      },
+      {
+        "driverNumber": 12,
+        "number": 53,
+        "time": 94.063,
+        "start": "2026-03-29T06:40:32.002000+00:00",
+        "complete": true,
+        "validityKnown": true,
+        "status": [
+          "GREEN"
+        ],
+        "stint": 2,
+        "compound": "HARD",
+        "tyreAge": 30,
+        "pitIn": false,
+        "pitOut": false,
+        "deleted": false
+      }
+    ],
+    "raceControl": [
+      {
+        "date": "2026-03-29T04:24:02+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 18,
+        "message": "CLEAR IN TRACK SECTOR 18",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T04:24:04+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 24,
+        "message": "CLEAR IN TRACK SECTOR 24",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T04:24:06+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 19,
+        "message": "CLEAR IN TRACK SECTOR 19",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T04:30:01+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:14:02+00:00",
+        "flag": "GREEN",
+        "scope": "Track",
+        "sector": null,
+        "message": "GREEN LIGHT - PIT EXIT OPEN",
+        "category": "Flag",
+        "lap_number": 1,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:47:54+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 21,
+        "message": "YELLOW IN TRACK SECTOR 21",
+        "category": "Flag",
+        "lap_number": 22,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:47:59+00:00",
+        "flag": "YELLOW",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "YELLOW IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 22,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:48:11+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "SAFETY CAR DEPLOYED",
+        "category": "SafetyCar",
+        "lap_number": 22,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:49:29+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 21,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 21",
+        "category": "Flag",
+        "lap_number": 23,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:49:58+00:00",
+        "flag": "DOUBLE YELLOW",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "DOUBLE YELLOW IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 23,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:57:32+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "LAPPED CARS MAY NOW OVERTAKE THE SAFETY CAR: 77",
+        "category": "Other",
+        "lap_number": 26,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:57:48+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 20,
+        "message": "CLEAR IN TRACK SECTOR 20",
+        "category": "Flag",
+        "lap_number": 26,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T05:57:50+00:00",
+        "flag": "CLEAR",
+        "scope": "Sector",
+        "sector": 21,
+        "message": "CLEAR IN TRACK SECTOR 21",
+        "category": "Flag",
+        "lap_number": 26,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T06:00:06+00:00",
+        "flag": null,
+        "scope": null,
+        "sector": null,
+        "message": "SAFETY CAR IN THIS LAP",
+        "category": "SafetyCar",
+        "lap_number": 27,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      },
+      {
+        "date": "2026-03-29T06:01:24+00:00",
+        "flag": "CLEAR",
+        "scope": "Track",
+        "sector": null,
+        "message": "TRACK CLEAR",
+        "category": "Flag",
+        "lap_number": 27,
+        "meeting_key": 1281,
+        "session_key": 11253,
+        "driver_number": null,
+        "qualifying_phase": null
+      }
+    ]
+  }
+]

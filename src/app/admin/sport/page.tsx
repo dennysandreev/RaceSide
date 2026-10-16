@@ -23,16 +23,19 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { loadAdminSport } from "@/data/admin-repository";
+import { AdminFilters } from "@/components/admin/admin-filters";
+import { AdminPagination } from "@/components/admin/admin-ui";
+import { loadAdminSport, parseAdminTableQuery } from "@/data/admin-repository";
 import { getAdminJobCopy } from "@/lib/admin-display";
 import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 
-export default async function AdminSportPage() {
+export default async function AdminSportPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin();
   const admin = createSupabaseAdminClient();
   if (!admin) throw new Error("Серверный клиент админки недоступен");
-  const data = await loadAdminSport(admin);
+  const query = parseAdminTableQuery(await searchParams);
+  const data = await loadAdminSport(admin, query);
 
   return (
     <AdminPage>
@@ -47,13 +50,15 @@ export default async function AdminSportPage() {
           Календарь, результаты и чемпионат должны совпадать с источником. Для восстановления используй задачи ниже.
         </AlertDescription>
       </Alert>
+      <AdminFilters hideSearch query={query} filters={[{ name: "season", allowAll: false, label: "Сезон для диагностики", value: String(data.selectedSeason), options: data.seasons.map(item => ({ value: String(item.year), label: String(item.year) })) }]} />
       <section className="grid grid-cols-2 gap-y-5 border-b border-border pb-5 lg:grid-cols-4">
-        <AdminMetric label="Сессии" value={String(data.counts.sessions)} />
-        <AdminMetric label="Результаты" value={String(data.counts.results)} />
-        <AdminMetric label="Личный зачёт" value={String(data.counts.driverStandings)} />
-        <AdminMetric label="Командный зачёт" value={String(data.counts.constructorStandings)} />
+        <AdminMetric helper={`Сезон ${data.selectedSeason}`} label="Сессии" value={String(data.counts.sessions)} />
+        <AdminMetric helper={`Сезон ${data.selectedSeason}`} label="Результаты" value={String(data.counts.results)} />
+        <AdminMetric helper={`Сезон ${data.selectedSeason}`} label="Личный зачёт" value={String(data.counts.driverStandings)} />
+        <AdminMetric helper={`Сезон ${data.selectedSeason}`} label="Командный зачёт" value={String(data.counts.constructorStandings)} />
       </section>
 
+      <p className="text-xs text-muted-foreground">Все сезоны в базе: {data.globalCounts.sessions} сессий, {data.globalCounts.results} результатов. Готовность архива проверяется по всем его сезонам.</p>
       <AdminUrlTabs defaultValue="health" values={["health", "archive", "assets", "drivers", "replay"]}>
         <TabsList variant="line">
           <TabsTrigger value="health">Состояние</TabsTrigger>
@@ -251,6 +256,7 @@ export default async function AdminSportPage() {
                 ))}
               </div>
             ) : <AdminEmpty description="Подготовь повтор после появления полной телеметрии гонки." title="Race Replay пока нет" />}
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/sport" total={data.replaysTotal} />
           </AdminSection>
         </TabsContent>
       </AdminUrlTabs>

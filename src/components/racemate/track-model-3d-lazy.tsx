@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Minimize2, Minus, Plus } from "lucide-react";
 
 import type { TrackModel3DProps } from "@/components/racemate/track-model-3d";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { TrackModelDefinition } from "@/data/track-model-types";
 import type { TrackModelId } from "@/data/track-models";
@@ -27,7 +29,7 @@ export function TrackModel3DLazy({ modelId, ...props }: TrackModel3DLazyProps) {
   useEffect(() => {
     const container = containerRef.current;
 
-    if (!container) {
+    if (!container && !props.fullscreenOpen) {
       return;
     }
 
@@ -69,7 +71,8 @@ export function TrackModel3DLazy({ modelId, ...props }: TrackModel3DLazyProps) {
       { rootMargin: "320px" },
     );
 
-    observer.observe(container);
+    if (props.fullscreenOpen) void load();
+    else if (container) observer.observe(container);
 
     return () => {
       cancelled = true;
@@ -83,7 +86,7 @@ export function TrackModel3DLazy({ modelId, ...props }: TrackModel3DLazyProps) {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [attempt, modelId]);
+  }, [attempt, modelId, props.fullscreenOpen]);
 
   if (loaded?.id === modelId) {
     const { Component, model } = loaded;
@@ -91,7 +94,7 @@ export function TrackModel3DLazy({ modelId, ...props }: TrackModel3DLazyProps) {
     return <Component {...props} model={model} />;
   }
 
-  return (
+  const placeholder = (
     <div
       className="relative grid size-full min-h-0 place-items-center overflow-hidden"
       ref={containerRef}
@@ -114,14 +117,40 @@ export function TrackModel3DLazy({ modelId, ...props }: TrackModel3DLazyProps) {
           </Button>
         </div>
       ) : (
-        <span className="sr-only">Загружаем 3D-модель трассы</span>
+        <span className={props.fullscreenOpen ? "relative text-sm text-foreground" : "sr-only"}>Загружаем 3D-карту…</span>
       )}
     </div>
   );
+  return props.fullscreenOpen ? <Dialog open onOpenChange={props.onFullscreenOpenChange}>
+    <DialogContent showCloseButton={false} className="flex h-[100dvh] w-screen max-w-none flex-col gap-0 rounded-none border-0 bg-[var(--track-model-stage)] p-0 motion-reduce:animate-none sm:max-w-none">
+      <DialogTitle className="sr-only">Трасса {props.circuit} на весь экран</DialogTitle>
+      <DialogDescription className="sr-only">Загружаем 3D-карту трассы.</DialogDescription>
+      {placeholder}
+      <div role="toolbar" aria-label="Управление картой" className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-30 flex items-center gap-1.5">
+        <Button size="icon" variant="secondary" className="size-11 sm:size-11" disabled aria-label="Отдалить трассу"><Minus aria-hidden="true" /></Button>
+        <Button size="icon" variant="secondary" className="size-11 sm:size-11" disabled aria-label="Приблизить трассу"><Plus aria-hidden="true" /></Button>
+        <Button size="icon" variant="secondary" className="size-11 sm:size-11" aria-label="Свернуть карту" title="Свернуть карту" onClick={() => props.onFullscreenOpenChange?.(false)}><Minimize2 aria-hidden="true" /></Button>
+      </div>
+    </DialogContent>
+  </Dialog> : placeholder;
 }
 
 async function loadTrackModel(modelId: TrackModelId): Promise<TrackModelDefinition> {
   switch (modelId) {
+    case "yas-marina":
+      return (await import("@/data/yas-marina-model")).YAS_MARINA_TRACK_MODEL;
+    case "qatar":
+      return (await import("@/data/qatar-model")).QATAR_TRACK_MODEL;
+    case "las-vegas":
+      return (await import("@/data/las-vegas-model")).LAS_VEGAS_TRACK_MODEL;
+    case "interlagos":
+      return (await import("@/data/interlagos-model")).INTERLAGOS_TRACK_MODEL;
+    case "mexico":
+      return (await import("@/data/mexico-model")).MEXICO_TRACK_MODEL;
+    case "singapore":
+      return (await import("@/data/singapore-model")).SINGAPORE_TRACK_MODEL;
+    case "austin":
+      return (await import("@/data/austin-model")).AUSTIN_TRACK_MODEL;
     case "sepang":
       return (await import("@/data/sepang-model")).SEPANG_TRACK_MODEL;
     case "albert-park":

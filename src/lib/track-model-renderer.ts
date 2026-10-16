@@ -1,3 +1,4 @@
+import { fitTrackModelFrame, orbitTrackModelFrame, type TrackModelCameraFrame } from "./track-model-camera";
 import type {
   CircuitModelPoint,
   CircuitTerrainData,
@@ -13,7 +14,7 @@ import {
 export const TRACK_MODEL_VIEW_SIZE = 900;
 export const TRACK_MODEL_ROTATION_STEP = 16;
 export const TRACK_MODEL_TILT_MAX = 82;
-export const TRACK_MODEL_TILT_MIN = 8;
+export const TRACK_MODEL_TILT_MIN = 0;
 export const TRACK_MODEL_TILT_STEP = 4;
 
 const TERRAIN_COLUMNS = 37;
@@ -148,8 +149,9 @@ export function projectTrackModel(
   tiltDeg = scene.definition.camera.tiltDeg,
   panX = 0,
   panY = 0,
+  frame?: TrackModelCameraFrame,
 ): TrackModelProjection {
-  const project = createProjector(scene, rotationDeg, zoom, tiltDeg, panX, panY);
+  const project = createProjector(scene, rotationDeg, zoom, tiltDeg, panX, panY, frame);
 
   return {
     highPoint: toAnnotation(scene.highPoint, project),
@@ -168,6 +170,19 @@ export function projectTrackModel(
   };
 }
 
+export function getTrackModelCanvasFrame(scene: TrackModelScene, frameRotationDeg: number, frameTiltDeg: number, rotationDeg = frameRotationDeg, tiltDeg = frameTiltDeg) {
+  const project = createProjector(scene, frameRotationDeg, 1, frameTiltDeg);
+  const points = scene.track.map(project);
+  const minX = Math.min(...points.map(p => p.x)), maxX = Math.max(...points.map(p => p.x));
+  const minY = Math.min(...points.map(p => p.y)), maxY = Math.max(...points.map(p => p.y));
+  const frame = orbitTrackModelFrame({
+    centerX: (minX + maxX) / 2 - TRACK_MODEL_VIEW_SIZE / 2,
+    centerY: (minY + maxY) / 2 - scene.definition.camera.centerY,
+    width: (maxX - minX) * 1.12, height: (maxY - minY) * 1.12,
+  }, rotationDeg - frameRotationDeg, Math.cos(frameTiltDeg * Math.PI / 180), Math.cos(tiltDeg * Math.PI / 180));
+  return { ...frame, centerX: frame.centerX + TRACK_MODEL_VIEW_SIZE / 2, centerY: frame.centerY + scene.definition.camera.centerY };
+}
+
 export function drawTrackModel(
   canvas: HTMLCanvasElement,
   scene: TrackModelScene,
@@ -177,6 +192,7 @@ export function drawTrackModel(
   tiltDeg = scene.definition.camera.tiltDeg,
   panX = 0,
   panY = 0,
+  frame?: TrackModelCameraFrame,
 ) {
   const bounds = canvas.getBoundingClientRect();
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -210,7 +226,7 @@ export function drawTrackModel(
   context.fillStyle = horizon;
   context.fillRect(0, 0, TRACK_MODEL_VIEW_SIZE, TRACK_MODEL_VIEW_SIZE);
 
-  const project = createProjector(scene, rotationDeg, zoom, tiltDeg, panX, panY);
+  const project = createProjector(scene, rotationDeg, zoom, tiltDeg, panX, panY, frame);
   drawGroundShadow(context, palette);
   drawTerrainSkirt(context, scene, project, palette);
   drawTerrainSurface(context, scene, project, palette);
@@ -378,6 +394,7 @@ function createProjector(
   tiltDeg = scene.definition.camera.tiltDeg,
   panX = 0,
   panY = 0,
+  frame?: TrackModelCameraFrame,
 ): Projector {
   const rotation = (rotationDeg * Math.PI) / 180;
   const tilt = (tiltDeg * Math.PI) / 180;
@@ -394,14 +411,21 @@ function createProjector(
       ((point.elevationM - scene.elevationReferenceM) / scene.horizontalHalfSpanM) *
       verticalExaggeration;
 
+    const rawX = -rotatedX * scale;
+    const rawY = rotatedY * cosTilt * scale - liftedZ * sinTilt * scale;
+    if (frame) {
+      const fitted = fitTrackModelFrame(frame.bounds, frame.viewport);
+      const { width, height, top, bottom } = frame.viewport;
+      return {
+        depth: rotatedY * sinTilt + liftedZ * cosTilt,
+        x: (width / 2 + (rawX - (frame.bounds.centerX - TRACK_MODEL_VIEW_SIZE / 2)) * fitted.scale * zoom + panX * width) / width * TRACK_MODEL_VIEW_SIZE,
+        y: (height / 2 + (rawY - (frame.bounds.centerY - centerY)) * fitted.scale * zoom + (top - bottom) / 2 + panY * height) / height * TRACK_MODEL_VIEW_SIZE,
+      };
+    }
     return {
       depth: rotatedY * sinTilt + liftedZ * cosTilt,
-      x: TRACK_MODEL_VIEW_SIZE / 2 - rotatedX * scale * zoom + panX * TRACK_MODEL_VIEW_SIZE,
-      y:
-        centerY +
-        rotatedY * cosTilt * scale * zoom -
-        liftedZ * sinTilt * scale * zoom +
-        panY * TRACK_MODEL_VIEW_SIZE,
+      x: TRACK_MODEL_VIEW_SIZE / 2 + rawX * zoom + panX * TRACK_MODEL_VIEW_SIZE,
+      y: centerY + rawY * zoom + panY * TRACK_MODEL_VIEW_SIZE,
     };
   };
 }

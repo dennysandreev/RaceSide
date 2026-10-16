@@ -1,0 +1,12 @@
+{
+  "publishedAtUtc": "2026-10-05T10:21:15.045723+00:00",
+  "baseImageId": "sha256:73d8c9fd76c7951800f3fe554e47134e18dc7183b6ee4c3fd0901d07aa15b088",
+  "imageId": "sha256:3f2d39ad4f62c52a8555e849316b92e5684e3ba0ced6d3032b3b157a12d48c0a",
+  "imageTag": "raceside:yas-marina-water-20261005-e78d8e4515c9",
+  "health": "healthy",
+  "environmentUnchanged": true,
+  "previousTracksUnchanged": true,
+  "glbSha256": "e78d8e4515c98ce8d9364247238004223754a3fd9b9b20cefcdc45db801c7ec4",
+  "previewSha256": "b3d17987c22f44020b0193a703f1ada3b2939f2267beeae258410f3afcfe2c25",
+  "backup": "/home/racemate/releases/yas-marina-water-20261005-e78d8e4515c9/publication-backup"
+}

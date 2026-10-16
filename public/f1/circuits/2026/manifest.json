@@ -401,20 +401,20 @@
       "file": "/f1/circuits/2026/16-malaysia.webp",
       "pageUrl": "https://www.formula1.com/en/racing/2026/bahrain",
       "sourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackkualalumpurdetailed.webp",
-      "sha256": "395027e7760ca173888a9d7022e7289ef8903c03337dbffdb3cb14d2c8673a5e",
+      "sha256": "69b864ad6585da556a8f6009c45f0921fd52cbd2103a80b928e074f63a7ff15a",
       "authority": "Formula1.com",
       "racePageUrl": "https://www.formula1.com/en/racing/2026/bahrain",
       "sourceTitle": "Bahrain Grand Prix in Malaysia official circuit map",
       "liveSourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackkualalumpurdetailed.webp",
-      "sourceImageSha256": "395027e7760ca173888a9d7022e7289ef8903c03337dbffdb3cb14d2c8673a5e",
+      "sourceImageSha256": "4605624cb80d857b143189f47b154d2cb19f3287edf6c41363f3213d50aa2b70",
       "sourceSelection": "official-season-page-live-asset",
       "width": 1252,
       "height": 704,
       "manualReview": {
         "status": "approved",
-        "reviewedAt": "2026-08-02T00:00:00.000Z",
+        "reviewedAt": "2026-09-29T00:00:00.000Z",
         "reviewer": "RaceSide visual QA",
-        "note": "Checked against the official Formula1.com 2026 race-page map."
+        "note": "Checked against the updated official Sepang race-page map, including overtaking activation and detection zones."
       }
     },
     {
@@ -426,20 +426,20 @@
       "file": "/f1/circuits/2026/17-singapore.webp",
       "pageUrl": "https://www.formula1.com/en/racing/2026/singapore",
       "sourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026tracksingaporedetailed.webp",
-      "sha256": "d78aaf15eea9d95eee9980f11bfb9332d6c6d24b96fb7d8936d2bc34350c8237",
+      "sha256": "8429e12bedf7e73cb646cc4780f2a988b94118f0b303d451173a01bb352b8913",
       "authority": "Formula1.com",
       "racePageUrl": "https://www.formula1.com/en/racing/2026/singapore",
       "sourceTitle": "Singapore Grand Prix official circuit map",
       "liveSourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026tracksingaporedetailed.webp",
-      "sourceImageSha256": "d78aaf15eea9d95eee9980f11bfb9332d6c6d24b96fb7d8936d2bc34350c8237",
+      "sourceImageSha256": "2f0b65101641c5de7799467f8802c46381b31ecfa3274b39ded884c6bf38b815",
       "sourceSelection": "official-season-page-live-asset",
       "width": 1252,
       "height": 704,
       "manualReview": {
         "status": "approved",
-        "reviewedAt": "2026-08-02T00:00:00.000Z",
+        "reviewedAt": "2026-10-04T00:00:00.000Z",
         "reviewer": "RaceSide visual QA",
-        "note": "Checked against the official Formula1.com 2026 race-page map."
+        "note": "Checked against the updated official Singapore race-page map, including straight mode, overtaking activation and detection zones."
       }
     },
     {

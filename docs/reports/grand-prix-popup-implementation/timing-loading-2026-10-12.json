@@ -1,0 +1,19 @@
+{
+  "coldMs": 362,
+  "warmMs": 0.35,
+  "timingPending": false,
+  "drivers": 22,
+  "positions": 1236,
+  "gaps": 1009,
+  "pace": 1013,
+  "reads": [
+    "race_replay_sessions",
+    "sessions",
+    "driver_standings",
+    "driver_standings",
+    "constructor_standings",
+    "constructor_standings",
+    "telemetry_cache",
+    "telemetry_cache"
+  ]
+}

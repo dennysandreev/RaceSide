@@ -1,0 +1,40 @@
+RaceSide report timing recovery — 2026-10-12
+
+Cause
+- The report required a fully ready Race Replay even when the separate race-pace cache and source lap catalog already existed.
+- Singapore Race 11388 was still preparing its Replay archive; qualifying was ready but is not a valid race timing source.
+- Empty analytics could persist in the report cache, and an initially empty driver selection did not recover on later data arrival.
+
+Changes
+- Independent compact report-timing-1 cache, prepared by the existing telemetry.prepare worker queue.
+- Scheduled result checks / season prewarming queue missing or expired report timing separately from race pace and classification readiness.
+- Partial timing retries after 60 seconds; completed timing refreshes after 15 minutes in the first day and daily for two weeks, then remains stored.
+- Race-only session/season guards; measured lap boundaries, UTC timestamps, maximum 15-second interval age, no synthetic positions or gaps.
+- Complete ready Race Replay remains a fallback and is not hidden by a partial compact dataset.
+- Partial/empty analytics are not retained in the long-lived server cache. A visible open popup refreshes every 30 seconds until timing is ready; closing or hiding stops refresh requests.
+- Late data selects the first available pilots; explicit user selections, including selecting none, are preserved.
+
+Stored-data recovery
+- Singapore 11388: derived only from the already stored lap catalog and LIVE position / interval events.
+- 1236 measured laps, 22 drivers, 1236 positions, 1009 numeric gaps; remaining gap values stay unknown or lapped.
+- 4 laps without measured duration excluded. Existing pace cache supplies 1013 clean pace values.
+- One new compact telemetry_cache result written; official classification, pace cache and Replay status unchanged.
+- Database reread confirmed all 22 measured drivers have saved position and gap data.
+- Recovery summary: timing-recovery-2026-10-12.json. Loader benchmark: timing-loading-2026-10-12.json.
+
+Validation
+- 62 focused report, share-image, analytics-loader and worker tests passed.
+- Targeted ESLint passed for all changed code and tests.
+- pnpm typecheck passed.
+- Production Next.js webpack build passed in an isolated temporary checkout; no shared .next files changed.
+- Browser: Singapore popup contains all 3 charts (9 selected traces), all 22 pilots available, m:ss axes and m:ss.SSS tooltip, no page errors.
+- Home click to popup: 397 ms. Calendar click to popup: 1973 ms. Figures are local observations, not production latency guarantees.
+- Cold stored-data loading: 286–362 ms; warm loading: 0.15–0.35 ms. No race_replay_events reads required for Singapore.
+- Malaysia ready-Replay fallback still displays all 3 charts.
+- Final rebuilt version checked again: 9 chart traces, no page errors.
+- Screenshots: singapore-positions-restored.png, singapore-pace-restored.png.
+
+Limits
+- Web and worker deployment were not performed. New preparation/retry code requires both deployments.
+- The upstream OpenF1 retry path was verified with regression tests, not by forcing an upstream outage or waiting for a new Grand Prix.
+- The report can only show timing that the source publishes; unavailable measurements remain blank.

@@ -9,6 +9,28 @@ const russianNames = {
   Hülkenberg: ["Хюлькенберг"], Hulkenberg: ["Хюлькенберг"], Colapinto: ["Колапинто"],
   Pérez: ["Перес"], Perez: ["Перес"], Bottas: ["Боттас"], Lindblad: ["Линдблад"],
 };
+const raceAliases = {
+  Azerbaijan: ["Baku", "Баку", "Азербайджан"], Italian: ["Monza", "Монца", "Италии"],
+  Emilia: ["Imola", "Имола", "Эмилии"], British: ["Silverstone", "Сильверстоун", "Британии"],
+  Dutch: ["Zandvoort", "Зандворт", "Нидерланд"], Belgian: ["Spa", "Спа", "Бельгии"],
+  Spanish: ["Madring", "Мадрид", "Мадринг", "Испании"], Barcelona: ["Catalunya", "Барселон", "Каталун"],
+  Madrid: ["Madring", "Мадрид", "Мадринг"],
+  United: ["COTA", "Austin", "Остин", "США"], Mexico: ["Mexico City", "Мехико", "Мексики"],
+  Brazilian: ["Interlagos", "Интерлагос", "Бразилии", "Sao Paulo", "São Paulo"],
+  Canadian: ["Montreal", "Монреаль", "Канады"], Japanese: ["Suzuka", "Сузука", "Японии"],
+  Australian: ["Melbourne", "Мельбурн", "Австралии"], Austrian: ["Spielberg", "Шпильберг", "Австрии"],
+  Hungarian: ["Hungaroring", "Хунгароринг", "Венгрии"], Chinese: ["Shanghai", "Шанхай", "Китая"],
+  Singapore: ["Marina Bay", "Сингапур"], Monaco: ["Monte Carlo", "Монако"],
+  Bahrain: ["Sakhir", "Бахрейн"], Qatar: ["Lusail", "Losail", "Катар"],
+  Saudi: ["Jeddah", "Джидд", "Саудовской"], Abu: ["Yas Marina", "Абу-Даби"],
+  Vegas: ["Las Vegas", "Лас-Вегас"], Miami: ["Майами"], Malaysia: ["Sepang", "Сепанг", "Малайзии"],
+};
+const normalize = value => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+function mentions(value, name) {
+  if (!name) return false;
+  const escaped = normalize(name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![\\p{L}\\d])${escaped}(?![a-z\\d])`, "u").test(normalize(value));
+}
 
 /** One season-scoped snapshot per batch, from the same sporting tables as the site. */
 export async function loadNewsContext(client, { season, now = new Date() }) {
@@ -62,18 +84,45 @@ export async function loadNewsContext(client, { season, now = new Date() }) {
 }
 
 export function selectNewsContext(context, source, teams) {
-  const sourceText = `${source.title} ${source.description} ${source.text}`.toLowerCase();
-  const mentionedDrivers = new Set(context.drivers.filter(driver => [driver.full_name, driver.last_name].some(name => name && sourceText.includes(name.toLowerCase()))).map(driver => driver.full_name));
-  const relatedRaces = context.races.filter(race => {
-    const name = race.race_name?.replace(/grand prix/ig, "").trim().toLowerCase();
-    return name && sourceText.includes(name);
-  });
+  const headline = `${source.title ?? ""} ${source.description ?? ""}`.toLowerCase();
+  const sourceText = `${headline} ${source.text ?? ""}`.toLowerCase();
+  const mentionedDrivers = new Set(context.drivers.filter(driver =>
+    [driver.full_name, driver.last_name, ...(russianNames[driver.last_name] ?? [])].some(name => mentions(sourceText, name))).map(driver => driver.full_name));
+  const mentionsRace = (race, value) => {
+    const name = race.race_name?.replace(/grand prix/ig, "").trim();
+    const aliases = Object.entries(raceAliases).filter(([key]) => name?.includes(key)).flatMap(([, names]) => names);
+    const circuit = relation(race.circuits);
+    return [name, circuit?.name, circuit?.country, ...aliases].some(alias => mentions(value, alias));
+  };
+  const relatedRaces = (context.races.filter(race => mentionsRace(race, headline)).length
+    ? context.races.filter(race => mentionsRace(race, headline))
+    : context.races.filter(race => mentionsRace(race, sourceText))).slice(0, 2);
   const raceFactIds = new Set(relatedRaces.map(race => `race:${race.id}:`));
+  const needsStandings = /\b(?:standings|championship|points|title fight)\b|чемпионат|зач[её]т|очк/i.test(headline);
+  const needsResults = /\b(?:practice|qualifying|session|results?)\b|квалификаци|тренировк|результат/i.test(headline);
+  const standings = [];
+  const results = [];
   const facts = context.facts.filter(fact => {
     if (["date", "season"].includes(fact.kind)) return true;
     if (["calendar", "race_date"].includes(fact.kind)) return [...raceFactIds].some(prefix => fact.id.startsWith(prefix));
-    if (mentionedDrivers.has(fact.subject)) return true;
-    return fact.id.startsWith("team:") && fact.subject && sourceText.includes(fact.subject.toLowerCase());
+    if (fact.kind === "driver_team") return mentionedDrivers.has(fact.subject);
+    if (!mentionedDrivers.has(fact.subject) && !(fact.id.startsWith("team:") && fact.subject && sourceText.includes(fact.subject.toLowerCase()))) return false;
+    if (fact.kind === "session_position") {
+      if (needsResults && relatedRaces.some(race => fact.scope?.includes(race.race_name))) results.push(fact);
+      return false;
+    }
+    if (fact.kind.startsWith("championship_") && needsStandings) standings.push(fact);
+    return false;
   });
-  return { current_date: context.current_date, season: context.season, teams, races: relatedRaces, facts };
+  return {
+    current_date: context.current_date, season: context.season,
+    teams: teams.map(team => ({ name: team.name, slug: team.slug })),
+    races: relatedRaces.map(race => ({ id: race.id, season_year: context.season, round: race.round, race_name: race.race_name,
+      circuit: relation(race.circuits)?.name, race_start_at: race.race_start_at })),
+    facts: [...facts, ...standings.slice(0, 9), ...results.slice(0, 6)].map(fact => {
+      const compact = { ...fact };
+      delete compact.reference;
+      return compact;
+    }),
+  };
 }

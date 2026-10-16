@@ -5,6 +5,16 @@ import { fileURLToPath } from "node:url";
 
 import { exportTrackData } from "./export-track-data.mjs";
 import { buildBakuTrack } from "./build-baku-track.mjs";
+import { buildYasMarinaTrack } from "./build-yas-marina-track.mjs";
+import { buildSingaporeTrack } from "./build-singapore-track.mjs";
+import { buildAustinTrack } from "./build-austin-track.mjs";
+import { buildLasVegasTrack } from "./build-las-vegas-track.mjs";
+import { buildQatarTrack } from "./build-qatar-track.mjs";
+import { buildShanghaiTrack } from "./build-shanghai-track.mjs";
+import { buildAlbertParkTrack } from "./build-albert-park-track.mjs";
+import { buildSuzukaTrack } from "./build-suzuka-track.mjs";
+import { buildMexicoTrack } from "./build-mexico-track.mjs";
+import { buildInterlagosTrack } from "./build-interlagos-track.mjs";
 import { buildMiamiTrack } from "./build-miami-track.mjs";
 import { exportCatalunyaTrackData } from "./export-catalunya-track-data.mjs";
 import { exportHungaroringTrackData } from "./export-hungaroring-track-data.mjs";
@@ -33,6 +43,46 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "../..");
 
 const modelId = process.argv.slice(2).find((value) => !value.startsWith("--")) ?? "zandvoort";
+if (modelId === "yas-marina") {
+  await buildYasMarinaTrack();
+  process.exit(0);
+}
+if (modelId === "qatar") {
+  await buildQatarTrack();
+  process.exit(0);
+}
+if (modelId === "las-vegas") {
+  await buildLasVegasTrack();
+  process.exit(0);
+}
+if (modelId === "albert-park") {
+  await buildAlbertParkTrack();
+  process.exit(0);
+}
+if (modelId === "interlagos") {
+  await buildInterlagosTrack();
+  process.exit(0);
+}
+if (modelId === "shanghai") {
+  await buildShanghaiTrack();
+  process.exit(0);
+}
+if (modelId === "suzuka") {
+  await buildSuzukaTrack();
+  process.exit(0);
+}
+if (modelId === "mexico") {
+  await buildMexicoTrack();
+  process.exit(0);
+}
+if (modelId === "singapore") {
+  await buildSingaporeTrack();
+  process.exit(0);
+}
+if (modelId === "austin") {
+  await buildAustinTrack();
+  process.exit(0);
+}
 if (modelId === "miami") {
   await buildMiamiTrack();
   process.exit(0);

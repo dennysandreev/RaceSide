@@ -9,6 +9,7 @@ const serviceNames = new Set([
   "live",
 ]);
 const releasePattern = /^[0-9a-f]{7,64}$/;
+const pendingHeartbeats = new WeakMap();
 
 export function normalizeHeartbeatRelease(value) {
   const normalized = String(value ?? "").trim().toLowerCase();
@@ -41,7 +42,13 @@ export function buildServiceHeartbeat({
       env.RACESIDE_RELEASE_SHA ?? env.GITHUB_SHA ?? env.VERCEL_GIT_COMMIT_SHA,
     ),
     status,
-    summary,
+    summary: ["worker", "admin-job-runner"].includes(serviceName) ? {
+      ...summary,
+      legacy_adapters: {
+        tribute: Boolean(String(env.TRIBUTE_API_KEY ?? "").trim()),
+        yoomoney: Boolean(String(env.YOOMONEY_RECONCILE_SECRET ?? "").trim()),
+      },
+    } : summary,
     checked_at: checkedAt,
     updated_at: checkedAt,
   };
@@ -49,9 +56,26 @@ export function buildServiceHeartbeat({
 
 export async function upsertServiceHeartbeat(client, input) {
   const row = buildServiceHeartbeat(input);
+  let pending = pendingHeartbeats.get(client);
+  if (!pending) {
+    pending = new Map();
+    pendingHeartbeats.set(client, pending);
+  }
+  const identity = `${row.service_name}:${row.instance_id}`;
+  if (pending.has(identity)) return pending.get(identity);
+
+  const request = writeServiceHeartbeat(client, row).finally(() => {
+    pending.delete(identity);
+  });
+  pending.set(identity, request);
+  return request;
+}
+
+async function writeServiceHeartbeat(client, row) {
   const { error } = await client
     .from("ops_service_heartbeats")
-    .upsert(row, { onConflict: "service_name,instance_id" });
+    .upsert(row, { onConflict: "service_name,instance_id" })
+    .abortSignal(AbortSignal.timeout(10_000));
 
   if (error) {
     throw error;

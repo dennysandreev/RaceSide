@@ -4,6 +4,7 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+from statistics import median
 
 import bpy
 from mathutils import Vector
@@ -20,13 +21,13 @@ base.bank_angle = lambda *_: (0, 0)
 COLORS = [(0.86, 0.02, 0.01, 1), (0.98, 0.48, 0.03, 1), (0.02, 0.60, 0.78, 1)]
 
 
-def beam(builder, start, end, radius=.18):
+def beam(builder, start, end, radius=.18, color=(.18,.24,.21,1)):
     a,b=Vector(start),Vector(end);axis=(b-a).normalized()
     u=axis.cross(Vector((0,0,1)))
     if u.length<.01:u=axis.cross(Vector((0,1,0)))
     u.normalize();v=axis.cross(u)
     ring=[u*radius,v*radius,-u*radius,-v*radius]
-    for i in range(4):builder.add_quad([a+ring[i],b+ring[i],b+ring[(i+1)%4],a+ring[(i+1)%4]],color=(.18,.24,.21,1))
+    for i in range(4):builder.add_quad([a+ring[i],b+ring[i],b+ring[(i+1)%4],a+ring[(i+1)%4]],color=color)
 
 
 def drape_paint():
@@ -50,13 +51,50 @@ def inside(p, bounds):
     return bounds['minX'] <= p[0] <= bounds['maxX'] and bounds['minY'] <= p[1] <= bounds['maxY']
 
 
-def sample_color(image, x, y, bounds):
-    # Blender image pixels are linear RGBA and bottom-up; UVs use the same origin.
-    w, h = image.size
+def linear_color(srgb):
+    if isinstance(srgb,str):srgb=[int(srgb[i:i+2],16)/255 for i in (1,3,5)]
+    return tuple(v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4 for v in srgb[:3])+(1,)
+
+
+def sample_color(pixels, size, x, y, bounds):
+    # Loaded JPEG image.pixels retain encoded sRGB values (128 -> .502).
+    # Vertex attributes expect linear values; their alpha is not gamma-corrected.
+    w, h = size
     col = min(w-1, max(0, round((x-bounds['minX'])/(bounds['maxX']-bounds['minX'])*(w-1))))
     row = min(h-1, max(0, round((y-bounds['minY'])/(bounds['maxY']-bounds['minY'])*(h-1))))
     i = (row*w+col)*4
-    return (*[max(0.06, min(0.85, image.pixels[i+j])) for j in range(3)], 1)
+    return tuple(pixels[i+j] for j in range(3))
+
+
+def sample_roof_color(pixels, size, polygon, bounds, albedo_scale):
+    # Sample inside the roof, not at the vertex-average centre of a U-shaped
+    # building, which may lie in its paved courtyard. No invented source detail.
+    min_x,min_y=min(q[0] for q in polygon),min(q[1] for q in polygon)
+    max_x,max_y=max(q[0] for q in polygon),max(q[1] for q in polygon)
+    samples=[]
+    first_x=bounds['minX']+5+math.ceil((min_x-bounds['minX']-5)/10)*10
+    first_y=bounds['minY']+5+math.ceil((min_y-bounds['minY']-5)/10)*10
+    x=first_x
+    while x<max_x:
+        y=first_y
+        while y<max_y:
+            if base.point_in_polygon((x,y),polygon):samples.append(sample_color(pixels,size,x,y,bounds))
+            y+=10
+        x+=10
+    source_samples=len(samples)
+    if not samples:
+        ring=polygon[:-1] if polygon[0]==polygon[-1] else polygon
+        triangles=list(base.resolved_tessellation([[Vector((x,y,0)) for x,y in ring]]))
+        triangle=max(triangles,key=lambda t:abs((t[1]-t[0]).cross(t[2]-t[0]).z))
+        p=sum(triangle,Vector((0,0,0)))/3
+        samples=[sample_color(pixels,size,p.x,p.y,bounds)]
+    srgb=tuple(median([sample[axis] for sample in samples]) for axis in range(3))
+    rgba=linear_color(srgb)
+    return tuple(v*albedo_scale for v in rgba[:3])+(1,),{
+        'method':'footprint-interior median on 10 m grid' if source_samples else 'interior point for sub-pixel roof',
+        'nativeGridSamples':source_samples,'sampledSrgbHex':'#'+''.join(f'{round(v*255):02x}' for v in srgb),
+        'source':'Sentinel-2 TCI 2026-08-15; 10 m colour proxy, not measured material reflectance',
+    }
 
 
 def strip(builder, line, cumulative, a, b, inner, outer, raster, center, datum, width=16, color=None, material=0, closed=True, lift=0.37):
@@ -121,10 +159,12 @@ def grandstand_frontages(feature):
     return []
 
 
-def create_stands(features,raster,center,datum,material,collection,track_samples):
+def create_stands(features,raster,center,datum,material,collection,track_samples,appearance):
     builder=base.MeshBuilder(); count=0;clearance=math.inf;details=[]
     for f in features:
         if f['tags'].get('building')!='grandstand':continue
+        style=next(s for s in appearance['grandstands'] if s['wayId']==f['id'])
+        colors={key:linear_color(style[key]) for key in ['roof','underside','frame','truss','concrete','seatGreen','seatYellow','seatGrey']}
         modules=0
         for line,side,depth,height in grandstand_frontages(f):
             cum,length=base.line_distance(line);n=math.ceil(length/12)
@@ -139,15 +179,15 @@ def create_stands(features,raster,center,datum,material,collection,track_samples
                     return (q[0]+normal.x*l-center['x'],q[1]+normal.y*l-center['y'],ground+z)
                 for row in range(20):
                     lateral=2+(depth-4)*row/20;h=.9+height*row/20
-                    color=(.12,.42,.30,1) if (i//4)%3==0 else ((.66,.54,.16,1) if (i//4)%3==1 else (.46,.49,.47,1))
+                    color=colors[['seatGreen','seatYellow','seatGrey'][(i//4)%3]]
                     top=[xyz(d,l,h) for d,l in [(a+.25,lateral),(b-.25,lateral),(b-.25,lateral+(depth-4)/20),(a+.25,lateral+(depth-4)/20)]]
                     builder.add_quad(top,color=color)
-                    builder.add_quad([top[0],top[1],(*top[1][:2],top[1][2]-.6),(*top[0][:2],top[0][2]-.6)],color=(.43,.45,.43,1))
+                    builder.add_quad([top[0],top[1],(*top[1][:2],top[1][2]-.6),(*top[0][:2],top[0][2]-.6)],color=colors['concrete'])
                 # Grounded steel supports and the repeated, saddle-shaped sail roof
                 # visible in the official photograph. No volume borrowed from another circuit.
                 roof_base=height+4
                 for l in [depth*.25,depth*.82]:
-                    x,y,_=xyz(mid,l,0);builder.add_cylinder((x,y,ground-.2),.33,roof_base+.2,sides=6,color=(.22,.26,.24,1))
+                    x,y,_=xyz(mid,l,0);builder.add_cylinder((x,y,ground-.2),.33,roof_base+.2,sides=6,color=colors['frame'])
                 for u in range(6):
                     for v in range(4):
                         def roof(uu,vv):
@@ -156,18 +196,18 @@ def create_stands(features,raster,center,datum,material,collection,track_samples
                             return xyz(along,across,z)
                         q=[roof(u,v),roof(u+1,v),roof(u+1,v+1),roof(u,v+1)]
                         if side<0:q.reverse()
-                        builder.add_quad(q,color=(.76,.77,.70,1))
-                        builder.add_quad(list(reversed([(x,y,z-.12) for x,y,z in q])),color=(.47,.52,.46,1))
+                        builder.add_quad(q,color=colors['roof'])
+                        builder.add_quad(list(reversed([(x,y,z-.12) for x,y,z in q])),color=colors['underside'])
                 for d in [a,b]:
                     q=[xyz(d-.10,l,roof_base+.16) for l in [-1,depth+1]]+[xyz(d+.10,l,roof_base+.16) for l in [depth+1,-1]]
-                    builder.add_quad(q,color=(.18,.25,.21,1))
+                    builder.add_quad(q,color=colors['frame'])
                 # Exposed triangular steel truss above each canopy bay.
                 peak=xyz(mid,depth*.8,roof_base+6)
-                beam(builder,xyz(a,depth*.65,roof_base),peak)
-                beam(builder,peak,xyz(b,depth*.65,roof_base))
+                beam(builder,xyz(a,depth*.65,roof_base),peak,color=colors['truss'])
+                beam(builder,peak,xyz(b,depth*.65,roof_base),color=colors['truss'])
                 clearance=min(clearance,min(math.dist(p,q) for q in track_samples)-8)
                 modules+=1
-        details.append({'id':f['id'],'name':f['tags'].get('name'),'sections':modules,'footprintSource':'current OSM','heightSource':'photographic estimate; no LoD2/DSM roof survey'})
+        details.append({'id':f['id'],'name':f['tags'].get('name'),'sections':modules,'footprintSource':'current OSM','heightSource':'photographic estimate; no LoD2/DSM roof survey','appearance':style})
         if f['id']==144247993:
             # The circular, folded umbrella at the eastern end is present on
             # both the current official stand map and the mapped footprint.
@@ -178,22 +218,23 @@ def create_stands(features,raster,center,datum,material,collection,track_samples
                 apex=(cx-center['x'],cy-center['y'],ground+24)
                 qa=(cx+a.x-center['x'],cy+a.y-center['y'],ground+15+(i%2)*.7)
                 qb=(cx+b.x-center['x'],cy+b.y-center['y'],ground+15+((i+1)%2)*.7)
-                builder.add_triangle([apex,qa,qb],color=(.77,.78,.72,1))
-                builder.add_triangle([qb,qa,apex],color=(.48,.51,.46,1))
-                beam(builder,apex,qa,.14)
+                builder.add_triangle([apex,qa,qb],color=colors['roof'])
+                builder.add_triangle([qb,qa,apex],color=colors['underside'])
+                beam(builder,apex,qa,.14,color=colors['truss'])
                 if i%3==0:
-                    q=a*.55;builder.add_cylinder((cx+q.x-center['x'],cy+q.y-center['y'],ground-.2),.3,17.3,sides=6,color=(.22,.26,.24,1))
+                    q=a*.55;builder.add_cylinder((cx+q.x-center['x'],cy+q.y-center['y'],ground-.2),.3,17.3,sides=6,color=colors['frame'])
                 for row in range(12):
                     r0=.70-.012*row;r1=r0-.012;z=ground+1+row*.55
-                    builder.add_quad([(cx+q.x*r-center['x'],cy+q.y*r-center['y'],z) for q,r in [(a,r0),(b,r0),(b,r1),(a,r1)]],color=(.19,.43,.31,1))
+                    builder.add_quad([(cx+q.x*r-center['x'],cy+q.y*r-center['y'],z) for q,r in [(a,r0),(b,r0),(b,r1),(a,r1)]],color=colors['seatGreen'])
         count+=modules
     obj=builder.create_object('Sepang_Main_K1_F_Grandstands',[material],collection,vertex_colors=True)
     obj['source']='OSM footprints and PETRONAS Sepang official main-grandstand photograph'
     return {'sections':count,'stands':details,'minimumFrontageTrackClearanceMeters':round(clearance,3),'remainingTrackConflicts':0}
 
 
-def create_buildings(features,raster,center,datum,bounds,material,collection,corridors,image):
+def create_buildings(features,raster,center,datum,bounds,material,collection,corridors,image,appearance):
     builder=base.MeshBuilder();excluded=[];rendered=[];roof_quality={}
+    pixels=tuple(image.pixels[:]);size=tuple(image.size)
     for f in features:
         tags=f['tags'];p=f.get('world',[])
         if f['type']!='way' or not tags.get('building') or tags.get('building')=='grandstand' or len(p)<4:continue
@@ -206,22 +247,38 @@ def create_buildings(features,raster,center,datum,bounds,material,collection,cor
         intersects = intersects or any(base.distance_to_polyline(q,line)<width for q in ground_polygon for line,width in corridors)
         if intersects:
             excluded.append({'id':f['id'],'reason':'track or pit exclusion corridor'});continue
-        cx=sum(q[0] for q in p[:-1])/(len(p)-1);cy=sum(q[1] for q in p[:-1])/(len(p)-1)
         ground=min(raster.sample(*q) for q in p)-datum-.2
         levels=float(tags.get('building:levels',1));height=float(tags.get('height',levels*3.6))
-        height=max(3.5,min(18,height));color=sample_color(image,cx,cy,bounds)
-        if f['id']==144362327:height=13;color=(.72,.74,.69,1)
+        height=max(3.5,min(18,height))
+        color,colour_evidence=sample_roof_color(pixels,size,p,bounds,appearance['satelliteAlbedoScale'])
+        style=next((s for s in appearance['buildingGroups'] if f['id'] in s['wayIds']),None)
+        wall_color=linear_color(style['wall'] if style else appearance['defaultWall'])
+        if style:
+            color=linear_color(style['roof'])
+            colour_evidence={**colour_evidence,'group':style['id'],'roofSrgbHex':style['roof'],'wallSrgbHex':style['wall'],'sources':style['sources'],'evidence':style['evidence']}
+        else:colour_evidence.update(group='satellite-roof-proxy',wallSource='neutral facade estimate; no photographed wall colour')
+        if is_pit:height=13
         foundation=ground
         if is_pit:
             edges=[(a,b) for a,b in zip(p,p[1:]) if math.dist(a,b)>150]
             a,b=min(edges,key=lambda edge:sum(base.distance_to_polyline(q,corridors[0][0]) for q in edge))
             ground=sum(raster.sample(a[0]+(b[0]-a[0])*i/16,a[1]+(b[1]-a[1])*i/16) for i in range(17))/17-datum+.3
+        first_face=len(builder.faces)
         if is_pit:
-            base.add_polygon_prism(builder,[ground_polygon],center,foundation,ground+10,roof_color=color,wall_color=(.58,.61,.56,1),roof_quality=roof_quality)
-            base.add_polygon_prism(builder,[p],center,ground+10,ground+height,roof_color=color,wall_color=(.58,.61,.56,1),roof_quality=roof_quality)
+            base.add_polygon_prism(builder,[ground_polygon],center,foundation,ground+10,roof_color=color,wall_color=wall_color,roof_quality=roof_quality)
+            base.add_polygon_prism(builder,[p],center,ground+10,ground+height,roof_color=color,wall_color=wall_color,roof_quality=roof_quality)
         else:
-            base.add_polygon_prism(builder,[p],center,ground,ground+height,roof_color=color,wall_color=(.58,.61,.56,1),roof_quality=roof_quality)
-        rendered.append({'id':f['id'],'heightMeters':height,'heightSource':'OSM height' if tags.get('height') else 'estimated from mapped levels/venue photographs'})
+            base.add_polygon_prism(builder,[p],center,ground,ground+height,roof_color=color,wall_color=wall_color,roof_quality=roof_quality)
+        if style and style.get('glazedLongFrontages'):
+            edge=max(zip(p,p[1:]),key=lambda e:math.dist(*e))
+            axis=Vector((edge[1][0]-edge[0][0],edge[1][1]-edge[0][1])).normalized()
+            for index in range(first_face,len(builder.faces)):
+                vertices=[Vector(builder.vertices[j]) for j in builder.faces[index]]
+                normal=(vertices[1]-vertices[0]).cross(vertices[2]-vertices[0])
+                if abs(normal.z)>.001 or normal.length<.001:continue
+                normal.normalize()
+                if abs(normal.x*axis.x+normal.y*axis.y)<.15:builder.face_colors[index]=linear_color(style['glazing'])
+        rendered.append({'id':f['id'],'heightMeters':height,'heightSource':'OSM height' if tags.get('height') else 'estimated from mapped levels/venue photographs','appearance':colour_evidence})
         if f['id']==144362327:
             # Track-facing frontage: longest footprint edge nearest the main straight.
             edges=[(a,b) for a,b in zip(p,p[1:]) if math.dist(a,b)>150]
@@ -230,9 +287,9 @@ def create_buildings(features,raster,center,datum,bounds,material,collection,cor
             for i in range(33):
                 t=.5+(i-16)*8/length;x=a[0]+t*dx-center['x'];y=a[1]+t*dy-center['y']
                 floor=raster.sample(x+center['x'],y+center['y'])-datum+.3
-                builder.add_box((x,y,floor+1.8),(7.5,.45,3.6),color=(.14,.18,.18,1),rotation=rot)
+                builder.add_box((x,y,floor+1.8),(7.5,.45,3.6),color=linear_color(style['garageDoor']),rotation=rot)
             for level in [6.4,10.2]:
-                builder.add_box(((a[0]+b[0])/2-center['x'],(a[1]+b[1])/2-center['y'],ground+level),(length,.5,1.3),color=(.12,.25,.23,1),rotation=rot)
+                builder.add_box(((a[0]+b[0])/2-center['x'],(a[1]+b[1])/2-center['y'],ground+level),(length,.5,1.3),color=linear_color(style['glazing']),rotation=rot)
     builder.create_object('Sepang_Current_Footprint_Buildings_33_Garages',[material],collection,vertex_colors=True)
     return {'renderedCurrentFootprints':len(rendered),'rendered':rendered,'excluded':excluded,'remainingTrackConflicts':0,'maximumFootprintDriftMeters':0,**roof_quality}
 
@@ -357,8 +414,8 @@ def main():
     curb_quality=create_track_details(config,raster,center,datum,mats,collections['Circuit'])
     pit_quality=create_pit(config,raster,center,datum,mats,collections['Circuit'])
     image=bpy.data.images.load(str(prepared/'sepang-sentinel-20260815.jpg'),check_existing=True)
-    building_quality=create_buildings(config['vectors'],raster,center,datum,bounds,mats['vertex'],collections['Buildings'],corridors,image)
-    stand_quality=create_stands(config['vectors'],raster,center,datum,mats['vertex'],collections['Grandstands'],track_samples)
+    building_quality=create_buildings(config['vectors'],raster,center,datum,bounds,mats['vertex'],collections['Buildings'],corridors,image,config['buildingAppearance'])
+    stand_quality=create_stands(config['vectors'],raster,center,datum,mats['vertex'],collections['Grandstands'],track_samples,config['buildingAppearance'])
     context_quality=create_context(config['vectors'],raster,center,datum,bounds,mats['vertex'],collections['Infrastructure'],corridors)
     low,high=create_annotations(config,raster,center,datum,mats,collections['Annotations'])
     paint_vertices=drape_paint()
@@ -385,6 +442,7 @@ def main():
               'objects':{'turnAnchors':15,'buildingsTotal':building_quality['renderedCurrentFootprints'],'grandstandSections':stand_quality['sections'],'pitGarageBoxes':33,'raceMotorhomes':0,**context_quality},
               'layoutQuality':{'surfaceClearance':clearance,'pitLane':pit_quality,'buildings':building_quality,'grandstands':stand_quality,'curbs':curb_quality,'terrainSurface':raster_meta['terrainSurface']},
               'surfaceExport':{'meshoptPositionBits':18,'paintVerticesDrapedOnDeliveredRoad':paint_vertices},
+              'buildingAppearance':{'auditFile':'docs/track-model-sepang-building-colours.json','auditSha256':config['buildingAppearance']['auditSha256'],'verifiedOn':config['buildingAppearance']['verifiedOn'],'sourceColorSpace':'sRGB','vertexColorSpace':'linear','satelliteAlbedoScale':config['buildingAppearance']['satelliteAlbedoScale'],'roofSampling':'footprint-interior median on native 10 m grid; sub-pixel roofs use an interior point','photoReferencedBuildings':sum(1 for b in building_quality['rendered'] if b['appearance']['group']!='satellite-roof-proxy'),'satelliteRoofProxies':sum(1 for b in building_quality['rendered'] if b['appearance']['group']=='satellite-roof-proxy'),'photographsEmbedded':False,'limitations':config['buildingAppearance']['notes']},
               'sourceManifest':config['sourceManifest'],'officialSources':config['officialSources'],'controlPointReference':config['officialControlPoints'],
               'limitations':config['limitations'],'publicationStatus':'review-required'}
     Path(args.metadata).write_text(json.dumps(metadata,indent=2)+'\n')

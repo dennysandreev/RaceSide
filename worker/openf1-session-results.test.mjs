@@ -5,6 +5,7 @@ import {
   getOpenF1ResultStatus,
   getOpenF1ResultTimeText,
   getOpenF1ParticipantIdentity,
+  hasFinalOpenF1SessionSignal,
   isOpenF1ClassificationReady,
   isOpenF1ResultProbeDue,
   normalizeLiveRaceClassification,
@@ -279,6 +280,22 @@ test("waits for the free historical window but allows authenticated sync earlier
       hasLiveAccess: true,
       nowMs: plusFiveMinutes,
     }),
+    true,
+  );
+});
+
+test("does not treat an aborted and resumed practice as final results", () => {
+  const aborted = { date: "2026-09-24T12:18:57Z", message: "SESSION ABORTED" };
+  const restarted = { date: "2026-09-24T12:29:00Z", message: "SESSION STARTED" };
+  const finished = { date: "2026-09-24T13:04:00Z", message: "SESSION FINISHED" };
+
+  assert.equal(hasFinalOpenF1SessionSignal([aborted]), false);
+  assert.equal(hasFinalOpenF1SessionSignal([aborted, restarted]), false);
+  assert.equal(hasFinalOpenF1SessionSignal([aborted, restarted, finished]), true);
+  assert.equal(
+    hasFinalOpenF1SessionSignal([
+      { date: "2026-09-24T13:04:00Z", flag: "CHEQUERED" },
+    ]),
     true,
   );
 });

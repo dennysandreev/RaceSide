@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { RaceSideLogoSvg } from "@/components/racemate/racemate-logo";
 import {
   compareDriverSnapshots,
   driverComparisonMetrics,
@@ -154,36 +155,7 @@ export function DriverComparisonShareImage({
 }
 
 export function RaceSideShareLogo() {
-  return (
-    <div style={{ alignItems: "center", display: "flex", gap: 12 }}>
-      <svg aria-hidden="true" height="48" viewBox="0 0 136 64" width="102">
-        <path
-          d="M5 59 18 7h27c12 0 19 6 19 15 0 10-8 17-20 17H27l23 20"
-          fill="none"
-          stroke={colors.primary}
-          strokeLinecap="square"
-          strokeLinejoin="round"
-          strokeWidth="10"
-        />
-        <path
-          d="M129 8H95c-10 0-16 5-16 13 0 7 6 11 15 11h19c10 0 16 5 16 13 0 8-6 13-16 13H76"
-          fill="none"
-          stroke={colors.primary}
-          strokeLinecap="square"
-          strokeLinejoin="round"
-          strokeWidth="10"
-        />
-      </svg>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <span style={{ display: "flex", fontSize: 27, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1 }}>
-          RaceSide
-        </span>
-        <span style={{ color: colors.muted, display: "flex", fontFamily: monoFont, fontSize: 9, fontWeight: 700, letterSpacing: 1.6, marginTop: 5 }}>
-          Гоночный центр
-        </span>
-      </div>
-    </div>
-  );
+  return <RaceSideLogoSvg palette="dark" variant="signature" width={300} />;
 }
 
 function DriverHero({

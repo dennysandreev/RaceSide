@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - run: node scripts/check-repository-hygiene.mjs
+      - run: node --test scripts/check-repository-hygiene.test.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck

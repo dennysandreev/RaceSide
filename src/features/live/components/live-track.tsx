@@ -7,28 +7,10 @@ import type {
   ReplayTrackId,
 } from "@/features/race-replay/components/race-replay-zandvoort-3d";
 import { Button } from "@/components/ui/button";
-import {
-  Crosshair,
-  RotateCcw,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  ChevronUp,
-  ChevronDown,
-} from "lucide-react";
-import { TrackOrientationSphere } from "@/components/racemate/track-orientation-sphere";
-import {
-  clampTrackModelPan,
-  normalizeDegrees,
-  orbitTrackModelCamera,
-  pinchTrackModelCamera,
-  preserveTrackModelOrbitFocus,
-  TRACK_MODEL_MIN_ZOOM,
-  TRACK_MODEL_MAX_ZOOM,
-  TRACK_MODEL_ZOOM_STEP,
-  type TrackModelCameraState,
-  zoomTrackModelAtPoint,
-} from "@/lib/track-model-camera";
+import { Crosshair } from "lucide-react";
+import { TrackModelViewer } from "@/components/racemate/track-model-viewer";
+import type { CircuitModelPoint } from "@/data/track-model-types";
+import { TRACK_MODEL_TOUCH_QUERY } from "@/lib/track-model-camera";
 import { buildMarshalSectorPath } from "../lib/track-sectors";
 const Track3D = dynamic(
   () =>
@@ -39,6 +21,15 @@ const Track3D = dynamic(
 );
 function modelId(name: string): ReplayTrackId | null {
   const matches: [RegExp, ReplayTrackId][] = [
+    [/singapore|marina bay|сингапур|марина.бэй/i, "singapore"],
+    [/austin|americas|cota|остин/i, "austin"],
+    [/mexico|rodr[ií]guez|мехико|мексик/i, "mexico"],
+    [/interlagos|[sс][aã]o paulo|j[oó]s[eé] carlos|интерлагос|сан.пау/i, "interlagos"],
+    [/las.vegas|лас.вегас/i, "las-vegas"],
+    [/qatar|l[uo]sail|катар|л[уо]с[аэ]/i, "qatar"],
+    [/yas|abu.dhabi|яс.марина|абу.даби/i, "yas-marina"],
+    [/sepang|malay|kuala lumpur|сепанг|малайз/i, "sepang"],
+    [/baku|baki|azerbaijan|баку|азербайджан/i, "baku"],
     [/madr|ifema/i, "madring"],
     [/catal|barcel/i, "catalunya"],
     [/hungar|budapest/i, "hungaroring"],
@@ -64,6 +55,8 @@ export const LiveTrack = memo(function LiveTrack({
     yellowSectors = useLive("yellowSectors"),
     store = useLiveStore();
   const [mode, setMode] = useState("2d");
+  const [fullscreenOpen, setFullscreenOpen] = useState(false);
+  const modelTriggerRef = useRef<HTMLButtonElement>(null);
   const markers = useRef(new Map<number, SVGGElement>());
   useEffect(() => {
     let frame = 0;
@@ -131,9 +124,13 @@ export const LiveTrack = memo(function LiveTrack({
         </Button>
         {id && (
           <Button
+            ref={modelTriggerRef}
             size="sm"
             variant={mode === "3d" ? "secondary" : "ghost"}
-            onClick={() => setMode("3d")}
+            onClick={() => {
+              setMode("3d");
+              setFullscreenOpen(window.matchMedia(TRACK_MODEL_TOUCH_QUERY).matches);
+            }}
             aria-pressed={mode === "3d"}
           >
             3D
@@ -141,7 +138,14 @@ export const LiveTrack = memo(function LiveTrack({
         )}
       </div>
       {mode === "3d" && id ? (
-        <Animated3D trackId={id} selected={selected} onSelect={onSelect} />
+        <Animated3D trackId={id} selected={selected} onSelect={onSelect} fullscreenOpen={fullscreenOpen}
+          onFullscreenOpenChange={(open) => {
+            setFullscreenOpen(open);
+            if (!open && window.matchMedia(TRACK_MODEL_TOUCH_QUERY).matches) {
+              setMode("2d");
+              requestAnimationFrame(() => modelTriggerRef.current?.focus());
+            }
+          }} />
       ) : (
         <svg
           viewBox={viewBox}
@@ -260,137 +264,17 @@ export const LiveTrack = memo(function LiveTrack({
     </div>
   );
 });
-function Animated3D({
-  trackId,
-  selected,
-  onSelect,
-}: {
+function Animated3D({ trackId, selected, onSelect, fullscreenOpen, onFullscreenOpenChange }: {
   trackId: ReplayTrackId;
   selected: number | null;
   onSelect: (n: number) => void;
+  fullscreenOpen: boolean;
+  onFullscreenOpenChange: (open: boolean) => void;
 }) {
   const store = useLiveStore();
-  type LiveCameraState = {
-    zoom: number;
-    rotation: number;
-    tilt: number;
-    pan: { x: number; y: number };
-  };
-  const initialCamera: LiveCameraState = {
-    zoom: 1,
-    rotation: 0,
-    tilt: 48,
-    pan: { x: 0, y: 0 },
-  };
-  const [camera, setCamera] = useState(initialCamera);
   const [follow, setFollow] = useState(false);
-  const stage = useRef<HTMLDivElement>(null);
-  const drag = useRef<{
-    mode: "orbit" | "pan";
-    pointerId: number;
-    startPan: LiveCameraState["pan"];
-    startRotation: number;
-    startTilt: number;
-    startX: number;
-    startY: number;
-  } | null>(null);
-  const pointers = useRef(new Map<number, { x: number; y: number }>());
-  const pinch = useRef<{
-    startAngle: number;
-    startCenter: { x: number; y: number };
-    startDistance: number;
-    startState: TrackModelCameraState;
-  } | null>(null);
-  const cameraRef = useRef(camera);
-  const moved = useRef(false);
-  const applyCamera = useCallback((next: LiveCameraState) => {
-    cameraRef.current = next;
-    setCamera(next);
-  }, []);
-  const zoomTo = useCallback(
-    (requestedZoom: number, focalPoint = { x: 0, y: 0 }) => {
-      const current = cameraRef.current;
-      const nextZoom = Math.min(
-        TRACK_MODEL_MAX_ZOOM,
-        Math.max(TRACK_MODEL_MIN_ZOOM, requestedZoom),
-      );
-      if (nextZoom === current.zoom) return;
-      const zoomed = zoomTrackModelAtPoint(current, nextZoom, focalPoint);
-      applyCamera({ ...current, pan: zoomed.pan, zoom: zoomed.zoom });
-    },
-    [applyCamera],
-  );
-  const zoomBy = useCallback(
-    (amount: number) => zoomTo(cameraRef.current.zoom + amount),
-    [zoomTo],
-  );
-  const setOrbit = useCallback(
-    (rotation: number, tilt: number) => {
-      const current = cameraRef.current;
-      const bounds = stage.current?.getBoundingClientRect();
-      const pan = preserveTrackModelOrbitFocus({
-        nextRotationDeg: rotation,
-        nextTiltDeg: tilt,
-        pan: current.pan,
-        startRotationDeg: current.rotation,
-        startTiltDeg: current.tilt,
-        viewportAspectRatio: bounds ? bounds.width / bounds.height : 1,
-        zoom: current.zoom,
-      });
-      applyCamera({ ...current, pan, rotation, tilt });
-    },
-    [applyCamera],
-  );
-  useEffect(() => {
-    const node = stage.current;
-    if (!node) return;
-    const wheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      const bounds = node.getBoundingClientRect();
-      const deltaUnit =
-        e.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? 16
-          : e.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? bounds.height
-            : 1;
-      zoomTo(cameraRef.current.zoom * Math.exp(-e.deltaY * deltaUnit * 0.0015), {
-        x: (e.clientX - bounds.left) / bounds.width - 0.5,
-        y: (e.clientY - bounds.top) / bounds.height - 0.5,
-      });
-    };
-    node.addEventListener("wheel", wheel, { passive: false });
-    return () => node.removeEventListener("wheel", wheel);
-  }, [zoomTo]);
-  const beginDrag = (
-    pointerId: number,
-    pointer: { x: number; y: number },
-    mode: "orbit" | "pan",
-  ) => {
-    const current = cameraRef.current;
-    drag.current = {
-      mode,
-      pointerId,
-      startPan: current.pan,
-      startRotation: current.rotation,
-      startTilt: current.tilt,
-      startX: pointer.x,
-      startY: pointer.y,
-    };
-  };
-  const endPointer = (pointerId: number, element: HTMLDivElement) => {
-    if (element.hasPointerCapture(pointerId)) {
-      element.releasePointerCapture(pointerId);
-    }
-    pointers.current.delete(pointerId);
-    pinch.current = null;
-    drag.current = null;
-    if (pointers.current.size === 1) {
-      const [remainingId, remainingPointer] = pointers.current.entries().next()
-        .value as [number, { x: number; y: number }];
-      beginDrag(remainingId, remainingPointer, "pan");
-    }
-  };
+  const [overviewPoints, setOverviewPoints] = useState<readonly CircuitModelPoint[]>([]);
+  const stopFollowing = useCallback(() => setFollow(false), []);
   const sampleCar = useCallback(
     (driverNumber: number): ReplayTrackCar | null => {
       const d = store.state.drivers[driverNumber];
@@ -427,296 +311,19 @@ function Animated3D({
       clearInterval(timer);
     };
   }, [store, sampleCar]);
-  return (
-    <div
-      ref={stage}
-      className="live-3d-stage"
-      tabIndex={0}
-      aria-label="Интерактивная 3D-карта. Перетаскивайте пальцем или левой кнопкой мыши, чтобы двигать трассу. Правая кнопка или Shift и перетаскивание поворачивают модель. Колесо мыши или щипок меняют масштаб."
-      onContextMenu={(e) => e.preventDefault()}
-      onDoubleClick={(e) => {
-        if ((e.target as HTMLElement).closest("button, a")) return;
-        const bounds = e.currentTarget.getBoundingClientRect();
-        zoomTo(cameraRef.current.zoom + TRACK_MODEL_ZOOM_STEP * 2, {
-          x: (e.clientX - bounds.left) / bounds.width - 0.5,
-          y: (e.clientY - bounds.top) / bounds.height - 0.5,
-        });
-      }}
-      onPointerDown={(e) => {
-        if (
-          (e.pointerType === "mouse" && e.button !== 0 && e.button !== 2) ||
-          (e.target as Element).closest("button, a")
-        )
-          return;
-        if (follow) setFollow(false);
-        e.currentTarget.setPointerCapture(e.pointerId);
-        moved.current = false;
-        pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (pointers.current.size >= 2) {
-          const gesture = readPointerGesture(
-            pointers.current,
-            e.currentTarget.getBoundingClientRect(),
-          );
-          pinch.current = {
-            startAngle: gesture.angle,
-            startCenter: gesture.center,
-            startDistance: gesture.distance,
-            startState: {
-              pan: cameraRef.current.pan,
-              rotationDeg: cameraRef.current.rotation,
-              zoom: cameraRef.current.zoom,
-            },
-          };
-          drag.current = null;
-          return;
-        }
-        beginDrag(
-          e.pointerId,
-          { x: e.clientX, y: e.clientY },
-          e.pointerType === "mouse" && (e.button === 2 || e.shiftKey)
-            ? "orbit"
-            : "pan",
-        );
-      }}
-      onPointerMove={(e) => {
-        if (!pointers.current.has(e.pointerId)) return;
-        pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (pointers.current.size >= 2 && pinch.current) {
-          const gesture = readPointerGesture(
-            pointers.current,
-            e.currentTarget.getBoundingClientRect(),
-          );
-          const next = pinchTrackModelCamera({
-            currentAngle: gesture.angle,
-            currentCenter: gesture.center,
-            currentDistance: gesture.distance,
-            maximumZoom: TRACK_MODEL_MAX_ZOOM,
-            minimumZoom: TRACK_MODEL_MIN_ZOOM,
-            startAngle: pinch.current.startAngle,
-            startCenter: pinch.current.startCenter,
-            startDistance: pinch.current.startDistance,
-            startState: pinch.current.startState,
-          });
-          moved.current = true;
-          applyCamera({
-            ...cameraRef.current,
-            pan: next.pan,
-            rotation: next.rotationDeg,
-            zoom: next.zoom,
-          });
-          return;
-        }
-        const start = drag.current;
-        if (!start || start.pointerId !== e.pointerId) return;
-        const dx = e.clientX - start.startX,
-          dy = e.clientY - start.startY;
-        if (Math.hypot(dx, dy) < 4) return;
-        moved.current = true;
-        if (start.mode === "pan") {
-          const bounds = e.currentTarget.getBoundingClientRect();
-          const pan = clampTrackModelPan(
-            {
-              x: start.startPan.x + dx / bounds.width,
-              y: start.startPan.y + dy / bounds.height,
-            },
-            cameraRef.current.zoom,
-          );
-          applyCamera({ ...cameraRef.current, pan });
-          return;
-        }
-        const next = orbitTrackModelCamera({
-          deltaX: dx,
-          deltaY: dy,
-          startRotationDeg: start.startRotation,
-          startTiltDeg: start.startTilt,
-          minimumTiltDeg: 15,
-          maximumTiltDeg: 85,
-        });
-        setOrbit(next.rotationDeg, next.tiltDeg);
-      }}
-      onPointerUp={(e) => {
-        endPointer(e.pointerId, e.currentTarget);
-      }}
-      onPointerCancel={(e) => {
-        endPointer(e.pointerId, e.currentTarget);
-      }}
-      onKeyDown={(e) => {
-        if (e.target !== e.currentTarget) return;
-        if (
-          [
-            "+",
-            "=",
-            "-",
-            "ArrowLeft",
-            "ArrowRight",
-            "ArrowUp",
-            "ArrowDown",
-          ].includes(e.key)
-        )
-          e.preventDefault();
-        if (e.key === "+" || e.key === "=") zoomBy(TRACK_MODEL_ZOOM_STEP);
-        if (e.key === "-") zoomBy(-TRACK_MODEL_ZOOM_STEP);
-        if (e.key.startsWith("Arrow"))
-          setOrbit(
-            normalizeDegrees(
-              cameraRef.current.rotation +
-                (e.key === "ArrowLeft" ? -15 : e.key === "ArrowRight" ? 15 : 0),
-            ),
-            Math.min(
-              85,
-              Math.max(
-                15,
-                cameraRef.current.tilt +
-                  (e.key === "ArrowUp" ? -5 : e.key === "ArrowDown" ? 5 : 0),
-              ),
-            ),
-          );
-      }}
-    >
-      <Track3D
-        cars={cars}
-        sampleCar={sampleCar}
-        followDriver={follow ? selected : null}
-        onSelectDriver={(n) => {
-          if (!moved.current) onSelect(n);
-        }}
-        panX={camera.pan.x}
-        panY={camera.pan.y}
-        rotationDeg={camera.rotation}
-        tiltDeg={camera.tilt}
-        trackId={trackId}
-        zoom={camera.zoom}
-      />
-      <div className="live-camera-controls" aria-label="Камера">
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Приблизить"
-          aria-label="Приблизить трассу"
-          disabled={camera.zoom >= TRACK_MODEL_MAX_ZOOM}
-          onClick={() => zoomBy(TRACK_MODEL_ZOOM_STEP)}
-        >
-          <ZoomIn />
-        </Button>
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Отдалить"
-          aria-label="Отдалить трассу"
-          disabled={camera.zoom <= TRACK_MODEL_MIN_ZOOM}
-          onClick={() => zoomBy(-TRACK_MODEL_ZOOM_STEP)}
-        >
-          <ZoomOut />
-        </Button>
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Повернуть влево"
-          aria-label="Повернуть влево"
-          onClick={() =>
-            setOrbit(
-              normalizeDegrees(cameraRef.current.rotation - 20),
-              cameraRef.current.tilt,
-            )
-          }
-        >
-          <RotateCcw />
-        </Button>
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Повернуть вправо"
-          aria-label="Повернуть вправо"
-          onClick={() =>
-            setOrbit(
-              normalizeDegrees(cameraRef.current.rotation + 20),
-              cameraRef.current.tilt,
-            )
-          }
-        >
-          <RotateCw />
-        </Button>
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Вид сверху"
-          aria-label="Поднять камеру"
-          onClick={() =>
-            setOrbit(
-              cameraRef.current.rotation,
-              Math.min(85, cameraRef.current.tilt + 10),
-            )
-          }
-        >
-          <ChevronUp />
-        </Button>
-        <Button
-          size="icon"
-          variant="secondary"
-          title="Опустить камеру"
-          aria-label="Опустить камеру"
-          onClick={() =>
-            setOrbit(
-              cameraRef.current.rotation,
-              Math.max(15, cameraRef.current.tilt - 10),
-            )
-          }
-        >
-          <ChevronDown />
-        </Button>
-        <Button
-          size="icon"
-          variant={follow ? "default" : "secondary"}
-          aria-pressed={follow}
-          disabled={selected === null}
-          title="Следить за пилотом"
-          aria-label="Следить за выбранным пилотом"
-          onClick={() => setFollow((value) => !value)}
-        >
-          <Crosshair />
-        </Button>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => {
-            applyCamera(initialCamera);
-            setFollow(false);
-          }}
-        >
-          Сброс
-        </Button>
-      </div>
-      <TrackOrientationSphere
-        initialRotationDeg={0}
-        initialTiltDeg={48}
-        rotationDeg={camera.rotation}
-        tiltDeg={camera.tilt}
-        onChange={setOrbit}
-      />
-      <div className="live-camera-status" aria-live="polite">
-        {follow
-          ? `Камера за ${store.state.drivers[selected!]?.acronym ?? "пилотом"} · `
-          : ""}
-        {Math.round(camera.zoom * 100)}%
-      </div>
-    </div>
-  );
-}
-
-function readPointerGesture(
-  pointers: Map<number, { x: number; y: number }>,
-  bounds: DOMRect,
-) {
-  const [first, second] = Array.from(pointers.values());
-  const centerX = (first.x + second.x) / 2;
-  const centerY = (first.y + second.y) / 2;
-
-  return {
-    angle: Math.atan2(second.y - first.y, second.x - first.x),
-    center: {
-      x: (centerX - bounds.left) / bounds.width - 0.5,
-      y: (centerY - bounds.top) / bounds.height - 0.5,
-    },
-    distance: Math.hypot(second.x - first.x, second.y - first.y),
-  };
+  return <TrackModelViewer circuit={store.state.track?.circuitName ?? ""} initialTiltDeg={48} points={overviewPoints}
+    fullscreenOpen={fullscreenOpen} onFullscreenOpenChange={onFullscreenOpenChange} onInteract={stopFollowing} onReset={stopFollowing}
+    bottomInset={132} toolbarExtra={<Button size="icon" variant={follow ? "default" : "secondary"} className="size-11 sm:size-11"
+      aria-pressed={follow} disabled={selected === null} aria-label="Следить за выбранным пилотом"
+      onClick={() => setFollow(value => !value)}><Crosshair aria-hidden="true" /></Button>}>
+    {view => <>
+      <Track3D cars={cars} sampleCar={sampleCar} followDriver={follow ? selected : null}
+        onSelectDriver={n => { if (!view.moved.current) onSelect(n); }} onOverviewPoints={setOverviewPoints}
+        panX={view.pan.x} panY={view.pan.y} rotationDeg={view.rotationDeg} tiltDeg={view.tiltDeg} trackId={trackId} zoom={view.zoom}
+        frameRotationDeg={view.frameRotationDeg} frameTiltDeg={view.frameTiltDeg} viewport={view.viewport} />
+      {follow ? <span className="pointer-events-none absolute left-3 top-16 z-20 rounded border border-border bg-background px-2 py-1 text-xs text-foreground">
+        Камера за {store.state.drivers[selected!]?.acronym ?? "пилотом"}
+      </span> : null}
+    </>}
+  </TrackModelViewer>;
 }

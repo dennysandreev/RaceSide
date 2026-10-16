@@ -1,4 +1,4 @@
-import tracks from "./tracks.json" with { type: "json" };
+import { orientComparison } from "./track-geometry.mjs";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 export const hash = (value) =>
@@ -50,8 +50,8 @@ export class TelemetryStore {
     });
     if (error) throw new Error("STORAGE_UNAVAILABLE");
   }
-  async enqueue(task) {
-    const key = hash(task);
+  async enqueue(task, cacheKey) {
+    const key = hash(cacheKey ?? task);
     const { data, error } = await this.db.rpc("enqueue_telemetry_task", {
       p_key: key,
       p_task: task,
@@ -67,6 +67,7 @@ export class TelemetryStore {
       .eq("id", id)
       .maybeSingle();
     if (error) throw new Error("STORAGE_UNAVAILABLE");
+    if (data?.status === "queued" && data.error_code) return { ...data, status: "failed" };
     if (data && data.status === "queued" && data.job_id) {
       const { data: job } = await this.db
         .from("job_runs")
@@ -82,8 +83,8 @@ export class TelemetryStore {
     }
     return data;
   }
-  async finish(id, resultKey) {
-    const { error } = await this.db
+  async finish(id, resultKey, jobId) {
+    let request = this.db
       .from("telemetry_tasks")
       .update({
         status: "ready",
@@ -92,13 +93,17 @@ export class TelemetryStore {
         updated_at: new Date().toISOString(),
       })
       .eq("id", id);
+    if (jobId) request = request.eq("job_id", jobId);
+    const { error } = await request;
     if (error) throw new Error("STORAGE_UNAVAILABLE");
   }
-  async fail(id, errorCode) {
-    const { error } = await this.db
+  async fail(id, errorCode, jobId) {
+    let request = this.db
       .from("telemetry_tasks")
-      .update({ error_code: errorCode, updated_at: new Date().toISOString() })
+      .update({ status: "failed", error_code: errorCode, updated_at: new Date().toISOString() })
       .eq("id", id);
+    if (jobId) request = request.eq("job_id", jobId);
+    const { error } = await request;
     if (error) throw new Error("STORAGE_UNAVAILABLE");
   }
   async saveComparison(comparison) {
@@ -117,20 +122,16 @@ export class TelemetryStore {
       .eq("id", id)
       .maybeSingle();
     if (error) throw new Error("STORAGE_UNAVAILABLE");
-    // Old permalinks retain their measurements but receive the corrected map plane.
-    if (data?.comparison.track.version === "raceside-2026-09-12") {
-      const corrected = tracks.find(
-        (track) => track.id === data.comparison.track.id,
-      );
-      if (corrected)
-        data.comparison.track = {
-          ...data.comparison.track,
-          points: corrected.points,
-          version: corrected.version,
-        };
-    }
     return data
-      ? { id: data.id, comparison: data.comparison, createdAt: data.created_at }
+      ? { id: data.id, comparison: orientComparison(data.comparison), createdAt: data.created_at }
       : null;
+  }
+  async getNormalizedLaps(session, driver) {
+    const { data, error } = await this.db.from("telemetry_cache")
+      .select("payload,expires_at")
+      .like("key", `normalized:telemetry-%:${session}:${driver}:%`)
+      .order("updated_at", { ascending: false }).limit(24);
+    if (error) throw new Error("STORAGE_UNAVAILABLE");
+    return (data ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > Date.now()).map((row) => row.payload);
   }
 }

@@ -38,6 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { loadAdminNews, parseAdminTableQuery } from "@/data/admin-repository";
+import { normalizeDailyDigestBody } from "@/lib/daily-digest-content";
 import { isNewsRemovedFromFeed } from "@/lib/admin-policies";
 import { newsReviewIssueLabel, newsArticleTypeLabel, NEWS_ARTICLE_TYPE_OPTIONS } from "@/lib/news-editorial";
 import { requireAdmin } from "@/lib/auth";
@@ -60,7 +61,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
         description="Редактируй русскую версию, управляй публикацией и повторной обработкой. Публичный адрес после первой публикации не меняется."
         title="Новости и сводки"
       />
-      <AdminUrlTabs defaultValue="materials" values={["materials", "sources", "digests"]}>
+      <AdminUrlTabs sourceIds={data.sources.map(source => source.id)} defaultValue="materials" values={["materials", "sources", "digests"]}>
         <TabsList variant="line">
           <TabsTrigger value="materials">Материалы</TabsTrigger>
           <TabsTrigger value="sources">RSS-источники</TabsTrigger>
@@ -72,7 +73,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
             description={`${data.total} материалов по текущему запросу.`}
             title="Материалы"
           >
-            <AdminFilters
+            <AdminFilters query={query}
               search={query.search}
               status={query.status}
               statuses={[
@@ -120,7 +121,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
                           <TableCell className="whitespace-nowrap">
                             <div className="flex items-center justify-end gap-1">
                               <Button asChild size="sm" variant="ghost">
-                                <Link href={`/news/${article.slug}`} target="_blank"><ExternalLink aria-hidden="true" data-icon="inline-start" />Открыть</Link>
+                                <Link href={article.publicAvailable ? `/news/${article.slug}` : article.canonical_url} target="_blank"><ExternalLink aria-hidden="true" data-icon="inline-start" />{article.publicAvailable ? "На сайте" : "Оригинал"}</Link>
                               </Button>
                               <AdminArticleEditorDialog title={article.ai_title_ru ?? article.original_title}>
                                 <ArticleEditor article={article} />
@@ -176,7 +177,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
                       ) : null}
                       <div className="flex flex-wrap gap-2">
                         <Button asChild size="sm" variant="ghost">
-                          <Link href={`/news/${article.slug}`} target="_blank"><ExternalLink aria-hidden="true" data-icon="inline-start" />Открыть</Link>
+                          <Link href={article.publicAvailable ? `/news/${article.slug}` : article.canonical_url} target="_blank"><ExternalLink aria-hidden="true" data-icon="inline-start" />{article.publicAvailable ? "На сайте" : "Оригинал"}</Link>
                         </Button>
                         <AdminArticleEditorDialog title={article.ai_title_ru ?? article.original_title}>
                           <ArticleEditor article={article} />
@@ -210,7 +211,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
                     </article>
                   ))}
                 </div>
-                <AdminPagination
+                <AdminPagination query={query}
                   page={query.page}
                   pageSize={query.pageSize}
                   pathname="/admin/news"
@@ -236,7 +237,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
           >
             <div className="grid">
               {data.sources.map((source) => (
-                <div className="grid gap-3 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center" key={source.id}>
+                <div className="grid gap-3 border-b border-border p-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center" id={`source-${source.id}`} key={source.id}>
                   <div className="min-w-0">
                     <p className="truncate font-medium">{source.name}</p>
                     <p className="mt-1 truncate text-xs text-muted-foreground">{source.url}</p>
@@ -261,6 +262,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
             description="Сводку можно отредактировать, опубликовать или скрыть без удаления."
             title="Дневные сводки"
           >
+            <AdminFilters query={query} search={query.search} status={query.status} statuses={[{ value: "draft", label: "Черновики" }, { value: "published", label: "Опубликованы" }, { value: "hidden", label: "Скрыты" }]} />
             {data.digests.length ? (
               <div className="grid gap-4 p-4">
                 {data.digests.map((digest) => (
@@ -283,7 +285,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
                       </Field>
                       <Field>
                         <FieldLabel htmlFor={`digest-body-${digest.id}`}>Текст сводки</FieldLabel>
-                        <Textarea defaultValue={digest.body_md} id={`digest-body-${digest.id}`} name="body" rows={8} />
+                        <Textarea defaultValue={normalizeDailyDigestBody(digest.body_md)} id={`digest-body-${digest.id}`} name="body" rows={8} />
                       </Field>
                       <Field>
                         <FieldLabel htmlFor={`digest-status-${digest.id}`}>Публикация</FieldLabel>
@@ -300,6 +302,7 @@ export default async function AdminNewsPage({ searchParams }: PageProps) {
             ) : (
               <AdminEmpty description="Запусти сбор дневной сводки в разделе AI или задач." title="Сводок пока нет" />
             )}
+            <AdminPagination query={query} page={query.page} pageSize={query.pageSize} pathname="/admin/news" total={data.digestsTotal} />
           </AdminSection>
         </TabsContent>
       </AdminUrlTabs>
@@ -314,6 +317,11 @@ function ArticleEditor({
 }) {
   return (
     <div className="grid gap-4 text-left">
+      {typeof article.editorialMeta?.request_count === "number" ? (
+        <p className="text-sm text-muted-foreground">
+          Обработка: {article.editorialMeta.request_count} запроса, {(article.editorialMeta.token_usage ?? 0).toLocaleString("ru-RU")} токенов.
+        </p>
+      ) : null}
       {article.editorialReview?.issues.length ? <section aria-label="Результат проверки" className="grid gap-2 text-sm leading-6">
         <h3 className="font-semibold">Что нужно проверить</h3>
         <ul className="list-disc pl-5">{article.editorialReview.issues.map((issue, index) => <li key={index}>{newsReviewIssueLabel(issue)}</li>)}</ul>

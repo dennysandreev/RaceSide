@@ -1,0 +1,58 @@
+[
+  {
+    "id": "singapore",
+    "sourceSessionKey": 9896,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 6.662968,
+    "scale": 9.979734,
+    "pitPoints": 259
+  },
+  {
+    "id": "austin",
+    "sourceSessionKey": 9888,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 9.425909,
+    "scale": 10.033958,
+    "pitPoints": 259
+  },
+  {
+    "id": "mexico",
+    "sourceSessionKey": 9877,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 7.811365,
+    "scale": 9.959643,
+    "pitPoints": 259
+  },
+  {
+    "id": "interlagos",
+    "sourceSessionKey": 9869,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 10.95352,
+    "scale": 9.943561,
+    "pitPoints": 259
+  },
+  {
+    "id": "las-vegas",
+    "sourceSessionKey": 9858,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 9.94268,
+    "scale": 9.984821,
+    "pitPoints": 259
+  },
+  {
+    "id": "qatar",
+    "sourceSessionKey": 9850,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 8.243753,
+    "scale": 9.973312,
+    "pitPoints": 259
+  },
+  {
+    "id": "yas-marina",
+    "sourceSessionKey": 9839,
+    "sourceSeason": 2025,
+    "calibrationRmsMeters": 8.222264,
+    "scale": 9.974177,
+    "pitPoints": 259
+  }
+]

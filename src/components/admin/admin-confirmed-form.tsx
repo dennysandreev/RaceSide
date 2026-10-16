@@ -28,6 +28,7 @@ export function AdminConfirmedForm({
   submitLabel = "Сохранить",
   submitVariant = "default",
   title,
+  confirmFields = [],
 }: {
   action: (state: AdminActionResult, formData: FormData) => Promise<AdminActionResult>;
   children?: React.ReactNode;
@@ -37,10 +38,12 @@ export function AdminConfirmedForm({
   submitLabel?: string;
   submitVariant?: ButtonProps["variant"];
   title: string;
+  confirmFields?: Array<{ name: string; label: string }>;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const confirmedRef = useRef(false);
   const [open, setOpen] = useState(false);
+  const [summary, setSummary] = useState<Array<{ label: string; value: string }>>([]);
   const [state, formAction, pending] = useActionState(async (previousState: AdminActionResult, formData: FormData) => {
     const result = await action(previousState, formData);
     if (result.ok) setOpen(false);
@@ -63,6 +66,8 @@ export function AdminConfirmedForm({
             return;
           }
           event.preventDefault();
+          const data = new FormData(event.currentTarget);
+          setSummary(confirmFields.map(field => ({ label: field.label, value: String(data.get(field.name) ?? "") })));
           setOpen(true);
         }}
         ref={formRef}
@@ -86,6 +91,7 @@ export function AdminConfirmedForm({
             <AlertDialogTitle>{title}</AlertDialogTitle>
             <AlertDialogDescription>{description}</AlertDialogDescription>
           </AlertDialogHeader>
+          {summary.length ? <dl className="grid gap-2 text-sm">{summary.map(item => <div className="grid gap-1" key={item.label}><dt className="text-muted-foreground">{item.label}</dt><dd className="break-words">{item.value}</dd></div>)}</dl> : null}
           {state.message && !state.ok ? <p aria-live="polite" className="text-sm text-danger">{state.message}</p> : null}
           <AlertDialogFooter>
             <AlertDialogCancel type="button">Отмена</AlertDialogCancel>

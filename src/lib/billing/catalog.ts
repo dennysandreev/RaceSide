@@ -2,22 +2,22 @@ import type { BillingPrice, BillingPriceCode } from "@/lib/billing/types";
 
 export const billingPriceCatalog: Record<BillingPriceCode, BillingPrice> = {
   plus_monthly: {
-    amountMinor: 24_900,
+    amountMinor: 39_000,
     code: "plus_monthly",
     currency: "RUB",
     durationMonths: 1,
     firstPurchaseOnly: false,
     label: "RaceSide Plus на месяц",
-    shortLabel: "249 ₽ за месяц",
+    shortLabel: "390 ₽ за месяц",
   },
   plus_first_year: {
-    amountMinor: 199_000,
+    amountMinor: 390_000,
     code: "plus_first_year",
     currency: "RUB",
     durationMonths: 12,
-    firstPurchaseOnly: true,
-    label: "RaceSide Plus на первые 12 месяцев",
-    shortLabel: "1 990 ₽ за 12 месяцев",
+    firstPurchaseOnly: false,
+    label: "RaceSide Plus на год",
+    shortLabel: "3 900 ₽ за год",
   },
 };
 
@@ -37,7 +37,11 @@ export function formatMoney(amountMinor: number, currency = "RUB") {
 }
 
 export function formatProvider(provider: string, method?: string) {
+  if (method === "lava_rub") return "Российская карта через Lava.top";
+  if (method === "lava") return "Зарубежная карта через Lava.top";
+  if (provider === "lava") return "Lava.top";
   if (provider === "tribute") return "Tribute";
   if (provider === "yoomoney_wallet" || method === "yoomoney_wallet") return "Кошелёк ЮMoney";
-  return "Банковская карта через ЮMoney";
+  if (provider === "yoomoney") return "Банковская карта через ЮMoney";
+  return "Способ оплаты неизвестен";
 }

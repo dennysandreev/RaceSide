@@ -1,14 +1,10 @@
 "use client";
-import {
-  Fragment,
-  useState,
-  useSyncExternalStore,
-  type CSSProperties,
-} from "react";
+import { useState, useSyncExternalStore, type CSSProperties } from "react";
 import Image from "next/image";
-import { Headphones, ArrowUpRight } from "lucide-react";
+import { Flag, ArrowUpRight } from "lucide-react";
+import { Popover } from "radix-ui";
 import { useLive, useLiveStore } from "./live-provider";
-import { compoundText, driverStatus, gapText, lapTime } from "../lib/format";
+import { compoundText, driverStatus, gapText, lapTime, tyreAgeText, tyreAgeDescription } from "../lib/format";
 import { sessionCapabilities } from "../lib/session";
 import { getRacePaceTrend, type RacePaceTrend } from "../lib/race-pace";
 import type {
@@ -113,10 +109,10 @@ export function Tyre({ driver }: { driver: DriverLiveState }) {
     <span
       className="live-tyre"
       data-compound={driver.compound}
-      title={`${compoundText[driver.compound ?? ""] ?? "Шины неизвестны"} · ${driver.tyreAge ?? "—"} кр.`}
+      title={`${compoundText[driver.compound ?? ""] ?? "Шины неизвестны"} · ${tyreAgeDescription(driver)}`}
     >
       <b>{driver.compound?.[0] ?? "—"}</b>
-      <span>{driver.tyreAge ?? "—"}</span>
+      <span>{tyreAgeText(driver)}</span>
     </span>
   );
 }
@@ -230,11 +226,11 @@ export function DriverPortrait({ driver }: { driver: DriverLiveState }) {
 }
 export function SelectedDriver({
   selected,
-  onRadio,
+  onEvents,
   onDetails,
 }: {
   selected: number | null;
-  onRadio: () => void;
+  onEvents: () => void;
   onDetails: () => void;
 }) {
   const drivers = useLive("drivers"),
@@ -279,7 +275,7 @@ export function SelectedDriver({
         <Tyre driver={d} />
         <span>
           {compoundText[d.compound ?? ""] ?? "Шины"}
-          <small>{d.tyreAge ?? "—"} кругов на комплекте</small>
+          <small title={tyreAgeDescription(d)}>{tyreAgeText(d)} {d.tyreAgeEstimated ? "кругов после пита" : "кругов на комплекте"}</small>
         </span>
         <b>
           {timed
@@ -315,9 +311,9 @@ export function SelectedDriver({
         </div>
       </dl>
       <div className="live-selected-actions">
-        <Button variant="secondary" size="sm" onClick={onRadio}>
-          <Headphones size={15} />
-          Радио
+        <Button variant="secondary" size="sm" onClick={onEvents}>
+          <Flag size={15} />
+          События
         </Button>
         <Button variant="ghost" size="sm" onClick={onDetails}>
           Подробнее
@@ -347,41 +343,48 @@ export function DetailedTiming({
   const timed = capabilities.rankByLapTime;
   const columns = timed
     ? [
-        "Поз.",
-        "Пилот",
-        "Шины",
-        "Питы",
-        "Лучший",
-        "От лучшего",
-        "Последний",
-        "S1",
-        "S2",
-        "S3",
-        "Круги",
-        "Статус",
+        { label: "Поз.", width: 44 },
+        { label: "Пилот", width: 56 },
+        { label: "Шины", width: 64 },
+        { label: "Питы", width: 48 },
+        { label: "Лучший", width: 88 },
+        { label: "От лучшего", width: 80 },
+        { label: "Последний", width: 88 },
+        { label: "S1", width: 64 },
+        { label: "S2", width: 64 },
+        { label: "S3", width: 64 },
+        { label: "Макс. км/ч", width: 88 },
+        { label: "Круги", width: 48 },
+        { label: "Статус", width: 136 },
       ]
     : [
-        "Поз.",
-        "Пилот",
-        "Шины",
-        "Питы",
-        "От лидера",
-        "Интервал",
-        "Последний",
-        "S1",
-        "S2",
-        "S3",
-        "Лучший",
-        "Темп",
-        "Статус",
+        { label: "Поз.", width: 44 },
+        { label: "Пилот", width: 56 },
+        { label: "Шины", width: 64 },
+        { label: "Питы", width: 48 },
+        { label: "От лидера", width: 88 },
+        { label: "Интервал", width: 80 },
+        { label: "Последний", width: 88 },
+        { label: "S1", width: 64 },
+        { label: "S2", width: 64 },
+        { label: "S3", width: 64 },
+        { label: "Лучший", width: 88 },
+        { label: "Темп", width: 88 },
+        { label: "Статус", width: 136 },
       ];
+  const tableWidth = columns.reduce((sum, column) => sum + column.width, 0);
   return (
     <div className="live-table-scroll">
-      <Table className="live-detail-table">
+      <Table className="live-detail-table" style={{ minWidth: tableWidth }}>
+        <colgroup>
+          {columns.map(({ label, width }) => (
+            <col key={label} style={{ width }} />
+          ))}
+        </colgroup>
         <TableHeader>
           <TableRow>
-            {columns.map((x) => (
-              <TableHead key={x}>{x}</TableHead>
+            {columns.map(({ label }) => (
+              <TableHead key={label}>{label}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -392,125 +395,133 @@ export function DetailedTiming({
               ? null
               : getRacePaceTrend(d, rows[index - 1]);
             return (
-              <Fragment key={d.driverNumber}>
-                <TableRow
-                  data-state={
-                    selected === d.driverNumber ? "selected" : undefined
-                  }
-                  data-eliminated={Boolean(d.eliminatedIn)}
-                  aria-selected={selected === d.driverNumber}
-                  onClick={() => onSelect(d.driverNumber)}
-                >
-                  <TableCell>
-                    {timed ? index + 1 : (d.position ?? "—")}
-                  </TableCell>
-                  <TableCell>
-                    <button
-                      aria-label={`Выбрать ${d.fullName}`}
-                      className="live-driver-button"
-                      style={{ color: d.teamColour }}
-                    >
-                      {d.acronym}
-                    </button>
-                  </TableCell>
-                  <TableCell>
-                    <Tyre driver={d} />
-                  </TableCell>
-                  <TableCell>{d.pitCount}</TableCell>
-                  {timed ? (
-                    <>
-                      <TableCell
-                        className={d.bestLap === best ? "live-purple" : ""}
-                      >
-                        {lapTime(d.bestLap)}
-                      </TableCell>
-                      <TableCell>
-                        {d.bestLap ? gapText(d.bestLap - best) : "—"}
-                      </TableCell>
-                    </>
-                  ) : (
-                    <>
-                      <TableCell>{gapText(d.gap)}</TableCell>
-                      <TableCell>{gapText(d.interval)}</TableCell>
-                    </>
-                  )}
-                  <TableCell>
-                    {driverStatus[d.status] ?? lapTime(d.lastLap)}
-                  </TableCell>
-                  {shownSectors.map((v, i) => (
-                    <TableCell
-                      key={i}
-                      className={
-                        v && v <= sectors[i]
-                          ? "live-purple"
-                          : v && v <= (d.bestSectors[i] ?? 0)
-                            ? "live-green"
-                            : ""
-                      }
-                    >
-                      {v?.toFixed(3) ?? "—"}
-                    </TableCell>
-                  ))}
-                  {timed ? (
-                    <>
-                      <TableCell>{d.lap}</TableCell>
-                      <TableCell>
-                        {d.eliminatedIn
-                          ? `Вылетел в ${d.eliminatedIn}`
-                          : (driverStatus[d.status] ?? "На трассе")}
-                      </TableCell>
-                    </>
-                  ) : (
-                    <>
-                      <TableCell
-                        className={d.bestLap === best ? "live-purple" : ""}
-                      >
-                        {lapTime(d.bestLap)}
-                      </TableCell>
-                      <TableCell>
-                        {lapTime(
-                          d.pace
-                            .filter((p) => !p.pit)
-                            .slice(-3)
-                            .reduce(
-                              (a, p, _, all) => a + p.duration / all.length,
-                              0,
-                            ),
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <button
-                          type="button"
-                          className="live-pace-button"
-                          data-trend={paceTrend?.kind}
-                          aria-expanded={expandedPace === d.driverNumber}
-                          aria-controls={`race-pace-${d.driverNumber}`}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            setExpandedPace((current) =>
-                              current === d.driverNumber
-                                ? null
-                                : d.driverNumber,
-                            );
-                          }}
-                        >
-                          {paceTrend?.label ?? "Мало данных"}
-                        </button>
-                      </TableCell>
-                    </>
-                  )}
-                </TableRow>
-                {!timed && paceTrend && expandedPace === d.driverNumber && (
-                  <TableRow
-                    className="live-pace-detail-row"
-                    id={`race-pace-${d.driverNumber}`}
+              <TableRow
+                key={d.driverNumber}
+                data-state={
+                  selected === d.driverNumber ? "selected" : undefined
+                }
+                data-eliminated={Boolean(d.eliminatedIn)}
+                aria-selected={selected === d.driverNumber}
+                onClick={() => onSelect(d.driverNumber)}
+              >
+                <TableCell>{timed ? index + 1 : (d.position ?? "—")}</TableCell>
+                <TableCell>
+                  <button
+                    aria-label={`Выбрать ${d.fullName}`}
+                    className="live-driver-button"
+                    style={{ color: d.teamColour }}
                   >
-                    <TableCell colSpan={columns.length}>
-                      <PaceSummary driver={d} trend={paceTrend} />
+                    {d.acronym}
+                  </button>
+                </TableCell>
+                <TableCell>
+                  <Tyre driver={d} />
+                </TableCell>
+                <TableCell>{d.pitCount}</TableCell>
+                {timed ? (
+                  <>
+                    <TableCell
+                      className={d.bestLap === best ? "live-purple" : ""}
+                    >
+                      {lapTime(d.bestLap)}
                     </TableCell>
-                  </TableRow>
+                    <TableCell>
+                      {d.bestLap ? gapText(d.bestLap - best) : "—"}
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell>{gapText(d.gap)}</TableCell>
+                    <TableCell>{gapText(d.interval)}</TableCell>
+                  </>
                 )}
-              </Fragment>
+                <TableCell>
+                  {driverStatus[d.status] ?? lapTime(d.lastLap)}
+                </TableCell>
+                {shownSectors.map((v, i) => (
+                  <TableCell
+                    key={i}
+                    className={
+                      v && v <= sectors[i]
+                        ? "live-purple"
+                        : v && v <= (d.bestSectors[i] ?? 0)
+                          ? "live-green"
+                          : ""
+                    }
+                  >
+                    {v?.toFixed(3) ?? "—"}
+                  </TableCell>
+                ))}
+                {timed ? (
+                  <>
+                    <TableCell title="Максимальная скорость за сессию">
+                      {d.maxSpeed == null ? "—" : Math.round(d.maxSpeed)}
+                    </TableCell>
+                    <TableCell>{d.lap}</TableCell>
+                    <TableCell>
+                      {d.eliminatedIn
+                        ? `Вылетел в ${d.eliminatedIn}`
+                        : (driverStatus[d.status] ?? "На трассе")}
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell
+                      className={d.bestLap === best ? "live-purple" : ""}
+                    >
+                      {lapTime(d.bestLap)}
+                    </TableCell>
+                    <TableCell>
+                      {lapTime(
+                        d.pace
+                          .filter((p) => !p.pit)
+                          .slice(-3)
+                          .reduce(
+                            (a, p, _, all) => a + p.duration / all.length,
+                            0,
+                          ),
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Popover.Root
+                        open={expandedPace === d.driverNumber}
+                        onOpenChange={(open) =>
+                          setExpandedPace(open ? d.driverNumber : null)
+                        }
+                      >
+                        <Popover.Trigger asChild>
+                          <button
+                            type="button"
+                            className="live-pace-button"
+                            data-trend={paceTrend?.kind}
+                            aria-label={`${d.acronym}: ${paceTrend?.label ?? "Мало данных"}. Подробнее о темпе`}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                            }}
+                          >
+                            {paceTrend?.label ?? "Мало данных"}
+                          </button>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                          <Popover.Content
+                            className="live-pace-popover"
+                            side="bottom"
+                            align="end"
+                            sideOffset={8}
+                            collisionPadding={16}
+                            aria-label={`Темп ${d.acronym}`}
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            {paceTrend && (
+                              <PaceSummary driver={d} trend={paceTrend} />
+                            )}
+                          </Popover.Content>
+                        </Popover.Portal>
+                      </Popover.Root>
+                    </TableCell>
+                  </>
+                )}
+              </TableRow>
             );
           })}
         </TableBody>

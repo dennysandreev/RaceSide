@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-09-30",
+  "colorSpace": "sRGB",
+  "satelliteAlbedoScale": 0.55,
+  "notes": [
+    "Photo colour values are observed material approximations, not spectrophotometer measurements. Photograph dates are not supplied by the venue.",
+    "Satellite colour is sampled only inside mapped roof footprints on a 10 m grid; a tessellated interior point is used for roofs smaller than a source pixel.",
+    "Photographic brightness is reduced before it becomes surface albedo to avoid applying sunlight twice. Small-roof colours and facades without photographs remain estimated.",
+    "The Welcome Centre exterior roofs appear reddish in the pinned 2026 Sentinel image; the official indoor photograph supports only the light facade and canopy underside.",
+    "K1 uses the main-stand material family checked against its light roof in Sentinel; its promotional photo does not independently establish the top-of-roof paint colour."
+  ],
+  "references": [
+    {
+      "id": "main-grandstand",
+      "file": "main-grandstand-photo.jpg",
+      "url": "https://www.sepangcircuit.com/media/mageplus/tickets/main-grandstand.jpg",
+      "page": "https://www.sepangcircuit.com/main-grandstand",
+      "role": "warm light membrane, dark green frame and green/yellow seating",
+      "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+      "attribution": "PETRONAS Sepang International Circuit",
+      "bytes": 1399632,
+      "sha256": "4bc80566bdaa59a04210aa7a02f1fdd756117adf424c8c6d3fc99e686c95e6a7",
+      "retrievedAt": "2026-09-22T06:59:18.205Z",
+      "photographedAt": null
+    },
+    {
+      "id": "chalet-exterior",
+      "file": "chalet-exterior-colours.jpg",
+      "url": "https://www.sepangcircuit.com/media/wysiwyg/paddock-chalet-img1_1.jpg",
+      "page": "https://www.sepangcircuit.com/facilities-paddock-chalet",
+      "role": "charcoal metal canopy, off-white infill, dark framing and tinted glass",
+      "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+      "attribution": "PETRONAS Sepang International Circuit",
+      "bytes": 127268,
+      "sha256": "841d52e8e6b8b79b8ebcc4dc334dbace9fed68114ad8017d79457be56879eab2",
+      "retrievedAt": "2026-09-29T21:47:17.814391+00:00",
+      "photographedAt": null
+    },
+    {
+      "id": "south-paddock",
+      "file": "south-paddock-colours.jpg",
+      "url": "https://www.sepangcircuit.com/media/wysiwyg/support-paddock-south-img.jpg",
+      "page": "https://www.sepangcircuit.com/facilities-support-paddock-south",
+      "role": "dark metal roof, pale grey walls and green-grey glazing",
+      "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+      "attribution": "PETRONAS Sepang International Circuit",
+      "bytes": 494218,
+      "sha256": "1ec4b1379744a623a3cbde9b86ac050391486935188d1465d83cdc6115a0264f",
+      "retrievedAt": "2026-09-29T21:47:46.414413+00:00",
+      "photographedAt": null
+    },
+    {
+      "id": "welcome-courtyard",
+      "file": "welcome-exterior-colours.png",
+      "url": "https://www.sepangcircuit.com/media/wysiwyg/welcome-center-2.png",
+      "page": "https://www.sepangcircuit.com/facilities-welcome",
+      "role": "light concrete facade and warm canopy underside; pitched exterior roof colour comes from Sentinel, not this interior view",
+      "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+      "attribution": "PETRONAS Sepang International Circuit",
+      "bytes": 310093,
+      "sha256": "ab4d1315baf6f55a8814e81f8d581e71e2623ae85d5dcbf0dd5beed4f9cbf0a6",
+      "retrievedAt": "2026-09-29T21:48:37.978721+00:00",
+      "photographedAt": null
+    },
+    {
+      "id": "f-grandstand",
+      "file": "f-grandstand-colours.jpg",
+      "url": "https://www.sepangcircuit.com/media/mageplus/tickets/f-grandstand.jpg",
+      "page": "https://www.sepangcircuit.com/f-grandstand",
+      "role": "grey-green roof underside and grey galvanized structure; top colour checked against Sentinel",
+      "license": "Official venue photograph; observational colour reference only, not redistributed in GLB",
+      "attribution": "PETRONAS Sepang International Circuit",
+      "bytes": 1444879,
+      "sha256": "bc8310d8b9d43877925e3cc1037792e5df84750ccac5849447436f3cc5e4a77b",
+      "retrievedAt": "2026-09-29T21:49:35.528137+00:00",
+      "photographedAt": null
+    }
+  ],
+  "defaultWall": "#b1b3a9",
+  "buildingGroups": [
+    {
+      "id": "pit-building",
+      "wayIds": [
+        144362327
+      ],
+      "name": "Paddock/Pit Building",
+      "roof": "#b8bfbc",
+      "wall": "#c1c6bd",
+      "glazing": "#345b5c",
+      "garageDoor": "#47534f",
+      "sources": [
+        "sentinel-tci.tif",
+        "official-architecture.html",
+        "main-grandstand"
+      ],
+      "evidence": "Light roof from Sentinel; glass/aluminium facade material from venue architecture and trackside view. Tone estimated."
+    },
+    {
+      "id": "paddock-chalets",
+      "wayIds": [
+        144362328,
+        1106524879,
+        1106524880,
+        1106524881,
+        1106524882,
+        1106524883,
+        1106524884,
+        1106524885
+      ],
+      "name": "14 paddock chalet units in 8 mapped building modules",
+      "roof": "#494e4b",
+      "wall": "#b9bcb3",
+      "glazing": "#3d5350",
+      "glazedLongFrontages": true,
+      "sources": [
+        "chalet-exterior"
+      ],
+      "evidence": "Official exterior photo shows dark metal roof, pale infill and large tinted glass frontages; exact paint codes are estimated."
+    },
+    {
+      "id": "south-paddock",
+      "wayIds": [
+        1105232836
+      ],
+      "name": "South Paddock",
+      "roof": "#4a504d",
+      "wall": "#bec2bc",
+      "sources": [
+        "south-paddock"
+      ],
+      "evidence": "Official trackside exterior photograph; dark metal roof and light concrete facade."
+    },
+    {
+      "id": "welcome-centre",
+      "wayIds": [
+        107364040,
+        1106756634
+      ],
+      "name": "Welcome Centre buildings",
+      "roof": "#a26557",
+      "wall": "#c5c5b5",
+      "sources": [
+        "sentinel-tci.tif",
+        "welcome-courtyard"
+      ],
+      "evidence": "Reddish roofs visible inside both mapped footprints in Sentinel; light facade inferred from the official courtyard photo."
+    }
+  ],
+  "grandstands": [
+    {
+      "wayId": 144247993,
+      "name": "Main Grandstand",
+      "roof": "#c4c0aa",
+      "underside": "#a5a18a",
+      "frame": "#324e47",
+      "truss": "#5a6b62",
+      "concrete": "#adb1a7",
+      "seatGreen": "#227851",
+      "seatYellow": "#c1a03b",
+      "seatGrey": "#969c8f",
+      "sources": [
+        "main-grandstand"
+      ],
+      "evidence": "Venue daylight photograph shows cream membranes, dark green framing, grey trusses and green/yellow seats."
+    },
+    {
+      "wayId": 107364100,
+      "name": "K1 Grandstand",
+      "roof": "#b9bcad",
+      "underside": "#989d8b",
+      "frame": "#4a6157",
+      "truss": "#758178",
+      "concrete": "#adb1a7",
+      "seatGreen": "#227851",
+      "seatYellow": "#c1a03b",
+      "seatGrey": "#969c8f",
+      "sources": [
+        "sentinel-tci.tif",
+        "main-grandstand"
+      ],
+      "evidence": "Light roof confirmed in Sentinel; surface tones and structure remain an estimate from the same venue material family."
+    },
+    {
+      "wayId": 107364038,
+      "name": "F Grandstand",
+      "roof": "#a4ada3",
+      "underside": "#767e70",
+      "frame": "#65736a",
+      "truss": "#819085",
+      "concrete": "#b1b5ac",
+      "seatGreen": "#227851",
+      "seatYellow": "#c1a03b",
+      "seatGrey": "#969c8f",
+      "sources": [
+        "f-grandstand",
+        "sentinel-tci.tif"
+      ],
+      "evidence": "Official F photograph shows galvanized steel and grey-green roof underside; roof top tone checked against Sentinel."
+    }
+  ]
+}

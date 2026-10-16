@@ -1,0 +1,11 @@
+{
+  "comparedMeshes": 22,
+  "changedMeshes": [
+    "YasMarina_Grandstand_Structures_Mesh",
+    "YasMarina_Textured_Blue_Seats_Mesh",
+    "YasMarina_White_Membrane_Canopies_Mesh"
+  ],
+  "comparedPositionValues": 1036875,
+  "maximumDifferenceMeters": 0,
+  "geometryUnchanged": true
+}

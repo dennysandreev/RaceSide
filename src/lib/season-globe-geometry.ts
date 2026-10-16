@@ -28,6 +28,48 @@ export type SeasonGlobeCameraDistances = {
 
 export const SEASON_GLOBE_MARKER_RADIUS = 1.006;
 
+export type SeasonGlobeLabelCandidate = {
+  round: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  facing: number;
+  selected: boolean;
+};
+
+export function placeSeasonGlobeLabels(
+  candidates: SeasonGlobeLabelCandidate[],
+  viewportWidth: number,
+  viewportHeight: number,
+  limit = 6,
+) {
+  const placed: (SeasonGlobeLabelCandidate & { left: number; top: number })[] = [];
+  const margin = 6;
+  const ordered = [...candidates].sort((a, b) => Number(b.selected) - Number(a.selected) || b.facing - a.facing);
+
+  for (const candidate of ordered) {
+    if (placed.length >= limit) break;
+    const width = Math.min(candidate.width, viewportWidth - margin * 2);
+    if (width <= 0 || candidate.height > viewportHeight - margin * 2) continue;
+    const options = candidate.selected
+      ? [[candidate.x + 16, candidate.y - candidate.height / 2]]
+      : [[candidate.x + 9, candidate.y - 9], [candidate.x - width - 9, candidate.y - 9], [candidate.x + 9, candidate.y - 25]];
+
+    for (const [x, y] of options) {
+      const left = candidate.selected ? MathUtils.clamp(x, margin, viewportWidth - width - margin) : x;
+      const top = candidate.selected ? MathUtils.clamp(y, margin, viewportHeight - candidate.height - margin) : y;
+      if (left < margin || top < margin || left + width > viewportWidth - margin || top + candidate.height > viewportHeight - margin) continue;
+      const overlaps = placed.some((other) => left < other.left + other.width + margin && left + width + margin > other.left &&
+        top < other.top + other.height + margin && top + candidate.height + margin > other.top);
+      if (overlaps) continue;
+      placed.push({ ...candidate, width, left, top });
+      break;
+    }
+  }
+  return placed;
+}
+
 export function getSeasonGlobeCameraDistances(
   fitDistance: number,
   compactViewport = false,
@@ -37,10 +79,8 @@ export function getSeasonGlobeCameraDistances(
     : 3.45;
 
   return {
-    initial: compactViewport
-      ? MathUtils.clamp(safeFitDistance * 0.59, 2.25, 2.6)
-      : MathUtils.clamp(safeFitDistance * 0.65, 2.45, 2.85),
-    maximum: Math.max(6.4, safeFitDistance + 1.2),
+    initial: safeFitDistance * (compactViewport ? 0.95 : 0.93),
+    maximum: Math.max(6.4, safeFitDistance * 1.6),
     minimum: 1.45,
   };
 }

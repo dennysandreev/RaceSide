@@ -380,7 +380,7 @@ function PodiumCard({
     <article
       className={cn(
         "stitch-panel relative isolate grid h-full justify-items-center content-start gap-1.5 px-2 pb-3 pt-8 text-center sm:gap-2 sm:px-4 sm:pb-5 sm:pt-10",
-        isChampionLeader ? "border-primary/45 ring-1 ring-primary/25" : "mt-3 sm:mt-6",
+        !isChampionLeader && "mt-3 sm:mt-6",
       )}
     >
       <span

@@ -1,3 +1,5 @@
+import { TEXT_AI_MODEL, textAiRequestOptions } from "../ai-prompt-registry.mjs";
+
 const MAX_AUDIO_BYTES = 20 * 1024 * 1024;
 export function allowedRecording(value) {
   try {
@@ -38,7 +40,7 @@ export async function fetchAudio(url, signal) {
 }
 export async function transcribeRadio(
   url,
-  { fetchAudioImpl = fetchAudio, fetchImpl = fetch, onUsage = () => {} } = {},
+  { fetchAudioImpl = fetchAudio, fetchImpl = fetch, onUsage = () => {}, beforePaidRequest = () => {} } = {},
 ) {
   let audio;
   try {
@@ -47,6 +49,7 @@ export async function transcribeRadio(
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",
     };
+    await beforePaidRequest("live_radio_transcription");
     const response = await fetchImpl(
       "https://openrouter.ai/api/v1/audio/transcriptions",
       {
@@ -70,13 +73,15 @@ export async function transcribeRadio(
     );
     if (typeof transcript.text !== "string" || !transcript.text.trim())
       throw new Error("Radio transcript empty");
+    await beforePaidRequest("live_radio_translation");
     const translation = await fetchImpl(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
         headers,
         body: JSON.stringify({
-          model: process.env.AI_SUMMARY_MODEL || "openai/gpt-4o-mini",
+          model: TEXT_AI_MODEL,
+          ...textAiRequestOptions(),
           max_tokens: 1200,
           messages: [
             {
@@ -95,7 +100,7 @@ export async function transcribeRadio(
     const translated = await translation.json();
     await onUsage(
       translated,
-      process.env.AI_SUMMARY_MODEL || "openai/gpt-4o-mini",
+      TEXT_AI_MODEL,
       "live_radio_translation",
     );
     const ru = translated.choices?.[0]?.message?.content;

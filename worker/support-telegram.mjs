@@ -19,7 +19,7 @@ export async function sendSupportTelegramMessage(input, options = {}) {
     body: JSON.stringify({
       chat_id: chatId,
       text: String(input.text ?? "").slice(0, 4_096),
-      parse_mode: input.parseMode ?? "HTML",
+      parse_mode: input.parseMode === null ? undefined : input.parseMode ?? "HTML",
       disable_web_page_preview: true,
       reply_markup: input.replyMarkup ?? undefined,
     }),

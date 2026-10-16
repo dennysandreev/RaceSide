@@ -18,7 +18,6 @@ import {
   StitchPanelHeader,
   StitchSegmentedLinks,
 } from "@/components/racemate/stitch-primitives";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -518,35 +517,19 @@ function NewsMeta({
   item,
 }: {
   item: {
-    editorial?: NewsItem["editorial"];
-    raceTag?: string;
     source: string;
-    tags: { name: string; slug: string; type?: string }[];
     time: string;
   };
 }) {
-  const visibleTag = item.tags.find((tag) => tag.type === "race");
-  const raceTag = visibleTag?.name ?? item.raceTag;
-
   return (
-    <div className="grid min-w-0 justify-items-start gap-3">
-      <div className="flex w-full min-w-0 items-center justify-between gap-3">
-        <span className="min-w-0 truncate font-telemetry text-xs font-bold uppercase tracking-[0.08em] text-foreground/78">
-          {item.source}
-        </span>
-        <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-telemetry text-[0.68rem] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-          <Clock3 aria-hidden="true" className="size-3.5" />
-          {item.time}
-        </span>
-      </div>
-      {raceTag ? (
-        <Badge
-          className="max-w-full whitespace-normal border-primary/65 bg-primary/[0.06] px-3 py-1.5 text-primary"
-          variant="outline"
-        >
-          {raceTag}
-        </Badge>
-      ) : null}
+    <div className="flex w-full min-w-0 items-center justify-between gap-3">
+      <span className="min-w-0 truncate font-telemetry text-xs font-bold uppercase tracking-[0.08em] text-foreground/78">
+        {item.source}
+      </span>
+      <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-telemetry text-[0.68rem] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+        <Clock3 aria-hidden="true" className="size-3.5" />
+        {item.time}
+      </span>
     </div>
   );
 }

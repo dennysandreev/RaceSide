@@ -1,89 +1,122 @@
+import type { CSSProperties } from "react";
+
+import { raceSideLogoArtwork } from "@/components/racemate/raceside-logo-artwork";
 import { cn } from "@/lib/utils";
 
 type RaceMateLogoProps = {
   className?: string;
   size?: "navigation" | "footer";
+  variant?: "horizontal" | "signature";
 };
 
 type RaceMateMarkProps = {
   className?: string;
+  plus?: boolean;
 };
 
-const logoSizeClasses = {
-  navigation: {
-    root: "gap-2",
-    mark: "h-9 w-[4.8rem]",
-    wordmark: "text-[1.55rem]",
-    descriptor: "mt-1 text-[0.55rem] tracking-[0.16em]",
+type RaceSideLogoSvgProps = {
+  className?: string;
+  palette?: "theme" | "dark" | "light" | "white";
+  plus?: boolean;
+  style?: CSSProperties;
+  variant?: "horizontal" | "signature";
+  width?: number;
+};
+
+const palettes = {
+  theme: {
+    mark: "var(--racemate-logo-mark)",
+    wordmark: "var(--racemate-logo-wordmark)",
+    descriptor: "var(--racemate-logo-descriptor)",
   },
-  footer: {
-    root: "gap-2",
-    mark: "h-7 w-[3.75rem]",
-    wordmark: "text-base",
-    descriptor: "mt-0.5 text-[0.46rem] tracking-[0.14em]",
-  },
+  dark: { mark: "#E10600", wordmark: "#F5F4F2", descriptor: "#BDB8B6" },
+  light: { mark: "#E10600", wordmark: "#191313", descriptor: "#6E5E5A" },
+  white: { mark: "#FFFFFF", wordmark: "#FFFFFF", descriptor: "#FFFFFF" },
 } as const;
 
-export function RaceMateLogo({
+export function RaceSideLogoSvg({
   className,
-  size = "navigation",
-}: RaceMateLogoProps) {
-  const classes = logoSizeClasses[size];
+  palette = "theme",
+  plus = false,
+  style,
+  variant = "horizontal",
+  width = 208,
+}: RaceSideLogoSvgProps) {
+  const layout = plus ? raceSideLogoArtwork.plusLayouts[variant] : raceSideLogoArtwork.layouts[variant];
+  const colors = palettes[palette];
 
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      data-raceside-logo={plus ? `${variant}-plus` : variant}
+      focusable="false"
+      height={(width * layout.height) / layout.width}
+      style={{ flexShrink: 0, ...style }}
+      viewBox={`0 0 ${layout.width} ${layout.height}`}
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g fill={colors.mark} transform={layout.markTransform}>
+        {raceSideLogoArtwork.markPaths.map((d) => <path d={d} key={d} />)}
+      </g>
+      <g fill={colors.wordmark} transform={layout.wordmarkTransform}>
+        {raceSideLogoArtwork.wordmarkPaths.map((path, index) => (
+          <path d={path.d} key={index} transform={path.transform} />
+        ))}
+      </g>
+      {variant === "signature" ? (
+        <g fill={colors.descriptor} transform={raceSideLogoArtwork.layouts.signature.descriptorTransform}>
+          {raceSideLogoArtwork.descriptorPaths.map((path, index) => (
+            <path d={path.d} key={index} transform={path.transform} />
+          ))}
+        </g>
+      ) : null}
+      {plus ? (
+        <g fill={colors.mark} transform={raceSideLogoArtwork.plusLayouts[variant].plusTransform}>
+          {raceSideLogoArtwork.plusPaths.map((d) => <path d={d} key={d} />)}
+        </g>
+      ) : null}
+    </svg>
+  );
+}
+
+export function RaceMateLogo({ className, size = "navigation", variant = "horizontal" }: RaceMateLogoProps) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "inline-flex min-w-0 items-center transition-transform duration-200 group-hover:translate-x-0.5 group-active:translate-y-px motion-reduce:transform-none motion-reduce:transition-none",
-        classes.root,
+        "inline-flex max-w-full shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-active:translate-y-px motion-reduce:transform-none motion-reduce:transition-none",
+        size === "footer" ? "w-44" : "w-52",
         className,
       )}
     >
-      <RaceMateMark className={classes.mark} />
-      <span className="min-w-0 leading-none">
-        <span
-          className={cn(
-            "block whitespace-nowrap font-display font-extrabold tracking-[-0.03em] text-[var(--racemate-logo-wordmark)]",
-            classes.wordmark,
-          )}
-        >
-          RaceSide
-        </span>
-        <span
-          className={cn(
-            "block whitespace-nowrap font-telemetry font-bold text-[var(--racemate-logo-descriptor)]",
-            classes.descriptor,
-          )}
-        >
-          Гоночный центр
-        </span>
-      </span>
+      <RaceSideLogoSvg className="block h-auto w-full" variant={variant} width={size === "footer" ? 176 : 208} />
     </span>
   );
 }
 
-export function RaceMateMark({ className }: RaceMateMarkProps) {
+export function RaceMateMark({ className, plus = false }: RaceMateMarkProps) {
+  const mark = plus ? raceSideLogoArtwork.plusMark : raceSideLogoArtwork.mark;
+
   return (
     <svg
       aria-hidden="true"
-      className={cn("shrink-0 text-primary", className)}
-      fill="none"
-      viewBox="0 0 136 64"
+      className={cn("shrink-0 text-[var(--racemate-logo-mark)]", className)}
+      data-raceside-logo={plus ? "mark-plus" : "mark"}
+      fill="currentColor"
+      focusable="false"
+      viewBox={`0 0 ${mark.width} ${mark.height}`}
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M5 59 18 7h27c12 0 19 6 19 15 0 10-8 17-20 17H27l23 20"
-        stroke="currentColor"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-        strokeWidth="10"
-      />
-      <path
-        d="M129 8H95c-10 0-16 5-16 13 0 7 6 11 15 11h19c10 0 16 5 16 13 0 8-6 13-16 13H76"
-        stroke="currentColor"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-        strokeWidth="10"
-      />
+      <g transform={mark.transform}>
+        {raceSideLogoArtwork.markPaths.map((d) => <path d={d} key={d} />)}
+      </g>
+      {plus ? (
+        <g transform={raceSideLogoArtwork.plusMark.plusTransform}>
+          {raceSideLogoArtwork.plusPaths.map((d) => <path d={d} key={d} />)}
+        </g>
+      ) : null}
     </svg>
   );
 }

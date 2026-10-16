@@ -1,3 +1,12 @@
+import type { DriverLiveState } from "./types";
+
+export const tyreAgeText = (driver: DriverLiveState) =>
+  driver.tyreAge == null ? "—" : `${driver.tyreAgeEstimated ? "≈" : ""}${driver.tyreAge}`;
+export const tyreAgeDescription = (driver: DriverLiveState) =>
+  driver.tyreAgeEstimated
+    ? `${tyreAgeText(driver)} кругов после пит-стопа · ждём данные о комплекте`
+    : `${tyreAgeText(driver)} кругов на комплекте`;
+
 export const lapTime = (value: number | null | undefined) =>
   value && Number.isFinite(value)
     ? `${Math.floor(value / 60)}:${(value % 60).toFixed(3).padStart(6, "0")}`

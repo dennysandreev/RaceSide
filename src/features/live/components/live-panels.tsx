@@ -107,9 +107,13 @@ function Telemetry({ selected }: { selected: number }) {
 }
 export function Analytics() {
   const drivers = useLive("drivers"),
-    pits = useLive("pits"),
-    weather = useLive("weather");
+    pits = useLive("pits");
   const rows = Object.values(drivers);
+  const speedRanking = [...rows].sort((a, b) =>
+    (b.maxSpeed ?? -1) - (a.maxSpeed ?? -1) ||
+    (a.position ?? 99) - (b.position ?? 99) ||
+    a.driverNumber - b.driverNumber,
+  );
   const compounds = ["SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"].flatMap(
     (compound) => {
       const samples = rows.flatMap((d) =>
@@ -191,34 +195,21 @@ export function Analytics() {
         </div>
       </section>
       <section>
-        <h2>Погода</h2>
-        <dl className="live-weather">
-          {[
-            ["Воздух", weather?.air, "°C"],
-            ["Трасса", weather?.track, "°C"],
-            [
-              "Дождь",
-              weather?.rain === 1 ? "Да" : weather?.rain === 0 ? "Нет" : null,
-              "",
-            ],
-            [
-              "Ветер",
-              weather?.wind == null ? null : (weather.wind * 3.6).toFixed(1),
-              "км/ч",
-            ],
-            ["Влажность", weather?.humidity, "%"],
-          ].map(([label, value, unit]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>
-                {value ?? "—"} {value == null ? "" : unit}
-              </dd>
-            </div>
+        <h2>Максимальная скорость</h2>
+        <ol className="live-inner-list live-speed-ranking">
+          {speedRanking.map((driver, index) => (
+            <li className="live-analytics-row" key={driver.driverNumber}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong style={{ color: driver.teamColour }} title={driver.fullName}>
+                {driver.acronym}
+              </strong>
+              <b>{driver.maxSpeed == null ? "—" : Math.round(driver.maxSpeed)}
+                {driver.maxSpeed != null && <small> км/ч</small>}
+              </b>
+            </li>
           ))}
-        </dl>
-        {weather && (
-          <p className="live-quiet">Обновлено в {time(weather.timestamp)}</p>
-        )}
+          {!speedRanking.length && <li className="live-quiet">Скорости появятся после выезда пилотов.</li>}
+        </ol>
       </section>
     </div>
   );
@@ -233,6 +224,7 @@ export function EventFeed({
   const events = useLive("events"),
     drivers = useLive("drivers"),
     session = useLive("session");
+  const store = useLiveStore();
   const [archive, setArchive] = useState<{
     sessionKey: number;
     items: FeedEvent[];
@@ -268,7 +260,7 @@ export function EventFeed({
     setHistoryError(false);
     try {
       const response = await fetch(
-        `/api/live/history?topic=events&before=${encodeURIComponent(before)}`,
+        `/api/live/history?topic=events&before=${encodeURIComponent(before)}${store.presentation ? `&at=${Math.floor(store.getPresentationNow())}&session_key=${session?.session_key}` : ""}`,
       );
       if (!response.ok) throw new Error();
       const result = await response.json();

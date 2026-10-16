@@ -41,7 +41,7 @@ export async function writeSepangClientModel({ configPath, metadataPath }) {
   const revision = createHash("sha256").update(asset).digest("hex").slice(0, 12);
   const previewRevision = createHash("sha256").update(preview).digest("hex").slice(0, 12);
   const model = {
-    id: "sepang", aliases: ["sepang international circuit", "sepang", "сепанг", "malaysian grand prix", "гран-при малайзии", "bahrain grand prix in malaysia"],
+    id: "sepang", aliases: ["sepang international circuit", "sepang", "сепанг", "malaysian grand prix", "гран-при малайзии", "bahrain grand prix in malaysia", "kuala lumpur", "куала лумпур"],
     camera: { centerY: 0, rotationDeg: 0, scale: 1, tiltDeg: 10, verticalExaggeration: 1 },
     data: "__DATA__", terrain: "__TERRAIN__",
     rendering: { contourIntervalM: 5, curbTurnNumbers: turns.map((t) => t.number), gravelTurnNumbers: [], runoffTurnNumbers: [], turnLabelOffsets: Object.fromEntries(turns.map((t) => [t.number, [0, 0]])) },

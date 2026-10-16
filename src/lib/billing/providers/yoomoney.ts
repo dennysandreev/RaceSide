@@ -1,6 +1,6 @@
 import "server-only";
 
-import { minorUnitsToDecimal, parseMinorUnits } from "@/lib/billing/money";
+import { parseMinorUnits } from "@/lib/billing/money";
 import { makeYooMoneyCanonicalString, signYooMoneyNotification, verifyYooMoneySignature } from "@/lib/billing/signatures";
 import type { PaymentProvider } from "@/lib/billing/types";
 
@@ -12,26 +12,6 @@ export const yoomoneyProvider: PaymentProvider = {
   },
   code: "yoomoney",
 };
-
-export function createYooMoneyForm(input: {
-  amountMinor: number;
-  label: string;
-  paymentType: "AC" | "PC";
-  receiver: string;
-  successUrl: string;
-}) {
-  return {
-    action: "https://yoomoney.ru/quickpay/confirm" as const,
-    fields: {
-      label: input.label,
-      paymentType: input.paymentType,
-      "quickpay-form": "button",
-      receiver: input.receiver,
-      successURL: input.successUrl,
-      sum: minorUnitsToDecimal(input.amountMinor),
-    },
-  };
-}
 
 export { makeYooMoneyCanonicalString, signYooMoneyNotification };
 

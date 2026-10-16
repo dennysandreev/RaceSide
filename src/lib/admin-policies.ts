@@ -47,6 +47,17 @@ export function isNewsRemovedFromFeed(
   return publicationStatus === "draft" && publishedAt !== null;
 }
 
+export function isNewsPubliclyAvailable(article: { status: string; publication_status: string; duplicate_of: string | null; ai_model: string | null }) {
+  return article.status === "processed" && article.publication_status === "published" && article.duplicate_of === null && article.ai_model !== "fallback";
+}
+
+export function getAdminTelemetrySignal(snapshot: { failed24h: number; queuedErrors: number; staleQueued: number; queued: number; ready24h: number }) {
+  if (snapshot.failed24h) return "failed";
+  if (snapshot.staleQueued) return "stale";
+  if (snapshot.queued || snapshot.queuedErrors) return "warning";
+  return snapshot.ready24h ? "healthy" : "unknown";
+}
+
 export function buildNewsEditorialUpdate(input: {
   currentPublishedAt: string | null;
   currentSlug: string;

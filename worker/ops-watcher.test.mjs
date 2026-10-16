@@ -76,6 +76,15 @@ test("recent telemetry failures create a data finding", () => {
   assert.deepEqual(findings.map((finding) => finding.ruleKey), ["telemetry-task-failed"]);
 });
 
+test("old queued telemetry errors require reconciliation without reporting a permanent live failure", () => {
+  const findings = evaluateOpsSnapshot({
+    heartbeats: ["web", "live", "admin-job-runner", "cron"].map(service_name => ({ service_name, status: "healthy", checked_at: now.toISOString() })),
+    publicHealth: { ok: true }, jobs: [], newsSources: [], socialSources: [],
+    telemetrySummary: { failed24h: 0, queuedErrors: 10, ready24h: 5 },
+  }, now);
+  assert.deepEqual(findings.map(finding => [finding.ruleKey, finding.severity]), [["telemetry-history-inconsistent", "P3"]]);
+});
+
 test("R2 proposal stays disabled during shadow and first seven days", () => {
   const finding = { ruleKey: "job-queue-stalled" };
   assert.equal(getSafeRecoveryProposal(finding, {

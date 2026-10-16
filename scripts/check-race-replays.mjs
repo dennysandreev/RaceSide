@@ -44,9 +44,11 @@ await mkdir(directory, { recursive: true });
 const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
-const { data: sessions, error } = await db.from("race_replay_sessions")
+let sessionQuery = db.from("race_replay_sessions")
   .select("id,source_session_key,source_season,status,duration_ms,total_laps,source_session_name,races!inner(round,race_name,season_year)")
-  .eq("races.season_year", 2026).eq("source_season", 2026).eq("status", "ready");
+  .eq("races.season_year", 2026).eq("status", "ready");
+if (!process.argv.includes("--all-versions")) sessionQuery = sessionQuery.eq("source_season", 2026);
+const { data: sessions, error } = await sessionQuery;
 if (error) throw error;
 const reports = [];
 for (const session of sessions.sort((a, b) => a.races.round - b.races.round)) {

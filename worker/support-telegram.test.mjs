@@ -52,3 +52,15 @@ test("support delivery resolves a confirmed Telegram account when getUpdates is 
   assert.match(telegramRequests[0].url, /\/sendMessage$/);
   assert.equal(JSON.parse(telegramRequests[0].init.body).chat_id, "123456789");
 });
+
+test("feedback can disable HTML parsing for literal user messages", async (context) => {
+  context.mock.method(globalThis, "fetch", async (_url, init) => {
+    const body = JSON.parse(init.body);
+    assert.equal(body.text, "<идея> & пожелание");
+    assert.equal(body.parse_mode, undefined);
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  });
+  assert.equal((await sendSupportTelegramMessage({ text: "<идея> & пожелание", parseMode: null }, {
+    botToken: "test-token", chatId: "123456789",
+  })).ok, true);
+});

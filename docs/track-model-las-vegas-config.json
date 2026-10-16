@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "modelId": "las-vegas",
+  "crs": "EPSG:32611",
+  "verticalDatum": "NAVD88",
+  "bounds": {
+    "minX": 663650,
+    "minY": 3997200,
+    "maxX": 666250,
+    "maxY": 4000000
+  },
+  "osmRelation": 16696508,
+  "finishNode": 13016217985,
+  "raceStartNode": 13016217986,
+  "pitWay": 1223479152,
+  "officialLapLengthMeters": 6201,
+  "officialTurnDistancesFromRaceStartMeters": [
+    228,
+    318,
+    498,
+    624,
+    1518,
+    1770,
+    1980,
+    2036,
+    2188,
+    2514,
+    2924,
+    3174,
+    3750,
+    5102,
+    5131,
+    5230,
+    5968
+  ],
+  "grandstands": [
+    {
+      "name": "Heineken Silver Main Grandstand",
+      "from": 10,
+      "to": 285,
+      "side": -1,
+      "offset": 25,
+      "depth": 26,
+      "blocks": 7,
+      "source": "main-grandstand-map-2026.jpg"
+    },
+    {
+      "name": "Turn 3 Grandstand (west, 2026)",
+      "from": 568,
+      "to": 652,
+      "side": -1,
+      "offset": 22,
+      "depth": 19,
+      "blocks": 3,
+      "source": "turn3-map-2026.jpg"
+    },
+    {
+      "name": "T-Mobile SG1–SG3",
+      "from": 1850,
+      "to": 2030,
+      "side": -1,
+      "offset": 22,
+      "depth": 20,
+      "blocks": 5,
+      "source": "sphere-grandstand-map-2026.png"
+    },
+    {
+      "name": "T-Mobile SG4",
+      "from": 1650,
+      "to": 1800,
+      "side": 1,
+      "offset": 22,
+      "depth": 23,
+      "blocks": 3,
+      "source": "sphere-grandstand-map-2026.png"
+    },
+    {
+      "name": "West Harmon / Lewis Hamilton",
+      "from": 5710,
+      "to": 6010,
+      "side": 1,
+      "offset": 23,
+      "depth": 20,
+      "blocks": 8,
+      "source": "event-map-2026.png"
+    },
+    {
+      "name": "Heineken Koval",
+      "from": 735,
+      "to": 810,
+      "side": 1,
+      "offset": 24,
+      "depth": 18,
+      "blocks": 3,
+      "source": "turn3-map-2026.jpg"
+    }
+  ],
+  "controlReference": {
+    "referenceYear": 2025,
+    "currentEventVerified": false,
+    "url": "https://www.fia.com/system/files/decision-document/2025_las_vegas_grand_prix_-_event_notes_-_circuit_map_v2_pit_lane_drawing_emergency_map_exits_quarantine_zone_and_red_zones.pdf",
+    "method": "OSM native control/start nodes; FIA turn positions transferred to the geographic line; S1 = T5 + 90 m, S2 = T12 + 140 m, speed trap = T14 - 140 m",
+    "garageBays": 43
+  },
+  "limitations": [
+    "NAIP acquired 11 June 2022 precedes completed Sphere and Grand Prix Plaza; current OSM footprints and separately reconstructed structures replace these objects.",
+    "FIA sporting controls and 43 garage bays use the latest available 2025 document; 2026 FIA event notes are not yet available.",
+    "Grandstand footprints and dimensions are reconstructions from 2026 promoter location maps, not surveyed event polygons.",
+    "No public LoD2/DSM was acquired. OSM height/levels provide building elevations; untagged objects use a disclosed 6.2 m estimate. Facade modules are authored textures tinted from OSM colour tags and visual references.",
+    "Width is nominal 12 m; temporary kerbs, barriers, hospitality structures and event-specific resurfacing are photo/map reconstructions.",
+    "Sphere shows the official F1 logo on an authored red LED display at the user’s request; this artwork is not claimed as a verified 2026 event screen. Small service vehicles, containers and unlocated 2026 motorhomes are omitted.",
+    "The former Mirage/Hard Rock resort is being renovated for 2027. Its retained tower uses the historical bronze facade estimate. Guitar Tower uses its OSM footprint and Clark County approved 542/660 ft heights; waisted silhouette and blue glazing are approximate construction-era reconstructions.",
+    "Night lighting is an authored reconstruction: room occupancy, fixture distribution and brightness are approximate, not measured event photometry. Native footprints, road geometry and source colours are retained.",
+    "Driving axes are locally rounded from the pinned OSM polygonal guide in native metres; apex radii are reconstructed, not surveyed. Main sigma 3 m, locally 10.5 m at sharp vertices; pit sigma 6 m. Source-reference distances are remapped to the rounded axis; no global scaling."
+  ]
+}

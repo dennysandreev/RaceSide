@@ -1,0 +1,342 @@
+{
+  "checks": [
+    {
+      "width": 375,
+      "theme": "light",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 2811469
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 219,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 269,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 319,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 219,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 269,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 319,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 612,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 662,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 712,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 612,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 662,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 712,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 868,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 918,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 968,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 868,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 918,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 968,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 1284,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 1334,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 1384,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false,
+      "canvas": 1,
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3005/f1/tracks/3d/yas-marina.glb?v=51e323188726",
+          "size": 300
+        }
+      ],
+      "length": true,
+      "controls": [
+        {
+          "label": "Отдалить трассу",
+          "rect": {
+            "x": 1284,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Приблизить трассу",
+          "rect": {
+            "x": 1334,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        },
+        {
+          "label": "Свернуть карту",
+          "rect": {
+            "x": 1384,
+            "y": 12,
+            "width": 44,
+            "height": 44
+          }
+        }
+      ]
+    }
+  ],
+  "maximumZoom": true,
+  "errors": []
+}

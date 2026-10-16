@@ -1,5 +1,6 @@
 import { getCircuitAsset, getTeamAsset, getTeamProfileAsset } from "../data/f1-assets.ts";
 import { formatGrandPrixNameRu } from "./race-display.ts";
+import type { GrandPrixReportAnalytics, ReportChartPoint, ReportStanding } from "./grand-prix-report.ts";
 import type {
   GrandPrixReport,
   RaceDetail,
@@ -13,6 +14,7 @@ export type GrandPrixRecapPodiumEntry = {
   driver: string;
   gapToWinner: string | null;
   position: 1 | 2 | 3;
+  points: number | null;
   raceTime: string | null;
   team: string;
   teamColor: string;
@@ -37,9 +39,30 @@ export type GrandPrixRecapData = {
     color: string;
     name: string;
     points: number;
+    pointsComplete: boolean;
     pointsLabel: string;
   };
   circuitName: string;
+  classification: Array<{
+    driver: string;
+    gap: string | null;
+    points: number | null;
+    position: number;
+    teamColor: string;
+  }>;
+  championship: ReportStanding[];
+  finishers: number | null;
+  retirements: number | null;
+  starters: number;
+  totalLaps: number;
+  positionGain: { driver: string; gained: number } | null;
+  positionDrivers: Array<{
+    code: string;
+    color: string;
+    driver: string;
+    finished: boolean;
+    points: ReportChartPoint[];
+  }>;
   dateLabel: string;
   fastestLap: {
     driver: string;
@@ -88,19 +111,17 @@ type GrandPrixRecapInput = {
   resultsBySession: Map<string, SessionResult[]>;
   sessions: WeekendSession[];
   teamProfiles?: TeamProfileSummary[];
+  analytics?: GrandPrixReportAnalytics | null;
 };
 
 export function getGrandPrixRecapImageLayout(raceName: string) {
-  const isMultilineTitle = raceName.trim().length >= 20;
-  const extraHeight = isMultilineTitle ? 44 : 0;
-
   return {
-    canvasHeight: 1350 + extraHeight,
-    heroHeight: 206 + extraHeight,
-    titleFontSize: 54,
-    titleHeight: isMultilineTitle ? 108 : 54,
-    titleLineHeight: 0.93,
-    titleMetaMarginTop: 10,
+    canvasHeight: 1350,
+    heroHeight: 116,
+    titleFontSize: raceName.trim().length > 30 ? 36 : 44,
+    titleHeight: 54,
+    titleLineHeight: 1.05,
+    titleMetaMarginTop: 8,
   };
 }
 
@@ -134,6 +155,7 @@ export function buildGrandPrixRecapData({
   resultsBySession,
   sessions,
   teamProfiles = [],
+  analytics = null,
 }: GrandPrixRecapInput): GrandPrixRecapData | null {
   const raceResults = getResultsForSessionType(sessions, resultsBySession, "race");
 
@@ -159,6 +181,7 @@ export function buildGrandPrixRecapData({
         driver: result.driver,
         gapToWinner: position === 1 ? null : formatGapToWinner(result.time, result.status),
         position,
+        points: validPoints(result.points),
         raceTime: position === 1 ? formatRaceDuration(result.time) : null,
         team: result.team,
         teamColor: result.teamColor ?? team?.color ?? "#E10600",
@@ -178,6 +201,7 @@ export function buildGrandPrixRecapData({
   }
 
   const [bestTeamName, bestTeamPoints] = bestTeamEntry;
+  const pointsComplete = [...raceResults, ...sprintResults].every((row) => validPoints(row.points) !== null);
   const bestTeamVisual = getTeamAsset(bestTeamName, race.season);
   const bestTeamProfile = getTeamProfileAsset(bestTeamName, race.season);
   const seasonalBestTeamProfile = findTeamProfile(teamProfiles, bestTeamName);
@@ -188,7 +212,8 @@ export function buildGrandPrixRecapData({
   const fastestLapTime = getString(fastestLapHighlight?.time);
   const fastestLapResult = fastestLapDriver
     ? findDriverResult(raceResults, fastestLapDriver)
-    : raceResults.find((result) => result.bestLap) ?? null;
+    : [...raceResults].filter((row) => lapSeconds(row.bestLap) !== null)
+      .sort((a, b) => lapSeconds(a.bestLap)! - lapSeconds(b.bestLap)!)[0] ?? null;
   const fastestPitStop = buildFastestPitStop(report, raceResults);
   const strategies = buildStrategies(report.strategies, report.highlights.mostCommonStrategy);
   const averageAirTemperature = toNumber(report.weather.averageAirTemperature);
@@ -198,6 +223,37 @@ export function buildGrandPrixRecapData({
   const redFlags = toNonNegativeInteger(report.raceStatistics.redFlagCount);
   const yellowFlags = toNonNegativeInteger(report.raceStatistics.yellowFlagCount);
   const trackFallback = getCircuitAsset(race.circuit, race.season)?.src ?? null;
+  const starters = raceResults.length;
+  const finishers = raceResults.every((row) => row.status.trim())
+    ? raceResults.filter((row) => isRecapFinisher(row.status)).length
+    : null;
+  const totalLaps = Math.min(1000, Math.max(
+    0,
+    toNumber(analytics?.totalLaps) ?? 0,
+    toNumber(report.raceStatistics.laps) ?? 0,
+    ...raceResults.map((row) => toNumber(row.laps) ?? 0),
+  ));
+  const teamDriverCounts = new Map<string, number>();
+  const positionDrivers = [...raceResults]
+    .sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity))
+    .map((row) => {
+      const trace = analytics?.drivers.find((item) => (
+        (row.driverNumber != null && item.number === row.driverNumber)
+        || normalizeName(item.driver) === normalizeName(row.driver)
+      ));
+      const teamIndex = teamDriverCounts.get(row.team) ?? 0;
+      teamDriverCounts.set(row.team, teamIndex + 1);
+      const color = row.teamColor ?? getTeamAsset(row.team, race.season)?.color ?? "#a8a8af";
+      return {
+        code: trace?.code && /^[A-Z]{3}$/i.test(trace.code)
+          ? trace.code.toUpperCase()
+          : (row.driverSlug ?? row.driver).split(/[-\s]+/).at(-1)!.slice(0, 3).toUpperCase(),
+        color: teamIndex % 2 ? lighterTeamColor(color) : color,
+        driver: row.driver,
+        finished: isRecapFinisher(row.status),
+        points: trace?.positions ?? [],
+      };
+    });
 
   return {
     bestTeam: {
@@ -208,9 +264,27 @@ export function buildGrandPrixRecapData({
       color: bestTeamVisual?.color ?? "#E10600",
       name: bestTeamName,
       points: bestTeamPoints,
+      pointsComplete,
       pointsLabel: hasSprint ? "Гонка + спринт" : "Гонка",
     },
     circuitName: race.circuit,
+    classification: raceResults
+      .filter((row) => row.position !== null && row.position > 0 && row.position <= 10)
+      .sort((a, b) => a.position! - b.position!)
+      .map((row) => ({
+        driver: row.driver,
+        position: row.position!,
+        points: validPoints(row.points),
+        teamColor: row.teamColor ?? getTeamAsset(row.team, race.season)?.color ?? "#a8a8af",
+        gap: row.position === 1 ? null : formatGapToWinner(row.time, row.status),
+      })),
+    championship: analytics?.championship.drivers.slice(0, 3) ?? [],
+    finishers,
+    retirements: finishers === null ? null : starters - finishers,
+    starters,
+    totalLaps: Math.floor(totalLaps),
+    positionGain: breakthrough ? { driver: breakthrough.driver, gained: breakthrough.delta } : null,
+    positionDrivers,
     dateLabel: formatRaceDate(race.startsAtIso, race.timezone),
     fastestLap: fastestLapResult || fastestLapHighlight
       ? {
@@ -272,7 +346,7 @@ function sumWeekendTeamPoints(raceResults: SessionResult[], sprintResults: Sessi
       return;
     }
 
-    totals.set(team, (totals.get(team) ?? 0) + Number(result.points ?? 0));
+    totals.set(team, (totals.get(team) ?? 0) + (validPoints(result.points) ?? 0));
   });
 
   return totals;
@@ -281,7 +355,7 @@ function sumWeekendTeamPoints(raceResults: SessionResult[], sprintResults: Sessi
 function getBreakthroughDriver(results: SessionResult[]) {
   return results
     .flatMap((result) => {
-      if (!result.position || !result.grid || result.grid <= result.position) {
+      if (!result.position || !result.grid || result.grid <= result.position || !isRecapFinisher(result.status)) {
         return [];
       }
 
@@ -490,8 +564,33 @@ function getShareTeamCarImagePath(value: string | null | undefined, season: numb
 }
 
 function toNumber(value: unknown) {
+  if ((typeof value !== "number" && typeof value !== "string") || (typeof value === "string" && !value.trim())) return null;
   const number = typeof value === "number" ? value : Number(value);
   return Number.isFinite(number) ? number : null;
+}
+
+function validPoints(value: unknown) {
+  const number = toNumber(value);
+  return number !== null && number >= 0 ? number : null;
+}
+
+function lapSeconds(value?: string | null) {
+  const match = value?.match(/^(\d+):(\d{2})[.,](\d+)$/);
+  return match ? Number(match[1]) * 60 + Number(`${match[2]}.${match[3]}`) : null;
+}
+
+function isRecapFinisher(status: string) {
+  // Lapped pilots finish with fewer laps than the winner; that is not a DNF.
+  return /^(?:finished|classified|lapped|финиш(?:ировал)?|классифицирован|\+\d+\s+laps?)$/i.test(status.trim());
+}
+
+function lighterTeamColor(color: string) {
+  if (!/^#[0-9a-f]{6}$/i.test(color)) return color;
+  const channels = [1, 3, 5].map((offset) => {
+    const value = parseInt(color.slice(offset, offset + 2), 16);
+    return Math.round(value + (255 - value) * 0.3).toString(16).padStart(2, "0");
+  });
+  return `#${channels.join("")}`;
 }
 
 function toNonNegativeInteger(value: unknown) {

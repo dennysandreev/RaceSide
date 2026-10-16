@@ -5,6 +5,7 @@ import {
   ExternalLink,
   MapPin,
   Newspaper,
+  Radio,
   Target,
   TrendingUp,
 } from "lucide-react";
@@ -41,7 +42,7 @@ import {
 } from "@/data/racemate-repository";
 import { getTeamAssetForMarketOutcome } from "@/data/f1-assets";
 import { getSessionUser } from "@/lib/auth";
-import { formatSessionName } from "@/lib/session-display";
+import { formatSessionName, splitSessionStart } from "@/lib/session-display";
 import { CURRENT_F1_SEASON, getSearchParam } from "@/lib/season-navigation";
 import { absoluteUrl, createPageMetadata, SITE_URL } from "@/lib/seo";
 import { withServerTtlCache } from "@/lib/server-ttl-cache";
@@ -205,18 +206,16 @@ async function WeekendContent({ requestedSessionId }: {
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_23rem] xl:items-stretch">
           <section className="stitch-panel min-w-0 overflow-hidden p-0">
             <PanelHeader
-              action={<WeekendProgressDots completed={completedSessions} total={sessionResults.length} />}
               icon={CalendarDays}
               meta={`${completedSessions} из ${sessionResults.length} сессий завершено`}
+              mobileMeta={`${completedSessions} из ${sessionResults.length}`}
               title="Расписание уикенда"
             />
-            <div className="p-3 sm:p-4">
-              <WeekendSessionBoard
-                activeSessionName={nextSession.session}
-                initialSessionId={requestedSessionId}
-                sessions={sessionResults}
-              />
-            </div>
+            <WeekendSessionBoard
+              activeSessionName={nextSession.session}
+              initialSessionId={requestedSessionId}
+              sessions={sessionResults}
+            />
           </section>
 
           <WinnerOddsCard odds={winnerOdds} teamLookupRows={standings} />
@@ -328,15 +327,15 @@ function WeekendHero({
             </div>
             <PageTitle className="mt-2.5 max-w-none">{nextRace}</PageTitle>
             <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-muted-foreground">
+              <span className="truncate font-display font-extrabold text-foreground">
+                {currentRace?.circuit ?? "Трасса этапа"}
+              </span>
               <p className="flex min-w-0 items-center gap-1.5 sm:hidden">
                 <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
                 <span className="truncate">
                   {currentRace ? `${currentRace.locality}, ${currentRace.country}` : "Локация уточняется"}
                 </span>
               </p>
-              <span className="truncate text-foreground/80">
-                {currentRace?.circuit ?? "Трасса этапа"}
-              </span>
               {isWeekendDone ? <span>Этап завершен</span> : null}
             </div>
           </header>
@@ -379,14 +378,19 @@ function WeekendHero({
               circuitName={currentRace?.circuit ?? nextRace}
               embedded
               footerAction={(
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-                <Button asChild className="w-full justify-center" size="sm" variant="secondary">
-                  <Link href="https://vkvideo.ru/@versportaa" rel="noreferrer" target="_blank">
-                    Смотреть онлайн
-                    <ExternalLink aria-hidden="true" data-icon="inline-end" />
-                  </Link>
-                </Button>
-                <Button asChild size="sm"><Link href="/live">LIVE HUB</Link></Button>
+                <div className="grid grid-cols-2 items-center gap-2">
+                  <Button asChild className="min-w-0 w-full justify-center gap-1.5 px-2" variant="secondary">
+                    <Link href="https://vkvideo.ru/@versportaa" rel="noreferrer" target="_blank">
+                      Смотреть
+                      <ExternalLink aria-hidden="true" className="size-4" data-icon="inline-end" />
+                    </Link>
+                  </Button>
+                  <Button asChild className="min-w-0 w-full gap-2 px-2 font-sans text-sm normal-case tracking-normal">
+                    <Link href="/live">
+                      <Radio aria-hidden="true" className="size-5" />
+                      <span className="whitespace-nowrap">RaceSide LIVE</span>
+                    </Link>
+                  </Button>
                 </div>
               )}
               previewFooter={<TrackLocalTimeBadge timezone={currentRace?.timezone} />}
@@ -396,7 +400,7 @@ function WeekendHero({
               stats={circuitStats}
             />
           </div>
-          {raceReplay ? (
+          {currentRace?.status === "Завершен" && raceReplay ? (
             <div className="p-4 lg:p-5">
               <Button asChild className="w-full justify-center" size="sm" variant="secondary">
                 <NavigationLoadingLink
@@ -448,30 +452,19 @@ function WeekendNextSession({
   );
 }
 
-function splitSessionStart(value: string) {
-  const separatorIndex = value.lastIndexOf(",");
-
-  if (separatorIndex < 0) {
-    return { date: value, time: null };
-  }
-
-  return {
-    date: value.slice(0, separatorIndex).trim(),
-    time: value.slice(separatorIndex + 1).trim() || null,
-  };
-}
-
 function PanelHeader({
   action,
   hideMetaOnMobile = false,
   icon: Icon,
   meta,
+  mobileMeta,
   title,
 }: {
   action?: ReactNode;
   hideMetaOnMobile?: boolean;
   icon: IconComponent;
   meta: string;
+  mobileMeta?: string;
   title: string;
 }) {
   return (
@@ -488,32 +481,17 @@ function PanelHeader({
               hideMetaOnMobile && "hidden sm:block",
             )}
           >
-            {meta}
+            {mobileMeta ? (
+              <>
+                <span className="sm:hidden">{mobileMeta}</span>
+                <span className="hidden sm:inline">{meta}</span>
+              </>
+            ) : meta}
           </p>
         </div>
       </div>
       {action}
     </div>
-  );
-}
-
-/*
- * Прогресс уикенда: точка на каждую сессию — закрашенные уже прошли.
- */
-function WeekendProgressDots({ completed, total }: { completed: number; total: number }) {
-  return (
-    <span aria-label={`Завершено сессий: ${completed} из ${total}`} className="flex items-center gap-1.5">
-      {Array.from({ length: total }, (_, index) => (
-        <span
-          aria-hidden="true"
-          className={cn(
-            "size-2 rounded-full",
-            index < completed ? "bg-primary" : "border border-border/80 bg-secondary/50",
-          )}
-          key={index}
-        />
-      ))}
-    </span>
   );
 }
 

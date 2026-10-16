@@ -39,7 +39,7 @@ export async function telemetryBootstrapRequest(
       return payload.data;
 
     await waitForTelemetryRetry(
-      Math.max(500, Number(response.headers.get("Retry-After") ?? 1) * 1000),
+      Math.max(3_000, Number(response.headers.get("Retry-After") ?? 3) * 1000),
       options.signal,
     );
   }
@@ -65,6 +65,7 @@ export const telemetryBootstrapLabel: Record<
   TelemetryBootstrapStage,
   string
 > = {
+  demo: "Готовим демо-этап",
   seasons: "Загружаем сезоны",
   meetings: "Загружаем этапы сезона",
   sessions: "Загружаем сессии",

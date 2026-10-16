@@ -1,5 +1,5 @@
-import { getAdminJobDefinition } from "@/lib/admin-job-catalog";
-import { getAdminAiPromptDefinition } from "@/lib/admin-ai-prompts";
+import jobCatalog from "@/config/admin-jobs.json";
+import aiCatalog from "@/config/ai-prompts.json";
 
 type AdminDisplayCopy = {
   title: string;
@@ -77,7 +77,7 @@ const auditActionCopy: Record<string, AdminDisplayCopy> = {
   },
   "poll.create": {
     title: "Опрос создан",
-    description: "Новый опрос сохранён для дальнейшей публикации.",
+    description: "Создан новый опрос.",
   },
   "poll.update": {
     title: "Опрос изменён",
@@ -180,6 +180,7 @@ const entityLabels: Record<string, string> = {
 };
 
 const aiPurposeLabels: Record<string, string> = {
+  "news.compose": "Подготовка новости и проверка дубля",
   "news.extract": "Факты и авторство",
   "news.verify": "Проверка перед публикацией",
   "news.audit_metadata": "Проверка метаданных новости",
@@ -188,7 +189,7 @@ const aiPurposeLabels: Record<string, string> = {
   "news.highlights": "Ключевые фразы новости",
   "news.metadata": "Теги и связи новости",
   "news.summary": "Русский текст новости",
-  "polls.generate": "Черновики опросов",
+  "polls.generate": "Подготовка опросов гонки",
   "reports.summary": "Краткий вывод отчёта Гран-при",
   "social.reddit": "Обработка публикации из Reddit",
   "social.telegram": "Классификация публикации из Telegram",
@@ -218,12 +219,12 @@ export function getAdminEntityLabel(entityType: string) {
 }
 
 export function getAdminJobCopy(jobName: string): AdminDisplayCopy {
-  const definition = getAdminJobDefinition(jobName);
+  const definition = jobCatalog.find(job => job.name === jobName);
 
   return definition
     ? { title: definition.title, description: definition.description }
     : {
-        title: "Фоновая задача",
+        title: "Архивная задача",
         description: "Запуск создан вне текущего каталога. Код доступен в технических деталях.",
       };
 }
@@ -234,7 +235,7 @@ export function getAdminAiPurposeLabel(purpose: string) {
 
 export function getAdminAiPromptLabel(promptKey: string | null) {
   if (!promptKey) return null;
-  return getAdminAiPromptDefinition(promptKey)?.title ?? "AI-задача из прежней версии";
+  return aiCatalog.find(prompt => prompt.key === promptKey)?.title ?? "AI-задача из прежней версии";
 }
 
 export function getAdminNotificationEventLabel(eventType: string) {

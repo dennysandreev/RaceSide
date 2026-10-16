@@ -18,16 +18,16 @@ import {
   useState,
 } from "react";
 import {
-  MathUtils,
   Object3D,
   OrthographicCamera,
   Vector3,
 } from "three";
 
-import { trackModelCameraPolarDeg } from "@/lib/track-model-camera";
+import { fitTrackModelFrame, type TrackModelCameraFrame, getTrackModelOrbitPosition } from "@/lib/track-model-camera";
 import { cn } from "@/lib/utils";
 
 type TrackModelWebGLProps = {
+  frame?: TrackModelCameraFrame;
   assetPath: string;
   camera: {
     fitHeight: number;
@@ -38,6 +38,7 @@ type TrackModelWebGLProps = {
   };
   circuit: string;
   elevationDatumLabel: string;
+  elevationApproximate?: boolean;
   panX: number;
   panY: number;
   previewPath: string;
@@ -49,10 +50,12 @@ type TrackModelWebGLProps = {
 };
 
 export function TrackModelWebGL({
+  frame,
   assetPath,
   camera,
   circuit,
   elevationDatumLabel,
+  elevationApproximate = false,
   panX,
   panY,
   previewPath,
@@ -63,6 +66,7 @@ export function TrackModelWebGL({
   zoom,
 }: TrackModelWebGLProps) {
   const [isReady, setIsReady] = useState(false);
+  const isNightScene = assetPath.includes("/singapore.glb") || assetPath.includes("/las-vegas.glb");
 
   return (
     <TrackModelErrorBoundary
@@ -98,11 +102,13 @@ export function TrackModelWebGL({
           orthographic
           performance={{ min: 0.5 }}
         >
-          <ambientLight intensity={1.35} />
-          <directionalLight intensity={2.1} position={[-900, 1_600, -1_100]} />
-          <directionalLight intensity={0.65} position={[1_000, 900, 700]} />
+          {isNightScene ? <color attach="background" args={["#080f1e"]} /> : null}
+          <ambientLight intensity={isNightScene ? 0.65 : 1.35} color={isNightScene ? "#8ca9d7" : "#ffffff"} />
+          <directionalLight intensity={isNightScene ? 0.65 : 2.1} color={isNightScene ? "#a0bcf0" : "#ffffff"} position={[-900, 1_600, -1_100]} />
+          <directionalLight intensity={isNightScene ? 0.3 : 0.65} position={[1_000, 900, 700]} />
           <CameraRig
             camera={camera}
+            frame={frame}
             panX={panX}
             panY={panY}
             rotationDeg={rotationDeg}
@@ -113,6 +119,7 @@ export function TrackModelWebGL({
             <TrackDigitalTwinScene
               assetPath={assetPath}
               elevationDatumLabel={elevationDatumLabel}
+              elevationApproximate={elevationApproximate}
               onReady={() => setIsReady(true)}
               showElevationAnchors={showElevationAnchors}
               turnCount={turnCount}
@@ -154,12 +161,14 @@ export function TrackModelStaticPreview({
 function TrackDigitalTwinScene({
   assetPath,
   elevationDatumLabel,
+  elevationApproximate,
   onReady,
   showElevationAnchors,
   turnCount,
 }: {
   assetPath: string;
   elevationDatumLabel: string;
+  elevationApproximate: boolean;
   onReady: () => void;
   showElevationAnchors: boolean;
   turnCount: number;
@@ -243,8 +252,11 @@ function TrackDigitalTwinScene({
           position={anchors.highPoint.position}
           zIndexRange={[20, 0]}
         >
-          <span className="pointer-events-none hidden whitespace-nowrap rounded border border-[var(--track-model-height-border)] bg-[var(--track-model-height-bg)] px-2 py-1 font-mono text-[0.65rem] font-bold text-[var(--track-model-height-text)] shadow-sm @lg/track:block">
-            {formatElevation(anchors.highPoint.elevation)} {elevationDatumLabel}
+          <span title={elevationApproximate ? "Самая высокая точка: примерная высота над уровнем моря" : "Самая высокая точка"}
+            className={cn("pointer-events-none whitespace-nowrap rounded border border-[var(--track-model-height-border)] bg-[var(--track-model-height-bg)] px-2 py-1 font-mono text-[0.65rem] font-bold text-[var(--track-model-height-text)] shadow-sm",
+              elevationApproximate ? "block" : "hidden @lg/track:block")}>
+            {elevationApproximate ? <>{Math.round(anchors.highPoint.elevation).toLocaleString("ru-RU")} {elevationDatumLabel}</>
+              : <>{formatElevation(anchors.highPoint.elevation)} {elevationDatumLabel}</>}
           </span>
         </Html>
       ) : null}
@@ -255,8 +267,11 @@ function TrackDigitalTwinScene({
           position={anchors.lowPoint.position}
           zIndexRange={[20, 0]}
         >
-          <span className="pointer-events-none hidden whitespace-nowrap rounded border border-[var(--track-model-height-border)] bg-[var(--track-model-height-bg)] px-2 py-1 font-mono text-[0.65rem] font-bold text-[var(--track-model-height-text)] shadow-sm @lg/track:block">
-            {formatElevation(anchors.lowPoint.elevation)} {elevationDatumLabel}
+          <span title={elevationApproximate ? "Самая низкая точка: примерная высота над уровнем моря" : "Самая низкая точка"}
+            className={cn("pointer-events-none whitespace-nowrap rounded border border-[var(--track-model-height-border)] bg-[var(--track-model-height-bg)] px-2 py-1 font-mono text-[0.65rem] font-bold text-[var(--track-model-height-text)] shadow-sm",
+              elevationApproximate ? "block" : "hidden @lg/track:block")}>
+            {elevationApproximate ? <>{Math.round(anchors.lowPoint.elevation).toLocaleString("ru-RU")} {elevationDatumLabel}</>
+              : <>{formatElevation(anchors.lowPoint.elevation)} {elevationDatumLabel}</>}
           </span>
         </Html>
       ) : null}
@@ -265,13 +280,14 @@ function TrackDigitalTwinScene({
 }
 
 function CameraRig({
+  frame,
   camera: cameraSettings,
   panX,
   panY,
   rotationDeg,
   tiltDeg,
   zoom,
-}: Pick<TrackModelWebGLProps, "camera" | "panX" | "panY" | "rotationDeg" | "tiltDeg" | "zoom">) {
+}: Pick<TrackModelWebGLProps, "frame" | "camera" | "panX" | "panY" | "rotationDeg" | "tiltDeg" | "zoom">) {
   const cameraRef = useRef<OrthographicCamera>(null);
   const invalidate = useThree((state) => state.invalidate);
   const height = useThree((state) => state.size.height);
@@ -284,28 +300,26 @@ function CameraRig({
       return;
     }
 
-    const polarDeg = trackModelCameraPolarDeg(tiltDeg);
-    const polar = MathUtils.degToRad(polarDeg);
-    const azimuth = MathUtils.degToRad(38 + rotationDeg);
-    const radius = cameraSettings.radius;
-    const horizontalRadius = Math.sin(polar) * radius;
-    camera.position.set(
-      Math.sin(azimuth) * horizontalRadius,
-      Math.cos(polar) * radius,
-      Math.cos(azimuth) * horizontalRadius,
-    );
+    camera.position.set(...getTrackModelOrbitPosition({
+      lookAtY: cameraSettings.lookAtY,
+      radius: cameraSettings.radius,
+      rotationDeg,
+      tiltDeg,
+    }));
     camera.lookAt(0, cameraSettings.lookAtY, 0);
     const fitWidth = width < 400 ? (cameraSettings.narrowFitWidth ?? cameraSettings.fitWidth) : cameraSettings.fitWidth;
-    camera.zoom = Math.min(width / fitWidth, height / cameraSettings.fitHeight) * zoom;
+    const fitted = frame ? fitTrackModelFrame(frame.bounds, { ...frame.viewport, width, height }) : null;
+    camera.zoom = (fitted?.scale ?? Math.min(width / fitWidth, height / cameraSettings.fitHeight)) * zoom;
     camera.clearViewOffset();
-
-    if (panX !== 0 || panY !== 0) {
-      camera.setViewOffset(width, height, -panX * width, -panY * height, width, height);
-    }
+    const offsetX = (fitted?.offsetX ?? 0) * zoom + panX * width;
+    const offsetY = frame
+      ? frame.bounds.centerY * fitted!.scale * zoom + (frame.viewport.top - frame.viewport.bottom) / 2 + panY * height
+      : panY * height;
+    if (offsetX !== 0 || offsetY !== 0) camera.setViewOffset(width, height, -offsetX, -offsetY, width, height);
 
     camera.updateProjectionMatrix();
     invalidate();
-  }, [cameraSettings, height, invalidate, panX, panY, rotationDeg, tiltDeg, width, zoom]);
+  }, [cameraSettings, frame, height, invalidate, panX, panY, rotationDeg, tiltDeg, width, zoom]);
 
   return (
     <DreiOrthographicCamera

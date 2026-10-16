@@ -17,6 +17,20 @@ type TeamProfileAsset = {
 
 export const LEGACY_F1_ASSET_SEASON = 2026;
 
+const malaysiaCircuitMap = "/f1/circuits/2026/16-malaysia.webp";
+const malaysiaCircuitMapVersioned = `${malaysiaCircuitMap}?v=69b864ad6585da55`;
+const singaporeCircuitMap = "/f1/circuits/2026/17-singapore.webp";
+const singaporeCircuitMapRevision = "8429e12bedf7e73c";
+
+export function getVersionedCircuitMapUrl(url: string): string {
+  const localPath = url.split(/[?#]/, 1)[0];
+  if (localPath === malaysiaCircuitMap) return malaysiaCircuitMapVersioned;
+  if ([singaporeCircuitMap, "/f1/circuits/2026/16-singapore.webp", "/f1/circuits/singapore.webp"].includes(localPath)) {
+    return `${localPath}?v=${singaporeCircuitMapRevision}`;
+  }
+  return url;
+}
+
 const circuitAssets = [
   {
     aliases: ["australia", "albert park", "melbourne"],
@@ -80,11 +94,11 @@ const circuitAssets = [
   },
   {
     aliases: ["malaysia", "malaysian grand prix", "sepang", "kuala lumpur", "bahrain grand prix in malaysia"],
-    src: "/f1/circuits/2026/16-malaysia.webp",
+    src: malaysiaCircuitMapVersioned,
   },
   {
     aliases: ["singapore", "marina bay"],
-    src: "/f1/circuits/2026/17-singapore.webp",
+    src: getVersionedCircuitMapUrl(singaporeCircuitMap),
   },
   {
     aliases: ["united states", "usa", "americas", "austin", "cota"],

@@ -5,13 +5,10 @@ import { createHash, randomUUID } from "node:crypto";
 import { billingPriceCatalog } from "@/lib/billing/catalog";
 import {
   billingFlags,
-  getTributeConfig,
-  getTrustedSiteOrigin,
-  getYooMoneyConfig,
+  getLavaConfig,
 } from "@/lib/billing/config";
 import { isOpenPendingCheckout } from "@/lib/billing/order-state";
-import { createTributeOrder } from "@/lib/billing/providers/tribute";
-import { createYooMoneyForm } from "@/lib/billing/providers/yoomoney";
+import { cancelLavaSubscription, createLavaInvoice } from "@/lib/billing/providers/lava";
 import type {
   BillingOrder,
   BillingPaymentMethod,
@@ -20,27 +17,26 @@ import type {
 } from "@/lib/billing/types";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 
+const internationalAmountMinor: Record<BillingPriceCode, number> = {
+  plus_monthly: 500,
+  plus_first_year: 4990,
+};
+
 export async function createCheckout(input: {
   idempotencyKey: string;
   paymentMethod: BillingPaymentMethod;
   priceCode: BillingPriceCode;
   userId: string;
+  userEmail?: string;
 }): Promise<HostedCheckout> {
   if (!billingFlags.checkout) throw new Error("CHECKOUT_DISABLED");
+  if (input.paymentMethod !== "lava" && input.paymentMethod !== "lava_rub")
+    throw new Error("PROVIDER_DISABLED");
+  if (!billingFlags.lava || !getLavaConfig()) throw new Error("LAVA_UNAVAILABLE");
   const admin = createSupabaseAdminClient();
   if (!admin) throw new Error("BILLING_UNAVAILABLE");
   const price = billingPriceCatalog[input.priceCode];
-  const provider = input.paymentMethod === "tribute" ? "tribute" : "yoomoney";
-  if (provider === "tribute" && !billingFlags.tribute)
-    throw new Error("TRIBUTE_DISABLED");
-  if (provider === "yoomoney" && !billingFlags.yoomoney)
-    throw new Error("YOOMONEY_DISABLED");
-  if (
-    input.paymentMethod === "yoomoney_wallet" &&
-    !billingFlags.yoomoneyWallet
-  ) {
-    throw new Error("YOOMONEY_WALLET_DISABLED");
-  }
+  const provider = "lava";
   if (!/^[a-f0-9-]{16,64}$/i.test(input.idempotencyKey))
     throw new Error("INVALID_IDEMPOTENCY_KEY");
 
@@ -50,7 +46,13 @@ export async function createCheckout(input: {
     .eq("user_id", input.userId)
     .eq("idempotency_key", input.idempotencyKey)
     .maybeSingle();
-  if (prior) return checkoutFromOrder(mapOrder(prior));
+  if (prior) {
+    const existing = mapOrder(prior);
+    if (existing.paymentMethod !== input.paymentMethod || existing.priceCode !== input.priceCode) throw new Error("CHECKOUT_BUSY");
+    return checkoutFromOrder(existing);
+  }
+
+  if (await getUserActiveLavaSubscription(input.userId)) throw new Error("LAVA_SUBSCRIPTION_EXISTS");
 
   if (price.firstPurchaseOnly) {
     const { count } = await admin
@@ -61,6 +63,7 @@ export async function createCheckout(input: {
     if ((count ?? 0) > 0) throw new Error("FIRST_YEAR_UNAVAILABLE");
   }
 
+  const dbPriceCode = input.paymentMethod === "lava" ? `${input.priceCode}_international` : input.priceCode;
   const [{ data: plan }, { data: dbPrice }] = await Promise.all([
     admin
       .from("subscription_plans")
@@ -70,12 +73,23 @@ export async function createCheckout(input: {
       .single(),
     admin
       .from("subscription_prices")
-      .select("id")
-      .eq("code", price.code)
+      .select("id, amount_minor, currency, duration_months, first_purchase_only")
+      .eq("code", dbPriceCode)
       .eq("active", true)
+      .lte("valid_from", new Date().toISOString())
+      .or(`valid_until.is.null,valid_until.gt.${new Date().toISOString()}`)
       .single(),
   ]);
   if (!plan || !dbPrice) throw new Error("BILLING_CATALOG_UNAVAILABLE");
+  if (dbPrice.currency !== (input.paymentMethod === "lava_rub" ? "RUB" : "USD")) throw new Error("BILLING_CATALOG_UNAVAILABLE");
+  if (Number(dbPrice.duration_months) !== price.durationMonths || Boolean(dbPrice.first_purchase_only) !== price.firstPurchaseOnly) throw new Error("BILLING_CATALOG_UNAVAILABLE");
+  const amountMinor = Number(dbPrice.amount_minor);
+  const currency = dbPrice.currency;
+  const expectedAmountMinor = input.paymentMethod === "lava" ? internationalAmountMinor[input.priceCode] : price.amountMinor;
+  if (amountMinor !== expectedAmountMinor) throw new Error("BILLING_CATALOG_UNAVAILABLE");
+  if (!Number.isSafeInteger(amountMinor) || amountMinor <= 0) throw new Error("BILLING_CATALOG_UNAVAILABLE");
+  const buyerEmail = input.userEmail?.trim().toLowerCase();
+  if (!buyerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail) || buyerEmail.length > 254) throw new Error("LAVA_EMAIL_REQUIRED");
 
   const now = new Date().toISOString();
   await admin
@@ -105,7 +119,7 @@ export async function createCheckout(input: {
       pending.priceCode === input.priceCode &&
       pending.paymentMethod === input.paymentMethod
     ) {
-      if (pending.provider === "tribute" && !pending.checkoutUrl) {
+      if (pending.provider === "lava" && !pending.checkoutUrl) {
         throw new Error("CHECKOUT_IN_PROGRESS");
       }
       return checkoutFromOrder(pending);
@@ -114,14 +128,14 @@ export async function createCheckout(input: {
   }
 
   const orderNumber = `RS-${new Date().getUTCFullYear()}-${randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
-  const providerLabel =
-    provider === "yoomoney" ? `rs_${randomUUID().replaceAll("-", "")}` : null;
+  const providerLabel = null;
   const expiresAt = new Date(Date.now() + 30 * 60_000).toISOString();
   const { data: order, error } = await admin
     .from("billing_orders")
     .insert({
-      amount_minor: price.amountMinor,
-      currency: price.currency,
+      amount_minor: amountMinor,
+      currency,
+      buyer_email: buyerEmail,
       duration_months: price.durationMonths,
       expires_at: expiresAt,
       idempotency_key: input.idempotencyKey,
@@ -143,31 +157,19 @@ export async function createCheckout(input: {
   }
 
   try {
-    if (provider === "tribute") {
-      const config = getTributeConfig();
-      if (!config) throw new Error("TRIBUTE_UNAVAILABLE");
-      const origin = getTrustedSiteOrigin();
-      const remote = await createTributeOrder({
-        amountMinor: price.amountMinor,
-        apiKey: config.apiKey,
-        customerId: opaqueCustomerId(input.userId),
-        description: `${price.label}. Разовый платёж, без автопродления.`,
-        failUrl: `${origin}/payment/return?order=${encodeURIComponent(orderNumber)}&status=failed`,
-        successUrl: `${origin}/payment/return?order=${encodeURIComponent(orderNumber)}`,
-        title: "RaceSide Plus",
-      });
-      await admin
-        .from("billing_orders")
-        .update({
-          checkout_url: remote.checkoutUrl,
-          provider_order_id: remote.uuid,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", order.id);
-      return { kind: "redirect", orderNumber, url: remote.checkoutUrl };
-    }
-
-    return checkoutFromOrder(mapOrder(order));
+    const config = getLavaConfig();
+    if (!config || !buyerEmail) throw new Error("LAVA_UNAVAILABLE");
+    const remote = await createLavaInvoice({
+      amountMinor, apiBase: config.apiBase, apiKey: config.apiKey,
+      currency: currency as "RUB" | "USD", email: buyerEmail, offerId: config.offerId,
+      durationMonths: price.durationMonths,
+    });
+    const { data: savedOrder, error: updateError } = await admin.from("billing_orders").update({
+      checkout_url: remote.checkoutUrl, provider_order_id: remote.invoiceId, lava_auto_renew: true,
+      updated_at: new Date().toISOString(),
+    }).eq("id", order.id).eq("status", "pending").select("id").maybeSingle();
+    if (updateError || !savedOrder) throw new Error("LAVA_ORDER_SAVE_FAILED");
+    return { kind: "redirect", orderNumber, url: remote.checkoutUrl };
   } catch (checkoutError) {
     await admin
       .from("billing_orders")
@@ -224,6 +226,41 @@ export async function getUserOrders(userId: string, limit = 20) {
   return (data ?? []).map(mapOrder);
 }
 
+export async function getUserActiveLavaSubscription(userId: string) {
+  const admin = createSupabaseAdminClient();
+  if (!admin) return null;
+  const { data, error } = await admin.from("billing_orders").select("*")
+    .eq("user_id", userId).eq("provider", "lava").eq("lava_auto_renew", true)
+    .is("lava_parent_contract_id", null).in("status", ["paid", "partially_refunded", "refunded"])
+    .order("created_at", { ascending: false }).limit(1).maybeSingle();
+  if (error?.code === "42703") return null;
+  if (error) throw error;
+  return data ? mapOrder(data) : null;
+}
+
+export async function cancelUserLavaSubscription(userId: string, expectedOrderId?: string) {
+  const admin = createSupabaseAdminClient();
+  if (!admin) throw new Error("BILLING_UNAVAILABLE");
+  const target = expectedOrderId
+    ? await admin.from("billing_orders").select("*").eq("id", expectedOrderId).eq("user_id", userId).eq("provider", "lava").is("lava_parent_contract_id", null).maybeSingle()
+    : null;
+  if (target?.error) throw target.error;
+  const order = expectedOrderId ? target?.data ? mapOrder(target.data) : null : await getUserActiveLavaSubscription(userId);
+  if (!order?.providerOrderId || !["paid", "partially_refunded", "refunded"].includes(order.status)) throw new Error("LAVA_SUBSCRIPTION_NOT_FOUND");
+  if (!order.lavaAutoRenew && order.lavaCancelledAt) return { alreadyCancelled: true, cancelledAt: order.lavaCancelledAt };
+  if (!order.lavaAutoRenew) throw new Error("LAVA_SUBSCRIPTION_NOT_FOUND");
+  const config = getLavaConfig();
+  if (!config) throw new Error("BILLING_UNAVAILABLE");
+  const { data, error: buyerError } = await admin.from("billing_orders").select("buyer_email").eq("id", order.id).single();
+  if (buyerError) throw buyerError;
+  if (!data?.buyer_email) throw new Error("LAVA_SUBSCRIPTION_NOT_FOUND");
+  await cancelLavaSubscription({ apiBase: config.apiBase, apiKey: config.apiKey, invoiceId: order.providerOrderId, email: data.buyer_email });
+  const cancelledAt = new Date().toISOString();
+  const { error } = await admin.from("billing_orders").update({ lava_auto_renew: false, lava_cancelled_at: cancelledAt, updated_at: cancelledAt }).eq("id", order.id);
+  if (error) throw error;
+  return { alreadyCancelled: false, cancelledAt };
+}
+
 export async function canUseFirstYearPrice(userId: string) {
   const admin = createSupabaseAdminClient();
   if (!admin) return false;
@@ -245,6 +282,31 @@ export async function getUserOrder(userId: string, orderNumber: string) {
     .eq("order_number", orderNumber)
     .maybeSingle();
   return data ? mapOrder(data) : null;
+}
+
+export async function getUserLavaOrderByInvoice(userId: string, invoiceId: string) {
+  const admin = createSupabaseAdminClient();
+  if (!admin) return null;
+  const { data } = await admin.from("billing_orders").select("*")
+    .eq("user_id", userId).eq("provider", "lava").eq("provider_order_id", invoiceId).maybeSingle();
+  return data ? mapOrder(data) : null;
+}
+
+export async function getInternationalPrices() {
+  const admin = createSupabaseAdminClient();
+  if (!admin) return {} as Partial<Record<BillingPriceCode, { amountMinor: number; currency: "USD" }>>;
+  const now = new Date().toISOString();
+  const { data } = await admin.from("subscription_prices")
+    .select("code, amount_minor, currency")
+    .in("code", ["plus_monthly_international", "plus_first_year_international"])
+    .eq("active", true).lte("valid_from", now).or(`valid_until.is.null,valid_until.gt.${now}`);
+  const result: Partial<Record<BillingPriceCode, { amountMinor: number; currency: "USD" }>> = {};
+  for (const row of data ?? []) {
+    if (row.currency !== "USD") continue;
+    const code = row.code === "plus_monthly_international" ? "plus_monthly" : row.code === "plus_first_year_international" ? "plus_first_year" : null;
+    if (code) result[code] = { amountMinor: Number(row.amount_minor), currency: row.currency };
+  }
+  return result;
 }
 
 export async function getPendingUserOrder(userId: string) {
@@ -291,23 +353,24 @@ export async function cancelUserCheckout(userId: string, orderNumber: string) {
 }
 
 export async function findOrderByProviderReference(
-  provider: "tribute" | "yoomoney",
+  provider: "tribute" | "yoomoney" | "lava",
   reference: string,
 ) {
   const admin = createSupabaseAdminClient();
   if (!admin) return null;
   const column =
-    provider === "tribute" ? "provider_order_id" : "provider_label";
+    provider === "yoomoney" ? "provider_label" : "provider_order_id";
   const { data } = await admin
     .from("billing_orders")
     .select("*")
+    .eq("provider", provider)
     .eq(column, reference)
     .maybeSingle();
   return data ? mapOrder(data) : null;
 }
 
 function checkoutFromOrder(order: BillingOrder): HostedCheckout {
-  if (order.provider === "tribute") {
+  if (order.provider === "lava") {
     if (!order.checkoutUrl) throw new Error("CHECKOUT_NOT_READY");
     return {
       kind: "redirect",
@@ -315,17 +378,7 @@ function checkoutFromOrder(order: BillingOrder): HostedCheckout {
       url: order.checkoutUrl,
     };
   }
-  const config = getYooMoneyConfig();
-  if (!config || !order.providerLabel) throw new Error("YOOMONEY_UNAVAILABLE");
-  const origin = getTrustedSiteOrigin();
-  const form = createYooMoneyForm({
-    amountMinor: order.amountMinor,
-    label: order.providerLabel,
-    paymentType: order.paymentMethod === "yoomoney_wallet" ? "PC" : "AC",
-    receiver: config.receiver,
-    successUrl: `${origin}/payment/return?order=${encodeURIComponent(order.orderNumber)}`,
-  });
-  return { kind: "form", orderNumber: order.orderNumber, ...form };
+  throw new Error("PROVIDER_DISABLED");
 }
 
 function mapOrder(row: Record<string, unknown>): BillingOrder {
@@ -340,21 +393,16 @@ function mapOrder(row: Record<string, unknown>): BillingOrder {
     orderNumber: String(row.order_number),
     paidAt: typeof row.paid_at === "string" ? row.paid_at : null,
     paymentMethod: row.payment_method as BillingPaymentMethod,
-    priceCode:
-      row.price_name_snapshot === billingPriceCatalog.plus_first_year.label
-        ? "plus_first_year"
-        : "plus_monthly",
-    provider: row.provider as "tribute" | "yoomoney",
+    priceCode: Number(row.duration_months) === 12 ? "plus_first_year" : "plus_monthly",
+    provider: row.provider as BillingOrder["provider"],
     providerLabel:
       typeof row.provider_label === "string" ? row.provider_label : null,
     providerOrderId:
       typeof row.provider_order_id === "string" ? row.provider_order_id : null,
+    lavaAutoRenew: row.lava_auto_renew === true,
+    lavaCancelledAt: typeof row.lava_cancelled_at === "string" ? row.lava_cancelled_at : null,
+    refundedAmountMinor: Number(row.refunded_amount_minor ?? 0),
     status: row.status as BillingOrder["status"],
     userId: String(row.user_id),
   };
-}
-
-function opaqueCustomerId(userId: string) {
-  const salt = process.env.TRIBUTE_CUSTOMER_SALT?.trim() || "raceside-tribute";
-  return createHash("sha256").update(`${salt}:${userId}`).digest("hex");
 }

@@ -1,0 +1,17 @@
+{
+  "maximumZoom": true,
+  "errors": [],
+  "payload": {
+    "bytes": 170897,
+    "containsGlb": false,
+    "containsModelData": false
+  },
+  "fallback": {
+    "loaded": true,
+    "naturalWidth": 720,
+    "opacity": "1"
+  },
+  "intentionalErrors": [
+    "Could not load /f1/tracks/3d/yas-marina.glb?v=85436f491702: fetch for \"http://127.0.0.1:3004/f1/tracks/3d/yas-marina.glb?v=85436f491702\" responded with 503: Service Unavailable"
+  ]
+}

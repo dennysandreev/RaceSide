@@ -2,6 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 
 import { formatGrandPrixNameRu } from "@/lib/race-display";
+import { normalizeDailyDigestBody } from "@/lib/daily-digest-content";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import type { Json } from "@/types/supabase";
 
@@ -298,7 +299,7 @@ async function handleMessage(
       .maybeSingle();
 
     await sendTelegramMessage(botToken, message.chat.id, digest
-      ? { text: `${digest.title}\n\n${stripMarkdown(digest.body_md).slice(0, 3500)}`, reply_markup: siteKeyboard("Читать на RaceSide", "/") }
+      ? { text: `${digest.title}\n\n${stripMarkdown(normalizeDailyDigestBody(digest.body_md)).slice(0, 3500)}`, reply_markup: siteKeyboard("Читать на RaceSide", "/") }
       : { text: "Свежая сводка ещё готовится." });
     return;
   }

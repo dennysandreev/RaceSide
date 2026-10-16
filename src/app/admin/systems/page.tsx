@@ -86,7 +86,7 @@ function SystemRow({ item }: { item: AdminSystemStatus }) {
         </div>
       </dl>
       <Button asChild size="sm" variant="ghost">
-        <Link href={item.kind === "schedule" ? "/admin/schedules" : item.href ?? getSourceHref(item.group)}>
+        <Link href={item.href ?? (item.kind === "schedule" ? "/admin/schedules" : getSourceHref(item.group))}>
           <Settings2 data-icon="inline-start" />
           {item.kind === "schedule" ? "Настроить" : item.kind === "source" ? "Открыть источник" : "Открыть"}
         </Link>

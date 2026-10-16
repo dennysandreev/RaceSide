@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { TEXT_AI_MODEL } from "./ai-prompt-registry.mjs";
 
 const TRACKING_QUERY_PARAMS = new Set([
   "fbclid",
@@ -23,10 +24,14 @@ export const NEWS_DEDUP_RELATIONS = Object.freeze([
 ]);
 
 const RELATION_SET = new Set(NEWS_DEDUP_RELATIONS);
-const EVENT_TYPE_ALIASES = { racing_driver_move: "driver_transfer", driver_move: "driver_transfer", driver_signing: "driver_transfer" };
+const EVENT_TYPE_ALIASES = {
+  racing_driver_move: "driver_transfer", driver_move: "driver_transfer", driver_signing: "driver_transfer",
+  driver_contract_renewal: "contract_extension", contract_renewal: "contract_extension",
+  contract_signing: "contract_extension", driver_contract_extension: "contract_extension",
+};
 const EVENT_STAGE_ALIASES = { announced: "announcement", announcement_made: "announcement", rumored: "rumour", rumor: "rumour", confirmed: "official_confirmation" };
-const eventTypeKey = value => EVENT_TYPE_ALIASES[normalizeSlug(value)] ?? normalizeSlug(value);
-const eventStageKey = value => EVENT_STAGE_ALIASES[normalizeSlug(value)] ?? normalizeSlug(value);
+const eventTypeKey = value => EVENT_TYPE_ALIASES[normalizeEventKey(value)] ?? normalizeEventKey(value);
+const eventStageKey = value => EVENT_STAGE_ALIASES[normalizeEventKey(value)] ?? normalizeEventKey(value);
 const COMPARISON_STOP_WORDS = new Set([
   "a", "an", "and", "at", "by", "for", "from", "in", "of", "on", "the", "to", "with",
   "а", "без", "был", "была", "были", "в", "во", "для", "до", "и", "из", "к", "как", "на",
@@ -36,7 +41,7 @@ const COMPARISON_STOP_WORDS = new Set([
 export function getNewsDedupConfig(env = process.env) {
   return {
     enabled: parseBoolean(env.NEWS_DEDUP_ENABLED, true),
-    windowHours: clampInteger(env.NEWS_DEDUP_WINDOW_HOURS, 72, 1, 168),
+    windowHours: clampInteger(env.NEWS_DEDUP_WINDOW_HOURS, 168, 1, 168),
     maxCandidates: clampInteger(env.NEWS_DEDUP_MAX_CANDIDATES, 10, 1, 25),
     confidenceThreshold: clampNumber(env.NEWS_DEDUP_CONFIDENCE_THRESHOLD, 0.85, 0, 1),
     failMode: env.NEWS_DEDUP_FAIL_MODE === "publish" ? "publish" : "hold",
@@ -61,15 +66,12 @@ export function isNewsFeedItemPublishable(item) {
     /^video draft \d+(?: formula 1)?$/.test(title) ||
     /(?:^|\/)video-draft-\d+(?:\/|$)/i.test(pathname) ||
     /^(?:sponsored content|advertorial|paid partnership|paid post)\b/i.test(title) ||
-    /(?:^|\/)(?:sponsored-content|partner-content|advertorial)(?:\/|$)/i.test(pathname)
+    /(?:^|\/)(?:promoted|sponsored-content|partner-content|advertorial)(?:\/|$)/i.test(pathname)
   );
 }
 
-export function resolveNewsDedupModel(env = process.env) {
-  return normalizeString(env.NEWS_DEDUP_AI_MODEL)
-    ?? normalizeString(env.AI_SUMMARY_MODEL)
-    ?? normalizeString(env.OPENROUTER_MODEL)
-    ?? "google/gemini-2.5-flash-lite";
+export function resolveNewsDedupModel() {
+  return TEXT_AI_MODEL;
 }
 
 export function normalizeNewsSourceUrl(value) {
@@ -222,10 +224,11 @@ export function rankNewsDedupCandidates(article, candidates, options = {}) {
       const candidateIngestedAt = toTimestamp(candidate.ingestedAt ?? candidate.ingested_at);
       const candidatePublishedAt = toTimestamp(candidate.publishedAt ?? candidate.published_at);
       const comparisonTime = candidateIngestedAt ?? candidatePublishedAt;
+      const archivedEntityMatch = options.preflight && getEntityNames(candidate).some(entity => newEntities.has(entity));
 
       if (
         comparisonTime === null ||
-        comparisonTime < windowStart ||
+        (comparisonTime < windowStart && !archivedEntityMatch) ||
         comparisonTime > referenceTime ||
         (candidateIngestedAt !== null && candidateIngestedAt >= referenceTime)
       ) {
@@ -254,12 +257,17 @@ export function rankNewsDedupCandidates(article, candidates, options = {}) {
         newTitle,
         candidate.title ?? candidate.ai_title_ru ?? candidate.original_title,
       );
+      const originalSimilarity = textSimilarity(
+        `${article.original_title ?? newTitle ?? ""} ${article.original_description ?? ""}`,
+        `${candidate.original_title ?? ""} ${candidate.original_description ?? ""}`,
+      );
       const matches =
         fingerprintMatch ||
         (eventTypeMatch && entityOverlap >= 1) ||
         entityOverlap >= 2 ||
         mainFactSimilarity >= 0.58 ||
-        titleSimilarity >= 0.62;
+        titleSimilarity >= 0.62 ||
+        (options.preflight && (entityOverlap >= 1 || originalSimilarity >= 0.15));
 
       if (!matches) {
         return [];
@@ -271,7 +279,7 @@ export function rankNewsDedupCandidates(article, candidates, options = {}) {
         entityOverlap * 18 +
         (eventTypeMatch ? 14 : 0) +
         mainFactSimilarity * 12 +
-        titleSimilarity * 10 +
+        titleSimilarity * 10 + originalSimilarity * 20 +
         freshness;
 
       return [{ ...candidate, _dedupScore: score }];
@@ -500,7 +508,7 @@ function normalizeEntities(value) {
 
   return value.flatMap((entity) => {
     if (typeof entity === "string") {
-      const normalizedName = normalizeFingerprint(entity);
+      const normalizedName = normalizeEntityKey(entity);
 
       if (!normalizedName || seen.has(normalizedName)) {
         return [];
@@ -516,7 +524,7 @@ function normalizeEntities(value) {
 
     const type = normalizeSlug(entity.type) ?? "other";
     const name = normalizeString(entity.name);
-    const normalizedName = normalizeFingerprint(entity.normalized_name ?? entity.normalizedName);
+    const normalizedName = normalizeEntityKey(entity.normalized_name ?? entity.normalizedName) ?? normalizeEntityKey(name);
 
     if (!name || !normalizedName || seen.has(normalizedName)) {
       return [];
@@ -537,7 +545,9 @@ function buildFallbackFingerprint({ eventType, normalizedEntities, mainFact }) {
   const entityPart = normalizedEntities.map((entity) => entity.normalized_name).sort().join("_");
   const suffix = createHash("sha256").update(mainFact).digest("hex").slice(0, 12);
 
-  return `${eventType}_${entityPart}_${suffix}`.slice(0, 240);
+  // Broad articles can list many drivers. Keep the distinguishing hash even
+  // when their names fill the fingerprint's storage allowance.
+  return `${`${eventType}_${entityPart}`.slice(0, 227)}_${suffix}`;
 }
 
 function textSimilarity(left, right) {
@@ -584,6 +594,20 @@ function normalizeFingerprint(value) {
 
 function normalizeSlug(value) {
   return normalizeFingerprint(value);
+}
+
+function normalizeEntityKey(value) {
+  const normalized = normalizeString(value)?.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "");
+  return normalized ? normalized.slice(0, 240) : null;
+}
+
+function normalizeEventKey(value) {
+  // These are private semantic labels, not URL slugs. A Russian label or
+  // spaces from the model must not veto otherwise verified reader content.
+  const normalized = normalizeString(value)?.normalize("NFKC").toLowerCase().replace(/[\s-]+/g, "_");
+  return normalized && /^[a-zа-яё0-9]+(?:_[a-zа-яё0-9]+)*$/i.test(normalized)
+    ? normalized.slice(0, 240) : null;
 }
 
 function normalizeEventDate(value) {

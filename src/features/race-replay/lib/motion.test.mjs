@@ -152,7 +152,7 @@ test("a delayed lap counter cannot make the car jump multiple laps in one sample
   assert.ok(after >= before);
 });
 
-test("lap timings are recovered from a legacy replay snapshot", () => {
+test("legacy lap metadata describes the current lap, not the previous completed lap", () => {
   const timings = inferLapTimingsFromPositions([
     { ...position(100_000, 0.02, 2, 1), lapNumber: 1, lastLapDuration: 85.123 },
     { ...position(108_000, 0.12, 12, 1), lapNumber: 1, lastLapDuration: 85.123 },
@@ -160,20 +160,54 @@ test("lap timings are recovered from a legacy replay snapshot", () => {
   ]);
 
   assert.deepEqual(timings, [
-    { driverNumber: 1, durationMs: 85_123, lapNumber: 1, startOffsetMs: 14_877 },
-    { driverNumber: 1, durationMs: 84_456, lapNumber: 2, startOffsetMs: 100_000 },
+    { driverNumber: 1, durationMs: 85_123, lapNumber: 1, startOffsetMs: 100_000 },
+    { driverNumber: 1, durationMs: 84_456, lapNumber: 2, startOffsetMs: 185_123 },
   ]);
 });
 
-test("legacy timing recovery renumbers a corrupted lap counter without a jump", () => {
+test("legacy timing recovery preserves missing lap numbers instead of shifting the rest of the race", () => {
   const timings = inferLapTimingsFromPositions([
     { ...position(100_000, 0.02, 2, 1), lapNumber: 1, lastLapDuration: 90 },
     { ...position(190_000, 0.02, 2, 1), lapNumber: 2, lastLapDuration: 90 },
     { ...position(280_000, 0.02, 2, 1), lapNumber: 4, lastLapDuration: 90 },
   ]);
 
-  assert.deepEqual(timings.map(({ lapNumber }) => lapNumber), [1, 2, 3]);
-  assert.deepEqual(timings.map(({ startOffsetMs }) => startOffsetMs), [10_000, 100_000, 190_000]);
+  assert.deepEqual(timings.map(({ lapNumber }) => lapNumber), [1, 2, 4]);
+  assert.deepEqual(timings.map(({ startOffsetMs }) => startOffsetMs), [100_000, 190_000, 280_000]);
+});
+
+test("an unknown first lap duration does not add pre-start grid time to later laps", () => {
+  const timings = inferLapTimingsFromPositions([
+    { ...position(106, 0, 0, 18), lapNumber: 1, lastLapDuration: null },
+    { ...position(302_506, 0, 0, 18), lapNumber: 2, lastLapDuration: 78.760 },
+    { ...position(383_786, 0, 0, 18), lapNumber: 3, lastLapDuration: 78.014 },
+  ], 195_847);
+  assert.deepEqual(timings.map((lap) => lap.startOffsetMs), [195_847, 302_506, 381_266]);
+});
+
+test("Miami legacy drivers share the race start despite asynchronous first samples", () => {
+  const timings = inferLapTimingsFromPositions([
+    { ...position(244_834, 0, 0, 16), lapNumber: 1, lastLapDuration: 96.529 },
+    { ...position(343_674, 0, 0, 16), lapNumber: 2, lastLapDuration: 93.036 },
+    { ...position(243_574, 0, 0, 12), lapNumber: 1, lastLapDuration: 97.685 },
+    { ...position(343_674, 0, 0, 12), lapNumber: 2, lastLapDuration: 92.936 },
+  ], 242_493);
+
+  assert.equal(timings.find((lap) => lap.driverNumber === 16).startOffsetMs, 242_493);
+  assert.equal(timings.find((lap) => lap.driverNumber === 12).startOffsetMs, 242_493);
+  const motions = [16, 12].map((driverNumber) => buildDriverMotion([], {
+    lapTimings: timings.filter((lap) => lap.driverNumber === driverNumber),
+  }));
+  assert.ok(trackProgressAt(motions[0], 339_500).unwrapped > 1);
+  assert.ok(trackProgressAt(motions[1], 339_500).unwrapped < 1);
+});
+
+test("without a start signal, legacy drivers use the earliest first-lap sample together", () => {
+  const timings = inferLapTimingsFromPositions([
+    { ...position(105_000, 0, 0, 16), lapNumber: 1, lastLapDuration: 90 },
+    { ...position(100_000, 0, 0, 12), lapNumber: 1, lastLapDuration: 92 },
+  ]);
+  assert.deepEqual(timings.map((lap) => lap.startOffsetMs), [100_000, 100_000]);
 });
 
 test("inferred laps continue an incomplete official timing feed", () => {

@@ -6,6 +6,7 @@ import { AdSlot } from "@/components/racemate/ad-slot";
 import { IntentLink as Link } from "@/components/racemate/intent-link";
 import {
   Activity,
+  BadgeCheck,
   CalendarDays,
   CarFront,
   ChevronRight,
@@ -20,14 +21,14 @@ import {
 
 import { ActiveNavigationLink } from "@/components/racemate/active-navigation-link";
 import { MobileAutoHideHeader } from "@/components/racemate/mobile-auto-hide-header";
+import { PlusOffer } from "@/components/racemate/plus-offer";
 import {
   RaceMateLogo,
   RaceMateMark,
 } from "@/components/racemate/racemate-logo";
-import { SidebarSessionStatus } from "@/components/racemate/sidebar-session-status";
+import { SidebarNextSession } from "@/components/racemate/sidebar-next-session";
 import { SiteFooter } from "@/components/racemate/site-footer";
 import { ThemeToggle } from "@/components/racemate/theme-toggle";
-import { getNextSession } from "@/data/racemate-repository";
 import {
   getIsAdmin,
   getSessionProfileSummary,
@@ -35,8 +36,8 @@ import {
 } from "@/lib/auth";
 import { getSubscriptionAccess } from "@/lib/billing/access";
 import { formatSubscriptionTimeLeft } from "@/lib/billing/subscription-display";
+import { getPlusOfferAudience } from "@/lib/plus-offer-policy";
 import type { SubscriptionAccess } from "@/lib/billing/types";
-import { formatSessionName } from "@/lib/session-display";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -63,7 +64,7 @@ const navigation = [
     href: "/teams",
     label: "Команды",
     icon: CarFront,
-    activePrefixes: ["/teams"],
+    activePrefixes: ["/teams", "/anatomy"],
   },
   { href: "/calendar", label: "Календарь", icon: CalendarDays },
   {
@@ -107,7 +108,6 @@ export function AppShell({
   const userPromise = getSessionUser();
   const profilePromise = getSessionProfileSummary();
   const adminPromise = getIsAdmin();
-  const nextSessionPromise = getNextSession();
   const subscriptionPromise = userPromise.then((user) =>
     getSubscriptionAccess(user?.id ?? null),
   );
@@ -115,6 +115,7 @@ export function AppShell({
 
   return (
     <div
+      data-public-ui
       className={
         viewport ? "telemetry-app-shell h-dvh overflow-hidden" : "min-h-dvh"
       }
@@ -125,7 +126,7 @@ export function AppShell({
           className="group flex items-center rounded-md pr-3 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           href="/"
         >
-          <RaceMateLogo />
+          <RaceMateLogo className="w-48 sm:w-52" variant="signature" />
         </Link>
 
         <details className="group relative xl:hidden">
@@ -174,7 +175,7 @@ export function AppShell({
             className="group flex items-center rounded-md p-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             href="/"
           >
-            <RaceMateLogo />
+            <RaceMateLogo variant="signature" />
           </Link>
         </div>
         <div className="raceside-sidebar-session px-6">
@@ -182,11 +183,7 @@ export function AppShell({
             <p className="font-telemetry text-[0.62rem] font-bold uppercase tracking-[0.16em] text-muted-foreground">
               следующая сессия
             </p>
-            <Suspense
-              fallback={<Skeleton className="mt-2 h-[4.25rem] w-full" />}
-            >
-              <NextSessionPanel sessionPromise={nextSessionPromise} />
-            </Suspense>
+            <SidebarNextSession />
           </div>
         </div>
         <nav
@@ -244,6 +241,14 @@ export function AppShell({
         </Suspense>
       )}
       {!viewport && !immersive && <SiteFooter />}
+      {!viewport && !immersive && (
+        <Suspense fallback={null}>
+          <PlusOfferStatus
+            subscriptionPromise={subscriptionPromise}
+            userPromise={userPromise}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
@@ -290,51 +295,30 @@ function AccountDock({
               : "Открыть RaceSide Plus"
         }
         className={cn(
-          "group grid min-w-0 grid-cols-[1fr_auto_1fr] items-center gap-2 px-2.5 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring active:bg-accent motion-reduce:transition-none",
+          "group flex min-w-0 items-center gap-2.5 px-2.5 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring active:bg-accent motion-reduce:transition-none",
           compact ? "h-10" : "h-11",
-          isActive && "bg-success/[0.035] hover:bg-success/[0.065]",
         )}
         href="/plus"
       >
-        <span className="flex w-7 items-center justify-center gap-0.5 justify-self-start">
-          <RaceMateMark
-            className={cn("h-3 w-6", isActive && "text-success/65")}
-          />
-          <span
-            className={cn(
-              "font-display text-sm font-black leading-none text-primary",
-              isActive && "text-success/65",
-            )}
-          >
-            +
-          </span>
+        <span className="grid size-7 shrink-0 place-items-center rounded-sm bg-primary/10 ring-1 ring-inset ring-primary/15">
+          <RaceMateMark className="h-4 w-[1.375rem]" plus />
         </span>
-        <span className="min-w-0 max-w-28 justify-self-center text-center">
-          <span
-            className={cn(
-              "block truncate text-xs font-semibold leading-tight text-foreground",
-              isActive && "text-success/75",
+        <span className="min-w-0 flex-1">
+          <span className="flex min-w-0 items-center gap-1.5 text-xs font-semibold leading-tight text-foreground">
+            <span className="truncate">RaceSide Plus</span>
+            {isActive && (
+              <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-primary" />
             )}
-          >
-            {isActive ? "Plus активен" : "RaceSide Plus"}
           </span>
           {plusDetail && (
-            <span
-              className={cn(
-                "block truncate text-[0.65rem] leading-tight text-muted-foreground",
-                isActive && "text-success/65",
-              )}
-            >
+            <span className="mt-0.5 block truncate text-[0.65rem] leading-tight text-muted-foreground">
               {plusDetail}
             </span>
           )}
         </span>
         <ChevronRight
           aria-hidden="true"
-          className={cn(
-            "size-4 shrink-0 justify-self-end text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none",
-            isActive && "text-success/55",
-          )}
+          className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
         />
       </Link>
 
@@ -421,30 +405,16 @@ async function AccountDockStatus({
   );
 }
 
-async function NextSessionPanel({
-  sessionPromise,
+async function PlusOfferStatus({
+  subscriptionPromise,
+  userPromise,
 }: {
-  sessionPromise: ReturnType<typeof getNextSession>;
+  subscriptionPromise: Promise<SubscriptionAccess>;
+  userPromise: ReturnType<typeof getSessionUser>;
 }) {
-  const nextSession = await sessionPromise;
-  const sidebarSessionName = nextSession
-    ? formatSessionName(nextSession.session)
-    : "Расписание уточняется";
-  return (
-    <>
-      <p className="font-display mt-2 text-sm font-bold">
-        {sidebarSessionName}
-      </p>
-      <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        {nextSession?.race ?? "Календарь сезона"}
-      </p>
-      <SidebarSessionStatus
-        sessionName={nextSession?.session}
-        startsAtIso={nextSession?.startsAtIso}
-        status={nextSession?.status}
-      />
-    </>
-  );
+  const [subscription, user] = await Promise.all([subscriptionPromise, userPromise]);
+  const audience = getPlusOfferAudience(Boolean(user), subscription.active);
+  return audience ? <PlusOffer audience={audience} key={user?.id ?? "guest"} /> : null;
 }
 
 async function AdminNavigationItem({

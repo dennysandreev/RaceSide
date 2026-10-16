@@ -9,10 +9,13 @@ import {
   type Task,
 } from "../../../../worker/telemetry/service.mjs";
 export { resultKey } from "../../../../worker/telemetry/service.mjs";
-import { resampleComparison } from "../../../../worker/telemetry/core.mjs";
+import { rebuildComparisonTiming, resampleComparison } from "../../../../worker/telemetry/core.mjs";
+import { ANALYSIS_VERSION, buildTelemetryAnalysis } from "../../../../worker/telemetry/analysis.mjs";
+import { normalizeTelemetryMeeting, orientComparison, verifiedTrack } from "../../../../worker/telemetry/track-geometry.mjs";
 import type {
   Catalog,
   Comparison,
+  RacePace,
   Meeting,
   Session,
   SavedComparison,
@@ -37,6 +40,8 @@ export const messages: Record<string, string> = {
     "Средний гоночный темп доступен только в завершённой гонке.",
   RACE_AVERAGE_UNAVAILABLE:
     "Для среднего темпа не хватает чистых гоночных кругов с телеметрией.",
+  RACE_PACE_ONLY: "Темп можно посмотреть в завершённой гонке или спринте.",
+  RACE_PACE_UNAVAILABLE: "Для этой гонки пока нет времени кругов. Попробуйте другой этап.",
   NO_TELEMETRY: "Для этого круга нет телеметрии. Попробуйте другой круг.",
   INCOMPLETE_TELEMETRY:
     "В этих кругах слишком много пропусков для точного сравнения. Выберите другие круги.",
@@ -60,8 +65,15 @@ export function present(
   c: Comparison,
   options?: { from?: number; to?: number; points?: number },
 ) {
-  const data = resampleComparison(c, options);
-  return telemetryFlags.telemetryInsights ? data : { ...data, insights: [] };
+  const geometry = orientComparison(c);
+  const oriented = geometry.analysis?.version === ANALYSIS_VERSION && geometry.analysis.trackVersion === geometry.track.version
+    ? geometry : rebuildComparisonTiming(geometry);
+  // Old saved links gain the new views using their full stored samples, before downsampling.
+  const analysis = oriented.analysis?.version === ANALYSIS_VERSION &&
+    oriented.analysis.trackVersion === oriented.track.version
+    ? oriented.analysis : buildTelemetryAnalysis(oriented) ?? undefined;
+  const data = resampleComparison({ ...oriented, analysis }, options);
+  return telemetryFlags.telemetryInsights ? data : { ...data, insights: [], analysis: undefined };
 }
 export async function queryTelemetry(input: Task) {
   if (!telemetryFlags.telemetryHub) throw new Error("STORAGE_UNAVAILABLE");
@@ -77,14 +89,21 @@ export async function queryTelemetry(input: Task) {
   if (data)
     return {
       status: 200,
-      data: task.kind === "compare" ? present(data as Comparison) : data,
+      data: task.kind === "compare" ? present(data as Comparison)
+        : task.kind === "race-pace" ? presentRacePace(data as RacePace)
+        : task.kind === "meetings" ? (data as Meeting[]).map(normalizeTelemetryMeeting) : data,
     };
-  const taskId = await store.enqueue(task);
+  const taskId = await store.enqueue(task, resultKey(task));
   return {
     status: 202,
     taskId,
     message: "Готовим телеметрию. Это сравнение ещё не открывали.",
   };
+}
+
+export function presentRacePace(data: RacePace): RacePace {
+  const track = verifiedTrack(data.session.circuit, data.session.season);
+  return track ? { ...data, session: { ...data.session, circuit: track.name } } : data;
 }
 
 type TelemetryBootstrapOptions = {
@@ -109,7 +128,7 @@ export async function getTelemetryBootstrap(
   options: TelemetryBootstrapOptions = {},
 ): Promise<TelemetryBootstrapData> {
   const scopeKey = options.demoScope
-    ? `demo:${options.demoScope.meeting.id}`
+    ? `demo:${options.demoScope.meeting.id}:${options.demoScope.sessions[0]?.id}`
     : "full";
   const cacheKey = [
     "telemetry:bootstrap",
@@ -166,7 +185,7 @@ async function loadTelemetryBootstrap(
   if (options.demoScope) {
     partial.meetings =
       partial.season === options.demoScope.meeting.season
-        ? [options.demoScope.meeting]
+        ? [normalizeTelemetryMeeting(options.demoScope.meeting)]
         : [];
   } else {
     const meetings = await resolveBootstrapTask<Meeting[]>(
@@ -174,7 +193,7 @@ async function loadTelemetryBootstrap(
       deadline,
     );
     if (!meetings.ready) return partial;
-    partial.meetings = meetings.data;
+    partial.meetings = meetings.data.map(normalizeTelemetryMeeting);
   }
 
   if (!partial.meetings.length) return { ...partial, stage: "ready" };
@@ -226,9 +245,16 @@ async function resolveBootstrapTask<T>(
 ): Promise<{ ready: true; data: T } | { ready: false }> {
   const result = await queryTelemetry(task);
   if (result.status === 200) return { ready: true, data: result.data as T };
-  if (!result.taskId || Date.now() >= deadline) return { ready: false };
+  if (!result.taskId) return { ready: false };
 
   const store = telemetryStore();
+  const current = await store.task(result.taskId);
+  if (current?.status === "failed")
+    throw new Error(current.error_code ?? "PROVIDER_UNAVAILABLE");
+  if (current?.status === "ready" && current.result_key) {
+    const data = await store.get<T>(current.result_key);
+    if (data) return { ready: true, data };
+  }
   while (Date.now() < deadline) {
     await new Promise((resolve) => setTimeout(resolve, 300));
     const pending = await store.task(result.taskId);
@@ -261,5 +287,22 @@ export async function getTelemetryCatalogPages() {
   }
 }
 export async function readSaved(id: string): Promise<SavedComparison | null> {
-  return telemetryStore().getComparison(id);
+  const store = telemetryStore(), saved = await store.getComparison(id);
+  if (!saved || !telemetryFlags.telemetryInsights) return saved;
+  const original = saved.comparison;
+  if (original.analysis?.version === ANALYSIS_VERSION && original.analysis.trackVersion === original.track.version) return saved;
+  const c = rebuildComparisonTiming(original);
+  // Existing permalinks use already cached full-resolution laps. Provider
+  // requests remain in the worker, and the saved comparison is never rewritten.
+  const cached = c.traces.length === 2 && c.traces[0].session.id === c.traces[1].session.id
+    ? await Promise.all(c.traces.map((t) => store.getNormalizedLaps(t.session.id, t.driver.number).catch(() => []))) : [];
+  const seen = new Set<string>();
+  const candidates = cached.flat().filter((t) => {
+    if (seen.has(t.lap.id) || !t.points?.length || !Number.isFinite(t.points.at(-1)!.distance) || t.points.at(-1)!.distance <= 0) return false;
+    seen.add(t.lap.id); return true;
+  }).map((t) => {
+    const scale = c.track.length / t.points.at(-1)!.distance;
+    return { ...t, points: t.points.map((p) => ({ ...p, distance: p.distance * scale })) };
+  });
+  return { ...saved, comparison: { ...c, analysis: buildTelemetryAnalysis(c, candidates) ?? undefined } };
 }
