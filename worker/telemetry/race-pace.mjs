@@ -57,7 +57,11 @@ function controlTimeline(catalog) {
       deployment = undefined;
       return;
     }
-    if (/^SESSION STARTED$/.test(message) && phase === "RED") {
+    if (/^SESSION STARTED$/.test(message) && phase === "RED" && !isRaceSession(catalog.session)) {
+      phase = undefined;
+      deployment = undefined;
+      row.resumeSession = true;
+    } else if (/^SESSION STARTED$/.test(message) && phase === "RED") {
       phase = "SC";
       row.resumeBehindSC = true;
     } else if (/^EXTRA FORMATION LAP$/.test(message)) phase = "SC";
@@ -132,6 +136,10 @@ function controlFlags(lap, rows) {
     } else if (isRed(row)) {
       global = "RED";
       deployment = undefined;
+    } else if (row.resumeSession) {
+      global = "GREEN";
+      deployment = undefined;
+      yellow.clear();
     } else if (row.resumeBehindSC || message === "EXTRA FORMATION LAP") {
       global = "SC";
       deployment = row.deployment;
@@ -212,6 +220,17 @@ export function raceTyreLaps(catalog) {
 
 export function buildRacePace(catalog) {
   if (!isRaceSession(catalog.session)) throw new Error("RACE_PACE_ONLY");
+  return buildPace(catalog);
+}
+export function buildSessionPace(catalog) {
+  const data = buildPace(catalog);
+  if (!isRaceSession(catalog.session)) data.drivers.sort((a,b) => {
+    const best = (driver) => Math.min(...data.points.filter(p=>p.driver===driver.number && p.time>0 && !p.reasons.some(r=>["PIT_IN","PIT_OUT","DELETED","INCOMPLETE","RED"].includes(r))).map(p=>p.time), Infinity);
+    return best(a)-best(b) || a.number-b.number;
+  });
+  return { ...data, version: "session-pace-1" };
+}
+function buildPace(catalog) {
   if (Date.parse(catalog.session.end) + 31 * 60_000 > Date.now())
     throw new Error("SESSION_NOT_FINISHED");
   const control = controlTimeline(catalog);
@@ -233,17 +252,17 @@ export function buildRacePace(catalog) {
           .map((lap) => [lap.number, lap]),
       ).values(),
     ].sort((a, b) => a.number - b.number);
-    const driverPoints = consistentTyres(laps, catalog)
+    const driverPoints = (isRaceSession(catalog.session) ? consistentTyres(laps, catalog) : laps)
       .map((lap, index) => {
         const flags = controlFlags(lap, control);
         if (flags.includes("RED") || lap.status?.includes("RED")) return null;
         const reasons = [];
-        if (lap.number === 1) reasons.push("START");
-        else if (flags.includes("START")) reasons.push("START");
+        if (isRaceSession(catalog.session) && (lap.number === 1 || flags.includes("START"))) reasons.push("START");
         if (lap.pitIn) reasons.push("PIT_IN");
         if (
           lap.pitOut ||
-          (laps[index - 1]?.number === lap.number - 1 && laps[index - 1]?.pitIn)
+          (laps[index - 1]?.number === lap.number - 1 && laps[index - 1]?.pitIn &&
+            (isRaceSession(catalog.session) || !laps[index - 1]?.pitOut))
         )
           reasons.push("PIT_OUT");
         if (lap.deleted) reasons.push("DELETED");

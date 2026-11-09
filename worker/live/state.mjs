@@ -738,6 +738,7 @@ export class LiveState {
         break;
       case "weather":
         s.weather = {
+          ...s.weather,
           timestamp: time,
           air: number(row.air_temperature),
           track: number(row.track_temperature),

@@ -1,4 +1,5 @@
-import { resultKey } from "./service.mjs";
+import { resultKey, DISCOVERY_TTL_MS } from "./service.mjs";
+import { OpenF1Provider, mapSession } from "./provider.mjs";
 import { completedSeasonRaces } from "./race-pace-backfill.mjs";
 
 // Result polling already knows the latest weekend's local sessions. Queue pace
@@ -15,6 +16,7 @@ export function localRacePaceTasks(sessions, now = Date.now()) {
 export function recentTelemetryTasks(season, sessions, now = Date.now()) {
   const finished = sessions
     .filter((session) =>
+      !session.is_cancelled &&
       Number.isInteger(Number(session.meeting_key)) && Number(session.meeting_key) > 0 &&
       Number.isInteger(Number(session.session_key)) && Number(session.session_key) > 0 &&
       Number.isFinite(Date.parse(session.date_end)) &&
@@ -27,7 +29,7 @@ export function recentTelemetryTasks(season, sessions, now = Date.now()) {
   for (const meeting of meetingIds) {
     tasks.push({ kind: "sessions", meeting });
     const meetingSessions = finished.filter((session) => Number(session.meeting_key) === meeting);
-    const selected = meetingSessions.slice(0, meeting === meetingIds[0] ? 2 : 0);
+    const selected = meeting === meetingIds[0] ? [...meetingSessions] : [];
     const qualifying = meetingSessions.find((session) => session.session_type === "Qualifying");
     if (qualifying && !selected.includes(qualifying)) selected.push(qualifying);
     for (const session of selected) {
@@ -38,6 +40,26 @@ export function recentTelemetryTasks(season, sessions, now = Date.now()) {
     tasks.push({ kind: "race-pace", session: race.session_key });
   }
   return tasks;
+}
+
+export async function refreshRecentTelemetry({ store, fetchRows, season, now = Date.now() }) {
+  const sessions = await fetchRows("sessions", { year: season });
+  if (!Array.isArray(sessions)) throw new Error("PROVIDER_UNAVAILABLE");
+  const recent = sessions.filter((session) => session.year === season &&
+    !session.is_cancelled && Date.parse(session.date_end) > now - 48 * 3600000 &&
+    Date.parse(session.date_end) + 31 * 60_000 < now);
+  if (!recent.length) return { itemsProcessed: 0, metadata: { season, skipped: "no_recent_completed_sessions" } };
+  // These lists come from fresh source reads, not from a cache about to expire
+  // just after the five-minute scheduler tick.
+  const meetings = await new OpenF1Provider({ fetchRows }).getMeetings(season);
+  await store.put(resultKey({ kind: "meetings", season }), meetings, DISCOVERY_TTL_MS);
+  for (const meeting of new Set(recent.map((session) => session.meeting_key))) {
+    const completed = sessions.filter((session) => session.meeting_key === meeting &&
+      !session.is_cancelled && Date.parse(session.date_end) + 31 * 60_000 < now);
+    await store.put(resultKey({ kind: "sessions", meeting }), completed.map(mapSession), DISCOVERY_TTL_MS);
+  }
+  const queued = await enqueueMissingTelemetryTasks(store, recentTelemetryTasks(season, recent, now));
+  return { itemsProcessed: queued, metadata: { season, sessions: recent.length, queued } };
 }
 
 export async function enqueueMissingTelemetryTasks(store, tasks) {

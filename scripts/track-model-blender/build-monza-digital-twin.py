@@ -18,6 +18,9 @@ hung = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(hung)
 spa = hung.spa
 base = hung.base
+VENUE_SPEC = importlib.util.spec_from_file_location("monza_venue", SCRIPT_DIRECTORY / "monza-venue.py")
+venue_module = importlib.util.module_from_spec(VENUE_SPEC)
+VENUE_SPEC.loader.exec_module(venue_module)
 
 SECTOR_COLORS = ((0.86, 0.02, 0.01, 1), (0.98, 0.48, 0.03, 1), (0.02, 0.60, 0.78, 1))
 
@@ -60,7 +63,7 @@ def utm32n_from_wgs84(lat, lon):
 base.rd_from_wgs84 = utm32n_from_wgs84
 spa.lambert_2008_from_wgs84 = utm32n_from_wgs84
 hung.utm34n_from_wgs84 = utm32n_from_wgs84
-spa.REPLACED_OSM_BUILDING_IDS = set()
+spa.REPLACED_OSM_BUILDING_IDS = venue_module.LANDMARK_IDS
 spa.REPLACED_OSM_GRANDSTAND_IDS = set()
 base.TERRAIN_COLUMNS = 140
 base.TERRAIN_ROWS = 120
@@ -101,6 +104,35 @@ def keep_near_circuit(osm_data, reference_lines, maximum_distance):
         ):
             retained.append(feature)
     return {**osm_data, "elements": retained}
+
+
+def create_road_edge_paint(samples, center, material, collection, pit):
+    # Use exactly the road's tessellation. Independent 4 m paint sampling
+    # previously cut across the 3 m asphalt triangles at tight chicanes.
+    builder = base.MeshBuilder()
+    for a, b in zip(samples, samples[1:]):
+        for side in [-1, 1]:
+            def edge_at(t):
+                x=a[1]*(1-t)+b[1]*t
+                y=a[2]*(1-t)+b[2]*t
+                normal=a[5]*(1-t)+b[5]*t
+                return (x+normal.x*side*(a[7]/2-.27),y+normal.y*side*(a[7]/2-.27))
+            interval=venue_module.visible_interval(0,1,lambda t:base.distance_to_polyline(edge_at(t),pit)-2.6)
+            if interval is None:
+                continue
+            vertices = []
+            first,last=interval
+            for blend,inset in [(first,.36),(last,.36),(last,.18),(first,.18)]:
+                _, x, y, height, _, normal, _, width = a
+                x=x*(1-blend)+b[1]*blend
+                y=y*(1-blend)+b[2]*blend
+                height=height*(1-blend)+b[3]*blend
+                normal=normal*(1-blend)+b[5]*blend
+                lateral = side*(width/2-inset)
+                vertices.append((x+normal.x*lateral-center["x"],
+                                 y+normal.y*lateral-center["y"],height+.05))
+            builder.add_quad(vertices)
+    return builder.create_object("Track_Edge_Lines",[material],collection)
 
 
 def assemble_way_geometry(osm_data, way_ids):
@@ -178,19 +210,40 @@ def configure_scene(center, base_elevation):
     scene["real_world_scale"] = "1 Blender unit = 1 metre"
 
 
-def render_preview(preview_path, collection, bounds):
+def render_preview(preview_path, collection, bounds, center, review_directory):
     scene = bpy.context.scene
     camera_data = bpy.data.cameras.new("MonzaPreviewCamera")
     camera_data.type = "ORTHO"
-    camera_data.ortho_scale = max(bounds["maxX"] - bounds["minX"], bounds["maxY"] - bounds["minY"]) * 1.22
+    camera_data.ortho_scale = 3_450
     camera_data.clip_end = 10_000
     camera = bpy.data.objects.new("MonzaPreviewCamera", camera_data)
-    camera.location = (1_950, -2_250, 2_450)
-    base.look_at(camera, (0, 0, 22))
+    camera.location = (1_500, -2_050, 2_500)
+    base.look_at(camera, (100, 310, 22))
     collection.objects.link(camera)
     scene.camera = camera
     scene.render.filepath = str(preview_path)
     bpy.ops.render.render(write_still=True)
+    review_directory.mkdir(parents=True, exist_ok=True)
+    for name, lat, lon, scale, offset in [
+        ("pit-complex", 45.6178, 9.2815, 620, (360, -420, 340)),
+        ("prima-variante", 45.6244, 9.2820, 700, (400, -450, 430)),
+        ("historic-banking", 45.6241, 9.2860, 700, (450, -350, 330)),
+        ("pit-entry", 45.6152, 9.2808, 180, (100, -110, 95)),
+        ("pit-garages", 45.6171, 9.2812, 210, (-100, -125, 100)),
+        ("pit-exit", 45.6198, 9.2814, 230, (100, 120, 90)),
+        ("serraglio-underpass", 45.624796, 9.28922, 150, (80, 100, 45)),
+        ("flat-north-approach", 45.6230, 9.2820, 360, (-160, -180, 130)),
+        ("banking-concrete", 45.62565, 9.2848, 100, (50, -60, 35)),
+        ("banking-south", 45.6104, 9.2863, 110, (-30, 65, 28)),
+        ("banking-frames", 45.62565, 9.2848, 70, (20, 60, 14)),
+    ]:
+        x, y = utm32n_from_wgs84(lat, lon)
+        target = (x - center["x"], y - center["y"], 22)
+        camera.location = tuple(target[i] + offset[i] for i in range(3))
+        camera_data.ortho_scale = scale
+        base.look_at(camera, target)
+        scene.render.filepath = str(review_directory / f"{name}.webp")
+        bpy.ops.render.render(write_still=True)
     bpy.data.objects.remove(camera, do_unlink=True)
     bpy.data.cameras.remove(camera_data)
 
@@ -221,10 +274,10 @@ def main():
         "curb_red": base.create_material("Monza_Curb_Red", (0.71, 0.018, 0.012, 1), 0.84),
         "building": base.create_material("Monza_Current_OSM_PCN_DSM_Buildings", (1, 1, 1, 1), 0.84, use_vertex_color=True),
         "motorhome": base.create_material("Monza_2026_Race_Motorhomes", (1, 1, 1, 1), 0.64, metallic=0.10, use_vertex_color=True),
-        "pit_wall": base.create_material("Monza_Pit_Wall_Concrete", (0.62, 0.63, 0.62, 1), 0.92),
+        "pit_wall": base.create_material("Monza_Pit_Wall_Concrete", (1, 1, 1, 1), 0.92, use_vertex_color=True),
         "fence": base.create_material("Monza_Safety_Fence", (0.40, 0.43, 0.44, 0.64), 0.72, metallic=0.34),
         "tree_trunk": base.create_material("Monza_Tree_Trunks", (0.18, 0.105, 0.055, 1), 1.0),
-        "tree_crown": base.create_material("Monza_Tree_Canopies", (0.12, 0.26, 0.095, 1), 1.0),
+        "tree_crown": base.create_material("Monza_Tree_Canopies", (1, 1, 1, 1), 1.0, use_vertex_color=True),
         "stand_frame": base.create_material("Monza_Grandstand_Frame", (0.19, 0.21, 0.22, 1), 0.58, metallic=0.55),
         "seat_dark": base.create_material("Monza_Grandstand_Seats_Dark", (0.05, 0.06, 0.07, 1), 0.88),
         "seat_red": base.create_material("Monza_Grandstand_Seats_Red", (0.67, 0.02, 0.018, 1), 0.88),
@@ -233,6 +286,8 @@ def main():
         "gravel": base.create_material("Monza_Real_Gravel_Runoff", (0.54, 0.43, 0.29, 1), 1.0),
         "runoff": base.create_material("Monza_Asphalt_Runoff", (0.16, 0.17, 0.18, 1), 0.98),
         "black": base.create_material("Monza_Control_Line_Black", (0.015, 0.015, 0.015, 1), 0.86),
+        "concrete": base.create_material("Monza_Weathered_Banking_Concrete", (1,1,1,1), .98),
+        "aged_structure": base.create_material("Monza_Weathered_Bridge_Concrete", (1,1,1,1), .98),
     }
     materials["terrain"].name = "Terrain_PCN_Orthophoto_2012"
     sector_materials = [base.create_material(f"Sector_{index + 1}", color, 0.68) for index, color in enumerate(SECTOR_COLORS)]
@@ -253,7 +308,6 @@ def main():
         z_offset=base.TRACK_SURFACE_Z_OFFSET, banked=False,
     )
     track["source"] = "Current OSM GP centreline, smoothed once and checked against the official 5.793 km Monza specification"
-    hung.create_edge_lines(centerline, cumulative, total_length, surface_raster, center, base_elevation, materials["white"], collections["Circuit"], config["model"]["trackWidthMeters"])
     curb_obj, curb_quality = hung.create_curbs(config, centerline, cumulative, surface_raster, center, base_elevation, [materials["curb_red"], materials["white"]], collections["Circuit"])
     curb_obj.name = "Monza_Real_Red_White_Curbs"
     curb_obj.data.name = "Monza_Real_Red_White_Curbs_Mesh"
@@ -262,29 +316,16 @@ def main():
     runoff_obj.data.name = "Monza_FIA_Runoff_And_Gravel_Mesh"
     runoff_obj["source"] = "Latest FIA operational map cross-checked against the PCN orthophoto"
 
-    _, pit_centerline, pit_quality = base.create_pit_lane(
-        osm_data, config["model"]["pitLaneWayId"], centerline, dtm, center, base_elevation, materials,
-        collections["Circuit"], pit_boxes=config["model"]["pitBoxes"], entry_minimum_width=4.2,
-    )
+    pit_way = next(e for e in osm_data["elements"] if e["id"] == config["model"]["pitLaneWayId"])
+    pit_centerline = [utm32n_from_wgs84(p["lat"], p["lon"]) for p in pit_way["geometry"]]
+    all_buildings = load_json(source_directory / "openstreetmap-buildings.json")
+    venue = venue_module.Venue(base, utm32n_from_wgs84, dtm, center, base_elevation,
+                               centerline, pit_centerline, all_buildings)
+    venue.surface = surface_raster
+    create_road_edge_paint(track_samples, center, materials["white"], collections["Circuit"], venue.pit)
+    pit_quality = venue.pit_lane(surface_raster, materials, collections["Circuit"], collections["Infrastructure"])
     pit_quality["sourceWayIds"] = [config["model"]["pitLaneWayId"]]
-    _, pit_length = base.line_distance(pit_centerline)
-    pit_wall_obj, pit_wall_quality = base.create_pit_wall(
-        pit_centerline, centerline, dtm, center, base_elevation,
-        [materials["pit_wall"], materials["fence"]], collections["Infrastructure"],
-        start_ratio=0.08, end_ratio=0.92,
-        wall_height=1.05, fence_height=2.25,
-    )
-    pit_wall_obj["source"] = "FIA pit-lane drawing aligned to the current OSM pit lane"
-    pit_wall_quality["placement"] = "between main circuit and pit lane"
-    pit_quality["pitWall"] = pit_wall_quality
-    pit_complex_obj, pit_complex_quality = spa.create_pit_complex(
-        config, pit_centerline, dtm, center, base_elevation,
-        [materials["structure"], materials["seat_dark"], materials["seat_red"]],
-        collections["Grandstands"], covered_grandstand=True,
-    )
-    pit_complex_obj.name = "Monza_2026_60_Garage_Pit_Complex_Grandstand"
-    pit_complex_obj.data.name = "Monza_2026_60_Garage_Pit_Complex_Grandstand_Mesh"
-    pit_complex_obj["source"] = "Latest FIA pit-lane drawing, current OSM alignment and official 2026 venue map"
+    pit_complex_obj, pit_complex_quality = venue.architecture(materials["building"], collections["Grandstands"])
     pit_quality["pitComplex"] = pit_complex_quality
 
     exclusion_corridors = [
@@ -301,7 +342,9 @@ def main():
         **osm_buildings,
         "elements": [feature for feature in osm_buildings["elements"] if feature.get("tags", {}).get("leisure") != "bleachers"],
     }
-    reserved_stands = base.grandstand_reservation_polygons(config, centerline, cumulative)
+    grandstand_obj, grandstand_sections, grandstand_quality = venue.grandstands(
+        [materials["building"], materials["seat_red"]], collections["Grandstands"])
+    reserved_stands = venue.exclusions
     building_obj, _, building_quality = spa.create_osm_buildings(
         osm_buildings_without_stands, dtm, dsm, bounds, center, base_elevation,
         materials["building"], collections["Buildings"], exclusion_corridors, reserved_stands,
@@ -310,34 +353,14 @@ def main():
     building_obj.data.name = "Monza_Current_OSM_PCN_DSM_Buildings_Mesh"
     building_obj["source"] = "Current OSM footprints with terrain-aligned heights"
     building_quality["replacedOsmBuildingIds"] = sorted(spa.REPLACED_OSM_BUILDING_IDS)
-    barrier_obj, fence_segments = spa.create_osm_barriers(
-        load_json(source_directory / "openstreetmap-barriers.json"), dtm, bounds, center,
-        base_elevation, materials["fence"], collections["Infrastructure"],
-    )
-    barrier_obj.name = "Monza_OSM_Safety_Fences_And_Walls"
-    barrier_obj.data.name = "Monza_OSM_Safety_Fences_And_Walls_Mesh"
-    tree_obj, tree_count = hung.create_osm_trees(
-        keep_near_circuit(load_json(source_directory / "openstreetmap-trees.json"), [centerline, pit_centerline], 300.0),
-        dtm, center, base_elevation,
-        [materials["tree_trunk"], materials["tree_crown"]], collections["Infrastructure"],
-        centerline, pit_centerline,
-    )
-    tree_obj.name = "Monza_OSM_Mapped_Trees"
-    tree_obj.data.name = "Monza_OSM_Mapped_Trees_Mesh"
-    motorhome_obj, motorhome_count, motorhome_quality = hung.create_paddock_motorhomes(
-        config, pit_centerline, dtm, center, base_elevation, materials["motorhome"],
-        collections["Infrastructure"], exclusion_corridors,
-    )
-    motorhome_obj.name = "Monza_2026_Race_Motorhomes"
-    motorhome_obj.data.name = "Monza_2026_Race_Motorhomes_Mesh"
-    motorhome_obj["source"] = "Official paddock zone, current orthophoto alignment and real vehicle dimensions"
-    grandstand_obj, grandstand_sections, grandstand_quality = base.create_grandstands(
-        config, centerline, cumulative, total_length, dtm, center, base_elevation,
-        [materials["stand_frame"], materials["seat_dark"], materials["seat_red"]], collections["Grandstands"],
-    )
-    grandstand_obj.name = "Monza_Current_OSM_Official_Map_Grandstands"
-    grandstand_obj.data.name = "Monza_Current_OSM_Official_Map_Grandstands_Mesh"
-    grandstand_obj["source"] = "Current OSM grandstand footprints cross-checked with the official venue map; real-metre rows and supports"
+    barrier_obj, fence_segments = venue.barriers(load_json(source_directory / "openstreetmap-barriers.json"),
+                                               materials["building"], collections["Infrastructure"])
+    oval_obj, historic_lines, oval_quality = venue.historic_oval(osm_data, materials, collections["Infrastructure"])
+    (input_path.parent / "monza-review").mkdir(parents=True, exist_ok=True)
+    (input_path.parent / "monza-review" / "oval-profile.json").write_text(json.dumps(oval_quality.pop("profile")))
+    motorhome_obj, motorhome_count, motorhome_quality = venue.paddock(materials["motorhome"], collections["Infrastructure"])
+    tree_obj, tree_count, forest_quality = venue.forest(prepared_directory, materials["tree_crown"],
+                                                      collections["Infrastructure"], historic_lines)
     grandstand_quality["sourceMap"] = "Autodromo Nazionale Monza official 2026 Formula 1 event map"
     grandstand_quality["excludedCurrentEventStandIds"] = [
         exclusion["osmWayId"] for exclusion in config.get("grandstandExclusions", [])
@@ -361,12 +384,21 @@ def main():
     collections["Annotations"].objects.link(bounds_anchor)
 
     base.add_lighting(collections["Terrain"])
+    # Review the underside in daylight too; one-sided studio light concealed
+    # the previous solid walls. This fill is for the offline preview only.
+    fill_data=bpy.data.lights.new("Monza_Daylight_Fill","SUN")
+    fill_data.energy=.65
+    fill_data.use_shadow=False
+    fill=bpy.data.objects.new("Monza_Daylight_Fill",fill_data)
+    fill.rotation_euler=(math.radians(-32),math.radians(24),math.radians(145))
+    collections["Terrain"].objects.link(fill)
+    venue_module.texture_surfaces(prepared_directory, materials)
     repaired_meshes = sum(1 for mesh in bpy.data.meshes if mesh.validate(clean_customdata=False))
     glb_path.parent.mkdir(parents=True, exist_ok=True)
     preview_path.parent.mkdir(parents=True, exist_ok=True)
     metadata_path.parent.mkdir(parents=True, exist_ok=True)
-    render_preview(preview_path, collections["Terrain"], bounds)
-    base.export_glb(glb_path)
+    render_preview(preview_path, collections["Terrain"], bounds, center, input_path.parent / "monza-review")
+    venue_module.export_precise_glb(base, glb_path)
     profile = []
     for index in range(180):
         distance = total_length * index / 179
@@ -376,6 +408,7 @@ def main():
         "boundsMeters": {"depth": bounds["maxY"] - bounds["minY"], "width": bounds["maxX"] - bounds["minX"]},
         "coordinateReferenceSystem": "EPSG:32632 + Terrarium DEM metres",
         "elevationProfile": profile,
+        "drivingLine": [[round(s[1],5),round(s[2],5),round(s[3]+base_elevation,5)] for s in track_samples],
         "elevationsMeters": {"high": round(high[0], 3), "low": round(low[0], 3)},
         "finishDistanceMeters": round(finish_distance, 2),
         "generatedWith": f"Blender {bpy.app.version_string}",
@@ -389,6 +422,8 @@ def main():
             "circuitConfiguration": {"direction": "clockwise", "officialLayout": "5.793 km / 11 turns"},
             "curbs": curb_quality,
             "grandstands": grandstand_quality,
+            "historicOval": oval_quality,
+            "forest": forest_quality,
             "motorhomes": motorhome_quality,
             "pitLane": pit_quality,
             "runoff": runoff_quality,
@@ -400,7 +435,7 @@ def main():
             "buildingsTotal": building_quality["renderedCurrentFootprints"],
             "fenceSegments": fence_segments,
             "grandstandSections": grandstand_sections,
-            "mappedTrees": tree_count,
+            "reconstructedTrees": tree_count,
             "repairedMeshes": repaired_meshes,
             "pitGarageBoxes": pit_complex_quality["garageBoxes"],
             "raceMotorhomes": motorhome_count,
@@ -408,6 +443,13 @@ def main():
             "turnAnchors": 11,
         },
         "officialSources": config["officialSources"],
+        "limitations": [
+            "Building footprints are mapped; heights, facade divisions, roof structures and tower dimensions are photographic reconstructions, not measured CAD.",
+            "The ground orthophoto dates from 2012. Individual forest trees and heights are inferred from wooded pixels, not a tree survey.",
+            "Historic oval cross-section uses archived 1954 dimensions. Bridge grades, transition placement and open-frame dimensions remain reconstructed. Client driving paths are sampled from the delivered GP road.",
+            "Temporary event structures and motorhome liveries do not claim an exact 2026 paddock layout.",
+        ],
+        "surfaceExport": {"meshoptPositionBits": 18},
         "realWorldScale": "1 unit = 1 metre; no vertical exaggeration",
         "schemaVersion": 1,
         "sectorBoundaryDistancesMeters": [round(value, 2) for value in sector_distances],

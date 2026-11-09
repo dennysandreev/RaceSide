@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import {
   Activity,
@@ -9,6 +10,7 @@ import {
   ChevronRight,
   ExternalLink,
   TrendingUp,
+  Trophy,
 } from "lucide-react";
 
 import { votePollFromHome } from "@/app/polls/actions";
@@ -19,12 +21,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import type { ConfirmedSeasonChampion } from "@/data/season-champions";
 import type { PollSummary } from "@/types/racemate";
 
 export type HomeMarketSlide = {
   id: "drivers" | "constructors";
   title: string;
   emptyText: string;
+  champion?: ConfirmedSeasonChampion | null;
   odds: {
     marketTitle: string;
     marketUrl: string;
@@ -269,6 +273,26 @@ function MarketCarousel({ slides }: { slides: HomeMarketSlide[] }) {
                 ))}
               </div>
             </>
+          ) : slide.champion ? (
+            <div className="flex min-w-0 flex-col items-center justify-center gap-4 py-4 text-center">
+              <Trophy aria-hidden="true" className="size-9 text-warning" />
+              <div className="grid min-w-0 gap-2">
+                <p className="font-display text-2xl font-bold leading-tight">{slide.champion.name}</p>
+                <p className="text-sm leading-6 text-muted-foreground">Чемпион мира {slide.champion.season}</p>
+              </div>
+              <Link
+                className="inline-flex min-h-11 items-center gap-2 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                data-carousel-control
+                href="https://polymarket.com/?r=raceside"
+                prefetch={false}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <Image alt="" className="size-5 rounded-sm" height={20} src="/brands/polymarket-mark-v2.png" width={20} />
+                Polymarket
+                <ExternalLink aria-hidden="true" className="size-3" />
+              </Link>
+            </div>
           ) : (
             <p className="text-sm leading-6 text-muted-foreground">{slide.emptyText}</p>
           )}

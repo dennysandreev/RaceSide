@@ -1,7 +1,6 @@
 import * as T from "three";
 import { mergeGeometries, mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { TessellateModifier } from "three/addons/modifiers/TessellateModifier.js";
 import type { RearWingVariant } from "./catalog.ts";
 import { createWheelBrake } from "./w17-brakes.ts";
 import { createSlickTyre, addTyreSidewalls } from "./w17-tyres.ts";
@@ -41,6 +40,7 @@ import { createFinalDrive } from "./w17-final-drive.ts";
 import { createEnginePneumatics } from "./w17-engine-pneumatics.ts";
 import { createFireSystem, prepareFireBodyPorts } from "./w17-fire-system.ts";
 import { createMirrorHead } from "./w17-mirrors.ts";
+import { fitFrontPlanform } from "./w17-front-planform.ts";
 import { addNoseDetails, refitNoseRoof } from "./w17-nose-details.ts";
 import { createRearLight } from "./w17-rear-light.ts";
 
@@ -577,12 +577,13 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   };
   const floorEdgeX=[1.045,.79,.38,-.10,-.50,-.98,-1.23];
   const outline: [number,number][]=[
-    [1.045,-.49],...floorEdgeX.map(x=>[x,-widthAt(x)] as [number,number]),
+    [1.045,-.78],...floorEdgeX.map(x=>[x,-widthAt(x)] as [number,number]),
     [-1.52,-widthAt(-1.52)],[-1.52,-.475],[-1.23,-.475],
     [-1.23,-.15],[-1.80,-.15],[-1.80,.15],[-1.23,.15],
     [-1.23,.475],[-1.52,.475],[-1.52,widthAt(-1.52)],
     ...[...floorEdgeX].reverse().map(x=>[x,widthAt(x)] as [number,number]),
-    [1.045,.49],[1.17,.24],[1.37,.18],[1.37,-.18],[1.17,-.24],
+    [1.045,.78],[.70,.71],[.64,.55],[.83,.27],[1.17,.24],
+    [1.37,.18],[1.37,-.18],[1.17,-.24],[.83,-.27],[.64,-.55],[.70,-.71],
   ];
   const floorShape=new T.Shape();outline.forEach(([x,z],i)=>i?floorShape.lineTo(x,-z):floorShape.moveTo(x,-z));floorShape.closePath();
   const floorGeo=new T.ExtrudeGeometry(floorShape,{depth:.018,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.006,bevelThickness:.003});floorGeo.rotateX(-Math.PI/2);
@@ -703,7 +704,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       const rings=triangle.map(v=>Math.floor(v/40)),columns=triangle.map(v=>v%40);
       const x=triangle.reduce((sum,v)=>sum+points[v].x,0)/3;
       const roof=columns.every(c=>c<=7||c>=33);
-      if(Math.min(...rings)!==Math.max(...rings)&&x>.88&&x<1.33&&roof){
+      if(Math.min(...rings)!==Math.max(...rings)&&x>1.12&&x<1.60&&roof){
         removed.push(...triangle);
         for(let j=0;j<3;j++){
           const a=triangle[j],b=triangle[(j+1)%3],key=a<b?`${a}/${b}`:`${b}/${a}`;
@@ -718,7 +719,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     const cover=laminate(vertices.map(v=>points[v]),removed.map(v=>local.get(v)!),boundary.map(v=>local.get(v)!),.006);
     mesh("bodywork","Front suspension access cover",cover,mat.carbon,[0,0,0],{cover:true});
     const tray=new Map(vertices.map((v,i)=>[v,points.length+i]));
-    const floorPoints=vertices.map(v=>new T.Vector3(points[v].x,.457+.008*T.MathUtils.smoothstep(points[v].x,.90,1.19),points[v].z));
+    const floorPoints=vertices.map(v=>new T.Vector3(points[v].x,.425-.012*T.MathUtils.smoothstep(points[v].x,1.18,1.47),points[v].z));
     kept.push(...removed.map(v=>tray.get(v)!));
     for(const {a,b} of boundaryEdges)kept.push(a,b,tray.get(a)!,b,tray.get(b)!,tray.get(a)!);
     const geometry=new T.BufferGeometry();geometry.setAttribute("position",new T.Float32BufferAttribute([...points,...floorPoints].flatMap(v=>v.toArray()),3));geometry.setIndex(kept);geometry.computeVertexNormals();
@@ -838,13 +839,11 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   for(const z of[-.020,.020])cylinder("halo",`Halo front fixing ${z}`,[.852,.620,z],[.852,.643,z],.004,mat.metal);
   // One continuous outer surface joins the engine spine, downwash shoulders
   // and undercut sidepods. Separate overlapping shells caused false creases.
-  // KA 12's planform, checked against KA 7, retains a fuller aft shoulder.
-  // Widen the aft shoulder sections progressively, leaving the inlet, spine
-  // heights and the two terminal heat-shield sections at their existing datums.
+  // The launch overhead view ends the broad shoulder ahead of the rear axle.
+  // Keep a full-width open cooling mouth instead of a long pinched tail.
   bodyShell("Continuous undercut sidepod shell",[
-    [208,167,220,244,266,.062,.061,.054,.009,168,.025,177,180],
-    [270,128,214,244,265,.14,.12,.09,.014,132,.06,164,172],
-    [320,114,209,238,266,.30,.19,.15,.020,118,.155,157,165],
+    [270,128,214,244,265,.265,.17,.13,.014,132,.13,164,172],
+    [320,114,209,238,266,.33,.21,.16,.020,118,.165,157,165],
     [420,82,194,231,270,.45,.31,.23,.030,87,.23,143,154],
     [510,49,178,226,274,.53,.37,.26,.036,54,.24,128,145],
     [590,31,162,224,275,.60,.40,.27,.074,34,.24,114,135],
@@ -875,10 +874,6 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   const shellPoints=sidepod.geometry.attributes.position,shellRings=sidepod.userData.shellRings as number;
   const reliefBand=(value:number,start:number,fullStart:number,fullEnd:number,end:number)=>
     T.MathUtils.smoothstep(value,start,fullStart)*(1-T.MathUtils.smoothstep(value,fullEnd,end));
-  // Continue the engine-cover ridge down to the outlet in one descending line.
-  // The rear reference station was too low, producing a dip before the shield.
-  const tailRoof=(x:number)=>.518+(x+1.98)*.246;
-  const shellTopHeights=Array.from({length:shellRings},(_,ring)=>shellPoints.getY(ring*64));
   // Leave a real cavity behind the separate roll-hoop inlet. The old engine
   // cover occupied this space, forcing a black disc in front of the opening.
   for(let i=0;i<shellPoints.count;i++){
@@ -893,24 +888,26 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       +.007*reliefBand(x,-.57,-.47,-.36,-.27)*reliefBand(y,.17,.21,.29,.35)
       +.005*reliefBand(x,-.35,-.29,-.19,-.10)*reliefBand(y,.42,.45,.50,.55);
     shellPoints.setZ(i,z+Math.sign(z)*relief);
-    // Match the upper rear body to the heat shield's rounded section before
-    // tapering into the engine cover. A local width bump left the shield's
-    // roof and shoulders standing proud of the much narrower silver skin.
-    const rounding=1-T.MathUtils.smoothstep(x,-1.61,-1.37);
-    const tailBlend=rounding*T.MathUtils.smoothstep(y,.26,.35);
-    if(tailBlend){
-      const dy=y-.43,dz=shellPoints.getZ(i);
-      const radius=Math.cbrt(Math.abs(dy/.12)**3+Math.abs(dz/.13)**3);
-      const scale=1/radius+.001/Math.hypot(dy,dz);
-      shellPoints.setY(i,T.MathUtils.lerp(y,.43+dy*scale,tailBlend));
-      shellPoints.setZ(i,T.MathUtils.lerp(dz,Math.sign(dz)*Math.max(Math.abs(dz),Math.abs(dz*scale)),tailBlend));
-    }
-    if(x<-1.20&&shellPoints.getY(i)>.31){
-      // Raise the roof without narrowing the forward shoulders or moving their
-      // suspension/cable clearances. Stretch above the existing lower waist.
-      const originalTop=shellTopHeights[Math.floor(i/64)],roundedTop=T.MathUtils.lerp(originalTop,.551,rounding);
-      const desiredTop=T.MathUtils.lerp(originalTop,Math.max(originalTop,tailRoof(x)+.001),1-T.MathUtils.smoothstep(x,-1.44,-1.20));
-      shellPoints.setY(i,.31+(shellPoints.getY(i)-.31)*(desiredTop-.31)/(roundedTop-.31));
+
+  }
+  // Use one convex plan-view shoulder from the widest section to the open
+  // tail. Interpolating each packaging station independently left flat spots
+  // and small bulges. Keep the spine/cockpit and the inlet lip in place; the
+  // floor return below is generated from this same corrected boundary.
+  const ringWidth=(ring:number)=>Math.max(...Array.from({length:64},(_,j)=>Math.abs(shellPoints.getZ(ring*64+j))));
+  let widestRing=0;
+  for(let ring=1;ring<shellRings;ring++)if(ringWidth(ring)>ringWidth(widestRing))widestRing=ring;
+  const frontX=shellPoints.getX(widestRing*64),rearX=shellPoints.getX(0);
+  const frontWidth=ringWidth(widestRing),rearWidth=ringWidth(0);
+  for(let ring=0;ring<widestRing;ring++){
+    const width=ringWidth(ring),t=(frontX-shellPoints.getX(ring*64))/(frontX-rearX);
+    // This cubic keeps a level tangent at the widest shoulder and retains
+    // the established width of the aft cooling outlet and gearbox clearance.
+    const taper=t*t*(1+.18*(1-t));
+    const correction=frontWidth-(frontWidth-rearWidth)*taper-width;
+    for(let j=0;j<64;j++){
+      const i=ring*64+j,z=shellPoints.getZ(i);
+      shellPoints.setZ(i,z+Math.sign(z)*correction*T.MathUtils.smoothstep(Math.abs(z)/width,.50,.98));
     }
   }
   for(const side of [-1,1]){
@@ -925,8 +922,8 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
         const point=curve.getPoint(j/across);
         // The side reference has a raised, rounded shoulder ahead of the rear
         // tyre. Keep both seam tangents and the thin outer floor edge intact.
-        const rise=1-T.MathUtils.smoothstep(point.x,-1.52,-.85);
-        point.y+=.076*rise*Math.sin(Math.PI*(j/across)**1.5)**2;
+        const rise=1-T.MathUtils.smoothstep(point.x,-1.52,-1.05);
+        point.y+=.100*rise*Math.sin(Math.PI*(j/across)**1.5)**2;
         if(point.x<-1.23)point.y=Math.max(point.y,diffuserHeightAt(point.x)+.010);
         positions.push(...point.toArray());
       }
@@ -941,7 +938,8 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       const previous=new T.Vector3().fromArray(positions,((shellRings-2)*(across+1)+j)*3);
       const tangent=start.clone().sub(previous).normalize();
       // Retain the floor landing after lowering the inlet's inner return.
-      const advance=T.MathUtils.lerp(.427,.167,j/across);
+      const acrossFraction=j/across;
+      const advance=.40*(1-acrossFraction)**2+.16*acrossFraction;
       const foot=new T.Vector3(start.x+advance,.075,start.z);
       frontCurves.push(new T.CubicBezierCurve3(start,start.clone().addScaledVector(tangent,.035),new T.Vector3(foot.x-advance*.42,foot.y,foot.z),foot));
     }
@@ -1034,14 +1032,6 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   // visible surfaces share a tangent at the seam. Hidden closure faces must not
   // flatten the normal there or the join reads as a detached ledge.
   const bodyNormals=sidepod.geometry.attributes.normal;
-  for(let i=0;i<64;i++){
-    const x=shellPoints.getX(i),y=shellPoints.getY(i),z=shellPoints.getZ(i);
-    if(y<.35)continue;
-    // Retain the prescribed outer tangent at the open, flush tail seam.
-    const centre=(tailRoof(x)+.31)/2,halfHeight=(tailRoof(x)-.31)/2,dy=(y-centre)/halfHeight;
-    const normal=new T.Vector3(-.123*Math.sign(dy)*dy*dy*(1+dy)/halfHeight,Math.sign(dy)*dy*dy/halfHeight,Math.sign(z)*z*z/.13**3).normalize();
-    bodyNormals.setXYZ(i,normal.x,normal.y,normal.z);
-  }
   for(const side of [-1,1]){
     const shoulder=root.getObjectByName(`Sculpted floor shoulder ${side}`) as T.Mesh;
     const points=shoulder.geometry.attributes.position,normals=shoulder.geometry.attributes.normal;
@@ -1238,6 +1228,9 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       if(side<0)boundary.reverse();
       boardParts.push(mesh("floor",`${board.returnName} ${side}`,laminate(points,indices,boundary,.004),mat.carbon));
     }
+    // The launch top view shows a slender stay over open air, not a floor
+    // bridge spanning the gap between the nose and the floor inlet fence.
+    fairedRail("floor",`Floor transverse stay ${side}`,[[.96,.25,side*.185],[.96,.25,side*.825]],.012,.006,mat.carbon);
     const floorRoof=createSurfaceSampler([root.getObjectByName("Carbon floor") as T.Mesh],"y");
     for(const x of [.58,.92]){
       const z=side*(boardWidth(x)-.010),bottom=floorRoof(x,z,1)!-.002,top=.252;
@@ -1248,6 +1241,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     // one swollen surface. Each strip follows the actual upper floor skin.
     const shoulder=root.getObjectByName(`Sculpted floor shoulder ${side}`) as T.Mesh;
     const shoulderHeight=createHeightSampler(shoulder.geometry);
+    const rearShoulderStart=shellPoints.getX(0)+.008;
     // A thin closed edge return follows the installed floor, including the
     // rise ahead of the rear tyre. The former round tube had open ends and
     // stood above the flat edge like a separate 12 mm bead.
@@ -1295,7 +1289,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     for(let layer=0;layer<2;layer++){
       const points:T.Vector3[]=[],indices:number[]=[],boundary:number[]=[],rows=48,columns=10;
       for(let row=0;row<=rows;row++)for(let col=0;col<=columns;col++){
-        const t=row/rows,u=col/columns,x=T.MathUtils.lerp(-1.53+layer*.045,-.64+layer*.10,t);
+        const t=row/rows,u=col/columns,x=T.MathUtils.lerp(rearShoulderStart+layer*.045,-.64+layer*.10,t);
         const inset=T.MathUtils.lerp(.105+layer*.078,.051+layer*.047,t);
         const width=(.067-layer*.008)*(1-.40*t),z=side*(widthAt(x)-inset+width*u);
         const height=shoulderHeight(x,z);
@@ -1317,7 +1311,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     // edge laminates. The swept crest and rolled root follow the launch side
     // photograph; the hidden section remains a photographic reconstruction.
     const fencePoints:T.Vector3[]=[],fenceIndices:number[]=[],fenceBoundary:number[]=[],fenceRows=64,fenceColumns=12;
-    const crest=new T.CatmullRomCurve3([[-1.46,.123],[-1.34,.198],[-1.23,.178],[-1.10,.112],[-.96,.085]].map(([x,y])=>new T.Vector3(x,y,0)),false,"centripetal");
+    const crest=new T.CatmullRomCurve3([[rearShoulderStart,.123],[-1.34,.198],[-1.23,.178],[-1.10,.112],[-.96,.085]].map(([x,y])=>new T.Vector3(x,y,0)),false,"centripetal");
     for(let row=0;row<=fenceRows;row++)for(let col=0;col<=fenceColumns;col++){
       const t=row/fenceRows,u=col/fenceColumns,top=crest.getPoint(t),rootZ=widthAt(top.x)-.019;
       const bottom=shoulderHeight(top.x,side*rootZ)??.079,y=T.MathUtils.lerp(bottom+.002,Math.max(bottom+.003,top.y),u);
@@ -1693,9 +1687,10 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     inner.computeVertexNormals();rearImpact.geometry=mergeGeometries([outer,inner]);outer.dispose();inner.dispose();
     rearImpact.userData.wallThickness=.0025;
   }
-  // Enclose the fixed damper eyes and spring seats on both gearbox shoulders.
-  // Keep the narrower exhaust exit; the former taper cut through the springs.
-  loft("bodywork","Tail heat shield",[[-1.98,.403,tailRoof(-1.98),.052],[-1.86,.364,tailRoof(-1.86),.073],[-1.76,.33,tailRoof(-1.76),.125],[shellPoints.getX(0)-.003,.31,tailRoof(shellPoints.getX(0)-.003),.130],[-1.54,.31,tailRoof(-1.54),.130],[-1.49,.31,tailRoof(-1.49),.130]],mat.carbon,{cover:true},3);
+  // The wide cooling outlet ends ahead of the rear axle. Beyond it only
+  // the narrow exhaust sleeve continues, leaving the gearbox shoulders open.
+  const tailShieldFront=shellPoints.getX(0)+.028;
+  loft("bodywork","Tail heat shield",[[-1.98,.419,.518,.052],[-1.86,.419,.528,.055],[-1.76,.435,.545,.058],[-1.54,.434,.550,.061],[tailShieldFront,.431,.553,.063]],mat.carbon,{cover:true},3);
   // Fuel bladder, electrical store, inverter, ECU, extinguisher and loom.
   const energyStore=createEnergyStore(mat);group("battery").add(energyStore.battery);group("inverter").add(energyStore.inverter);
   root.updateMatrixWorld(true);
@@ -1899,8 +1894,9 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   // 150 mm. C3.9.2(h) allows a level/upward exit, never a downward-facing one.
   const exhaustRoute:V[]=[turbo.ports.exhaustOutlet,[-1.31,.51,0],[-1.43,.49,0],[-1.70,.49,0],[-1.82,.485,0],[-1.87,.470,0],[-1.89,.470,0],[-1.94,.470,0],[-2.04,.470,0]];
   hollowTube("exhaust","Exhaust tailpipe",exhaustRoute,.036,.0012,mat.bronze);
-  // The shield follows the pipe's route. Cut its bore in the pipe's frame
-  // so the top stays intact instead of opening a long slot over the exhaust.
+  // Two thin, open-ended laminates: the shaped outer cover and the round
+  // sleeve around the exhaust. Explicit rings avoid boolean slivers and the
+  // dense tessellation of the old solid hood with a drilled-through bore.
   {
     const points=new T.CatmullRomCurve3(exhaustRoute.map(p=>new T.Vector3(...p)),false,"centripetal").getSpacedPoints(256);
     const heightAt=(x:number)=>{
@@ -1908,16 +1904,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       return points.at(-1)!.y;
     };
     const shield=root.getObjectByName("Tail heat shield") as T.Mesh;
-    let positions=shield.geometry.attributes.position;
-    for(let i=0;i<positions.count;i++)positions.setY(i,positions.getY(i)-heightAt(positions.getX(i)));
-    shield.geometry.rotateY(Math.PI/2);openRadialPort(shield,[0,0],.043,1,1.44);shield.geometry.rotateY(-Math.PI/2);
-    // Subdivide the long bore faces before bending them along the pipe.
-    // Otherwise each face remains a straight chord through the curved outlet.
-    const unbent=shield.geometry;unbent.deleteAttribute("normal");
-    const refined=new TessellateModifier(.018,8).modify(unbent);
-    shield.geometry=mergeVertices(refined,1e-7);unbent.dispose();refined.dispose();
-    positions=shield.geometry.attributes.position;
-    for(let i=0;i<positions.count;i++)positions.setY(i,positions.getY(i)+heightAt(positions.getX(i)));
+    const positions=shield.geometry.attributes.position;
     // Recess the entire overlap beneath the actual faceted body, not only the
     // leading lip. Coincident lofts with different tessellation poke through
     // one another even when their ideal cross-sections agree.
@@ -1942,7 +1929,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     const source=shield.geometry,sourceIndex=source.index!,outerIndices:number[]=[];
     for(let i=0;i<sourceIndex.count;i+=3){
       const face=[sourceIndex.getX(i),sourceIndex.getX(i+1),sourceIndex.getX(i+2)];
-      if([-1.49,-1.98].some(x=>face.every(j=>Math.abs(positions.getX(j)-x)<1e-6)))continue;
+      if([tailShieldFront,-1.98].some(x=>face.every(j=>Math.abs(positions.getX(j)-x)<1e-6)))continue;
       outerIndices.push(...face);
     }
     source.setIndex(outerIndices);source.deleteAttribute("normal");
@@ -1958,7 +1945,22 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       }
     }
     for(const {a,b,count:uses}of edges.values())if(uses===1)shellIndices.push(a,b+count,b,a,a+count,b+count);
-    const shell=new T.BufferGeometry();shell.setAttribute("position",new T.Float32BufferAttribute(shellPositions,3));shell.setIndex(shellIndices);shell.computeVertexNormals();
+    const outerShell=new T.BufferGeometry();outerShell.setAttribute("position",new T.Float32BufferAttribute(shellPositions,3));outerShell.setIndex(shellIndices);outerShell.computeVertexNormals();
+    const sleevePoints:number[]=[],sleeveFaces:number[]=[],sleeveRings=96,sleeveSides=40,layerSize=(sleeveRings+1)*sleeveSides;
+    for(const radius of[.045,.043])for(let ring=0;ring<=sleeveRings;ring++)for(let j=0;j<sleeveSides;j++){
+      const x=T.MathUtils.lerp(-1.98,tailShieldFront,ring/sleeveRings),angle=j/sleeveSides*Math.PI*2;
+      sleevePoints.push(x,heightAt(x)+radius*Math.cos(angle),radius*Math.sin(angle));
+    }
+    for(let ring=0;ring<sleeveRings;ring++)for(let j=0;j<sleeveSides;j++){
+      const a=ring*sleeveSides+j,b=ring*sleeveSides+(j+1)%sleeveSides,c=b+sleeveSides,d=a+sleeveSides;
+      sleeveFaces.push(a,b,d,b,c,d,a+layerSize,d+layerSize,b+layerSize,b+layerSize,d+layerSize,c+layerSize);
+    }
+    for(let j=0;j<sleeveSides;j++){
+      const a=j,b=(j+1)%sleeveSides,c=sleeveRings*sleeveSides+a,d=sleeveRings*sleeveSides+b;
+      sleeveFaces.push(a,a+layerSize,b,b,a+layerSize,b+layerSize,c,d,c+layerSize,d,d+layerSize,c+layerSize);
+    }
+    const sleeve=new T.BufferGeometry();sleeve.setAttribute("position",new T.Float32BufferAttribute(sleevePoints,3));sleeve.setIndex(sleeveFaces);sleeve.computeVertexNormals();
+    const shell=mergeGeometries([outerShell,sleeve]);outerShell.dispose();sleeve.dispose();
     shield.geometry=shell;shield.userData.laminateThickness=.002;source.dispose();exterior.dispose();
     annulus("bodywork","Exhaust outlet shield rim",[-1.983,heightAt(-1.983),0],[-1.977,heightAt(-1.977),0],.043,.047,mat.darkMetal,{cover:true});
     // Narrow lateral stays retain the separate exhaust sleeve after opening
@@ -2112,7 +2114,7 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   // cluster starts 420 mm ahead of the differential. Tooth counts and casing
   // sections are an illustrative reconstruction, not Mercedes gear drawings.
   const mainHeight=crankHeight+.100,selectorHeight=mainHeight+.097,diffHeight=W17_REFERENCE_HEIGHT+.270;
-  const gearboxCasing=loft("gearbox","Carbon gearbox casing",[[-1.84,.205,.437,.125],[-1.72,.187,.452,.15],[-1.63,.157,.442,.14],[-1.575,.085,.373,.104],[-1.28,.088,.366,.103],[-1.15,.079,.315,.084]],mat.carbon,{cover:true},3);
+  const gearboxCasing=loft("gearbox","Carbon gearbox casing",[[-1.84,.205,.437,.125],[-1.72,.187,.452,.15],[-1.63,.157,.442,.14],[-1.575,.085,.373,.104],[-1.28,.088,.366,.103],[-1.15,.079,.315,.084]],mat.carbon,{cover:true,structural:true},3);
   {
     const outer=gearboxCasing.geometry,inner=outer.clone(),p=inner.attributes.position,n=inner.attributes.normal,ix=inner.index!;
     for(let i=0;i<p.count;i++)p.setXYZ(i,p.getX(i)-n.getX(i)*.003,p.getY(i)-n.getY(i)*.003,p.getZ(i)-n.getZ(i)*.003);
@@ -2359,8 +2361,8 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
     const prefix=`${front?"Front":"Rear"} ${s}`;
     const uprightZ=inner-s*.025;
     const outerUpper:V=[x-.012,.455,uprightZ],outerLower:V=[x+.005,.225,uprightZ];
-    const upperAnchors:V[]=front?[[1.58,.467,s*.155],[.82,.555,s*.22]]:[[-1.56,.48,s*.145],[-1.14,.54,s*.16]];
-    const lowerAnchors:V[]=front?[[1.58,.242,s*.155],[.91,.245,s*.225]]:[[-1.59,.22,s*.125],[-1.16,.235,s*.135]];
+    const upperAnchors:V[]=front?[[1.75,.405,s*.145],[1.06,.535,s*.17]]:[[-1.79,.450,s*.145],[-1.23,.54,s*.16]];
+    const lowerAnchors:V[]=front?[[1.76,.230,s*.145],[1.36,.235,s*.17]]:[[-1.80,.22,s*.125],[-1.23,.235,s*.135]];
     function wishbone(name:string,anchor:V,end:V,chordWidth:number,sectionThickness:number,component=id,mount:"surface"|"rocker"|"fixed"="surface"){
       if(mount==="surface")anchor=mountedAnchor(anchor,end);
       const length=new T.Vector3(...end).distanceTo(new T.Vector3(...anchor));
@@ -2390,13 +2392,13 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
       arm.userData.anchor=anchor;arm.userData.rockerMount=mount==="rocker";arm.userData.terminal=end;arm.userData.armLength=length;
       if(mount!=="fixed")ball(component,`${prefix} ${name} inner joint`,anchor,.012,mat.darkMetal);
     }
-    upperAnchors.forEach((anchor,i)=>wishbone(`upper wishbone ${i}`,front?frontWishboneMount(`${prefix} upper wishbone ${i}`,anchor,s):rearSuspensionMount(root,group(id),`${prefix} upper wishbone ${i}`,[i===0?-1.56:-1.23,anchor[1],anchor[2]],s,mat),outerUpper,.070,front?.022:.025,id,"fixed"));
-    lowerAnchors.forEach((anchor,i)=>wishbone(`lower wishbone ${i}`,front?frontWishboneMount(`${prefix} lower wishbone ${i}`,anchor,s):rearSuspensionMount(root,group(id),`${prefix} lower wishbone ${i}`,[i===0?-1.59:-1.23,anchor[1],anchor[2]],s,mat),outerLower,.075,front?.026:.028,id,"fixed"));
-    const inboard=createInboardSuspension(front,s,mat);group(id).add(inboard.root);
+    upperAnchors.forEach((anchor,i)=>wishbone(`upper wishbone ${i}`,front?frontWishboneMount(`${prefix} upper wishbone ${i}`,anchor,s):rearSuspensionMount(root,group(id),`${prefix} upper wishbone ${i}`,anchor,s,mat),outerUpper,.070,front?.022:.025,id,"fixed"));
+    lowerAnchors.forEach((anchor,i)=>wishbone(`lower wishbone ${i}`,front?frontWishboneMount(`${prefix} lower wishbone ${i}`,anchor,s):rearSuspensionMount(root,group(id),`${prefix} lower wishbone ${i}`,anchor,s,mat),outerLower,.075,front?.026:.028,id,"fixed"));
+    const inboard=createInboardSuspension(front,s,mat,front?undefined:gearboxCasing);group(id).add(inboard.root);
     const pushrodAnchor:V=inboard.pushrod;
-    const pushrodEnd:V=[x+.024,.263,uprightZ];
+    const pushrodEnd:V=[x+(front?-.030:.045),.263,uprightZ];
     wishbone("pushrod",pushrodAnchor,pushrodEnd,.044,.025,id,"rocker");
-    const trackEnd:V=[x-.070,.325,uprightZ],trackAnchor:V=front?[1.48,.28,s*.25]:rearSuspensionMount(root,group(id),`${prefix} track rod`,[-1.32,.315,s*.14],s,mat);
+    const trackEnd:V=[x+(front?.070:-.070),.325,uprightZ],trackAnchor:V=front?[1.48,.28,s*.25]:rearSuspensionMount(root,group(id),`${prefix} track rod`,[-1.57,.315,s*.14],s,mat);
     if(front){
       ball("steering",`Steering rack joint ${s}`,trackAnchor,.012,mat.metal);
     }
@@ -2506,6 +2508,34 @@ export function createW17(rearWing:RearWingVariant="mercedes", options:{rearWing
   connectFrontBrakes(root,group("brakes"),mat);
   seatRearBrakeByWire(root,brakeByWire,mat);
   addNoseDetails(root,mat);
+  fitFrontPlanform(root,linkages);
+  for(const side of [-1,1]){
+    // A thin cambered foil with an elliptical tip, rather than the previous
+    // constant-span loft and its square end face. The root enters the nose.
+    const positions:number[]=[],indices:number[]=[],spanSteps=32,sectionSteps=40;
+    for(let ring=0;ring<spanSteps;ring++){
+      const t=ring/spanSteps,chord=.144*Math.sqrt(1-t*t),centre=1.976-.014*t;
+      for(let j=0;j<sectionSteps;j++){
+        const angle=j/sectionSteps*Math.PI*2,u=(1-Math.cos(angle))/2;
+        const half=5*.012*(chord/.144)*(.2969*Math.sqrt(u)-.126*u-.3516*u*u+.2843*u**3-.1036*u**4);
+        const camber=.003*Math.sin(Math.PI*u)*(1-t*t);
+        positions.push(centre+(.5-u)*chord,.302+camber+Math.sign(Math.sin(angle))*half,side*(.128+.180*t));
+      }
+    }
+    for(let ring=0;ring<spanSteps-1;ring++)for(let j=0;j<sectionSteps;j++){
+      const a=ring*sectionSteps+j,b=ring*sectionSteps+(j+1)%sectionSteps;
+      indices.push(a,b,a+sectionSteps,b,b+sectionSteps,a+sectionSteps);
+    }
+    const tip=positions.length/3;positions.push(1.962,.302,side*.308);
+    for(let j=0;j<sectionSteps;j++){
+      const a=(spanSteps-1)*sectionSteps+j,b=(spanSteps-1)*sectionSteps+(j+1)%sectionSteps;
+      indices.push(a,b,tip);
+    }
+    for(let j=1;j<sectionSteps-1;j++)indices.push(0,j+1,j);
+    if(side<0)for(let i=0;i<indices.length;i+=3)[indices[i+1],indices[i+2]]=[indices[i+2],indices[i+1]];
+    const geometry=new T.BufferGeometry();geometry.setAttribute("position",new T.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();
+    mesh("bodywork",`Nose side turning vane ${side}`,geometry,mat.carbon,[0,0,0],{cover:true});
+  }
   openSuspensionPassages(root);
   group("safety").add(createRearLight(rearImpact,mat,impactRearX,lampY));
   createEngineMotion(root)(ENGINE_CORE.initialAngle);

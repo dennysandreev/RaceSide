@@ -76,7 +76,6 @@ export function PitStops({ selected, onSelect }: {
       <header className="live-pits-header">
         <div>
           <h2>Пит-стопы</h2>
-          <p>Каждый отрезок — отдельный комплект</p>
         </div>
         <select
           aria-label="Пилот на шкале пит-стопов"

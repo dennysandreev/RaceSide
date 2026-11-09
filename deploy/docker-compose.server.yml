@@ -11,6 +11,8 @@ services:
       LIVE_INTERNAL_ORIGIN: http://live:3002
     expose:
       - "3000"
+    volumes:
+      - web-image-cache:/app/.next/cache/images
     restart: unless-stopped
     networks:
       - default
@@ -141,3 +143,4 @@ networks:
 
 volumes:
   live-spool:
+  web-image-cache:

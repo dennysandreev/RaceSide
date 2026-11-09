@@ -27,6 +27,7 @@ const localDriverAvatarSlugs = new Set([
   "oliver-bearman",
   "oscar-piastri",
   "pierre-gasly",
+  "rafael-camara",
   "sergio-perez",
   "valtteri-bottas",
 ]);

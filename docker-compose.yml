@@ -19,6 +19,8 @@ services:
       LIVE_INTERNAL_ORIGIN: "http://live:3002"
     ports:
       - "3000:3000"
+    volumes:
+      - web-image-cache:/app/.next/cache/images
     restart: unless-stopped
 
   live:
@@ -92,3 +94,4 @@ services:
 
 volumes:
   live-spool:
+  web-image-cache:

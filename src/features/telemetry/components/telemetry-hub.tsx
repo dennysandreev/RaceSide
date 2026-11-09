@@ -86,7 +86,7 @@ import { RacePaceWorkspace, type RacePaceView } from "./race-pace";
 const comparisonKinds = [
   { value: "drivers", label: "Пилоты и круги", icon: Users },
   { value: "session", label: "Сессии", icon: Layers },
-  { value: "race-pace", label: "Темп гонки", icon: Activity },
+  { value: "race-pace", label: "Телеметрия сессии", icon: Activity },
 ] as const;
 const views = [
   ["overview", "Обзор"],
@@ -103,8 +103,6 @@ const analysisViews = new Set(["profile", "exits", "signals", "analysis"]);
 const isRaceSession = (session?: Session | null) =>
   session?.type.toLowerCase() === "race" ||
   ["race", "sprint"].includes(session?.name.toLowerCase() ?? "");
-const isMainRaceSession = (session?: Session | null) =>
-  session?.name.toLowerCase() === "race";
 const initialDrivers = (catalog?: TelemetrySetupCatalog | null) => {
   const sorted = [...(catalog?.drivers ?? [])].sort(
     (a, b) => (a.position ?? 99) - (b.position ?? 99),
@@ -255,9 +253,6 @@ export function TelemetryHub({
     );
     if (!signal.aborted) {
       applyBootstrap(data);
-      if (paceModeRef.current && !isMainRaceSession(data.catalog?.session)) {
-        await openRaceSession(data.sessions, signal);
-      }
     }
   }
   async function pickSession(id: number, signal: AbortSignal, index = 0, firstCatalog?: TelemetrySetupCatalog) {
@@ -300,18 +295,6 @@ export function TelemetryHub({
     setLoadingPhase(null);
     return catalog;
   }
-  async function openRaceSession(list: Session[], signal: AbortSignal) {
-    if (signal.aborted) return;
-    const race = list.find(isMainRaceSession);
-    if (race) {
-      setLoading(true);
-      setLoadingPhase("catalog");
-      await pickSession(race.id, signal);
-    } else {
-      setLoading(false);
-      setLoadingPhase(null);
-    }
-  }
   async function pickMeeting(
     id: number,
     signal: AbortSignal,
@@ -334,16 +317,12 @@ export function TelemetryHub({
       setLoadingPhase(null);
       return;
     }
-    if (paceModeRef.current) {
-      await openRaceSession(list, signal);
-      return;
-    }
     const chosen =
       list.find((s) => s.id === sessionId) ??
       [...list].reverse().find((s) => s.type === "Qualifying") ??
       list.at(-1)!;
     const first = await pickSession(chosen.id, signal);
-    if (mode === "session" && !signal.aborted) {
+    if (mode === "session" && !paceModeRef.current && !signal.aborted) {
       const other = list.find((session) => session.id !== chosen.id);
       if (other && first) await pickSession(other.id, signal, 1, first);
     }
@@ -534,15 +513,15 @@ export function TelemetryHub({
     return { paceMode, mode, season, meeting, meetings, sessions, selectedSession, selectedSecondSession,
       catalogs, drivers, laps, showInvalid, paceRequested, paceData, windowMode };
   }
-  const settingsSnapshot = useRef<ReturnType<typeof setupSnapshot> | null>(null);
+  const [settingsSnapshot, setSettingsSnapshot] = useState<ReturnType<typeof setupSnapshot> | null>(null);
   function openSettings() {
-    settingsSnapshot.current = setupSnapshot();
+    setSettingsSnapshot(setupSnapshot());
     setEditing(true);
   }
   function changeSettingsOpen(open: boolean) {
     if (open) { openSettings(); return; }
     controller.current?.abort();
-    const previous = settingsSnapshot.current;
+    const previous = settingsSnapshot;
     if (previous) {
       setPaceMode(previous.paceMode); setMode(previous.mode);
       setSeason(previous.season); setMeeting(previous.meeting);
@@ -555,7 +534,7 @@ export function TelemetryHub({
     }
     setError(""); setLoading(false); setLoadingPhase(null); setEditing(false);
   }
-  const paceScreen = editing ? settingsSnapshot.current?.paceMode ?? paceMode : paceMode;
+  const paceScreen = editing ? settingsSnapshot?.paceMode ?? paceMode : paceMode;
   const paceReady = (editing && paceScreen && Boolean(paceData) ||
     !loading && !error && Boolean(paceRequested && mainSession && paceData?.session.id === mainSession.id));
   const shownPaceSession = editing && paceScreen ? paceData?.session : mainSession;
@@ -571,9 +550,6 @@ export function TelemetryHub({
           setError("");
           if (value === "race-pace") {
             if (!editing) { setPaceRequested(false); setPaceData(null); }
-            if (!isMainRaceSession(mainSession) && loadingPhase !== "initial") {
-              void openRaceSession(sessions, begin()).catch(fail);
-            }
             return;
           }
           setLaps(["best", "best"]);
@@ -697,7 +673,7 @@ export function TelemetryHub({
             ))}
           </select>
         </Field>
-        {!paceMode && kind !== "session" && <Field className="telemetry-session-field">
+        {kind !== "session" && <Field className="telemetry-session-field">
           <FieldLabel id="telemetry-session-label">
             Сессия
           </FieldLabel>
@@ -997,12 +973,12 @@ export function TelemetryHub({
       )}
       {paceMode && <div className="telemetry-controls-action">
         <p aria-hidden="true" />
-        <Button data-slot="button" disabled={loading || !isMainRaceSession(mainSession)} onClick={() => {
+        <Button data-slot="button" disabled={loading || !mainSession} onClick={() => {
           setPaceData(null);
           setPaceRequested(true);
           setEditing(false);
         }}>
-          <Activity data-icon="inline-start" />Показать темп
+          <Activity data-icon="inline-start" />Показать телеметрию
         </Button>
       </div>}
       {!paceMode && <div
@@ -1047,7 +1023,7 @@ export function TelemetryHub({
   const selectedMeeting = meetings.find((item) => item.id === meeting);
   const selectedHeadingSessions = [
     selectedSession,
-    ...(mode === "session" ? [selectedSecondSession || catalogs[1]?.session.id] : []),
+    ...(mode === "session" && !paceScreen ? [selectedSecondSession || catalogs[1]?.session.id] : []),
   ].flatMap((id) => {
     const session = sessions.find((item) => item.id === id &&
       item.meetingId === meeting && item.season === season);
@@ -1060,7 +1036,7 @@ export function TelemetryHub({
     (paceScreen ? shownPaceSession?.season : comparison?.traces[0].session.season) ?? season;
   const raceName = showSelectedHeading ? selectedMeeting?.name : paceScreen
     ? (meetings.find((item) => item.id === shownPaceSession?.meetingId) ??
-      settingsSnapshot.current?.meetings.find((item) => item.id === shownPaceSession?.meetingId))?.name
+      settingsSnapshot?.meetings.find((item) => item.id === shownPaceSession?.meetingId))?.name
     : comparisonMeetingName ?? meetings.find(
       (item) => item.id === comparison?.traces[0].session.meetingId,
     )?.name;
@@ -1182,8 +1158,8 @@ export function TelemetryHub({
                 {showPaceHeading ? formatGrandPrixNameRu(raceName ?? "Гонка") : "Телеметрия"}
               </PageTitle>
               {showPaceHeading ? <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                {[showSelectedHeading ? selectedMeeting?.circuit : shownPaceSession?.circuit,
-                  headingSeason, "Темп гонки"].filter(Boolean).join(" · ")}
+                {showSelectedHeading ? selectedHeadingDetails : [shownPaceSession?.circuit,
+                  headingSeason, shownPaceSession ? sessionName(shownPaceSession.name) : "Телеметрия сессии"].filter(Boolean).join(" · ")}
               </p> : <SeasonSwitcher
                 activeSeason={season}
                 className="mt-3"
@@ -1213,7 +1189,7 @@ export function TelemetryHub({
         </> : <div className="telemetry-setup stitch-panel">{controls}</div>}
         {error && !editing ? (
           <Alert variant="destructive">
-            <AlertTitle>Не удалось открыть гонку</AlertTitle>
+            <AlertTitle>Не удалось открыть сессию</AlertTitle>
             <AlertDescription>
               {error}
               <Button variant="outline" size="sm"
@@ -1222,14 +1198,14 @@ export function TelemetryHub({
               </Button>
             </AlertDescription>
           </Alert>
-        ) : (paceReady || paceRequested && !loading && isMainRaceSession(mainSession)) && shownPaceSession ? (
+        ) : (paceReady || paceRequested && !loading && mainSession) && shownPaceSession ? (
           <RacePaceWorkspace session={shownPaceSession} initialView={initialPaceView} onReady={raceLoaded} actionsContainer={paceActionsContainer} />
-        ) : !loading && !isMainRaceSession(mainSession) && (
+        ) : !loading && !mainSession && (
           <Empty>
             <EmptyHeader>
-              <EmptyTitle>Гонка пока недоступна</EmptyTitle>
+              <EmptyTitle>Сессия пока недоступна</EmptyTitle>
               <EmptyDescription>
-                Выберите другой этап с завершённой гонкой.
+                Выберите завершённую сессию другого этапа.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

@@ -680,6 +680,15 @@
     "parameters": []
   },
   {
+    "name": "telemetry.refresh_recent",
+    "title": "Обновить сессии телеметрии",
+    "description": "Добавит прошедшие сессии и подготовит список пилотов и кругов.",
+    "group": "f1",
+    "expectedIntervalMinutes": 5,
+    "maxAttempts": 3,
+    "parameters": []
+  },
+  {
     "name": "telemetry.prepare",
     "title": "Подготовить телеметрию",
     "description": "Загрузит историю OpenF1 и подготовит сравнение кругов.",

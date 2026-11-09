@@ -41,7 +41,7 @@ export const messages: Record<string, string> = {
   RACE_AVERAGE_UNAVAILABLE:
     "Для среднего темпа не хватает чистых гоночных кругов с телеметрией.",
   RACE_PACE_ONLY: "Темп можно посмотреть в завершённой гонке или спринте.",
-  RACE_PACE_UNAVAILABLE: "Для этой гонки пока нет времени кругов. Попробуйте другой этап.",
+  RACE_PACE_UNAVAILABLE: "Для этой сессии пока нет времени кругов. Попробуйте другую сессию.",
   NO_TELEMETRY: "Для этого круга нет телеметрии. Попробуйте другой круг.",
   INCOMPLETE_TELEMETRY:
     "В этих кругах слишком много пропусков для точного сравнения. Выберите другие круги.",
@@ -90,7 +90,7 @@ export async function queryTelemetry(input: Task) {
     return {
       status: 200,
       data: task.kind === "compare" ? present(data as Comparison)
-        : task.kind === "race-pace" ? presentRacePace(data as RacePace)
+        : (task.kind === "race-pace" || task.kind === "session-pace") ? presentRacePace(data as RacePace)
         : task.kind === "meetings" ? (data as Meeting[]).map(normalizeTelemetryMeeting) : data,
     };
   const taskId = await store.enqueue(task, resultKey(task));

@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { TRACK_MODEL_ALIASES } from "../src/data/track-models.ts";
 
 // Reuse the same horizontal plane as track-model-renderer. worldZ is elevation.
@@ -37,13 +38,17 @@ for (const track of tracks) {
     (value) => value.points && value.lapLengthKm,
   );
   if (!model) throw new Error(`Track model missing: ${track.id}`);
-  track.points = model.points.map(([progress, worldX, worldY]) => ({
+  const points = model.points.map(([progress, worldX, worldY]) => ({
     distance: progress * track.length,
     x: worldX,
     y: -worldY, // SVG's vertical axis runs south, worldY runs north.
   }));
+  if (JSON.stringify(track.points) !== JSON.stringify(points)) {
+    const revision = createHash("sha256").update(JSON.stringify(points)).digest("hex").slice(0, 12);
+    track.version = `raceside-2026-09-12-planar-v2:${revision}`;
+  }
+  track.points = points;
   track.aliases = [...TRACK_MODEL_ALIASES[track.id]];
-  track.version = "raceside-2026-09-12-planar-v2";
 }
 await writeFile(registryUrl, JSON.stringify(tracks));
 console.info(`Updated planar geometry for ${tracks.length} circuits.`);

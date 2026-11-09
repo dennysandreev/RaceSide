@@ -2,6 +2,8 @@ import { CalendarClock } from "lucide-react";
 import Link from "next/link";
 
 import { RaceFlag } from "@/components/racemate/race-flag";
+import { SeasonChampionBadge } from "@/components/racemate/season-champion-badge";
+import { getConfirmedSeasonChampion } from "@/data/season-champions";
 import { cn } from "@/lib/utils";
 
 type NextRaceSummary = {
@@ -16,13 +18,16 @@ export function SeasonProgress({
   className,
   completedCount,
   nextRace,
+  season,
   totalCount,
 }: {
   className?: string;
   completedCount: number;
   nextRace: NextRaceSummary | null;
+  season: number;
   totalCount: number;
 }) {
+  const champion = getConfirmedSeasonChampion(season);
   const progressPercent = totalCount
     ? Math.round((completedCount / totalCount) * 100)
     : 0;
@@ -34,18 +39,35 @@ export function SeasonProgress({
         className,
       )}
     >
-      <div className="flex items-end justify-between gap-4">
-        <div>
+      <div className={cn("flex justify-between", champion ? "items-center gap-3" : "items-end gap-4")}>
+        <div className="min-w-0">
           <p className="stitch-label text-foreground/75">Прогресс сезона</p>
-          <p className="mt-1 font-display text-2xl font-extrabold leading-none tracking-[-0.04em]">
-            {progressPercent}%
-          </p>
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <p className="font-display text-2xl font-extrabold leading-none">
+              {progressPercent}%
+            </p>
+            {champion ? (
+              <p className="font-telemetry text-[0.65rem] text-muted-foreground">{completedCount} / {totalCount}</p>
+            ) : null}
+          </div>
         </div>
-        <p className="font-telemetry text-sm font-bold text-foreground/75">
-          {completedCount} / {totalCount}
-        </p>
+        {champion ? (
+          <SeasonChampionBadge champion={champion} />
+        ) : (
+          <p className="font-telemetry text-sm font-bold text-foreground/75">
+            {completedCount} / {totalCount}
+          </p>
+        )}
       </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-foreground/15">
+      <div
+        aria-label={`Прогресс сезона ${season}`}
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={progressPercent}
+        aria-valuetext={`Завершено ${completedCount} из ${totalCount} этапов`}
+        className="h-1.5 overflow-hidden rounded-full bg-foreground/15"
+        role="progressbar"
+      >
         <div
           className="h-full rounded-full bg-primary"
           style={{ width: `${progressPercent}%` }}

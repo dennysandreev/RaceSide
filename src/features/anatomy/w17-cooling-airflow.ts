@@ -122,11 +122,16 @@ function ductLane(root:T.Object3D,packName:string,ductName:string,side:number,x:
 
 export function createCoolingAirflowPaths(root:T.Object3D):AirflowPath[] {
   root.updateMatrixWorld(true);
+  // The wide body now ends ahead of the axle. Exhausted radiator air stays
+  // outside the separate exhaust sleeve and rear-wing supports instead of
+  // turning into the sleeve or crossing its supporting pylons.
+  const outletRoute=(side:number,start:number)=>outlets[side].slice(start).map(([x,y,z])=>
+    new T.Vector3(x,y,side*Math.max(Math.abs(z),.070+.060*T.MathUtils.smoothstep(-x,1.74,1.91))));
   const paths:AirflowPath[]=[-1,1].map(side=>{
     // An actual open fin cell, between adjacent coolant tubes.
     const x=-.216,z=-side*.02018181818181818;
     const {points,world}=ductLane(root,`Radiator pack ${side}`,`Radiator inlet duct ${side}`,side,x,z,.299,.112,-.025);
-    const radii=points.map(()=>.00065),controls=outlets[side].slice(1).map(p=>new T.Vector3(...p));
+    const radii=points.map(()=>.00065),controls=outletRoute(side,1);
     const turn=new T.CubicBezierCurve3(points.at(-1)!,world(x,-.046,z),controls[0].clone().add(new T.Vector3(.025,0,0)),controls[0]);
     for(const [i,p]of turn.getPoints(24).slice(1).entries()){points.push(p);radii.push(T.MathUtils.lerp(.00065,.0012,(i+1)/24));}
     const exit=new T.CatmullRomCurve3(controls,false,"centripetal");
@@ -138,7 +143,7 @@ export function createCoolingAirflowPaths(root:T.Object3D):AirflowPath[] {
   const x=-.074,z=-.00015;
   const {points,world}=ductLane(root,"Charge low-temperature radiator","Charge radiator inlet duct",1,x,z,.148,.075,-.012);
   const radii=points.map(()=>.0006);
-  const controls=[[-.16,.535,.390],[-.25,.526,.395],[-.32,.50,.400],[-.37,.445,.380],...outlets[1].slice(7)].map(p=>new T.Vector3(...p));
+  const controls=[...([[-.16,.535,.390],[-.25,.526,.395],[-.32,.50,.400],[-.37,.445,.380]] as Point[]).map(p=>new T.Vector3(...p)),...outletRoute(1,7)];
   const turn=new T.CubicBezierCurve3(points.at(-1)!,world(x,-.028,z),controls[0].clone().add(new T.Vector3(.025,0,0)),controls[0]);
   for(const [i,p]of turn.getPoints(24).slice(1).entries()){points.push(p);radii.push(T.MathUtils.lerp(.0006,.0012,(i+1)/24));}
   for(const p of new T.CatmullRomCurve3(controls,false,"centripetal").getSpacedPoints(260).slice(1)){points.push(p);radii.push(.0012);}

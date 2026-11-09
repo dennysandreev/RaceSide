@@ -57,6 +57,12 @@ export function connectSteeringSupply(car: T.Group, hydraulics: T.Group, steerin
       route[6][2]+=.012;route[7][2]+=.010;
       for(const i of [6,7])route[i][1]-=.014;
       for (let i = route.length - 3; i < route.length; i++) route[i] = [base[i][0], .316, frontZ];
+    } else {
+      // Retain the straight passage through the bay sleeve, then pass below
+      // and inboard of the repositioned front damper's structural foot.
+      const bend=route.findIndex(p=>p[0]===1.08);
+      route.splice(bend,3,[1.045,.420,.105],[1.06,.420,.105],[1.09,.404,.090],
+        [1.13,.392,.075],[1.16,.390,.075],[1.30,.370,.075]);
     }
     // Only the rear service loop follows the relocated block. The supported
     // forward route and its structural feedthroughs retain their installation.

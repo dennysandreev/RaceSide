@@ -1,7 +1,8 @@
 import type { RacePace, RacePacePoint, RacePaceReason } from "./types";
+import type { SessionMetric } from "./session-metrics";
 
 export type PaceAxis = "lap" | "age";
-export type PaceSection = "trend" | "distribution";
+export type PaceSection = "trend" | "distribution" | "metrics";
 export type PaceDistributionScope = "field" | "selected";
 export type PaceLapRange = [number, number];
 export type PaceFilters = { hidePits: boolean; hideSafetyCar: boolean; lapRange?: PaceLapRange };
@@ -216,11 +217,12 @@ export function paceShareUrl(
     lapRange?: PaceLapRange;
     section?: PaceSection;
     distributionScope?: PaceDistributionScope;
+    metric?: SessionMetric;
   },
 ) {
   const url = new URL("/telemetry", origin);
   const params = {
-    mode: "race-pace",
+    mode: "session-telemetry",
     season: session.season,
     meeting: session.meetingId,
     session: session.id,
@@ -237,6 +239,10 @@ export function paceShareUrl(
   if (view.section === "distribution") {
     url.searchParams.set("view", "distribution");
     url.searchParams.set("scope", view.distributionScope ?? "field");
+  }
+  if (view.section === "metrics") {
+    url.searchParams.set("view", "metrics");
+    url.searchParams.set("metric", view.metric ?? "speed");
   }
   if (view.lapRange) {
     url.searchParams.set("from", String(view.lapRange[0]));

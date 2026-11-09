@@ -107,7 +107,7 @@ export function createAirflowPaths(root:T.Group,linkages:WingLinkage[]=[]):Airfl
         let surface=wingSurfaces.get(key);
         if(!surface){surface=createSurfaceSampler(end==="front"?front:rear,"y");wingSurfaces.set(key,surface);}
         const points=end==="front"
-          ?sample(3.10,1.91,(x,t)=>new T.Vector3(x,Math.max(upper(surface,x,side*lane,0)+.030,.12+Math.pow(t,1.5)*T.MathUtils.lerp(.23,.11,fraction)),side*lane))
+          ?sample(3.10,1.91,(x,t)=>new T.Vector3(x,Math.max(upper(surface,x,side*lane,0)+.030,upper(vertical,x,side*lane,0)+.025,.12+Math.pow(t,1.5)*T.MathUtils.lerp(.23,.11,fraction)),side*lane))
           :sample(-1.25,-3.05,(x,t)=>new T.Vector3(x,Math.max(upper(surface,x,side*lane,0)+.040,x>=envelope.min.x-.04&&x<=envelope.max.x+.04?envelope.max.y+.04:0,.89+Math.pow(t,1.7)*T.MathUtils.lerp(.40,.16,fraction)),side*lane));
         soften(points,"y",.60);states.push(points);
       }

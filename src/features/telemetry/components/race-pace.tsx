@@ -52,7 +52,8 @@ import {
   type PaceSection,
   type PaceDistributionScope,
 } from "../lib/race-pace";
-import { isRaceSession } from "../../../../worker/telemetry/race-pace.mjs";
+import { SessionMetricsWorkspace } from "./session-metrics";
+import type { SessionMetric } from "../lib/session-metrics";
 import { TelemetryShare } from "./telemetry-share";
 import { RacePaceDistribution } from "./race-pace-distribution";
 import "./race-pace.css";
@@ -69,6 +70,7 @@ export type RacePaceView = {
   lapRange?: PaceLapRange;
   section?: PaceSection;
   distributionScope?: PaceDistributionScope;
+  metric?: SessionMetric;
 };
 export function RacePaceWorkspace({
   session,
@@ -87,12 +89,11 @@ export function RacePaceWorkspace({
     error?: string;
   } | null>(null);
   const [retry, setRetry] = useState(0);
-  const race = isRaceSession(session);
+  const [view, setView] = useState(initialView);
   const sessionId = session.id;
   useEffect(() => {
-    if (!race) return;
     const controller = new AbortController();
-    void telemetryRequest<RacePace>(`race-pace?session=${sessionId}`, {
+    void telemetryRequest<RacePace>(`session-pace?session=${sessionId}`, {
       signal: controller.signal,
     })
       .then((data) => {
@@ -108,24 +109,17 @@ export function RacePaceWorkspace({
             error:
               error instanceof Error
                 ? error.message
-                : "Не удалось загрузить темп гонки.",
+                : "Не удалось загрузить телеметрию сессии.",
           });
       });
     return () => controller.abort();
-  }, [sessionId, race, retry, onReady]);
-  if (!isRaceSession(session))
-    return (
-      <PaceEmpty
-        title="Нужна завершённая гонка"
-        description="Выберите гонку или спринт, чтобы посмотреть темп всех пилотов."
-      />
-    );
+  }, [sessionId, retry, onReady]);
   if (result?.session !== session.id)
     return (
       <div className="race-pace-loading" role="status">
         <Cog className="telemetry-loading-gear" aria-hidden="true" />
         <div>
-          <strong>Готовим темп гонки</strong>
+          <strong>Готовим телеметрию сессии</strong>
           <p>Загрузка может занять время</p>
         </div>
       </div>
@@ -133,7 +127,7 @@ export function RacePaceWorkspace({
   if (result.error)
     return (
       <Alert variant="destructive">
-        <AlertTitle>Не удалось открыть темп гонки</AlertTitle>
+        <AlertTitle>Не удалось открыть телеметрию сессии</AlertTitle>
         <AlertDescription>
           {result.error}
           <Button
@@ -153,7 +147,8 @@ export function RacePaceWorkspace({
     <RacePaceAnalysis
       key={session.id}
       data={result.data}
-      initialView={initialView}
+      initialView={view}
+      onViewChange={setView}
       actionsContainer={actionsContainer}
     />
   ) : null;
@@ -179,18 +174,22 @@ export function RacePaceAnalysis({
   data,
   initialView = {},
   actionsContainer,
+  onViewChange,
 }: {
   data: RacePace;
   initialView?: RacePaceView;
   actionsContainer?: HTMLElement | null;
+  onViewChange?: (view: RacePaceView) => void;
 }) {
   const mobile = useIsMobile();
   const [axis, setAxis] = useState<PaceAxis>(initialView.axis ?? "lap");
   const [section, setSection] = useState<PaceSection>(initialView.section ?? "trend");
   const [distributionScope, setDistributionScope] = useState<PaceDistributionScope>(initialView.distributionScope ?? "field");
   const distribution = section === "distribution";
+  const metrics = section === "metrics";
+  const [metric, setMetric] = useState<SessionMetric>(initialView.metric ?? "speed");
   function changeChart(value: string) {
-    setSection(value === "distribution" ? "distribution" : "trend");
+    setSection(value === "metrics" ? "metrics" : value === "distribution" ? "distribution" : "trend");
     if (value === "lap" || value === "age") setAxis(value);
   }
   const [compounds, setCompounds] = useState(() => selectedCompounds(initialView.compounds ?? initialView.compound));
@@ -224,6 +223,9 @@ export function RacePaceAnalysis({
     () => paceSeries(data, distribution ? "lap" : axis, compounds, { hidePits: true, hideSafetyCar, lapRange }),
     [data, axis, distribution, compounds, hideSafetyCar, lapRange],
   );
+  useEffect(() => {
+    onViewChange?.({ axis, section, metric, distributionScope, compounds, hideSafetyCar, trend, field, lapRange, drivers: selected });
+  }, [axis, section, metric, distributionScope, compounds, hideSafetyCar, trend, field, lapRange, selected, onViewChange]);
   const distributionRows = useMemo(() => paceDistribution(data, compounds,
     { hidePits: true, hideSafetyCar, lapRange }, distributionScope === "selected" ? selected : undefined),
     [data, compounds, hideSafetyCar, lapRange, distributionScope, selected]);
@@ -262,6 +264,7 @@ export function RacePaceAnalysis({
     shareParams.set("view", "distribution");
     shareParams.set("scope", distributionScope);
   }
+  if (metrics) { shareParams.set("view", "metrics"); shareParams.set("metric", metric); }
   if (!fullRace) {
     shareParams.set("from", String(lapRange[0]));
     shareParams.set("to", String(lapRange[1]));
@@ -271,7 +274,7 @@ export function RacePaceAnalysis({
   useEffect(() => {
     const url = new URL("/telemetry", window.location.origin);
     url.search = query;
-    url.searchParams.set("mode", "race-pace");
+    url.searchParams.set("mode", "session-telemetry");
     url.searchParams.set("season", String(data.session.season));
     url.searchParams.set("meeting", String(data.session.meetingId));
     url.searchParams.set("session", String(data.session.id));
@@ -416,23 +419,25 @@ export function RacePaceAnalysis({
   );
   return (
     <>
-      {actionsContainer && createPortal(actions, actionsContainer)}
+      {!metrics && actionsContainer && createPortal(actions, actionsContainer)}
       <div className="race-pace-toolbar telemetry-workspace-toolbar">
-        <select className="telemetry-mobile-view" aria-label="Как сравнить темп" value={distribution ? "distribution" : axis}
+        <select className="telemetry-mobile-view" aria-label="Как сравнить темп" value={metrics ? "metrics" : distribution ? "distribution" : axis}
           onChange={(event) => changeChart(event.target.value)}>
-          <option value="lap">По кругам гонки</option><option value="age">По возрасту шин</option>
-          <option value="distribution">Распределение темпа</option>
+          <option value="lap">По кругам сессии</option><option value="age">По возрасту шин</option>
+          <option value="distribution">Распределение темпа</option><option value="metrics">Скорость и газ</option>
         </select>
-        <Tabs value={distribution ? "distribution" : axis} onValueChange={changeChart}>
+        <Tabs value={metrics ? "metrics" : distribution ? "distribution" : axis} onValueChange={changeChart}>
           <TabsList className="telemetry-view-tabs" aria-label="Как сравнить темп">
-            <TabsTrigger value="lap">По кругам гонки</TabsTrigger>
+            <TabsTrigger value="lap">По кругам сессии</TabsTrigger>
             <TabsTrigger value="age">По возрасту шин</TabsTrigger>
             <TabsTrigger value="distribution">Распределение темпа</TabsTrigger>
+            <TabsTrigger value="metrics">Скорость и газ</TabsTrigger>
           </TabsList>
         </Tabs>
-        {tyreButtons}
+        {!metrics && tyreButtons}
       </div>
-      <section className="race-pace-workspace" aria-label="Темп гонки" data-section={section}>
+      {metrics ? <SessionMetricsWorkspace session={data.session} metric={metric} onMetricChange={setMetric} actionsContainer={actionsContainer} /> : <>
+      <section className="race-pace-workspace" aria-label="Телеметрия сессии" data-section={section}>
         <div className="race-pace-body">
           <div className="race-pace-main">
             <header className="race-pace-chart-heading telemetry-chart-heading">
@@ -451,7 +456,7 @@ export function RacePaceAnalysis({
             </header>
             <div
               className="race-pace-plot"
-              aria-label={distribution ? "Распределение темпа" : `Время круга по ${axis === "age" ? "возрасту шин" : "кругам гонки"}`}
+              aria-label={distribution ? "Распределение темпа" : `Время круга по ${axis === "age" ? "возрасту шин" : "кругам сессии"}`}
             >
               {distribution ? (distributionRows.length ? <RacePaceDistribution rows={distributionRows} /> :
                 <PaceEmpty title={distributionScope === "selected" && !selected.length ? "Выберите пилотов" : "Нет кругов для этого сравнения"}
@@ -466,7 +471,7 @@ export function RacePaceAnalysis({
                   title="Нет кругов для этого сравнения"
                   description={
                     axis === "age" && data.warnings.includes("MISSING_TYRES")
-                      ? "Для части кругов неизвестен возраст шин. Попробуйте сравнение по кругам гонки."
+                      ? "Для части кругов неизвестен возраст шин. Попробуйте сравнение по кругам сессии."
                       : "Расширьте диапазон кругов или измените фильтры."
                   }
                 />
@@ -499,7 +504,7 @@ export function RacePaceAnalysis({
                       axisLine={false}
                       label={{
                         value:
-                          axis === "age" ? "Возраст шин, кругов" : "Круг гонки",
+                          axis === "age" ? "Возраст шин, кругов" : "Круг",
                         position: "insideBottom",
                         offset: -14,
                         fill: "var(--muted-foreground)",
@@ -602,11 +607,11 @@ export function RacePaceAnalysis({
                 </ResponsiveContainer>
               )}
             </div>
-            <section className="race-pace-range" aria-label="Отрезок гонки">
+            <section className="race-pace-range" aria-label="Отрезок сессии">
               <header>
                 <span>{lapRange[0] === lapRange[1] ? `Круг ${lapRange[0]}` : `Круги ${lapRange[0]}–${lapRange[1]}`}</span>
                 <Button variant="ghost" size="sm" disabled={fullRace}
-                  onClick={() => setLapRange(paceLapRange(data.totalLaps))}>Вся гонка</Button>
+                  onClick={() => setLapRange(paceLapRange(data.totalLaps))}>Вся сессия</Button>
               </header>
               <Slider min={1} max={Math.max(2, data.totalLaps)} step={1} value={lapRange}
                 disabled={data.totalLaps < 2} thumbLabels={["Первый круг отрезка", "Последний круг отрезка"]}
@@ -628,7 +633,7 @@ export function RacePaceAnalysis({
             <section className="race-pace-strategy" aria-label="Смена шин">
               <header>
                 <h3>Смена шин</h3>
-                <span>По кругам гонки</span>
+                <span>По кругам сессии</span>
               </header>
               <div className="race-pace-strategy-rows">
                 {data.drivers
@@ -705,7 +710,8 @@ export function RacePaceAnalysis({
         </DialogContent>
       </Dialog>
       <TelemetryShare open={shareOpen} onOpenChange={setShareOpen}
-        imageSource={shareImage} title="Поделиться темпом гонки" />
+        imageSource={shareImage + "&source=session"} title="Поделиться телеметрией" />
+      </>}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { recentTelemetryTasks, localRacePaceTasks, enqueueMissingTelemetryTasks } from "./prewarm.mjs";
+import { recentTelemetryTasks, localRacePaceTasks, enqueueMissingTelemetryTasks, refreshRecentTelemetry } from "./prewarm.mjs";
 import { resultKey } from "./service.mjs";
 
 const session = (meeting, id, date, type = "Practice") => ({
@@ -82,4 +82,80 @@ test("does not enqueue catalog tasks already in cache", async () => {
   ]);
   assert.equal(count, 1);
   assert.deepEqual(enqueued, [{ kind: "seasons" }]);
+});
+
+test("catch-up includes every ended session in the newest weekend and ignores cancellations", () => {
+  const tasks = recentTelemetryTasks(2026, [
+    session(1298, 11397, "2026-10-30T19:30:00Z"),
+    session(1298, 11398, "2026-10-30T23:00:00Z"),
+    session(1298, 11399, "2026-10-31T18:30:00Z"),
+    { ...session(1298, 11400, "2026-10-31T19:00:00Z", "Qualifying"), is_cancelled: true },
+  ], Date.parse("2026-10-31T20:00:00Z"));
+  assert.deepEqual(tasks.filter((task) => task.kind === "catalog").map((task) => task.session), [11399, 11398, 11397]);
+});
+
+test("the periodic discovery queues Mexico practices without waiting for result polling or a page visit", async () => {
+  const now = Date.parse("2026-10-31T10:00:00Z"), queued = [], calls = [];
+  const rows = [
+    { ...session(1298, 11397, "2026-10-30T19:30:00Z"), year: 2026 },
+    { ...session(1298, 11398, "2026-10-30T23:00:00Z"), year: 2026 },
+    { ...session(1298, 11399, "2026-10-31T18:30:00Z"), year: 2026 },
+    { ...session(1297, 11396, "2026-10-25T22:00:00Z", "Race"), year: 2026 },
+  ];
+  const cached = new Set();
+  const store = { get: async (key) => cached.has(key) ? [] : null,
+    put: async (key) => cached.add(key),
+    enqueue: async (task, key) => { queued.push(task); cached.add(key); } };
+  const options = { store, now, season: 2026, fetchRows: async (...args) => {
+    calls.push(args);
+    return args[0] === "sessions" ? rows : [{ meeting_key: 1298, year: 2026, meeting_name: "Mexico City Grand Prix", date_start: "2026-10-30T18:30:00Z" }];
+  } };
+  const first = await refreshRecentTelemetry(options);
+  assert.deepEqual(queued, [
+    { kind: "seasons" },
+    { kind: "catalog", session: 11398 }, { kind: "catalog", session: 11397 },
+  ]);
+  assert.equal(first.itemsProcessed, 3);
+  assert.equal((await refreshRecentTelemetry(options)).itemsProcessed, 0);
+  assert.deepEqual(calls, [["sessions", { year: 2026 }], ["meetings", { year: 2026 }],
+    ["sessions", { year: 2026 }], ["meetings", { year: 2026 }]]);
+});
+
+test("a scheduler tick replaces a still-fresh session list when a new practice has become available", async () => {
+  const now = Date.parse("2026-10-31T10:00:00Z"), rows = [
+    { ...session(1298, 11397, "2026-10-30T19:30:00Z"), year: 2026 },
+    { ...session(1298, 11398, "2026-10-30T23:00:00Z"), year: 2026 },
+  ];
+  const values = new Map([["sessions:1298", [{ id: 11397 }]]]), writes = [];
+  const store = {
+    get: async (key) => values.get(key) ?? { alreadyCached: true },
+    put: async (key, value, ttl) => { values.set(key, value); writes.push({ key, ttl }); },
+    enqueue: async () => { throw Error("unexpected queue write"); },
+  };
+  await refreshRecentTelemetry({ store, now, season: 2026, fetchRows: async (topic) =>
+    topic === "sessions" ? rows : [{ meeting_key: 1298, date_start: "2026-10-30T18:30:00Z" }] });
+  assert.deepEqual(values.get("sessions:1298").map((session) => session.id), [11397, 11398]);
+  assert.ok(writes.every((write) => write.ttl === 5 * 60_000));
+});
+
+test("periodic discovery waits for source readiness and ignores cancelled, future and historical sessions", async () => {
+  const now = Date.parse("2026-10-31T10:00:00Z");
+  const store = { get: async () => { throw Error("unexpected cache read"); }, enqueue: async () => { throw Error("unexpected enqueue"); } };
+  const result = await refreshRecentTelemetry({ store, season: 2026, now, fetchRows: async () => [
+    { ...session(1298, 11397, "2026-10-31T09:29:00Z"), year: 2026 },
+    { ...session(1298, 11398, "2026-10-31T08:00:00Z"), year: 2026, is_cancelled: true },
+    { ...session(1298, 11399, "2026-10-31T18:30:00Z"), year: 2026 },
+    { ...session(1297, 11396, "2026-10-25T22:00:00Z"), year: 2026 },
+    { ...session(1298, 1, "2026-10-31T08:00:00Z"), year: 2025 },
+    { ...session(1298, 2, "invalid"), year: 2026 },
+  ] });
+  assert.equal(result.itemsProcessed, 0);
+  assert.equal(result.metadata.skipped, "no_recent_completed_sessions");
+});
+
+test("periodic discovery propagates source failure rather than reporting a successful empty refresh", async () => {
+  await assert.rejects(() => refreshRecentTelemetry({ store: {}, season: 2026,
+    fetchRows: async () => { throw Error("HTTP 429"); } }), /HTTP 429/);
+  await assert.rejects(() => refreshRecentTelemetry({ store: {}, season: 2026,
+    fetchRows: async () => ({ error: "unavailable" }) }), /PROVIDER_UNAVAILABLE/);
 });

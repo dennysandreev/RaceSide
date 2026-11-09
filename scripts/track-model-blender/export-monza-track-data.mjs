@@ -65,7 +65,7 @@ export async function exportMonzaTrackData({ forceSources = false, outputPath, s
   const centerline = assembleMainCircuit(osm, MONZA_MAIN_CIRCUIT_WAY_IDS);
   const sourceStartFinishOffsetMeters = nearestDistance(centerline, utm32nFromWgs84(START_FINISH_REFERENCE.lat, START_FINISH_REFERENCE.lon));
   const payload = {
-    generatorVersion: "1.0.0",
+    generatorVersion: "2.0.0",
     grandstands: GRANDSTANDS,
     model: {
       bounds: MONZA_BOUNDS_UTM32N,
@@ -86,8 +86,10 @@ export async function exportMonzaTrackData({ forceSources = false, outputPath, s
       speedTrap: { beforeTurnMeters: 212, turn: 1 },
     },
     officialSources: [
+      { role: "photographic reference for hospitality glazing, pit-side structures and the north/south towers; dimensions reconstructed", url: "https://www.monzanet.it/wp-content/uploads/2026/01/Brochure_Hospitality_GP_2026F1.pdf" },
+      { role: "historic oval reference, including the published maximum 80 percent banking", url: "https://www.monzanet.it/en/the-flyover-of-monza/" },
       { role: "official venue specifications: 5.793 km, 11 turns, 10–12 m width and clockwise direction", url: "https://www.monzanet.it/en/circuit/" },
-      { role: "latest published FIA operational circuit map: sectors, speed trap, DRS and pit-lane drawing", url: "https://www.fia.com/system/files/decision-document/2025_italian_grand_prix_-_event_notes_-_circuit_map_pit_lane_emergency_exit_map_quarantine_zone_and_red_zones.pdf" },
+      { role: "pinned FIA 2025 operational circuit map: sectors, speed trap, DRS and pit-lane drawing", url: "https://www.fia.com/system/files/decision-document/2025_italian_grand_prix_-_event_notes_-_circuit_map_pit_lane_emergency_exit_map_quarantine_zone_and_red_zones.pdf" },
       { role: "official 2026 Monza named grandstand inventory", url: "https://www.monzanet.it/wp-content/uploads/2026/06/GP_F1_2026_LISTINO_PREZZI_6_17.pdf" },
       { role: "Italian National Geoportal 2012 colour orthophoto WMS", url: "https://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/raster/ortofoto_colore_12.map&service=WMS&request=GetCapabilities&version=1.3.0" },
       { role: "Terrarium elevation format and attribution", url: "https://docs.versatiles.org/basics/tilesets.html#elevation" },

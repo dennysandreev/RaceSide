@@ -180,6 +180,7 @@ function CalendarHero({
           className="lg:w-[22rem]"
           completedCount={completedCount}
           nextRace={nextRace}
+          season={season}
           totalCount={totalCount}
         />
       </div>

@@ -24,7 +24,9 @@ import {
 } from "three";
 
 import { fitTrackModelFrame, type TrackModelCameraFrame, getTrackModelOrbitPosition } from "@/lib/track-model-camera";
+import { configureTrackShadows } from "@/lib/track-model-shadows";
 import { cn } from "@/lib/utils";
+import { TrackSceneLighting } from "./track-scene-lighting";
 
 type TrackModelWebGLProps = {
   frame?: TrackModelCameraFrame;
@@ -100,12 +102,10 @@ export function TrackModelWebGL({
           }}
           onCreated={({ gl }) => gl.setClearAlpha(0)}
           orthographic
+          shadows
           performance={{ min: 0.5 }}
         >
           {isNightScene ? <color attach="background" args={["#080f1e"]} /> : null}
-          <ambientLight intensity={isNightScene ? 0.65 : 1.35} color={isNightScene ? "#8ca9d7" : "#ffffff"} />
-          <directionalLight intensity={isNightScene ? 0.65 : 2.1} color={isNightScene ? "#a0bcf0" : "#ffffff"} position={[-900, 1_600, -1_100]} />
-          <directionalLight intensity={isNightScene ? 0.3 : 0.65} position={[1_000, 900, 700]} />
           <CameraRig
             camera={camera}
             frame={frame}
@@ -195,6 +195,7 @@ function TrackDigitalTwinScene({
   return (
     <>
       <primitive dispose={null} object={scene} />
+      <TrackSceneLighting scene={scene} night={assetPath.includes("/singapore.glb") || assetPath.includes("/las-vegas.glb")} />
       {anchors.turns.map(({ number, position }) => (
         <Html
           center
@@ -339,6 +340,7 @@ function cloneScene(source: Object3D) {
   cloned.traverse((object) => {
     object.frustumCulled = true;
   });
+  configureTrackShadows(cloned);
   cloned.updateMatrixWorld(true);
   return cloned;
 }

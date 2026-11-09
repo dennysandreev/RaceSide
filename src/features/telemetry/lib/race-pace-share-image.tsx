@@ -67,7 +67,7 @@ export function racePaceGraphic(data: RacePace, view: PaceImageView, width: numb
   const ticks = view.axis === "lap" && range[0] === range[1] ? [range[0]]
     : [...new Set(Array.from({ length: 7 }, (_, i) => Math.round(minX + (maxX - minX) * i / 6)))];
   for (const value of ticks) svg += chartText(String(value), x(value), bottom + 16, 14, muted, "middle");
-  svg += chartText(view.axis === "age" ? "Возраст шин, кругов" : "Круг гонки", (left + right) / 2, height - 22, 15, muted, "middle");
+  svg += chartText(view.axis === "age" ? "Возраст шин, кругов" : "Круг", (left + right) / 2, height - 22, 15, muted, "middle");
   svg += `<g clip-path="url(#plot)">`;
   const visible = series.filter((item) => view.field || view.drivers.includes(item.driver))
     .sort((a, b) => Number(view.drivers.includes(a.driver)) - Number(view.drivers.includes(b.driver)));
@@ -126,7 +126,7 @@ function RacePaceDistributionImage({ data, view, format, meetingName }: {
     paddingBottom: vertical ? 110 : 64, gap: vertical ? 20 : 12, boxSizing: "border-box", background: "#09090b", color: ink, fontFamily: "Geist Sans", position: "relative" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-        <span style={{ color: "#ed1c24", fontSize: vertical ? 24 : 16, fontWeight: 700 }}>ТЕМП ГОНКИ · {data.session.season}</span>
+        <span style={{ color: "#ed1c24", fontSize: vertical ? 24 : 16, fontWeight: 700 }}>ТЕЛЕМЕТРИЯ СЕССИИ · {data.session.season}</span>
         <span style={{ fontSize: vertical ? 46 : 34, fontWeight: 900 }}>{formatGrandPrixNameRu(meetingName ?? data.session.country)}</span>
         <span style={{ color: muted, fontSize: vertical ? 22 : 15 }}>{data.session.circuit} · {rangeLabel}</span>
       </div><RaceSideShareLogo />
@@ -175,7 +175,7 @@ export function RacePaceShareImage({ data, view, format, meetingName }: {
       paddingBottom: vertical ? 110 : 64, boxSizing: "border-box", background: "#09090b", color: ink, fontFamily: "Geist Sans", position: "relative" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-          <span style={{ display: "flex", color: "#ed1c24", fontSize: vertical ? 24 : 16, fontWeight: 700 }}>ТЕМП ГОНКИ · {data.session.season}</span>
+          <span style={{ display: "flex", color: "#ed1c24", fontSize: vertical ? 24 : 16, fontWeight: 700 }}>ТЕЛЕМЕТРИЯ СЕССИИ · {data.session.season}</span>
           <span style={{ display: "flex", fontSize: vertical ? 46 : 34, fontWeight: 900, letterSpacing: "-0.035em" }}>{formatGrandPrixNameRu(meetingName ?? data.session.country)}</span>
           <span style={{ display: "flex", color: muted, fontSize: vertical ? 22 : 15 }}>{data.session.circuit} · {fullRace ? `${data.totalLaps} кругов` : rangeLabel}</span>
         </div>
@@ -197,7 +197,7 @@ export function RacePaceShareImage({ data, view, format, meetingName }: {
       </div>
       <div style={{ display: "flex", flexDirection: "column", background: "#111114", border: `1px solid ${border}`, borderRadius: 12, padding: vertical ? 22 : 18, gap: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ display: "flex", fontSize: vertical ? 28 : 21, fontWeight: 700 }}>{view.axis === "age" ? "По возрасту шин" : "По кругам гонки"}</span>
+          <span style={{ display: "flex", fontSize: vertical ? 28 : 21, fontWeight: 700 }}>{view.axis === "age" ? "По возрасту шин" : "По кругам сессии"}</span>
           {/* eslint-disable-next-line @next/next/no-img-element -- Tyre symbols use outlined Geist glyphs in the PNG. */}
           {shareTyres.length > 0 && <img alt="Выбранные шины" width={shareTyres.length*tyreSize} height={tyreSize}
             src={racePaceTyreGraphic(view.compounds,tyreSize)} />}
@@ -209,7 +209,7 @@ export function RacePaceShareImage({ data, view, format, meetingName }: {
       <div style={{ display: "flex", flexDirection: "column", gap: vertical ? 12 : 6 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ display: "flex", fontSize: vertical ? 26 : 19, fontWeight: 700 }}>Смена шин</span>
-          <span style={{ display: "flex", color: muted, fontSize: vertical ? 15 : 11 }}>Вся гонка</span>
+          <span style={{ display: "flex", color: muted, fontSize: vertical ? 15 : 11 }}>Вся сессия</span>
         </div>
         {drivers.map((driver) => <div key={driver.number} style={{ display: "flex", gap: 14, alignItems: "center" }}>
           <span style={{ display: "flex", width: vertical ? 70 : 52, color: teamColor(driver), fontSize: vertical ? 23 : 15, fontWeight: 700 }}>{driver.code}</span>

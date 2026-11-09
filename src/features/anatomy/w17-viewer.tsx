@@ -4,7 +4,7 @@
 
 import { Canvas, events as pointerEvents, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Environment, Lightformer, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
-import { Component, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type ComponentRef } from "react";
+import { Component, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type ComponentRef, type RefObject } from "react";
 import * as T from "three";
 import { Pause, Play, Rotate3D, Wind } from "lucide-react";
 import Image from "next/image";
@@ -19,11 +19,19 @@ import { AirflowVolume } from "./airflow-volume";
 import { createEngineMotion, ENGINE_CORE } from "./w17-engine-core";
 import { createVehicleMotion, VEHICLE_MOTION } from "./w17-vehicle-motion";
 import { createHoverInspection } from "./w17-inspection";
+import type { LessonFrame, LessonSystem } from "./monza-lesson";
 
 import { CameraControls, WingControls, type CameraView } from "./view-controls";
 type BrakeAxle = "front" | "rear";
 const visibleInDetail=(part:T.Object3D,brakeAxle:BrakeAxle)=>!part.userData.installedOnly&&(!part.userData.brakeAxle||(part.userData.brakeAxle===brakeAxle&&part.userData.brakeSide===1));
-type Props = { selected:string; onSelect:(id:string)=>void; phase:PhaseId; together:boolean; playing:boolean; running?:boolean; onRunningChange?:(running:boolean)=>void; aero:AeroMode; onAeroChange:(mode:AeroMode)=>void; rearWing:RearWingVariant; onRearWingChange:(variant:RearWingVariant)=>void };
+type LessonView = { clock:RefObject<LessonFrame>; system:LessonSystem; focus:readonly string[]; revision:number };
+type Props = { selected:string; onSelect:(id:string)=>void; phase:PhaseId; together:boolean; playing:boolean; running?:boolean; onRunningChange?:(running:boolean)=>void; aero:AeroMode; onAeroChange:(mode:AeroMode)=>void; rearWing:RearWingVariant; onRearWingChange:(variant:RearWingVariant)=>void; lesson?:LessonView };
+
+// The teaching scene owns its track camera; the installed model keeps the same
+// geometry, inspection and absolute mechanism clock as the anatomy studio.
+export function W17LessonCar(props:Props&{inside:boolean;onReady:()=>void;onFlowStatus?:(status:"loading"|"ready"|"error")=>void}) {
+  return <Model {...props} externalCamera mode={props.inside?"cutaway":"assembled"} open={props.inside} view="perspective" resetKey={0} onHover={()=>{}} flowLayer={props.lesson?.system==="aero"?"all":"off"} flowPlaying={props.playing}/>;
+}
 
 const modelEvents: typeof pointerEvents = store => {
   const manager = pointerEvents(store), move = manager.handlers?.onPointerMove;
@@ -43,7 +51,8 @@ function RearWingPicker({value,onChange}:{value:RearWingVariant;onChange:(varian
 }
 
 export default function W17Viewer(props:Props) {
-  const [mode,setMode]=useState<AssemblyMode>("assembled");
+  const [mode,setMode]=useState<AssemblyMode>(props.lesson?"cutaway":"assembled");
+  const [lessonOpen,setLessonOpen]=useState(true);
   const [view,setView]=useState<CameraView>("perspective");
   const [resetKey,setResetKey]=useState(0);
   const [freeView,setFreeView]=useState(false);
@@ -55,7 +64,7 @@ export default function W17Viewer(props:Props) {
   const [flowStatus,setFlowStatus]=useState<"idle"|"loading"|"ready"|"error">("idle");
   const stage=useRef<HTMLDivElement>(null);
   const current=components.find(c=>c.id===hover);
-  const visibleFlow=flow&&mode!=="exploded"&&mode!=="powertrain"?"all":"off";
+  const visibleFlow=props.lesson?(props.lesson.system==="aero"?"all":"off"):flow&&mode!=="exploded"&&mode!=="powertrain"?"all":"off";
   useEffect(()=>{void preloadModel();},[]);
   useEffect(()=>{
     const target=stage.current;if(!target)return;
@@ -65,19 +74,19 @@ export default function W17Viewer(props:Props) {
     return()=>{observer.disconnect();document.removeEventListener("visibilitychange",update);};
   },[]);
   return <section className="an-3d-panel" aria-label="Трёхмерная модель болида Формулы-1">
-    <div className="an-3d-stage" ref={stage} tabIndex={-1} onPointerDown={event=>{if(event.target instanceof HTMLCanvasElement)event.currentTarget.focus({preventScroll:true});}} data-ready={ready} data-running={!!props.running&&props.playing&&active} data-mode={mode} data-aero={props.aero} data-rear-wing={props.rearWing} data-airflow={visibleFlow} data-flow-playing={visibleFlow!=="off"&&props.playing&&active}>
+    <div className="an-3d-stage" ref={stage} tabIndex={-1} onPointerDown={event=>{if(event.target instanceof HTMLCanvasElement)event.currentTarget.focus({preventScroll:true});}} data-ready={ready} data-running={!!props.running&&props.playing&&active} data-mode={mode} data-aero={props.aero} data-rear-wing={props.rearWing} data-airflow={visibleFlow} data-flow-playing={visibleFlow!=="off"&&props.playing&&active} data-lesson-inside={props.lesson?lessonOpen:undefined}>
     <div className="an-studio-toolbar">
     <div className="an-3d-toolbar">
-      <div className="an-mode-switch" role="group" aria-label="Сборка модели">{([{id:"assembled",label:"В сборе"},{id:"cutaway",label:"Под кузовом"},{id:"exploded",label:"В разборе"},{id:"powertrain",label:"Двигатель"}] as const).map(o=><button type="button" key={o.id} aria-pressed={mode===o.id} onClick={()=>setMode(o.id)}>{o.label}</button>)}</div>
+      <div className="an-mode-switch" role="group" aria-label="Сборка модели">{([{id:"assembled",label:"В сборе"},{id:"cutaway",label:"Под кузовом"},{id:"exploded",label:"В разборе"},{id:"powertrain",label:"Двигатель"}] as const).filter(o=>!props.lesson||o.id==="assembled"||o.id==="cutaway").map(o=><button type="button" key={o.id} aria-pressed={mode===o.id} onClick={()=>setMode(o.id)}>{o.label}</button>)}</div>
 
     </div>
     <div className="an-aero-control">
-      <button type="button" className="an-drive-toggle" aria-pressed={!!props.running} onClick={()=>props.onRunningChange?.(!props.running)}>{props.running?<Pause size={15}/>:<Play size={15}/>}<span>В движении</span></button>
-      {mode!=="powertrain"&&<div className="an-wing-controls" role="group" aria-label="Крылья">
+      {props.lesson?<button type="button" className="an-drive-toggle" aria-pressed={lessonOpen&&mode==="cutaway"} onClick={()=>{setMode("cutaway");setLessonOpen(mode==="assembled"||!lessonOpen);}}>{lessonOpen&&mode==="cutaway"?"Закрыть корпуса":"Посмотреть внутри"}</button>:<button type="button" className="an-drive-toggle" aria-pressed={!!props.running} onClick={()=>props.onRunningChange?.(!props.running)}>{props.running?<Pause size={15}/>:<Play size={15}/>}<span>В движении</span></button>}
+      {!props.lesson&&mode!=="powertrain"&&<div className="an-wing-controls" role="group" aria-label="Крылья">
         <WingControls compact value={props.aero} onChange={props.onAeroChange}/>
         <RearWingPicker value={props.rearWing} onChange={props.onRearWingChange}/>
       </div>}
-      {mode!=="powertrain"&&<div className="an-flow-tools">
+      {!props.lesson&&mode!=="powertrain"&&<div className="an-flow-tools">
         <button type="button" className="an-flow-toggle" aria-label="Потоки" aria-pressed={visibleFlow!=="off"} onClick={()=>{setFlow(visibleFlow==="off");if(mode==="exploded")setMode("assembled");}}><Wind size={15}/><span>Потоки</span></button>
         {visibleFlow!=="off"&&<div className="an-flow-legend"><strong>Относительная скорость</strong><i/><div><span>Ниже</span><span>Выше</span></div><small>Учебная визуализация</small>{flowStatus!=="ready"&&<p className="an-flow-loading" role="status">{flowStatus==="error"?"Не удалось показать потоки. Выключи и включи их ещё раз.":"Готовим потоки…"}</p>}</div>}
       </div>}
@@ -96,12 +105,13 @@ export default function W17Viewer(props:Props) {
               <Lightformer form="rect" intensity={2} color="#ccd9e7" scale={[10,2,1]} position={[0,2,5]} rotation={[0,Math.PI,0]}/>
               <Lightformer form="rect" intensity={1.4} color="white" scale={[4,4,1]} position={[-5,2,0]} rotation={[0,Math.PI/2,0]}/>
             </Environment>
-            <Model {...props} playing={props.playing&&active} mode={mode} view={view} resetKey={resetKey} flowLayer={visibleFlow} flowPlaying={props.playing&&active} onFlowStatus={setFlowStatus} onOrbit={()=>setFreeView(true)} onHover={setHover} onReady={()=>setReady(true)}/>
+            <Model {...props} playing={props.playing&&active} mode={mode} open={!!props.lesson&&lessonOpen&&mode==="cutaway"} view={view} resetKey={resetKey} flowLayer={visibleFlow} flowPlaying={props.playing&&active} onFlowStatus={setFlowStatus} onOrbit={()=>setFreeView(true)} onHover={setHover} onReady={()=>setReady(true)}/>
           </Suspense>
           <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.006,0]} receiveShadow><planeGeometry args={[30,30]}/><shadowMaterial transparent opacity={.22}/></mesh>
         </Canvas>
       </ModelBoundary>
       {!ready&&!failed&&<div className="an-3d-loading">Загружаем болид…</div>}
+      {props.lesson&&visibleFlow!=="off"&&flowStatus!=="ready"&&<p className="an-lesson-flow-status" role="status">{flowStatus==="error"?"Потоки недоступны. Выбери другую систему и вернись к воздуху, чтобы повторить загрузку.":"Готовим потоки…"}</p>}
       <div className="an-studio-footer">
         <div className="an-studio-hint" aria-live="polite"><Rotate3D size={16} aria-hidden="true"/><span>{current?current.name:"Потяни, чтобы вращать"}<small>{current?"Нажми, чтобы изучить":mode==="assembled"?(props.running?"Движение замедлено · Нажми на деталь":"Нажми на деталь, чтобы изучить её"):props.running?"Движение замедлено · Наведи на корпус":"Наведи на корпус, чтобы заглянуть внутрь"}</small></span></div>
         <CameraControls view={view} free={freeView} onChange={next=>{setView(next);setFreeView(false);setResetKey(k=>k+1);}} onReset={()=>{setView("perspective");setFreeView(false);setResetKey(k=>k+1);}}/>
@@ -148,7 +158,7 @@ export function W17ComponentViewer(props:Props&{initialOpen?:boolean;initialView
           <directionalLight position={[0,-4,2]} intensity={view==="underside"?2:0} color="#d7dde1"/>
           <Suspense fallback={null}>
             <Environment resolution={64} environmentIntensity={.65}><Lightformer form="rect" intensity={3} scale={[10,4,1]} position={[0,5,3]} rotation={[-Math.PI/2,0,0]}/></Environment>
-            <Model {...props} playing={props.playing&&(!(props.selected==="engine"||(props.selected==="cooling"&&coolingFocus!=="all")||(props.selected==="hydraulics"&&hydraulicFocus!=="all"))||enginePlaying)} detail mode="isolated" open={open} brakeAxle={brakeAxle} cockpitFocus={cockpitFocus} coolingFocus={coolingFocus} hydraulicFocus={hydraulicFocus} hydraulicBarrelOpen={hydraulicBarrelOpen} view={view} resetKey={resetKey} onHover={()=>{}} onReady={()=>setReady(true)}/>
+            <Model {...props} playing={props.playing&&active&&(!(props.selected==="engine"||(props.selected==="cooling"&&coolingFocus!=="all")||(props.selected==="hydraulics"&&hydraulicFocus!=="all"))||enginePlaying)} detail mode="isolated" open={open} brakeAxle={brakeAxle} cockpitFocus={cockpitFocus} coolingFocus={coolingFocus} hydraulicFocus={hydraulicFocus} hydraulicBarrelOpen={hydraulicBarrelOpen} view={view} resetKey={resetKey} onHover={()=>{}} onReady={()=>setReady(true)}/>
           </Suspense>
         </Canvas>
       </ModelBoundary>}
@@ -161,11 +171,11 @@ export function W17ComponentViewer(props:Props&{initialOpen?:boolean;initialView
       {props.selected==="hydraulics"&&<div className="an-mode-switch" role="group" aria-label="Детали гидравлики">{([{id:"all",label:"Вся система"},{id:"pump-drive",label:"Привод насоса"},{id:"pump",label:"Насос"}] as const).map(focus=><button key={focus.id} type="button" aria-pressed={hydraulicFocus===focus.id} onClick={()=>setHydraulicFocus(focus.id)}>{focus.label}</button>)}</div>}
       {props.selected==="hydraulics"&&hydraulicFocus!=="all"&&<button type="button" aria-pressed={open} onClick={()=>setOpenFor(open?null:props.selected)}>{open?(hydraulicFocus==="pump"?"Закрыть корпус":"Закрыть привод"):"Показать внутри"}</button>}
       {props.selected==="hydraulics"&&hydraulicFocus==="pump"&&open&&<button type="button" aria-pressed={hydraulicBarrelOpen} onClick={()=>setHydraulicBarrelOpen(!hydraulicBarrelOpen)}>{hydraulicBarrelOpen?"Вернуть блок":"Снять блок цилиндров"}</button>}
-      {wing?<WingControls detail value={props.aero} onChange={props.onAeroChange}/>:["engine","clutch","gearbox","differential","monocoque","brakes","cooling","turbo","exhaust","mguk","battery","inverter","fuel","steering","cockpit"].includes(props.selected)&&(props.selected!=="cockpit"||cockpitFocus==="all"||cockpitFocus==="seat")?<button type="button" aria-pressed={open} onClick={()=>setOpenFor(open?null:props.selected)}>{props.selected==="cockpit"?(open?"Вернуть обрамление":"Снять обрамление"):props.selected==="fuel"?(open?"Скрыть срез":"Показать срез"):props.selected==="engine"?(open?"Закрыть двигатель":"Открыть двигатель"):props.selected==="clutch"?(open?"Собрать сцепление":"Снять нажимной механизм"):["mguk","battery","inverter","steering","differential"].includes(props.selected)?(open?"Закрыть корпус":"Показать внутри"):props.selected==="exhaust"?(open?"Вернуть корпус клапана":"Показать клапан"):props.selected==="turbo"?(open?"Вернуть корпуса":"Снять корпуса"):props.selected==="gearbox"?(open?"Вернуть корпус":"Снять корпус"):props.selected==="cooling"?(open?"Закрыть корпуса":"Показать внутри"):props.selected==="brakes"?(open?"Вернуть кожух":"Снять кожух"):(open?"Вернуть обшивку":"Снять обшивку")}</button>:null}
+      {wing?(props.lesson?<span>Положение крыла задаёт выбранный момент круга</span>:<WingControls detail value={props.aero} onChange={props.onAeroChange}/>):["engine","clutch","gearbox","differential","monocoque","brakes","cooling","turbo","exhaust","mguk","battery","inverter","fuel","steering","cockpit"].includes(props.selected)&&(props.selected!=="cockpit"||cockpitFocus==="all"||cockpitFocus==="seat")?<button type="button" aria-pressed={open} onClick={()=>setOpenFor(open?null:props.selected)}>{props.selected==="cockpit"?(open?"Вернуть обрамление":"Снять обрамление"):props.selected==="fuel"?(open?"Скрыть срез":"Показать срез"):props.selected==="engine"?(open?"Закрыть двигатель":"Открыть двигатель"):props.selected==="clutch"?(open?"Собрать сцепление":"Снять нажимной механизм"):["mguk","battery","inverter","steering","differential"].includes(props.selected)?(open?"Закрыть корпус":"Показать внутри"):props.selected==="exhaust"?(open?"Вернуть корпус клапана":"Показать клапан"):props.selected==="turbo"?(open?"Вернуть корпуса":"Снять корпуса"):props.selected==="gearbox"?(open?"Вернуть корпус":"Снять корпус"):props.selected==="cooling"?(open?"Закрыть корпуса":"Показать внутри"):props.selected==="brakes"?(open?"Вернуть кожух":"Снять кожух"):(open?"Вернуть обшивку":"Снять обшивку")}</button>:null}
       {props.selected==="brakes"&&<div className="an-mode-switch" role="group" aria-label="Тормозной узел">{([{id:"front",label:"Передний"},{id:"rear",label:"Задний"}] as const).map(axle=><button key={axle.id} type="button" aria-pressed={brakeAxle===axle.id} onClick={()=>setBrakeAxle(axle.id)}>{axle.label}</button>)}</div>}
-      {(props.selected==="engine"||(props.selected==="cooling"&&coolingFocus!=="all")||(props.selected==="hydraulics"&&hydraulicFocus!=="all"))&&open&&<button type="button" onClick={()=>setEnginePlaying(!enginePlaying)}>{enginePlaying?"Пауза":"Продолжить"}</button>}
+      {!props.lesson&&(props.selected==="engine"||(props.selected==="cooling"&&coolingFocus!=="all")||(props.selected==="hydraulics"&&hydraulicFocus!=="all"))&&open&&<button type="button" onClick={()=>setEnginePlaying(!enginePlaying)}>{enginePlaying?"Пауза":"Продолжить"}</button>}
     </div>
-    {props.selected==="rear-wing"&&<div className="an-component-wing-picker"><RearWingPicker value={props.rearWing} onChange={props.onRearWingChange}/></div>}
+    {!props.lesson&&props.selected==="rear-wing"&&<div className="an-component-wing-picker"><RearWingPicker value={props.rearWing} onChange={props.onRearWingChange}/></div>}
   </div>;
 }
 
@@ -175,7 +185,7 @@ function ViewCamera({view,technical=false}:{view:CameraView;technical?:boolean})
     : <OrthographicCamera makeDefault position={[5,2.6,5]} zoom={110} near={.01} far={80}/>;
 }
 
-function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,together,playing,running=false,aero,rearWing,mode,view,resetKey,onHover,onReady,open=false,brakeAxle="front",cockpitFocus="all",coolingFocus="all",hydraulicFocus="all",hydraulicBarrelOpen=false,flowLayer,flowPlaying=false}:Props&{detail?:boolean;onOrbit?:()=>void;onFlowStatus?:(status:"loading"|"ready"|"error")=>void;mode:AssemblyMode;open?:boolean;brakeAxle?:BrakeAxle;cockpitFocus?:CockpitFocus;coolingFocus?:CoolingFocus;hydraulicFocus?:HydraulicFocus;hydraulicBarrelOpen?:boolean;view:CameraView;resetKey:number;onHover:(id:string|null)=>void;onReady:()=>void;flowLayer?:AirflowLayer|"off";flowPlaying?:boolean}) {
+function Model({detail=false,externalCamera=false,onOrbit,onFlowStatus,selected,onSelect,phase,together,playing,running=false,aero,rearWing,lesson,mode,view,resetKey,onHover,onReady,open=false,brakeAxle="front",cockpitFocus="all",coolingFocus="all",hydraulicFocus="all",hydraulicBarrelOpen=false,flowLayer,flowPlaying=false}:Props&{detail?:boolean;externalCamera?:boolean;onOrbit?:()=>void;onFlowStatus?:(status:"loading"|"ready"|"error")=>void;mode:AssemblyMode;open?:boolean;brakeAxle?:BrakeAxle;cockpitFocus?:CockpitFocus;coolingFocus?:CoolingFocus;hydraulicFocus?:HydraulicFocus;hydraulicBarrelOpen?:boolean;view:CameraView;resetKey:number;onHover:(id:string|null)=>void;onReady:()=>void;flowLayer?:AirflowLayer|"off";flowPlaying?:boolean}) {
   const controls=useRef<ComponentRef<typeof OrbitControls>>(null);
   const hovered=useRef<string|null>(null);
   const {camera,size,gl,invalidate}=useThree();
@@ -186,6 +196,7 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
   const wingTarget=useRef(aero==="straight"?1:0);
   const ready=useRef(false);
   const component=detail?selected:undefined;
+  const lessonFocus=lesson?.focus;
   const data=useMemo(()=>createModelInstance(component),[component]);
   const engineMotion=useMemo(()=>createEngineMotion(data.root),[data]);
   const engineAngle=useRef(ENGINE_CORE.initialAngle);
@@ -224,7 +235,7 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
       const groupMaterials=new Set<T.MeshStandardMaterial>();materials.set(id,groupMaterials);
       g.traverse(o=>{
         if(o instanceof T.Mesh){
-          o.visible=!(mode==="cutaway"&&o.userData.cover&&!o.userData.structural)&&!(open&&(o.userData.cover||o.userData.serviceCover)&&!(selected==="hydraulics"&&hydraulicFocus==="pump-drive"&&o.userData.hydraulicPumpCover))&&!(mode==="isolated"&&(!visibleInDetail(o,brakeAxle)||(selected==="cockpit"&&!visibleInCockpit(o,cockpitFocus))||(selected==="cooling"&&!visibleInCooling(o,coolingFocus))||(selected==="hydraulics"&&!visibleInHydraulics(o,hydraulicFocus))))&&!(mode==="powertrain"&&!visibleInPowertrain(o))&&!(mode==="isolated"&&selected==="hydraulics"&&hydraulicFocus==="pump"&&open&&hydraulicBarrelOpen&&o.userData.hydraulicBarrel);
+          o.visible=!(mode==="cutaway"&&o.userData.cover&&!o.userData.structural)&&!(open&&(!lessonFocus||detail||lessonFocus.includes(id))&&(o.userData.cover||o.userData.serviceCover)&&!(selected==="hydraulics"&&hydraulicFocus==="pump-drive"&&o.userData.hydraulicPumpCover))&&!(mode==="isolated"&&(!visibleInDetail(o,brakeAxle)||(selected==="cockpit"&&!visibleInCockpit(o,cockpitFocus))||(selected==="cooling"&&!visibleInCooling(o,coolingFocus))||(selected==="hydraulics"&&!visibleInHydraulics(o,hydraulicFocus))))&&!(mode==="powertrain"&&!visibleInPowertrain(o))&&!(mode==="isolated"&&selected==="hydraulics"&&hydraulicFocus==="pump"&&open&&hydraulicBarrelOpen&&o.userData.hydraulicBarrel);
           groupMaterials.add(o.material as T.MeshStandardMaterial);
           if(o.userData.flap)flaps.push(o);
         }
@@ -233,13 +244,14 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
     }
     sceneParts.current={flaps,turbo,materials};appearanceDirty.current=true;
     gl.shadowMap.needsUpdate=true;invalidate();
-  },[data,rearWing,mode,selected,open,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,hydraulicBarrelOpen,phase,together,gl,invalidate]);
+  },[data,rearWing,mode,selected,open,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,hydraulicBarrelOpen,phase,together,lessonFocus,detail,gl,invalidate]);
   useEffect(()=>{
     const media=window.matchMedia("(prefers-reduced-motion: reduce)");const update=()=>{reduced.current=media.matches;};update();media.addEventListener("change",update);
     return()=>media.removeEventListener("change",update);
   },[]);
   useEffect(()=>()=>disposeInstanceMaterials(data.root),[data]);
   useLayoutEffect(()=>{
+    if(externalCamera)return;
     if(!(camera instanceof T.OrthographicCamera)&&!(camera instanceof T.PerspectiveCamera))return;
     const nextKey=`${camera.uuid}/${mode==="isolated"?"detail":mode==="exploded"?"exploded":"car"}/${view}/${resetKey}/${size.width}/${size.height}/${mode==="isolated"?selected+brakeAxle+(selected==="cockpit"?cockpitFocus:selected==="cooling"?coolingFocus:selected==="hydraulics"?hydraulicFocus:"")+(["brakes","cockpit","cooling","engine","hydraulics"].includes(selected)?open:""):""}`;
     if(cameraKey.current===nextKey)return;cameraKey.current=nextKey;
@@ -324,14 +336,15 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
     }
     camera.lookAt(target);camera.updateProjectionMatrix();
     if(controls.current){controls.current.target.copy(target);controls.current.update();}
-  },[camera,size,view,mode,resetKey,selected,rearWing,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,open,data]);
+  },[camera,size,view,mode,resetKey,selected,rearWing,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,open,data,externalCamera]);
   useFrame((_,dt)=>{
     if(!ready.current){ready.current=true;gl.shadowMap.needsUpdate=true;onReady();}
     const target=aero==="straight"?1:0;
     // Demand rendering may have been idle for seconds before this click.
     const motionDelta=wingTarget.current===target?dt:0;wingTarget.current=target;
     wingMotion.current=reduced.current?{value:target,velocity:0}:advanceWingOpening(wingMotion.current,target,motionDelta);
-    let moving=wingMotion.current.value!==target;
+    if(lesson)wingMotion.current={value:lesson.clock.current.wingOpening,velocity:0};
+    let moving=!lesson&&wingMotion.current.value!==target;
     const t=reduced.current?1:1-Math.exp(-Math.min(dt,.05)/.18);
     let shadowsMoving=moving;
     for(const [id,g]of data.assemblies){
@@ -340,14 +353,20 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
         g.position.x=T.MathUtils.lerp(g.position.x,off[0],t);g.position.y=T.MathUtils.lerp(g.position.y,off[1],t);g.position.z=T.MathUtils.lerp(g.position.z,off[2],t);moving=shadowsMoving=true;
       }
     }
-    if(appearanceDirty.current){
+    if(appearanceDirty.current||lesson?.system==="energy"){
       const active=phases.find(p=>p.id===phase)?.active??[];
       for(const [id,materials]of sceneParts.current.materials){
-        const lit=!hovered.current&&(((mode==="cutaway"||mode==="exploded")&&id===selected)||(together&&active.includes(id)));
+        const lit=!hovered.current&&(lesson?lesson.focus.includes(id):(((mode==="cutaway"||mode==="exploded")&&id===selected)||(together&&active.includes(id))));
         const highlight=!detail&&hovered.current===id;
+        const frame=lesson?.clock.current;
+        const energyOrder=frame?.energy==="recover"?["mguk","inverter","battery"]:["battery","inverter","mguk"];
+        const energyIndex=energyOrder.indexOf(id);
+        const energyPulse=frame&&lesson?.system==="energy"&&frame.energy!=="hold"&&energyIndex>=0
+          ? Math.pow(Math.max(0,Math.cos((frame.mechanismTime*1.4-energyIndex)*Math.PI*2/3)),6)*.5 : 0;
+        const braking=lesson?.system==="brakes"&&frame?.phase==="braking";
         for(const material of materials){
-          material.emissive.set(highlight?"#d86746":lit?(together?"#16483d":"#5a211b"):"#000000");
-          material.emissiveIntensity=highlight?.03:lit?.28:0;
+          material.emissive.set(highlight?"#d86746":lit?(braking?"#b6301c":together?"#16483d":"#5a211b"):"#000000");
+          material.emissiveIntensity=highlight?.03:lit?(lesson?.system==="energy"?.22+energyPulse:braking?(detail?.12:.35):.28):0;
         }
       }
       appearanceDirty.current=false;
@@ -360,12 +379,19 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
     const fade=inspection.current?.(hovered.current,dt,reduced.current,flowEnabled&&!!airflowPaths?.some(path=>path.layer==="cooling"),mode!=="assembled");
     if(fade?.moving)moving=true;
     if(fade?.shadowsChanged)shadowsMoving=true;
-    if(!detail&&running&&playing){
+    if(lesson){
+      // The same absolute pose is used by the full car and its isolated parts.
+      // Seeking and opening a dialog cannot start an independent engine clock.
+      const angle=ENGINE_CORE.initialAngle-lesson.clock.current.mechanismTime*VEHICLE_MOTION.engineSpeed;
+      if(angle!==engineAngle.current){engineAngle.current=angle;vehicleMotion(angle);if(!playing)shadowsMoving=true;}
+      if(playing&&!reduced.current)moving=true;
+    }
+    if(!lesson&&!detail&&running&&playing&&!reduced.current){
       engineAngle.current-=Math.min(dt,.05)*VEHICLE_MOTION.engineSpeed;
       vehicleMotion(engineAngle.current);moving=true;
     }
-    if(detail&&playing&&!reduced.current)for(const rotor of sceneParts.current.turbo){rotor.rotation.x+=Math.min(dt,.05)*1.3;moving=true;}
-    if(detail&&((selected==="engine"&&open)||selected==="mguk"||(selected==="cooling"&&coolingFocus!=="all"&&open)||(selected==="hydraulics"&&hydraulicFocus!=="all"&&open))&&playing&&!reduced.current){
+    if(!lesson&&detail&&playing&&!reduced.current)for(const rotor of sceneParts.current.turbo){rotor.rotation.x+=Math.min(dt,.05)*1.3;moving=true;}
+    if(!lesson&&detail&&((selected==="engine"&&open)||selected==="mguk"||(selected==="cooling"&&coolingFocus!=="all"&&open)||(selected==="hydraulics"&&hydraulicFocus!=="all"&&open))&&playing&&!reduced.current){
       // Clockwise when viewed from the front (+X), as specified by C5.4.5.
       engineAngle.current-=Math.min(dt,.05)*.8;engineMotion(engineAngle.current);moving=true;
     }
@@ -378,7 +404,7 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
   },-1);
   // Camera orbit does not change world-space shadows. Refresh them only when
   // the assembly or moving mechanisms change, not for every camera frame.
-  useEffect(()=>{gl.shadowMap.needsUpdate=true;invalidate();},[selected,mode,phase,playing,running,together,aero,open,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,hydraulicBarrelOpen,gl,invalidate]);
+  useEffect(()=>{gl.shadowMap.needsUpdate=true;invalidate();},[selected,mode,phase,playing,running,together,aero,open,brakeAxle,cockpitFocus,coolingFocus,hydraulicFocus,hydraulicBarrelOpen,lesson?.revision,lesson?.system,gl,invalidate]);
   function hit(e:ThreeEvent<PointerEvent|MouseEvent>){
     return e.intersections.find(intersection=>{
       let object:T.Object3D|null=intersection.object;
@@ -393,8 +419,8 @@ function Model({detail=false,onOrbit,onFlowStatus,selected,onSelect,phase,togeth
 
   return <>
     <primitive object={data.root} dispose={null} onClick={(e:ThreeEvent<MouseEvent>)=>{if(e.delta>3)return;const id=hit(e);if(id){e.stopPropagation();onSelect(id);}}} onPointerMove={(e:ThreeEvent<PointerEvent>)=>{if(e.buttons){highlight(null);return;}const id=hit(e);if(id){e.stopPropagation();highlight(id);}}} onPointerOut={()=>highlight(null)}/>
-    {airflowPaths&&<AirflowVolume key={rearWing} paths={airflowPaths} layer={flowLayer??"off"} playing={flowPlaying} opening={wingMotion}/>}
-    <OrbitControls onStart={()=>{highlight(null);onOrbit?.();}} key={`${view}/${resetKey}`} ref={controls} makeDefault enableDamping dampingFactor={.1} minZoom={25} maxZoom={mode==="isolated"?12000:900} minDistance={.25} maxDistance={28} enablePan maxPolarAngle={Math.PI-.001}/>
+    {airflowPaths&&<AirflowVolume key={rearWing} paths={airflowPaths} layer={flowLayer??"off"} playing={flowPlaying} opening={wingMotion} lessonClock={lesson?.clock} revision={lesson?.revision}/>}
+    {!externalCamera&&<OrbitControls onStart={()=>{highlight(null);onOrbit?.();}} key={`${view}/${resetKey}`} ref={controls} makeDefault enableDamping dampingFactor={.1} minZoom={25} maxZoom={mode==="isolated"?12000:900} minDistance={.25} maxDistance={28} enablePan maxPolarAngle={Math.PI-.001}/>}
   </>;
 }
 

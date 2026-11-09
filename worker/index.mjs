@@ -5,7 +5,7 @@ import { newsResponseFormat, newsRequestOptions } from "./news-response-format.m
 import { extractNewsSourceHtml, extractNewsSourceMarkdown, decodeNewsEntities, cleanNewsRssText, hasUsableNewsSourceText, truncateNewsSourceText } from "./news-source-text.mjs";
 import { runTelemetryTask } from "./telemetry/service.mjs";
 import { TelemetryStore } from "./telemetry/store.mjs";
-import { recentTelemetryTasks, localRacePaceTasks, enqueueMissingTelemetryTasks } from "./telemetry/prewarm.mjs";
+import { recentTelemetryTasks, localRacePaceTasks, enqueueMissingTelemetryTasks, refreshRecentTelemetry } from "./telemetry/prewarm.mjs";
 import { getVerifiedReplayPitLane, withVerifiedReplayPitLane } from "../src/lib/replay-pit-lane.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -16,9 +16,6 @@ import { fileURLToPath } from "node:url";
 import { hostname } from "node:os";
 
 import { createClient } from "@supabase/supabase-js";
-import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/sessions/index.js";
-import { getPeerId } from "telegram/Utils.js";
 
 import {
   isFantasyRaceReadyForScoring,
@@ -80,8 +77,8 @@ import {
   getOpenF1ParticipantIdentity,
   hasFinalOpenF1SessionSignal,
   isOpenF1ClassificationReady,
+  isOpenF1LapFallbackAllowed,
   isOpenF1ResultProbeDue,
-  isOpenF1TimedSessionType,
   normalizeLiveRaceClassification,
   normalizeOpenF1SessionKey,
   normalizeOpenF1SessionClassification,
@@ -183,7 +180,8 @@ const commands = new Map([
   ["jolpica.prepare_history", prepareHistoricalSeasons],
   ["jolpica.publish_history", publishHistoricalSeasons],
   ["openf1.sync_sessions", syncOpenF1Sessions],
-  ["telemetry.prepare", () => runTelemetryTask({ db: supabase, taskId: getCliOption("task-id"), jobId: getCliOption("attached-run-id"), fetchRows: async (topic, query) => { const url = new URL(`${process.env.OPENF1_BASE_URL ?? "https://api.openf1.org/v1"}/${topic}`); for (const [key, value] of Object.entries(query)) url.searchParams.set(key, String(value)); try { return await fetchJson(url.toString()); } catch (error) { if (String(error?.message).includes("Fetch failed 404")) return []; throw error; } } })],
+  ["telemetry.prepare", () => runTelemetryTask({ db: supabase, taskId: getCliOption("task-id"), jobId: getCliOption("attached-run-id"), fetchRows: fetchTelemetryRows })],
+  ["telemetry.refresh_recent", () => refreshRecentTelemetry({ store: new TelemetryStore(supabase), fetchRows: fetchTelemetryRows, season: getCurrentF1Season() })],
   ["openf1.check_current_sessions", checkCurrentOpenF1Sessions],
   ["openf1.sync_results", syncOpenF1Laps],
   ["openf1.sync_starting_grid", syncOpenF1StartingGrid],
@@ -1723,6 +1721,9 @@ async function createTelegramClient() {
   if (!apiHash) throw new Error("TELEGRAM_API_HASH is missing");
   if (!session) throw new Error("TELEGRAM_SESSION is missing; run pnpm telegram:authorize");
 
+  // Polling and unrelated jobs must not pay the MTProto SDK startup cost.
+  const { TelegramClient } = await import("telegram");
+  const { StringSession } = await import("telegram/sessions/index.js");
   const client = new TelegramClient(new StringSession(session), apiId, apiHash, {
     connectionRetries: 3,
     floodSleepThreshold: 0,
@@ -1761,6 +1762,7 @@ async function resolveTelegramEntity(client, source) {
     }
 
     if (/^-?\d+$/.test(key)) {
+      const { getPeerId } = await import("telegram/Utils.js");
       const normalizedId = key.replace(/^-100(?=\d)/, "");
       const dialogs = await client.getDialogs({ limit: 500 });
       const dialog = dialogs.find((item) => {
@@ -9848,6 +9850,17 @@ async function markRacesCompletedFromStandings(season, rounds) {
   return completedRaces.map((race) => ({ id: race.id, round: Number(race.round) })).filter((race) => race.id);
 }
 
+async function fetchTelemetryRows(topic, query) {
+  const url = new URL(`${process.env.OPENF1_BASE_URL ?? "https://api.openf1.org/v1"}/${topic}`);
+  for (const [key, value] of Object.entries(query)) url.searchParams.set(key, String(value));
+  try {
+    return await fetchJson(url.toString());
+  } catch (error) {
+    if (String(error?.message).includes("Fetch failed 404")) return [];
+    throw error;
+  }
+}
+
 async function syncOpenF1Sessions() {
   const baseUrl = process.env.OPENF1_BASE_URL ?? "https://api.openf1.org/v1";
   const season = Number(process.env.F1_SEASON ?? new Date().getUTCFullYear());
@@ -10027,15 +10040,10 @@ async function syncOpenF1StartingGrid() {
     };
   }
 
-  let drivers = await getDriverMapByNumber(season);
-
-  if (normalized.some((entry) => !drivers.has(entry.driverNumber))) {
-    drivers = await extendDriverMapWithOpenF1SessionParticipants({
-      baseUrl,
-      drivers,
-      sessionKey: weekend.qualifyingSessionKey,
-    });
-  }
+  const drivers = await extendDriverMapWithOpenF1SessionParticipants({
+    baseUrl,
+    sessionKey: weekend.qualifyingSessionKey,
+  });
 
   const syncedAt = new Date().toISOString();
   const unmappedDriverNumbers = [];
@@ -10199,10 +10207,7 @@ async function syncOpenF1Laps({
     currentRaceSessions.map((session) => session.id),
     minimumRows,
   );
-  const telemetryWarm = await enqueueMissingTelemetryTasks(
-    new TelemetryStore(supabase), localRacePaceTasks(currentRaceSessions, now),
-  ).then((queued) => ({ queued }), (error) => ({ error: getSafeErrorMessage(error) }));
-  let drivers = null;
+  const confirmedSessions = [];
   let itemsProcessed = 0;
   let sessionsChecked = 0;
   let sessionsSaved = 0;
@@ -10223,12 +10228,12 @@ async function syncOpenF1Laps({
     const sessionType = String(session.session_type);
     const storedState = storedStates.get(session.id) ?? createStoredSessionResultState([], minimumRows);
 
-    if (now < Date.parse(session.end_at)) {
+    if (!storedState.hasOfficialClassification) {
       try {
         const controls = await fetchJson(
           `${baseUrl}/race_control?session_key=${session.openf1_session_key}`,
         );
-        if (!hasFinalOpenF1SessionSignal(controls)) {
+        if (!hasFinalOpenF1SessionSignal(controls, { sessionType, sessionKey: session.openf1_session_key, nowMs: now })) {
           waitingForSessionEnd += 1;
           continue;
         }
@@ -10242,6 +10247,7 @@ async function syncOpenF1Laps({
       }
     }
 
+    confirmedSessions.push(session);
     const requiresRacePoints = ["race", "sprint"].includes(sessionType.toLowerCase());
     const hasCompleteStoredOpenF1Classification =
       storedState.hasOpenF1Classification &&
@@ -10273,7 +10279,6 @@ async function syncOpenF1Laps({
     }
 
     sessionsChecked += 1;
-    drivers ??= await getDriverMapByNumber(season);
     let normalizedResults = [];
     let source = "openf1_session_result";
 
@@ -10293,7 +10298,7 @@ async function syncOpenF1Laps({
       }
     }
 
-    if (!isOpenF1ClassificationReady(normalizedResults, { minimumRows }) && isOpenF1TimedSessionType(sessionType)) {
+    if (!isOpenF1ClassificationReady(normalizedResults, { minimumRows }) && isOpenF1LapFallbackAllowed(sessionType)) {
       try {
         const laps = await fetchJson(`${baseUrl}/laps?session_key=${session.openf1_session_key}`);
         normalizedResults = normalizeOpenF1LapFallback(laps);
@@ -10343,13 +10348,10 @@ async function syncOpenF1Laps({
       continue;
     }
 
-    if (normalizedResults.some((result) => !drivers.has(result.driverNumber))) {
-      drivers = await extendDriverMapWithOpenF1SessionParticipants({
-        baseUrl,
-        drivers,
-        sessionKey: session.openf1_session_key,
-      });
-    }
+    const drivers = await extendDriverMapWithOpenF1SessionParticipants({
+      baseUrl,
+      sessionKey: session.openf1_session_key,
+    });
     const saved = await saveOpenF1SessionClassification({
       drivers,
       existingRows: storedState.rows,
@@ -10388,6 +10390,9 @@ async function syncOpenF1Laps({
   const predictionRescore = fantasyRaceIdsToScore.size
     ? await scorePredictions({ raceIds: [...fantasyRaceIdsToScore] })
     : null;
+  const telemetryWarm = await enqueueMissingTelemetryTasks(
+    new TelemetryStore(supabase), localRacePaceTasks(confirmedSessions, now),
+  ).then((queued) => ({ queued }), (error) => ({ error: getSafeErrorMessage(error) }));
 
   return {
     itemsProcessed,
@@ -10599,7 +10604,7 @@ async function syncWeekendWeather() {
   const startDate = formatIsoDate(new Date(Math.min(...sessionDates.map((date) => date.getTime()), Date.now())));
   const endDate = formatIsoDate(new Date(Math.max(...sessionDates.map((date) => date.getTime()), Date.now())));
   const response = await fetch(
-    `${baseUrl}/forecast?latitude=${circuit.latitude}&longitude=${circuit.longitude}&current=temperature_2m,wind_speed_10m,precipitation&hourly=temperature_2m,wind_speed_10m,precipitation,weather_code&timezone=UTC&start_date=${startDate}&end_date=${endDate}`,
+    `${baseUrl}/forecast?latitude=${circuit.latitude}&longitude=${circuit.longitude}&current=temperature_2m,wind_speed_10m,precipitation,weather_code,cloud_cover,is_day&hourly=temperature_2m,wind_speed_10m,precipitation,weather_code&timezone=UTC&start_date=${startDate}&end_date=${endDate}`,
   );
   const weather = await response.json();
   let itemsProcessed = 0;
@@ -13422,71 +13427,21 @@ async function buildCircuitLayoutFromOpenF1(baseUrl, sessionKey) {
   };
 }
 
-async function getDriverMapByNumber(season) {
-  const [{ data: seasonProfiles, error: seasonProfilesError }, { data: drivers, error: driversError }] = await Promise.all([
-    supabase
-      .from("driver_season_profiles")
-      .select("driver_id, permanent_number, primary_team_id")
-      .eq("season_year", season),
-    supabase
-      .from("drivers")
-      .select("id, permanent_number, current_team_id"),
-  ]);
-
-  if (seasonProfilesError) {
-    throw seasonProfilesError;
-  }
-
-  if (driversError) {
-    throw driversError;
-  }
-
-  const driverByNumber = new Map();
-
-  for (const profile of seasonProfiles ?? []) {
-    if (profile.permanent_number === null || !profile.driver_id) {
-      continue;
-    }
-
-    driverByNumber.set(Number(profile.permanent_number), {
-      id: profile.driver_id,
-      current_team_id: profile.primary_team_id ?? null,
-    });
-  }
-
-  for (const driver of drivers ?? []) {
-    if (driver.permanent_number === null || driverByNumber.has(Number(driver.permanent_number))) {
-      continue;
-    }
-
-    driverByNumber.set(Number(driver.permanent_number), driver);
-  }
-
-  return driverByNumber;
-}
-
-async function extendDriverMapWithOpenF1SessionParticipants({ baseUrl, drivers, sessionKey }) {
+async function extendDriverMapWithOpenF1SessionParticipants({ baseUrl, sessionKey }) {
   const participantsPayload = await fetchJson(`${baseUrl}/drivers?session_key=${sessionKey}`);
   const participants = (participantsPayload ?? [])
     .map(getOpenF1ParticipantIdentity)
     .filter(Boolean);
 
   if (!participants.length) {
-    return drivers;
-  }
-
-  const missingParticipants = participants.filter(
-    (participant) => !drivers.has(participant.driverNumber),
-  );
-
-  if (!missingParticipants.length) {
-    return drivers;
+    throw new Error(`OpenF1 session ${sessionKey} roster is empty`);
   }
 
   const [
     { data: teams, error: teamsError },
     { data: driversByExternalId, error: externalIdError },
-    { data: driversByFullName, error: fullNameError },
+    { data: driversByCode, error: codeError },
+    { data: driversBySlug, error: slugError },
   ] = await Promise.all([
     supabase
       .from("teams")
@@ -13495,11 +13450,15 @@ async function extendDriverMapWithOpenF1SessionParticipants({ baseUrl, drivers, 
     supabase
       .from("drivers")
       .select("id, code, full_name, external_id, current_team_id")
-      .in("external_id", missingParticipants.map((participant) => participant.externalId)),
+      .in("external_id", participants.map((participant) => participant.externalId)),
     supabase
       .from("drivers")
       .select("id, code, full_name, external_id, current_team_id")
-      .in("full_name", missingParticipants.map((participant) => participant.fullName)),
+      .in("code", participants.map((participant) => participant.code).filter(Boolean)),
+    supabase
+      .from("drivers")
+      .select("id, code, full_name, external_id, current_team_id")
+      .in("slug", participants.map((participant) => participant.slug)),
   ]);
 
   if (teamsError) {
@@ -13508,24 +13467,44 @@ async function extendDriverMapWithOpenF1SessionParticipants({ baseUrl, drivers, 
   if (externalIdError) {
     throw externalIdError;
   }
-  if (fullNameError) {
-    throw fullNameError;
+  if (codeError) {
+    throw codeError;
+  }
+  if (slugError) {
+    throw slugError;
   }
 
-  const knownByIdentity = new Map(
-    [...(driversByExternalId ?? []), ...(driversByFullName ?? [])].flatMap((driver) => [
-      [normalizeFantasyTeamKey(driver.external_id), driver],
-      [normalizeFantasyTeamKey(driver.full_name), driver],
-    ]),
+  // Numbers can be reused; identify each session participant before assigning their number.
+  const knownDrivers = [...new Map(
+    [...(driversByExternalId ?? []), ...(driversByCode ?? []), ...(driversBySlug ?? [])]
+      .map((driver) => [driver.id, driver]),
+  ).values()];
+  const knownByName = new Map(
+    knownDrivers.map((driver) => [normalizeFantasyTeamKey(driver.full_name), driver])
+      .filter(([name]) => Boolean(name)),
   );
-  const extended = new Map(drivers);
+  const knownByExternalId = new Map(
+    knownDrivers.map((driver) => [normalizeFantasyTeamKey(driver.external_id), driver]),
+  );
+  const extended = new Map();
 
-  for (const participant of missingParticipants) {
+  for (const participant of participants) {
     const teamId = resolveExactTeamId(participant.teamName, teams ?? []);
     let driver =
-      knownByIdentity.get(normalizeFantasyTeamKey(participant.externalId)) ??
-      knownByIdentity.get(normalizeFantasyTeamKey(participant.fullName)) ??
+      knownByName.get(normalizeFantasyTeamKey(participant.fullName)) ??
+      knownByExternalId.get(normalizeFantasyTeamKey(participant.externalId)) ??
       null;
+
+    if (!driver && participant.code) {
+      const name = normalizeFantasyTeamKey(participant.fullName);
+      const aliases = knownDrivers.filter((candidate) => {
+        const candidateName = normalizeFantasyTeamKey(candidate.full_name);
+        return candidate.code === participant.code && name.includes(" ") && (
+          candidateName.endsWith(` ${name}`) || name.endsWith(` ${candidateName}`)
+        );
+      });
+      if (aliases.length === 1) driver = aliases[0];
+    }
 
     if (!driver) {
       const { data, error } = await supabase
@@ -13551,8 +13530,8 @@ async function extendDriverMapWithOpenF1SessionParticipants({ baseUrl, drivers, 
 
       driver = data;
       if (driver) {
-        knownByIdentity.set(normalizeFantasyTeamKey(participant.externalId), driver);
-        knownByIdentity.set(normalizeFantasyTeamKey(participant.fullName), driver);
+        knownByExternalId.set(normalizeFantasyTeamKey(participant.externalId), driver);
+        knownByName.set(normalizeFantasyTeamKey(participant.fullName), driver);
       }
     }
 
@@ -14155,14 +14134,16 @@ async function upsertScheduleSessions(raceId, race, options = {}) {
     }
 
     const startAt = `${value.date}T${value.time ?? "00:00:00Z"}`;
-    const status = hasSessionCompletionWindowElapsed(startAt, sessionType) ? "completed" : "scheduled";
-
-    const { data: previous } = await supabase
+    const { data: previous, error: previousError } = await supabase
       .from("sessions")
-      .select("id, start_at")
+      .select("id, start_at, status")
       .eq("race_id", raceId)
       .eq("session_type", sessionType)
       .maybeSingle();
+
+    if (previousError) {
+      throw previousError;
+    }
 
     const { data: saved } = await supabase.from("sessions").upsert(
       {
@@ -14170,7 +14151,7 @@ async function upsertScheduleSessions(raceId, race, options = {}) {
         session_type: sessionType,
         name,
         start_at: startAt,
-        status,
+        status: previous?.status ?? "scheduled",
       },
       { onConflict: "race_id,session_type" },
     ).select("id").single();

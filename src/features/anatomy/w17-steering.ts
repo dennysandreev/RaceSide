@@ -183,12 +183,33 @@ export function seatSteeringSystem(car: T.Group, system: T.Group, mat: Materials
   for (const s of [-1, 1]) {
     const z = s * .123, y = bottom(1.48, z, -1)!;
     const foot = add(`rack mount ${s}`, new RoundedBoxGeometry(.062, .009, .040, 2, .001), [1.48, y + .003, z]);
+    // Follow the curved tub floor across the entire pad. A level base fitted
+    // at its centre protruded through the rising outer wall at both edges.
+    const fp=foot.geometry.attributes.position;
+    for(let i=0;i<fp.count;i++){
+      const floor=bottom(1.48+fp.getX(i),z+fp.getZ(i),-1)!;
+      fp.setY(i,fp.getY(i)+floor-y+.0025);
+    }
+    foot.geometry.computeVertexNormals();
     foot.userData.seat = [1.48, y, z];
-    add(`rack pedestal ${s}`, new RoundedBoxGeometry(.034, .28 - y - .014, .025, 2, .002), [1.48, (y + .28 - .014) / 2, z]);
+    const pedestal=add(`rack pedestal ${s}`, new RoundedBoxGeometry(.034, .28 - y - .014, .025, 2, .002), [1.48, (y + .28 - .014) / 2, z]);
+    const pp=pedestal.geometry.attributes.position,top=.28-.014;
+    for(let i=0;i<pp.count;i++){
+      const floor=bottom(1.48+pp.getX(i),z+pp.getZ(i),-1)!+.006;
+      const t=(pp.getY(i)+pedestal.position.y-y)/(top-y);
+      pp.setY(i,T.MathUtils.lerp(floor,top,t)-pedestal.position.y);
+    }
+    pedestal.geometry.computeVertexNormals();
     const shape = new T.Shape(); shape.absarc(0, 0, .026, 0, Math.PI * 2, false);
     const hole = new T.Path(); hole.absarc(0, 0, s > 0 ? .020 : .016, 0, Math.PI * 2, true); shape.holes.push(hole);
     add(`rack clamp ${s}`, new T.ExtrudeGeometry(shape, { depth: .012, bevelEnabled: false, curveSegments: 32 }), [1.48, .28, z - .006]);
-    for (const dx of [-.024, .024]) add(`rack fixing ${s} ${dx}`, new T.CylinderGeometry(.003, .003, .017, 6), [1.48 + dx, y + .008, z], mat.metal);
+    for (const dx of [-.024, .024]) {
+      const x=1.48+dx,h=.001;
+      const inward=new T.Vector3(-(bottom(x+h,z,-1)!-bottom(x-h,z,-1)!)/(2*h),1,-(bottom(x,z+h,-1)!-bottom(x,z-h,-1)!)/(2*h)).normalize();
+      const centre=new T.Vector3(x,bottom(x,z,-1)!,z).addScaledVector(inward,.011);
+      const bolt=add(`rack fixing ${s} ${dx}`,new T.CylinderGeometry(.003,.003,.017,6),centre.toArray() as V,mat.metal);
+      bolt.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),inward);
+    }
   }
   const upper = vec(system.userData.upperBearing), lower = vec(system.userData.lowerBearing);
   const keel = car.getObjectByName("Front suspension keel") as T.Mesh, keelRoof = createSurfaceSampler([keel], "y");

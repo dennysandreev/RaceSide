@@ -7,16 +7,19 @@ import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react"
 
 import { HomeSessionStrip } from "@/components/racemate/home-session-strip";
 import { RaceFlag } from "@/components/racemate/race-flag";
+import { SeasonChampionBadge } from "@/components/racemate/season-champion-badge";
 import { SeasonGlobeSceneLazy } from "@/components/racemate/season-globe/season-globe-scene-lazy";
 import type { SessionWithResults } from "@/components/racemate/session-results-dialog";
 import { TrackMap } from "@/components/racemate/track-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getConfirmedSeasonChampion } from "@/data/season-champions";
 import { formatSessionName } from "@/lib/session-display";
 import {
   formatSeasonGlobeCountdownLabel,
   formatSeasonGlobeDateTimeLabel,
 } from "@/lib/season-globe-data";
+import { cn } from "@/lib/utils";
 import type {
   NextSession,
   RaceDetail,
@@ -271,6 +274,7 @@ export function SeasonGlobeExplorer({
 
 function HomeSeasonProgress({ data }: { data: SeasonGlobeData }) {
   const totalCount = data.events.length;
+  const champion = getConfirmedSeasonChampion(data.season);
 
   if (!totalCount) {
     return null;
@@ -287,13 +291,25 @@ function HomeSeasonProgress({ data }: { data: SeasonGlobeData }) {
   } as CSSProperties;
 
   return (
-    <div className="mb-4 hidden border-b border-border/50 pb-3 lg:block" style={progressStyle}>
+    <div className={cn("mb-4 border-b border-border/50 pb-3", !champion && "hidden lg:block")} style={progressStyle}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-foreground">{title}</p>
-        <div className="flex items-baseline gap-4 font-telemetry tabular-nums">
-          <p className="text-xs text-muted-foreground">{completedCount} из {totalCount} этапов</p>
-          <p className="text-[1.375rem] font-bold leading-none text-foreground">{progressPercent}%</p>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold leading-5 text-foreground">{title}</p>
+          {champion ? (
+            <p className="mt-1 font-telemetry text-[0.65rem] tabular-nums text-muted-foreground sm:text-xs">
+              {completedCount} из {totalCount} этапов <span aria-hidden="true">·</span>{" "}
+              <span className="font-bold text-foreground">{progressPercent}%</span>
+            </p>
+          ) : null}
         </div>
+        {champion ? (
+          <SeasonChampionBadge champion={champion} />
+        ) : (
+          <div className="flex items-baseline gap-4 font-telemetry tabular-nums">
+            <p className="text-xs text-muted-foreground">{completedCount} из {totalCount} этапов</p>
+            <p className="text-[1.375rem] font-bold leading-none text-foreground">{progressPercent}%</p>
+          </div>
+        )}
       </div>
       <div
         aria-label={title}

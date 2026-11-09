@@ -294,3 +294,21 @@ export type SavedComparison = {
   comparison: Comparison;
   createdAt: string;
 };
+export type SessionLapMetric = {
+  driver: Driver;
+  lap: Lap | null;
+  topSpeed: number | null;
+  averageSpeed: number | null;
+  fullThrottle: number | null;
+  speedCoverage: number;
+  throttleCoverage: number;
+  samples: number;
+  state: "ready" | "partial" | "unavailable" | "no-lap";
+  averageMethod: "circuit-length" | "telemetry";
+};
+export type SessionMetrics = {
+  version: string;
+  session: Session;
+  circuitLength: number | null;
+  laps: SessionLapMetric[];
+};

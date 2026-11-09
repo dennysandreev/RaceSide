@@ -85,3 +85,13 @@ test("production workers use resilient polling intervals", () => {
   assert.match(warmer, /isApplicationHealthy/);
   assert.match(warmer, /const intervalMs = 4 \* 60_000/);
 });
+
+test("web image cache survives recreation without sharing the LIVE spool", () => {
+  for (const path of ["../docker-compose.yml", "../deploy/docker-compose.server.yml"]) {
+    const source = readFileSync(new URL(path, import.meta.url), "utf8");
+    const web = source.slice(source.indexOf("  web:"), source.indexOf("  live:"));
+    assert.match(web, /web-image-cache:\/app\/\.next\/cache\/images/);
+    assert.doesNotMatch(web, /live-spool/);
+    assert.match(source, /^volumes:\n(?:.*\n)*?  web-image-cache:/m);
+  }
+});

@@ -91,6 +91,14 @@ export type WeatherState = {
   rain: number | null;
   wind: number | null;
   humidity: number | null;
+  condition?: {
+    code: number;
+    isDay: boolean | null;
+    cloudCover: number | null;
+    observedAt: string;
+    expiresAt: string;
+    source: "Open-Meteo";
+  } | null;
 };
 export type LiveStint = {
   driverNumber: number;

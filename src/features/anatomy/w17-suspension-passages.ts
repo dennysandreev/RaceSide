@@ -102,7 +102,10 @@ function hollowCover(part:T.Mesh){
 function cleanCut(geometry:T.BufferGeometry){
   const p=geometry.attributes.position,index=geometry.index!,vertices:T.Vector3[]=[],ids:number[]=[],keys=new Map<string,number>();
   for(let i=0;i<p.count;i++){
-    const v=new T.Vector3().fromBufferAttribute(p,i),key=v.toArray().map(n=>Math.round(n*1e6)).join();
+    // Weld in the final storage precision. A Float64 rim just below a weld
+    // boundary can round onto its neighbour when exported as Float32, leaving
+    // two opposite slivers attached to the same laminate edge after cleanup.
+    const v=new T.Vector3(Math.fround(p.getX(i)),Math.fround(p.getY(i)),Math.fround(p.getZ(i))),key=v.toArray().map(n=>Math.round(n*1e6)).join();
     if(!keys.has(key)){keys.set(key,vertices.length);vertices.push(v);}
     const id=keys.get(key)!;ids.push(id);p.setXYZ(i,vertices[id].x,vertices[id].y,vertices[id].z);
   }

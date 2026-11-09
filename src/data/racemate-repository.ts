@@ -2537,7 +2537,7 @@ export async function getDriverComparisonData(
   const isCurrentSeason = selectedSeason === CURRENT_F1_SEASON;
 
   return withServerTtlCache(
-    `public:driver-comparison:${selectedSeason}:${normalizedSlugs.join(":") || "empty"}`,
+    `public:driver-comparison:v2:${selectedSeason}:${normalizedSlugs.join(":") || "empty"}`,
     isCurrentSeason ? 60_000 : 5 * 60_000,
     () => getDriverComparisonDataUncached(selectedSeason, normalizedSlugs),
     { staleWhileRevalidateMs: isCurrentSeason ? 5 * 60_000 : 30 * 60_000 },
@@ -2687,27 +2687,8 @@ async function getDriverComparisonDataUncached(
       const raceResult = raceSession
         ? resultsBySession.get(raceSession.id) ?? null
         : null;
-      const raceCompleted =
-        isCompletedSportStatus(race.status) ||
-        isCompletedSportStatus(raceSession?.status) ||
-        Boolean(raceResult);
-      const missingCompletedResult = raceCompleted && !raceResult && Boolean(qualifyingResult);
 
-      return {
-        round: race.round,
-        raceName: formatGrandPrixNameRu(race.race_name),
-        participated: Boolean(qualifyingResult || sprintResult || raceResult),
-        qualifyingPosition: qualifyingResult?.position ?? null,
-        sprintPosition: sprintResult?.position ?? null,
-        sprintPoints: sprintResult ? getDriverResultPoints(sprintResult, "sprint") : 0,
-        startPosition: normalizeGridPosition(raceResult?.grid),
-        finishPosition: raceResult?.position ?? null,
-        fastestLapTime: getFastestLapTime(raceResult),
-        racePoints: raceResult ? getDriverResultPoints(raceResult, "race") : 0,
-        status: missingCompletedResult ? "Сход" : raceResult?.status ?? null,
-        isDnf: missingCompletedResult || isDnfDriverResult(raceResult),
-        hasFastestLap: hasFastestLap(raceResult),
-      };
+      return buildDriverRaceInput(race, qualifyingResult, sprintResult, raceResult);
     });
     const standingInputs: DriverComparisonStandingInput[] = standings
       .filter((standing) => standing.driver_id === driver.id && standing.round)
@@ -2885,7 +2866,6 @@ export async function getDriverProfileBySlug(
     standingsHistory,
     topTenCumulativePoints,
   );
-  const latestStanding = getLatestDriverStanding(standingsHistory);
 
   return {
     id: driver.id,
@@ -2911,12 +2891,7 @@ export async function getDriverProfileBySlug(
     },
     season: selectedSeason,
     availableSeasons,
-    stats: {
-      ...context.stats,
-      championshipPosition: latestStanding?.position ?? context.stats.championshipPosition,
-      points: latestStanding ? Number(latestStanding.points) : context.stats.points,
-      wins: latestStanding?.wins ?? context.stats.wins,
-    },
+    stats: context.stats,
     results: context.results,
     charts: context.charts,
     form: context.form,
@@ -4229,7 +4204,7 @@ export async function getPredictionState(
   }
 
   return {
-    drivers: publicState.drivers,
+    drivers: await getFantasyDriverOptionsForRace(publicState.drivers, race, current),
     startingGrid: publicState.startingGrid,
     race,
     teams: publicState.teams,
@@ -4237,6 +4212,65 @@ export async function getPredictionState(
     seasonSummary,
     current,
   };
+}
+
+async function getFantasyDriverOptionsForRace(
+  drivers: PredictionState["drivers"],
+  race: PredictionState["race"],
+  current: PredictionState["current"],
+): Promise<PredictionState["drivers"]> {
+  const ocon = drivers.find((driver) => driver.slug === "esteban-ocon");
+
+  if (!race || race.season !== 2026 || race.round < 20 || !ocon) {
+    return drivers;
+  }
+
+  const camara = drivers.find((driver) => driver.slug === "rafael-camara")
+    ?? await withServerTtlCache("public:fantasy-camara:2026", 60_000, async () => {
+      const supabase = await createSupabaseServerClient();
+      if (!supabase) return null;
+
+      const { data, error } = await supabase
+        .from("drivers")
+        .select("id, full_name, slug, code, permanent_number, teams:current_team_id(name, code)")
+        .eq("external_id", "rafael_camara")
+        .eq("is_active", true)
+        .maybeSingle();
+
+      if (error || !data) return null;
+      const driver = data as unknown as DriverOptionRow;
+      const team = getRelationObject(driver.teams);
+      const teamAsset = getTeamAsset(team?.code) ?? getTeamAsset(team?.name);
+
+      return {
+        avatarUrl: getFantasyPredictionDriverAvatarUrl(driver.slug),
+        code: driver.code,
+        id: driver.id,
+        name: driver.full_name,
+        number: driver.permanent_number ?? null,
+        slug: driver.slug,
+        team: getRelationName(driver.teams, "Команда уточняется"),
+        teamCode: team?.code ?? null,
+        teamColor: teamAsset?.color ?? null,
+      };
+    });
+
+  if (!camara) return drivers;
+
+  // Keep saved identities available so opening an old pick never clears Ocon.
+  const savedIds = new Set([
+    ...(current?.top10DriverIds ?? []),
+    current?.poleDriverId,
+    current?.winnerDriverId,
+    current?.fastestLapDriverId,
+    current?.dnfDriverId,
+  ]);
+  const alreadyAvailable = drivers.some((driver) => driver.id === camara.id);
+
+  return drivers.flatMap((driver) => driver.id !== ocon.id ? [driver] : [
+    ...(savedIds.has(driver.id) ? [driver] : []),
+    ...(alreadyAvailable ? [] : [camara]),
+  ]);
 }
 
 async function getPublicPredictionState() {
@@ -4898,6 +4932,7 @@ const localPredictionDriverAvatarSlugs = new Set([
   "oliver-bearman",
   "oscar-piastri",
   "pierre-gasly",
+  "rafael-camara",
   "sergio-perez",
   "valtteri-bottas",
 ]);
@@ -7241,7 +7276,7 @@ export async function getSeasonChampionOdds(): Promise<SeasonChampionOdds | null
       outcomes: parsePolymarketEventOutcomes(event, driverNames, "driver-champion"),
       score: scoreSeasonChampionEvent(event),
     }))
-    .filter((entry) => entry.score >= 8 && entry.outcomes.length >= 2)
+    .filter((entry) => entry.score >= 8 && entry.outcomes.length >= 1)
     .sort(
       (a, b) =>
         b.score - a.score ||
@@ -7272,7 +7307,7 @@ export async function getConstructorChampionOdds(): Promise<ConstructorChampionO
       outcomes: parsePolymarketEventOutcomes(event, teamNames, "constructor-champion"),
       score: scoreConstructorChampionEvent(event),
     }))
-    .filter((entry) => entry.score >= 8 && entry.outcomes.length >= 2)
+    .filter((entry) => entry.score >= 8 && entry.outcomes.length >= 1)
     .sort(
       (a, b) =>
         b.score - a.score ||
@@ -7407,7 +7442,7 @@ function mapSessionResultRows(
     .filter((row) => {
       const session = getRelationObject(row.sessions);
 
-      if (session?.session_type !== "race" && session?.session_type !== "sprint") {
+      if (!["race", "sprint", "qualifying", "sprint_qualifying"].includes(session?.session_type ?? "")) {
         return true;
       }
 
@@ -8098,6 +8133,7 @@ function buildDriverProfileContext(
   });
 
   const resultRows: DriverRaceResultRow[] = [];
+  const raceInputs: DriverComparisonRaceInput[] = [];
   const racePoints: DriverChartPoint[] = [];
   const cumulativePoints: DriverChartPoint[] = [];
   const positionTrend: DriverChartPoint[] = [];
@@ -8113,22 +8149,18 @@ function buildDriverProfileContext(
     const raceSession = findSessionByType(raceSessions, "race");
     const sprintSession = findSessionByType(raceSessions, "sprint");
     const qualifyingSession = findSessionByType(raceSessions, "qualifying");
-    const raceSessionResults = raceSession ? resultsBySession.get(raceSession.id) ?? [] : [];
     const raceResult = getDriverSessionResult(resultsBySession, raceSession?.id, driverId);
     const sprintResult = getDriverSessionResult(resultsBySession, sprintSession?.id, driverId);
     const qualifyingResult = getDriverSessionResult(resultsBySession, qualifyingSession?.id, driverId);
-    const racePointsValue = raceResult ? getDriverResultPoints(raceResult, "race") : 0;
-    const sprintPointsValue = sprintResult ? getDriverResultPoints(sprintResult, "sprint") : 0;
-    const isMissingCompletedResult = raceSessionResults.length > 0 && !raceResult;
-    const totalRoundPoints = raceResult || sprintResult || isMissingCompletedResult
-      ? racePointsValue + sprintPointsValue
+    const input = buildDriverRaceInput(race, qualifyingResult, sprintResult, raceResult);
+    raceInputs.push(input);
+    const totalRoundPoints = raceResult || sprintResult
+      ? input.racePoints + input.sprintPoints
       : null;
     const circuit = getRelationObject(race.circuits);
-    const finishPosition = raceResult?.position ?? null;
-    const startPosition = normalizeGridPosition(raceResult?.grid);
+    const { finishPosition, startPosition, isDnf } = input;
     const positionDelta =
       startPosition && finishPosition ? startPosition - finishPosition : null;
-    const isDnf = isMissingCompletedResult || isDnfDriverResult(raceResult);
 
     if (totalRoundPoints !== null) {
       cumulative += totalRoundPoints;
@@ -8141,7 +8173,7 @@ function buildDriverProfileContext(
       circuit: circuit?.name ?? "Трасса уточняется",
       country: circuit?.country ?? "",
       countryCode: getCountryCode(circuit?.country ?? ""),
-      qualifyingPosition: qualifyingResult?.position ?? null,
+      qualifyingPosition: input.qualifyingPosition,
       startPosition,
       finishPosition,
       positionDelta,
@@ -8174,26 +8206,35 @@ function buildDriverProfileContext(
   const positions = completedRows
     .map((row) => row.finishPosition)
     .filter((value): value is number => typeof value === "number");
-  const starts = completedRows
-    .map((row) => row.startPosition)
-    .filter((value): value is number => typeof value === "number");
   const deltas = completedRows
     .filter((row) => row.positionDelta !== null)
     .map((row) => ({ value: row.positionDelta as number, raceName: row.raceName }));
+  const snapshots = buildDriverRoundSnapshots(
+    raceInputs,
+    standingsHistory.flatMap((row) => row.round ? [{
+      round: row.round,
+      position: row.position,
+      points: Number(row.points),
+      wins: row.wins ?? 0,
+    }] : []),
+    Math.max(0, ...races.map((race) => race.round)),
+  );
+  const snapshot = snapshots.at(-1);
+  const latestStanding = getLatestDriverStanding(standingsHistory);
   const stats: DriverSeasonStats = {
-    points: Number(cumulative.toFixed(2)),
-    championshipPosition: getLatestDriverStanding(standingsHistory)?.position ?? null,
-    wins: completedRows.filter((row) => row.isWin).length,
-    podiums: completedRows.filter((row) => row.isPodium).length,
-    poles: resultRows.filter((row) => row.qualifyingPosition === 1).length,
-    fastestLaps: countFastestLaps(driverId, races, sessionsByRace, resultsBySession),
-    dnfs: completedRows.filter((row) => row.isDnf).length,
-    pointsFinishes: completedRows.filter((row) => row.scoredPoints).length,
-    averageStart: averageNumber(starts),
-    averageFinish: averageNumber(positions),
+    points: snapshot?.points ?? (latestStanding ? Number(latestStanding.points) : 0),
+    championshipPosition: snapshot?.championshipPosition ?? latestStanding?.position ?? null,
+    wins: snapshot?.wins ?? latestStanding?.wins ?? 0,
+    podiums: snapshot?.podiums ?? 0,
+    poles: snapshot?.poles ?? 0,
+    fastestLaps: snapshot?.fastestLaps ?? 0,
+    dnfs: snapshot?.dnfs ?? 0,
+    pointsFinishes: snapshot?.pointsFinishes ?? 0,
+    averageStart: snapshot?.averageStart ?? null,
+    averageFinish: snapshot?.averageFinish ?? null,
     bestResult: positions.length ? Math.min(...positions) : null,
     worstResult: positions.length ? Math.max(...positions) : null,
-    q3Appearances: resultRows.filter((row) => row.qualifyingPosition && row.qualifyingPosition <= 10).length,
+    q3Appearances: snapshot?.q3Appearances ?? 0,
   };
 
   return {
@@ -8250,18 +8291,27 @@ function isDnfDriverResult(result?: DriverSessionResultDbRow | null) {
   );
 }
 
-function countFastestLaps(
-  driverId: string,
-  races: DriverRaceDbRow[],
-  sessionsByRace: Map<string, DriverSessionDbRow[]>,
-  resultsBySession: Map<string, DriverSessionResultDbRow[]>,
-) {
-  return races.reduce((count, race) => {
-    const raceSession = findSessionByType(sessionsByRace.get(race.id) ?? [], "race");
-    const result = getDriverSessionResult(resultsBySession, raceSession?.id, driverId);
-
-    return count + (hasFastestLap(result) ? 1 : 0);
-  }, 0);
+function buildDriverRaceInput(
+  race: DriverRaceDbRow,
+  qualifyingResult: DriverSessionResultDbRow | null,
+  sprintResult: DriverSessionResultDbRow | null,
+  raceResult: DriverSessionResultDbRow | null,
+): DriverComparisonRaceInput {
+  return {
+    round: race.round,
+    raceName: formatGrandPrixNameRu(race.race_name),
+    participated: Boolean(qualifyingResult || sprintResult || raceResult),
+    qualifyingPosition: normalizeGridPosition(qualifyingResult?.position),
+    sprintPosition: normalizeGridPosition(sprintResult?.position),
+    sprintPoints: sprintResult ? getDriverResultPoints(sprintResult, "sprint") : 0,
+    startPosition: normalizeGridPosition(raceResult?.grid),
+    finishPosition: normalizeGridPosition(raceResult?.position),
+    fastestLapTime: getFastestLapTime(raceResult),
+    racePoints: raceResult ? getDriverResultPoints(raceResult, "race") : 0,
+    status: raceResult?.status ?? null,
+    isDnf: isDnfDriverResult(raceResult),
+    hasFastestLap: hasFastestLap(raceResult),
+  };
 }
 
 function hasFastestLap(result?: DriverSessionResultDbRow | null) {
@@ -8407,15 +8457,12 @@ function buildTeammateComparison(
     const qualifyingSession = findSessionByType(raceSessions, "qualifying");
     const raceSession = findSessionByType(raceSessions, "race");
     const sprintSession = findSessionByType(raceSessions, "sprint");
-    const raceSessionResults = raceSession ? resultsBySession.get(raceSession.id) ?? [] : [];
     const driverRace = getDriverSessionResult(resultsBySession, raceSession?.id, driverId);
     const driverQualifying = getDriverSessionResult(resultsBySession, qualifyingSession?.id, driverId);
     const driverTeamId = driverRace?.team_id ?? driverQualifying?.team_id;
     const teammateRace = findTeammateResult(resultsBySession, raceSession?.id, driverTeamId, driverId);
     const teammateQualifying = findTeammateResult(resultsBySession, qualifyingSession?.id, driverTeamId, driverId);
     const teammateSprint = findTeammateResult(resultsBySession, sprintSession?.id, driverTeamId, driverId);
-    const driverMissingResult = raceSessionResults.length > 0 && !driverRace && Boolean(driverQualifying);
-    const teammateMissingResult = raceSessionResults.length > 0 && !teammateRace && Boolean(teammateQualifying);
 
     if (driverQualifying?.position && teammateQualifying?.position) {
       if (driverQualifying.position < teammateQualifying.position) {
@@ -8431,10 +8478,6 @@ function buildTeammateComparison(
       } else if (teammateRace.position < driverRace.position) {
         comparison.races.teammate += 1;
       }
-    } else if (driverRace?.position && teammateMissingResult) {
-      comparison.races.driver += 1;
-    } else if (teammateRace?.position && driverMissingResult) {
-      comparison.races.teammate += 1;
     }
 
     if (driverRace) {
@@ -8442,10 +8485,10 @@ function buildTeammateComparison(
       comparison.podiums.driver += driverRace.position && driverRace.position <= 3 ? 1 : 0;
       comparison.wins.driver += driverRace.position === 1 ? 1 : 0;
       comparison.dnfs.driver += isDnfDriverResult(driverRace) ? 1 : 0;
-      if (driverRace.grid) driverStarts.push(driverRace.grid);
-      if (driverRace.position) driverFinishes.push(driverRace.position);
-    } else if (driverMissingResult) {
-      comparison.dnfs.driver += 1;
+      const startPosition = normalizeGridPosition(driverRace.grid);
+      const finishPosition = normalizeGridPosition(driverRace.position);
+      if (startPosition !== null) driverStarts.push(startPosition);
+      if (finishPosition !== null) driverFinishes.push(finishPosition);
     }
 
     if (teammateRace) {
@@ -8455,10 +8498,10 @@ function buildTeammateComparison(
       comparison.podiums.teammate += teammateRace.position && teammateRace.position <= 3 ? 1 : 0;
       comparison.wins.teammate += teammateRace.position === 1 ? 1 : 0;
       comparison.dnfs.teammate += isDnfDriverResult(teammateRace) ? 1 : 0;
-      if (teammateRace.grid) teammateStarts.push(teammateRace.grid);
-      if (teammateRace.position) teammateFinishes.push(teammateRace.position);
-    } else if (teammateMissingResult) {
-      comparison.dnfs.teammate += 1;
+      const startPosition = normalizeGridPosition(teammateRace.grid);
+      const finishPosition = normalizeGridPosition(teammateRace.position);
+      if (startPosition !== null) teammateStarts.push(startPosition);
+      if (finishPosition !== null) teammateFinishes.push(finishPosition);
     }
 
     const teammateIdentity = getRelationObject(teammateRace?.drivers ?? teammateQualifying?.drivers ?? null);
@@ -8888,12 +8931,31 @@ function scorePolymarketEvent(event: PolymarketEvent, race: RaceDetail) {
   return score;
 }
 
+function isNonTitleChampionshipMarket(value: string) {
+  return /\b(?:place|position|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|runner up|podium|ahead|behind|without|excluding|not)\b|\b\d+(?:st|nd|rd|th)\b|\btop\s*\d+\b/.test(value);
+}
+
+function isPolymarketEventForSeason(event: PolymarketEvent, season: number) {
+  const identity = `${event.title ?? ""} ${event.slug ?? ""}`;
+  const eventYears = identity.match(/\b20\d{2}\b/g) ?? [];
+  const years = eventYears.length ? eventYears : (event.markets ?? []).flatMap((market) =>
+    `${market.question ?? ""} ${market.title ?? ""} ${market.slug ?? ""}`.match(/\b20\d{2}\b/g) ?? [],
+  );
+
+  return years.length > 0 && years.every((year) => Number(year) === season);
+}
+
 function scoreSeasonChampionEvent(event: PolymarketEvent) {
-  if (!event.active || event.closed || event.archived) {
+  if (!event.active || event.closed || event.archived || !isPolymarketEventForSeason(event, CURRENT_F1_SEASON)) {
     return 0;
   }
 
   const normalizedTitle = normalizeText(`${event.title ?? ""} ${event.slug ?? ""}`);
+
+  if (isNonTitleChampionshipMarket(normalizedTitle)) {
+    return 0;
+  }
+
   let score = 0;
 
   if (normalizedTitle.includes("f1") || normalizedTitle.includes("formula 1")) {
@@ -8904,7 +8966,7 @@ function scoreSeasonChampionEvent(event: PolymarketEvent) {
     score += 6;
   }
 
-  if (normalizedTitle.includes("2026")) {
+  if (normalizedTitle.includes(String(CURRENT_F1_SEASON))) {
     score += 2;
   }
 
@@ -8926,11 +8988,16 @@ function scoreSeasonChampionEvent(event: PolymarketEvent) {
 }
 
 function scoreConstructorChampionEvent(event: PolymarketEvent) {
-  if (!event.active || event.closed || event.archived) {
+  if (!event.active || event.closed || event.archived || !isPolymarketEventForSeason(event, CURRENT_F1_SEASON)) {
     return 0;
   }
 
   const normalizedTitle = normalizeText(`${event.title ?? ""} ${event.slug ?? ""}`);
+
+  if (isNonTitleChampionshipMarket(normalizedTitle)) {
+    return 0;
+  }
+
   let score = 0;
 
   if (normalizedTitle.includes("f1") || normalizedTitle.includes("formula 1")) {
@@ -8946,7 +9013,7 @@ function scoreConstructorChampionEvent(event: PolymarketEvent) {
     score += 7;
   }
 
-  if (normalizedTitle.includes("2026")) {
+  if (normalizedTitle.includes(String(CURRENT_F1_SEASON))) {
     score += 2;
   }
 
@@ -8976,6 +9043,17 @@ function parsePolymarketEventOutcomes(
 
   (event.markets ?? []).forEach((market) => {
     if (!market.active || market.closed || market.archived) {
+      return;
+    }
+
+    if (kind !== "race-winner" && (
+      !isPolymarketOutcomeMarket(market, kind) ||
+      !isPolymarketEventForSeason({
+        ...event,
+        title: `${event.title ?? ""} ${market.question ?? ""} ${market.title ?? ""}`,
+        slug: `${event.slug ?? ""} ${market.slug ?? ""}`,
+      }, CURRENT_F1_SEASON)
+    )) {
       return;
     }
 
@@ -9062,12 +9140,9 @@ function isPolymarketOutcomeMarket(
 
 function isDriverChampionMarket(market: PolymarketMarket) {
   const normalized = normalizeText(`${market.question ?? ""} ${market.slug ?? ""}`);
-  const outcomes = parseStringArray(market.outcomes).map(normalizeText);
-  const hasYesNo =
-    outcomes.length === 2 && outcomes.includes("yes") && outcomes.includes("no");
 
   return (
-    hasYesNo &&
+    !isNonTitleChampionshipMarket(normalized) &&
     (normalized.includes("f1 drivers champion") ||
       normalized.includes("f1 driver champion") ||
       normalized.includes("drivers champion")) &&
@@ -9092,12 +9167,9 @@ function isDriverWinnerMarket(market: PolymarketMarket) {
 
 function isConstructorChampionMarket(market: PolymarketMarket) {
   const normalized = normalizeText(`${market.question ?? ""} ${market.slug ?? ""}`);
-  const outcomes = parseStringArray(market.outcomes).map(normalizeText);
-  const hasYesNo =
-    outcomes.length === 2 && outcomes.includes("yes") && outcomes.includes("no");
 
   return (
-    hasYesNo &&
+    !isNonTitleChampionshipMarket(normalized) &&
     (normalized.includes("f1 constructors champion") ||
       normalized.includes("f1 constructor champion") ||
       normalized.includes("constructors champion") ||
@@ -9140,7 +9212,11 @@ function getPolymarketUpdatedAt(event: PolymarketEvent) {
 }
 
 function getPolymarketEventUrl(event: PolymarketEvent) {
-  return `https://polymarket.com/event/${event.slug ?? event.id ?? ""}`;
+  const eventId = event.slug ?? event.id;
+  const url = new URL(eventId == null || eventId === "" ? "/" : `/event/${eventId}`, "https://polymarket.com");
+  url.searchParams.set("r", "raceside");
+
+  return url.toString();
 }
 
 function parsePolymarketOutcomes(
@@ -10374,8 +10450,6 @@ function mapSessionStatus(status: string) {
 function getRuntimeSessionStatus({
   hasResults = false,
   rawStatus,
-  sessionName,
-  sessionType,
   startsAt,
 }: {
   hasResults?: boolean;
@@ -10384,7 +10458,7 @@ function getRuntimeSessionStatus({
   sessionType?: string | null;
   startsAt: string | null;
 }) {
-  if (hasResults || rawStatus === "completed") {
+  if (hasResults || rawStatus === "completed" || rawStatus === "finished") {
     return "Завершена";
   }
 
@@ -10395,14 +10469,8 @@ function getRuntimeSessionStatus({
   }
 
   const now = Date.now();
-  const endMs = startMs + getSessionDurationMs(sessionType, sessionName);
-
-  if (now >= startMs && now < endMs) {
+  if (now >= startMs) {
     return "Live";
-  }
-
-  if (now >= endMs) {
-    return "Завершена";
   }
 
   return "Ожидается";

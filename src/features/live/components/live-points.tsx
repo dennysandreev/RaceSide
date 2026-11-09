@@ -81,11 +81,9 @@ export function ChampionshipPoints({
           {badge}
         </span>
       </header>
-      {projection.sprintPending || projection.missingDrivers ? (
+      {projection.sprintPending ? (
         <p className="live-points-notice" role="status">
-          {projection.sprintPending
-            ? "Ждём итог спринта: его очки пока не учтены."
-            : "Позиции уточняются. Очки для пилотов без подтверждённой позиции пока не начислены."}
+          Ждём итог спринта: его очки пока не учтены.
         </p>
       ) : null}
       <div className="live-points-tables">

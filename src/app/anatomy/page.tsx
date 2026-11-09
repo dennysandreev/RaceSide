@@ -2,10 +2,11 @@ import { AppShell } from "@/components/racemate/app-shell";
 import { AnatomyExplorer } from "@/features/anatomy/explorer";
 import { createPageMetadata } from "@/lib/seo";
 import "@/features/anatomy/anatomy.css";
+import "@/features/anatomy/driving-lesson.css";
 
 export const metadata = createPageMetadata({
   title: "Болид Формулы-1 2026 — устройство",
-  description: "Изучи болид Формулы-1 сезона 2026: объёмная модель, 30 узлов, активные крылья и движение воздуха.",
+  description: "Изучи 31 узел болида Формулы-1 2026 и пройди учебный круг Монцы: работа механизмов, энергия, торможение и потоки воздуха.",
   path: "/anatomy",
 });
 

@@ -21,12 +21,27 @@ const malaysiaCircuitMap = "/f1/circuits/2026/16-malaysia.webp";
 const malaysiaCircuitMapVersioned = `${malaysiaCircuitMap}?v=69b864ad6585da55`;
 const singaporeCircuitMap = "/f1/circuits/2026/17-singapore.webp";
 const singaporeCircuitMapRevision = "8429e12bedf7e73c";
+const unitedStatesCircuitMap = "/f1/circuits/2026/18-united-states.webp";
+const unitedStatesCircuitMapRevision = "a5a3a52e80d69a75";
+const mexicoCircuitMap = "/f1/circuits/2026/19-mexico.webp";
+const mexicoCircuitMapRevision = "c5d6008a33a7c5b3";
+const brazilCircuitMap = "/f1/circuits/2026/20-brazil.webp";
+const brazilCircuitMapRevision = "560141f6d73a7ac1";
 
 export function getVersionedCircuitMapUrl(url: string): string {
   const localPath = url.split(/[?#]/, 1)[0];
   if (localPath === malaysiaCircuitMap) return malaysiaCircuitMapVersioned;
   if ([singaporeCircuitMap, "/f1/circuits/2026/16-singapore.webp", "/f1/circuits/singapore.webp"].includes(localPath)) {
     return `${localPath}?v=${singaporeCircuitMapRevision}`;
+  }
+  if ([unitedStatesCircuitMap, "/f1/circuits/2026/17-united-states.webp", "/f1/circuits/usa.webp"].includes(localPath)) {
+    return `${localPath}?v=${unitedStatesCircuitMapRevision}`;
+  }
+  if ([mexicoCircuitMap, "/f1/circuits/2026/18-mexico.webp", "/f1/circuits/mexico.webp"].includes(localPath)) {
+    return `${localPath}?v=${mexicoCircuitMapRevision}`;
+  }
+  if ([brazilCircuitMap, "/f1/circuits/2026/19-brazil.webp", "/f1/circuits/brazil.webp"].includes(localPath)) {
+    return `${localPath}?v=${brazilCircuitMapRevision}`;
   }
   return url;
 }
@@ -102,15 +117,15 @@ const circuitAssets = [
   },
   {
     aliases: ["united states", "usa", "americas", "austin", "cota"],
-    src: "/f1/circuits/2026/18-united-states.webp",
+    src: getVersionedCircuitMapUrl(unitedStatesCircuitMap),
   },
   {
     aliases: ["mexico", "hermanos rodriguez"],
-    src: "/f1/circuits/2026/19-mexico.webp",
+    src: getVersionedCircuitMapUrl(mexicoCircuitMap),
   },
   {
     aliases: ["brazil", "interlagos", "jose carlos pace", "sao paulo"],
-    src: "/f1/circuits/2026/20-brazil.webp",
+    src: getVersionedCircuitMapUrl(brazilCircuitMap),
   },
   {
     aliases: ["las vegas", "las vegas strip"],

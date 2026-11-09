@@ -1,17 +1,24 @@
 import * as T from "three";
+import { createSurfaceSampler } from "./w17-surface.ts";
 
 type V = [number, number, number];
 type Materials = Record<"metal" | "cast" | "darkMetal" | "carbon", T.Material>;
 
 // One supported rocker per wheel. Dimensions are illustrative; the rod, rocker,
 // damper eyes and fixed clevis use the same physical joint coordinates.
-export function createInboardSuspension(front: boolean, side: number, mat: Materials) {
+export function createInboardSuspension(front: boolean, side: number, mat: Materials, casing?: T.Mesh) {
   const component = front ? "front-suspension" : "rear-suspension", prefix = `${front ? "Front" : "Rear"} ${side}`;
   const root = new T.Group(); root.name = `${prefix} inboard suspension`;
-  const pivot: V = [front ? 1.19 : -1.43, front ? .510 : .409, side * (front ? .115 : .085)];
-  const pushrod: V = [pivot[0] + .048, pivot[1] + .040, pivot[2]];
-  const movingEye: V = [pivot[0] - .046, pivot[1] + .024, pivot[2]];
-  const fixedEye: V = [front ? .900 : -1.715, front ? .500 : .477, pivot[2]];
+  // The rear rocker sits above the gearbox. Its input and damper arms lie
+  // on opposite sides of the pivot so upward wheel travel compresses the
+  // spring. The former shallow triangle approached a dead centre and pulled
+  // the damper out. These hidden dimensions are reconstructed, not W17 CAD.
+  const pivot: V = [front ? 1.47 : -1.455, front ? .455 : .460, side * (front ? .115 : .100)];
+  const pushrod: V = [pivot[0] + (front ? .048 : .010), pivot[1] + (front ? .040 : .060), pivot[2]];
+  const movingEye: V = [pivot[0] - .046, pivot[1] + (front ? .024 : -.028), pivot[2]];
+  const fixedEye: V = [front ? 1.18 : -1.715, front ? .465 : .515, pivot[2]];
+  const roof = casing ? createSurfaceSampler([casing], "y") : undefined;
+  if (!front && !roof) throw new Error("Rear inboard suspension requires its gearbox mounting surface");
   const add = (name: string, g: T.BufferGeometry, m: T.Material) => {
     const part = new T.Mesh(g, m); part.name = `${prefix} ${name}`; part.userData = { component, internal: true };
     part.castShadow = true; part.receiveShadow = true; root.add(part); return part;
@@ -28,16 +35,38 @@ export function createInboardSuspension(front: boolean, side: number, mat: Mater
     for (const s of [-1, 1]) ring(`${name} washer ${s}`, [p[0], p[1], p[2] + s * (width / 2 - .002)], [p[0], p[1], p[2] + s * (width / 2 + .001)], .004, .007);
   };
   const bracket = (name: string, p: V, depth: number) => {
+    // Seat the rear rocker on the narrower forward casing, with cheeks
+    // leaning outward to its transverse pivot. The fixed damper clevis
+    // sits on the broader differential roof. Both pads follow real skin.
+    const footZ = !front && name.startsWith("rocker") ? side * .060 : p[2];
+    const seat = (x: number, z: number) => {
+      const y = roof?.(x, z, 1);
+      if (y === undefined) throw new Error(`${prefix} ${name}: mounting pad misses gearbox`);
+      return y;
+    };
+    const top = front ? p[1] - depth : Math.max(...[-.025, 0, .025].flatMap(dx => [-.0225, 0, .0225].map(dz => seat(p[0] + dx, footZ + dz)))) + .006;
+    depth = p[1] - top;
     // Drilled double-shear cheeks, continuous down to a bolted base plate.
     for (const s of [-1, 1]) {
       const shape = new T.Shape(); shape.moveTo(-.020, -depth); shape.lineTo(.020, -depth); shape.lineTo(.015, .005); shape.quadraticCurveTo(0, .025, -.015, .005); shape.closePath();
       const hole = new T.Path(); hole.absarc(0, 0, .004, 0, Math.PI * 2, true); shape.holes.push(hole);
       const g = new T.ExtrudeGeometry(shape, { depth: .006, bevelEnabled: false, curveSegments: 16 });
+      if (!front) {
+        const points = g.attributes.position;
+        for (let i = 0; i < points.count; i++) points.setZ(i, points.getZ(i) + (footZ - p[2]) * T.MathUtils.clamp((-points.getY(i) - .015) / (depth - .015), 0, 1));
+        g.computeVertexNormals();
+      }
       g.translate(p[0], p[1], p[2] + s * .015 - .003); add(`${name} cheek ${s}`, g, mat.cast);
     }
-    box(`${name} foot`, [p[0], p[1] - depth, p[2]], [.050, .008, .045]);
+    const foot = box(`${name} foot`, [p[0], top, footZ], [.050, .008, .045]);
+    if (!front) {
+      const points = foot.geometry.attributes.position;
+      for (let i = 0; i < points.count; i++) points.setY(i, points.getY(i) < 0 ? seat(p[0] + points.getX(i), footZ + points.getZ(i)) - .002 - top : .002);
+      foot.geometry.computeVertexNormals();foot.userData.structural = true;
+    }
     for (const dx of [-.019, .019]) {
-      const part = add(`${name} fixing ${dx}`, new T.CylinderGeometry(.0035, .0035, .020, 6), mat.metal); part.position.set(p[0] + dx, p[1] - depth, p[2]);
+      const bottom = front ? top - .010 : seat(p[0] + dx, footZ) - .008, upper = front ? top + .010 : top + .005;
+      const part = add(`${name} fixing ${dx}`, new T.CylinderGeometry(.0035, .0035, upper - bottom, 6), mat.metal); part.position.set(p[0] + dx, (bottom + upper) / 2, footZ);
     }
     pin(`${name} pivot bolt`, p, .042);
   };

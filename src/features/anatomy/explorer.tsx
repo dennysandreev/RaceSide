@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Info, Layers3, Search, X, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Flag, Info, Layers3, Search, X, Zap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -13,9 +13,11 @@ import { ersPowerLimit } from "./model";
 
 const W17Viewer = dynamic(() => import("./w17-viewer"), { ssr: false, loading: () => <div className="an-model-placeholder">Загружаем болид…</div> });
 const W17ComponentViewer = dynamic(() => import("./w17-viewer").then(module => module.W17ComponentViewer), { ssr: false });
+const DrivingLesson = dynamic(() => import("./driving-lesson").then(module => module.DrivingLesson));
 type Panel = "catalog" | "detail" | "energy" | "about" | null;
 
 export function AnatomyExplorer() {
+  const [driving, setDriving] = useState(false);
   const [selectedId, setSelectedId] = useState("engine");
   const [system, setSystem] = useState<SystemId | "all">("all");
   const [query, setQuery] = useState("");
@@ -60,17 +62,20 @@ export function AnatomyExplorer() {
 
   return <div className="an-explorer an-studio stitch-panel" ref={root} data-playing={!panel} data-phase="acceleration" data-visible="true">
     <header className="an-explorer-header">
-      <div className="an-explorer-title"><h1>Болид Формулы-1</h1><span>Сезон 2026</span></div>
+      <div className="an-explorer-title"><h1>{driving ? "Болид в деле" : "Болид Формулы-1"}</h1><span>{driving ? "Учебный круг · Монца" : "Сезон 2026"}</span></div>
       <div className="an-header-actions">
+        <Button variant="outline" size="sm" className="an-lesson-entry" onClick={() => { setDriving(!driving); setRunning(false); }}>{driving ? <ArrowLeft/> : <Flag/>}{driving ? "К модели" : "Болид в деле"}</Button>
+        {!driving && <>
         <Button variant="ghost" size="sm" aria-haspopup="dialog" onClick={() => openPanel("catalog")} aria-label="Все узлы"><Layers3/><span className="an-action-label">Все узлы</span></Button>
         <Button variant="ghost" size="sm" className="an-energy-action" aria-haspopup="dialog" onClick={() => openPanel("energy")}><Zap/>ERS</Button>
         <Button variant="ghost" size="icon" aria-label="О модели" aria-haspopup="dialog" onClick={() => openPanel("about")}><Info/></Button>
+        </>}
       </div>
     </header>
-    <div className="an-cockpit-layout">
+    {driving ? <DrivingLesson onExit={() => setDriving(false)}/> : <div className="an-cockpit-layout">
       <W17Viewer {...viewerProps} onSelect={openDetail}/>
 
-    </div>
+    </div>}
 
     <Dialog open={panel !== null} onOpenChange={open => { if (!open) setPanel(null); }}>
       <DialogContent className={cn("an-page an-dialog", panel === "catalog" && "an-catalog-dialog")} onCloseAutoFocus={event => { event.preventDefault(); returnFocus.current?.focus(); }} onKeyDown={event => {

@@ -146,7 +146,7 @@ async function LeaderboardContent({ query, season, publishedSeasons, activeTable
 }) {
   const isCurrentSeason = season === CURRENT_F1_SEASON;
   const [drivers, constructors, calendar, driverOdds, constructorOdds] = await withServerTtlCache(
-    `public:leaderboard:${season}`,
+    `public:leaderboard:champion-markets-v2:${season}`,
     isCurrentSeason ? 60_000 : 5 * 60_000,
     () => Promise.all([
       getDriverChampionshipMatrix(season),
@@ -284,6 +284,7 @@ async function LeaderboardContent({ query, season, publishedSeasons, activeTable
               className="order-2 mt-1 lg:order-none lg:col-start-2 lg:mt-0 lg:w-[22rem]"
               completedCount={completedRounds}
               nextRace={nextRace}
+              season={season}
               totalCount={totalRounds}
             />
           </div>

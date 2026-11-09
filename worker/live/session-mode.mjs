@@ -1,3 +1,5 @@
+import { hasFinalOpenF1SessionSignal } from "../openf1-session-results.mjs";
+
 export function sessionMode(session) {
   const name =
     `${session?.session_type ?? ""} ${session?.session_name ?? ""}`.toLowerCase();
@@ -64,12 +66,15 @@ function latestSessionControl(session, controls, now) {
     .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
     .at(-1) ?? null;
 }
-const sessionControlFinished = (row) =>
-  Boolean(row && (row.flag === "CHEQUERED" ||
-    /SESSION (?:FINISHED|ABORTED)/i.test(row.message ?? "")));
+const sessionControlFinished = (session, controls, now) =>
+  hasFinalOpenF1SessionSignal(controls, {
+    sessionType: `${session?.session_type ?? ""} ${session?.session_name ?? ""}`,
+    sessionKey: session?.session_key,
+    nowMs: now,
+  });
 export function sessionStillOngoing(session, controls, now = Date.now()) {
   const latest = latestSessionControl(session, controls, now);
-  return Boolean(latest && !sessionControlFinished(latest));
+  return Boolean(latest && !sessionControlFinished(session, controls, now));
 }
 export async function chooseSessionWithControls(rows, {
   loadControls, currentSession = null, currentStatus = null, now = Date.now(),
@@ -86,7 +91,7 @@ export async function chooseSessionWithControls(rows, {
   // Reconnects must retain a known live session when Race Control is temporarily
   // unavailable. The scheduled end is never evidence that racing has stopped.
   const ongoing = latest
-    ? !sessionControlFinished(latest)
+    ? !sessionControlFinished(candidate, controls, now)
     : currentOngoing &&
       Number(currentSession?.session_key) === Number(candidate.session_key);
   if (!ongoing)
@@ -103,7 +108,7 @@ export function sessionHistoryEnd(session, controls, ongoing, now = Date.now()) 
   const latest = latestSessionControl(session, controls, now);
   return Math.min(
     now,
-    sessionControlFinished(latest)
+    sessionControlFinished(session, controls, now)
       ? Date.parse(latest.date) + 120000
       : ongoing ? now : Date.parse(session.date_end) + 120000,
   );

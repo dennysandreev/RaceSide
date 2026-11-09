@@ -39,12 +39,13 @@ export default async function TelemetryPage({
   return (
     <TelemetryHub
       demoMode={demoMode}
-      initialRacePace={value("mode") === "race-pace"}
+      initialRacePace={["race-pace", "session-telemetry"].includes(value("mode") ?? "")}
       initialSeason={id("season")}
       initialMeeting={id("meeting")}
       initialSession={id("session")}
       initialPaceView={{
-        section: value("view") === "distribution" ? "distribution" : "trend",
+        section: value("view") === "metrics" ? "metrics" : value("view") === "distribution" ? "distribution" : "trend",
+        metric: value("metric") === "throttle" ? "throttle" : value("metric") === "map" ? "map" : "speed",
         distributionScope: value("scope") === "selected" ? "selected" : "field",
         axis: value("axis") === "age" ? "age" : "lap",
         compound: value("compound")?.slice(0, 24),

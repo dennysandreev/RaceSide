@@ -25,7 +25,7 @@ function assertClosedShell(parts){
     }
   }
   for(const [edge,{faces,winding}] of edges){
-    assert.equal(faces,2,`unjoined or branching shell edge: ${edge}`);
+    assert.equal(faces,2,`${parts.map(p=>p.name).join(", ")}: unjoined or branching shell edge: ${edge}`);
     assert.equal(winding,0,`flipped shell face: ${edge}`);
   }
 }
@@ -239,59 +239,20 @@ test("the T-camera has seated feet, a connected mast and exposed fore/aft window
   }
 });
 
-test("rear inboard dampers and their fixed brackets fit beneath the assembled tail cover",()=>{
-  const body=["Tail heat shield","Continuous undercut sidepod shell"].map(name=>model.root.getObjectByName(name));
-  assertClosedShell([body[0]]);
-  const edge=createSurfaceSampler(body,"z");let checked=0;
-  for(const side of[-1,1])model.root.getObjectByName(`Rear ${side} inboard suspension`).traverse(part=>{
-    if(!part.isMesh||!/damper|spring/.test(part.name))return;
-    const p=part.geometry.attributes.position;
-    for(let i=0;i<p.count;i++){
-      const v=new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(part.matrixWorld);
-      let skin=edge(v.x,v.y,side);
-      for(const panel of body)for(const profile of panel.userData.suspensionPassages??[]){
-        const point=new T.Vector2(v.x,v.y),polygon=profile.map(p=>new T.Vector2(...p));
-        if(!polygon.every((a,j)=>{const b=polygon[(j+1)%polygon.length];return (b.x-a.x)*(point.y-a.y)-(b.y-a.y)*(point.x-a.x)>=0;}))continue;
-        // A glimpse through a new suspension slot is legitimate. The damper
-        // must still lie inside the surrounding skin, not protrude through it.
-        let nearest,distance=Infinity;
-        polygon.forEach((a,j)=>{
-          const b=polygon[(j+1)%polygon.length],d=b.clone().sub(a),q=a.clone().addScaledVector(d,T.MathUtils.clamp(point.clone().sub(a).dot(d)/d.lengthSq(),0,1));
-          if(q.distanceToSquared(point)<distance){distance=q.distanceToSquared(point);nearest=q.add(new T.Vector2(d.y,-d.x).normalize().multiplyScalar(.001));}
-        });
-        const rim=edge(nearest.x,nearest.y,side);
-        if(rim!==undefined&&(skin===undefined||Math.abs(rim)>Math.abs(skin)))skin=rim;
-      }
-      assert.ok(skin!==undefined&&Math.abs(v.z)<Math.abs(skin)-.003,`${part.name}: exposed through tail cover at ${v.toArray()}`);
-      checked++;
-    }
-  });
-  assert.ok(checked>5000);
-});
-
-test("the rear body and heat shield share a flush upper contour without a shoulder step",()=>{
+test("the wide cooling tail ends ahead of the axle and leaves the gearbox shoulders open",()=>{
   const body=model.root.getObjectByName("Continuous undercut sidepod shell"),shield=model.root.getObjectByName("Tail heat shield");
-  const join=new T.Box3().setFromObject(body).min.x,ray=new T.Raycaster();
-  const radius=(part,x,angle)=>{
-    const direction=new T.Vector3(0,Math.cos(angle),Math.sin(angle)),origin=new T.Vector3(x,(.518+(x+1.98)*.246+.31)/2,0);
-    ray.set(origin.clone().addScaledVector(direction,.4),direction.clone().negate());ray.far=.4;
-    const hit=ray.intersectObject(part,false)[0];assert.ok(hit,`${part.name}: missing skin at ${x}/${angle}`);
-    return hit.point.distanceTo(origin);
-  };
-  for(let i=-12;i<=12;i++){
-    const angle=i/12*Math.PI*.55;
-    const aft=radius(shield,join-.002,angle),forward=radius(body,join+.002,angle);
-    assert.ok(Math.abs(aft-forward)<.0035,`raised edge at angle ${angle}: ${aft-forward}`);
-    const aftSlope=(aft-radius(shield,join-.022,angle))/.02;
-    const forwardSlope=(radius(body,join+.022,angle)-forward)/.02;
-    assert.ok(Math.abs(forwardSlope-aftSlope)<.12,`kink at angle ${angle}: ${aftSlope}/${forwardSlope}`);
-  }
-  const roof=createSurfaceSampler([body,shield],"y");
-  for(let x=-1.94;x< -1.30;x+=.02){
-    const height=roof(x,0,1),next=roof(x+.02,0,1);
-    assert.ok(height!==undefined&&next!==undefined);
-    const slope=(next-height)/.02;
-    assert.ok(slope>.10&&slope<.40,`tail ridge dips or turns abruptly at ${x}: ${slope}`);
+  const bounds=new T.Box3().setFromObject(body),sidewall=createSurfaceSampler([body],"z");
+  assert.ok(bounds.min.x>W17_AXLES.rear+.25&&bounds.min.x<W17_AXLES.rear+.32);
+  let width=0;for(let y=.2;y<.7;y+=.005)width=Math.max(width,sidewall(bounds.min.x+.005,y,1)??0);
+  assert.ok(width>.25&&width<.29,"cooling outlet pinches down to a closed tail");
+  assertClosedShell([shield]);
+  const sleeveBounds=new T.Box3().setFromObject(shield);
+  assert.ok(sleeveBounds.max.z<.07&&sleeveBounds.min.z>-.07,"a false tail hood hides the gearbox shoulders");
+  for(const side of[-1,1]){
+    const damper=model.root.getObjectByName(`Rear ${side} inboard suspension`);
+    const ray=new T.Raycaster(new T.Vector3(-1.65,1,side*.085),new T.Vector3(0,-1,0));
+    assert.equal(ray.intersectObjects([body,shield],false).length,0,"tail sheet extends over the exposed rear suspension");
+    assert.ok(ray.intersectObject(damper,true).length,"the uncovered damper is missing");
   }
 });
 
@@ -603,10 +564,13 @@ test("the front floor shoulder rounds down to the floor and closes the visible t
       });
       assert.ok(hits[0]>hits[2]+.12,"the shoulder ends as a vertical wall instead of a descending surface");
     }
-    ray.set(new T.Vector3(.8,.8,side*.30),new T.Vector3(0,-1,0));
-    const landing=ray.intersectObject(shoulder,false)[0];
-    assert.ok(landing&&landing.point.y>=base.min.y&&landing.point.y<=base.max.y,"rounded shoulder floats above the floor");
-    assert.ok(landing.normal.y>.98,"shoulder does not flatten as it meets the floor");
+    const landings=[];
+    for(let x=.68;x<.77;x+=.001){
+      ray.set(new T.Vector3(x,.8,side*.30),new T.Vector3(0,-1,0));
+      const hit=ray.intersectObject(shoulder,false)[0];
+      if(hit&&hit.point.y>=base.min.y&&hit.point.y<=base.max.y&&hit.normal.y>.98)landings.push(hit);
+    }
+    assert.ok(landings.length>2,"rounded shoulder does not land horizontally inside the trimmed floor");
   }
 });
 
@@ -655,7 +619,7 @@ test("the front mainplane rises to a narrow slot below the next element",()=>{
   flap.quaternion.setFromAxisAngle(flap.userData.hingeAxis,flap.userData.closedAngle);model.root.updateMatrixWorld(true);
   try{
     for(const z of [.18,.30,.45]){
-      ray.set(new T.Vector3(2.36,1,z),new T.Vector3(0,-1,0));
+      ray.set(new T.Vector3(2.36+.28*(1-z/.75),1,z),new T.Vector3(0,-1,0));
       const upper=Math.max(...ray.intersectObject(main,false).map(hit=>hit.point.y));
       const lower=Math.min(...ray.intersectObject(flap,false).map(hit=>hit.point.y));
       assert.ok(lower-upper>.005&&lower-upper<.035,`incorrect inter-element slot at ${z}: ${lower-upper}`);
@@ -778,7 +742,7 @@ test("the rear floor shoulder rises ahead of the tyre and all floor skins clear 
   for(const side of [-1,1]){
     const shoulder=model.root.getObjectByName(`Sculpted floor shoulder ${side}`);
     const height=x=>new T.Raycaster(new T.Vector3(x,.6,side*.44),new T.Vector3(0,-1,0)).intersectObject(shoulder,false)[0]?.point.y;
-    assert.ok(height(-1.48)>height(-1.28)&&height(-1.28)>height(-.85)+.015,"rear floor must descend into the long channel, not form a central mound");
+    assert.ok(height(-1.40)>height(-1.28)&&height(-1.28)>height(-.85)+.015,"rear floor must descend into the long channel, not form a central mound");
     for(let layer=0;layer<2;layer++)assertClosedShell([model.root.getObjectByName(`Stepped floor edge ${side} ${layer}`)]);
     for(let layer=0;layer<2;layer++){
       const vane=model.root.getObjectByName(`Rear floor turning vane ${side} ${layer}`);assertClosedShell([vane]);
@@ -1241,5 +1205,78 @@ test("nose service joint is recessed and its fixings have closed driver sockets"
     const axis=new T.Vector3(0,1,0).applyQuaternion(fixing.quaternion);
     const hit=new T.Raycaster(fixing.position.clone().addScaledVector(axis,.005),axis.clone().negate(),0,.007).intersectObject(fixing,false)[0];
     assert.ok(hit&&hit.distance>.0053,"driver recess is capped flush");
+  }
+});
+
+test("the overhead front-wing planform has a forward centre and swept outer panels",()=>{
+  const main=model.root.getObjectByName("Front mainplane"),p=main.geometry.attributes.position;
+  let centre=-Infinity,outer=-Infinity;
+  for(let i=0;i<p.count;i++){
+    const v=new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(main.matrixWorld),z=Math.abs(v.z);
+    if(z<.03)centre=Math.max(centre,v.x);
+    if(z>.64&&z<.71)outer=Math.max(outer,v.x);
+  }
+  assert.ok(centre-outer>.32&&centre-outer<.55,"front wing retains the nearly straight old planform");
+  const nose=new T.Box3().setFromObject(model.root.getObjectByName("Silver nose skin"));
+  assert.ok(centre-nose.max.x>0&&centre-nose.max.x<.10,"nose does not follow the swept centre");
+});
+
+test("both nose-side turning vanes have closed profiles seated in the nose skin",()=>{
+  const nose=model.root.getObjectByName("Silver nose skin"),wall=createSurfaceSampler([nose],"z");
+  for(const side of[-1,1]){
+    const vane=model.root.getObjectByName(`Nose side turning vane ${side}`);assertClosedShell([vane]);
+    const bounds=new T.Box3().setFromObject(vane),skin=wall(1.97,.302,side);
+    assert.ok(skin!==undefined);
+    assert.ok(side>0?bounds.min.z<skin&&bounds.max.z>skin+.1:bounds.max.z>skin&&bounds.min.z<skin-.1,"nose vane is detached or buried");
+    assert.ok(bounds.min.x>W17_AXLES.front+.18&&bounds.max.x<W17_AXLES.front+.36);
+    const p=vane.geometry.attributes.position,tip=[];
+    for(let i=0;i<p.count;i++)if(Math.abs(p.getZ(i))>.295)tip.push(p.getX(i));
+    assert.ok(tip.length>0&&Math.max(...tip)-Math.min(...tip)<.085,"nose vane ends as a square plate rather than a rounded tapered tip");
+  }
+});
+
+test("the sidepod overhead outline narrows with continuous convex curvature toward the tail",()=>{
+  const body=model.root.getObjectByName("Continuous undercut sidepod shell"),wall=createSurfaceSampler([body],"z");
+  const widths=[];
+  for(let x=-1.38;x<.25;x+=.05){
+    let width=0;
+    for(let y=.15;y<.8;y+=.002)width=Math.max(width,wall(x,y,1)??0);
+    widths.push(width);
+  }
+  for(let i=1;i<widths.length-1;i++){
+    assert.ok(widths[i+1]>widths[i],"outline reverses into a local shoulder bulge");
+    const curvature=widths[i+1]-2*widths[i]+widths[i-1];
+    assert.ok(curvature<.00025&&curvature>-.002,"outline has a flat spot or kink between body stations");
+  }
+});
+
+test("the floor inlet has an open bay with a narrow transverse stay on both sides",()=>{
+  const floor=model.assemblies.get("floor"),ray=new T.Raycaster();
+  for(const side of[-1,1]){
+    for(const x of[.86,.90,1.0])for(const z of[.35,.42,.55]){
+      ray.set(new T.Vector3(x,1,side*z),new T.Vector3(0,-1,0));
+      assert.equal(ray.intersectObject(floor,true).length,0,"a solid floor bridge fills the open bay");
+    }
+    ray.set(new T.Vector3(.96,1,side*.42),new T.Vector3(0,-1,0));
+    assert.equal(ray.intersectObject(floor,true)[0]?.object.name,`Floor transverse stay ${side}`);
+    const stay=new T.Box3().setFromObject(model.root.getObjectByName(`Floor transverse stay ${side}`));
+    assert.ok(stay.max.x-stay.min.x<.03&&stay.max.y-stay.min.y<.015,"the stay is a broad floor strip");
+  }
+});
+
+test("front and rear wishbones retain the photographed fore-aft order and connected uprights",()=>{
+  for(const side of[-1,1]){
+    const front=model.root.getObjectByName(`Front ${side} upper wishbone 0`).userData;
+    const aft=model.root.getObjectByName(`Front ${side} upper wishbone 1`).userData;
+    assert.ok(front.anchor[0]>front.terminal[0]&&aft.anchor[0]<aft.terminal[0]-.5);
+    assert.ok(front.anchor[1]<front.terminal[1]&&aft.anchor[1]>aft.terminal[1],"front upper arms lack the opposed attachment heights");
+    const lower=model.root.getObjectByName(`Front ${side} lower wishbone 1`).userData;
+    assert.ok(lower.anchor[0]>aft.anchor[0]+.2,"upper and lower arms repeat the same top-view triangle");
+    for(const level of["upper","lower"]){
+      const rear=model.root.getObjectByName(`Rear ${side} ${level} wishbone 0`).userData;
+      const forward=model.root.getObjectByName(`Rear ${side} ${level} wishbone 1`).userData;
+      assert.ok(rear.anchor[0]<W17_AXLES.rear-.05&&forward.anchor[0]>W17_AXLES.rear+.4,"rear wishbone legs sit on the same side of the axle");
+      assert.deepEqual(rear.terminal,forward.terminal);
+    }
   }
 });

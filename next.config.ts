@@ -4,6 +4,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 import { resolveSentryRelease } from "./sentry-scrub.mjs";
 
 const developmentScriptPolicy = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
+// Rewrites are baked into the build; runtime env cannot retarget this proxy.
+const liveInternalOrigin = process.env.LIVE_INTERNAL_ORIGIN
+  ?? (process.env.NODE_ENV === "production" ? "http://live:3002" : "http://127.0.0.1:3002");
 
 const securityHeaders = [
   {
@@ -68,7 +71,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   devIndicators: false,
   async rewrites() {
-    return [{ source: "/ws/live", destination: `${process.env.LIVE_INTERNAL_ORIGIN ?? "http://127.0.0.1:3002"}/ws/live` }];
+    return [{ source: "/ws/live", destination: `${liveInternalOrigin}/ws/live` }];
   },
   async headers() {
     return [
@@ -106,6 +109,7 @@ const nextConfig: NextConfig = {
       { pathname: "/f1/tracks/3d/austin-preview.webp" },
       { pathname: "/f1/tracks/3d/mexico-preview.webp" },
       { pathname: "/f1/tracks/3d/monaco-preview.webp" },
+      { pathname: "/f1/tracks/3d/monza-preview.webp" },
       { pathname: "/f1/tracks/3d/suzuka-preview.webp" },
       { pathname: "/f1/tracks/3d/interlagos-preview.webp" },
       { pathname: "/f1/tracks/3d/las-vegas-preview.webp" },

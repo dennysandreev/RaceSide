@@ -13,11 +13,13 @@ import { buildReplayFromHistory } from "./replay-adapter.mjs";
 import { normalizeMessage, hydrationMessages } from "./normalize.mjs";
 import { chooseSessionWithControls, sessionStillOngoing, sessionHistoryEnd, sessionCapabilities } from "./session-mode.mjs";
 import { queueSessionResultSync } from "./result-sync.mjs";
+import { hasFinalOpenF1SessionSignal } from "../openf1-session-results.mjs";
 import { findOpenF1SessionMatch } from "../index.mjs";
 import { upsertServiceHeartbeat } from "../ops-heartbeat.mjs";
 import { verifyAndConsumeLiveTicket } from "./access-ticket.mjs";
 import { resolveSessionTrack } from "./track-registry.mjs";
 import { loadLiveChampionship } from "./championship.mjs";
+import { loadLiveWeatherCondition } from "./weather.mjs";
 import { LiveTimeline, TimelineViewer, parseTimelineView } from "./timeline.mjs";
 import { readTimelineCache, writeTimelineCache } from "./timeline-cache.mjs";
 
@@ -58,6 +60,26 @@ async function refreshChampionship() {
   }
 }
 const championshipTimer = setInterval(() => void refreshChampionship(), 60000);
+let weatherBusy = false;
+async function refreshWeatherCondition() {
+  const session = live.state.session;
+  if (!db || !session || simulated || weatherBusy || live.state.status === "finished") return;
+  weatherBusy = true;
+  try {
+    const condition = await loadLiveWeatherCondition(db, session);
+    if (live.state.session?.session_key === session.session_key && (live.state.weather || condition))
+      live.state.weather = {
+        timestamp: condition?.observedAt ?? new Date().toISOString(),
+        air: null, track: null, rain: null, wind: null, humidity: null,
+        ...live.state.weather, condition,
+      };
+  } catch {
+    console.error("[live] sky conditions cache unavailable; retaining track measurements");
+  } finally {
+    weatherBusy = false;
+  }
+}
+const weatherTimer = setInterval(() => void refreshWeatherCondition(), 60000);
 const radioRetryTimers = new Set();
 const radioRetryDelays = [15000, 30000, 60000, 120000, 300000];
 let sourceConnected = false,
@@ -630,7 +652,11 @@ async function discover(force = false) {
       live.state.track = track;
       live.state.trackSectorCount = track.marshalSectorCount ?? null;
     }
-    if (!choice.active && Date.parse(session.date_end) < now)
+    if (!choice.active && hasFinalOpenF1SessionSignal(controlStreams.get(Number(session.session_key)), {
+      sessionType: `${session.session_type ?? ""} ${session.session_name ?? ""}`,
+      sessionKey: session.session_key,
+      nowMs: now,
+    }))
       live.state.status = "finished";
     if (!sameSession) {
       for (const timer of radioRetryTimers) clearTimeout(timer);
@@ -658,6 +684,7 @@ async function discover(force = false) {
     }
     const historyStarts = {};
     void refreshChampionship();
+    void refreshWeatherCondition();
     for (const [topic, field] of [
       ["location", "locations"],
       ["car_data", "telemetry"],
@@ -947,6 +974,7 @@ async function stop() {
   clearInterval(writerTimer);
   clearInterval(serviceHeartbeatTimer);
   clearInterval(championshipTimer);
+  clearInterval(weatherTimer);
   clearInterval(timelineCacheTimer);
   for (const timer of radioRetryTimers) clearTimeout(timer);
   radioRetryTimers.clear();

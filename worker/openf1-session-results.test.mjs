@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
 import {
   getOpenF1ResultStatus,
@@ -7,11 +8,51 @@ import {
   getOpenF1ParticipantIdentity,
   hasFinalOpenF1SessionSignal,
   isOpenF1ClassificationReady,
+  isOpenF1LapFallbackAllowed,
   isOpenF1ResultProbeDue,
   normalizeLiveRaceClassification,
   normalizeOpenF1SessionKey,
   normalizeOpenF1SessionClassification,
 } from "./openf1-session-results.mjs";
+
+const delayedQualifying = JSON.parse(readFileSync(new URL("./live/fixtures/brazil-qualifying-delay-2026.json", import.meta.url), "utf8"));
+
+test("Brazil's delayed Q1 and a resumed Q1 never complete the whole qualifying session", () => {
+  for (const now of ["2026-11-07T19:05:00Z", "2026-11-07T19:30:00Z", "2026-11-07T19:44:00Z"]) {
+    assert.equal(hasFinalOpenF1SessionSignal(delayedQualifying.controls, {
+      sessionType: "qualifying", sessionKey: 11408, nowMs: Date.parse(now),
+    }), false);
+  }
+});
+
+test("Q2 finish is not final; Q3 finish is, and later suspension or resumption revokes it", () => {
+  const controls = [...delayedQualifying.controls];
+  const signal = (phase, message, date) => ({ session_key: 11408, qualifying_phase: phase, message, date });
+  const options = { sessionType: "sprint_qualifying", sessionKey: 11408, nowMs: Date.parse("2026-11-07T22:00:00Z") };
+  controls.push(signal(2, "SESSION FINISHED", "2026-11-07T20:00:00Z"));
+  assert.equal(hasFinalOpenF1SessionSignal(controls, options), false);
+  controls.push(signal(3, "SESSION FINISHED", "2026-11-07T20:20:00Z"));
+  assert.equal(hasFinalOpenF1SessionSignal(controls, options), true);
+  controls.push(signal(3, "SESSION ABORTED", "2026-11-07T20:21:00Z"));
+  assert.equal(hasFinalOpenF1SessionSignal(controls, options), false);
+});
+
+test("driver flags, another session and future finish signals cannot finish an active session", () => {
+  const controls = [
+    { date: "2026-11-07T19:00:00Z", session_key: 11408, message: "SESSION STARTED", qualifying_phase: 3 },
+    { date: "2026-11-07T19:01:00Z", session_key: 11408, flag: "CHEQUERED", scope: "Driver" },
+    { date: "2026-11-07T19:02:00Z", session_key: 1, message: "SESSION FINISHED", qualifying_phase: 3 },
+    { date: "2026-11-07T20:00:00Z", session_key: 11408, message: "SESSION FINISHED", qualifying_phase: 3 },
+  ];
+  assert.equal(hasFinalOpenF1SessionSignal(controls, {
+    sessionType: "qualifying", sessionKey: 11408, nowMs: Date.parse("2026-11-07T19:05:00Z"),
+  }), false);
+});
+
+test("lap-only fallback belongs to practice, never a segmented qualifying classification", () => {
+  for (const type of ["fp1", "fp2", "fp3", "practice"]) assert.equal(isOpenF1LapFallbackAllowed(type), true);
+  for (const type of ["qualifying", "sprint_qualifying", "race", "sprint"]) assert.equal(isOpenF1LapFallbackAllowed(type), false);
+});
 
 test("accepts only a real positive OpenF1 session key", () => {
   assert.equal(normalizeOpenF1SessionKey("11369"), 11369);

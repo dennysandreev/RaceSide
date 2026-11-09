@@ -10,18 +10,21 @@ const FIA_MAP_URL = "https://www.fia.com/system/files/decision-document/2025_ita
 const EVENT_MAP_URL = "https://www.monzanet.it/wp-content/uploads/2026/06/GP_F1_2026_LISTINO_PREZZI_6_17.pdf";
 const ORTHOPHOTO_URL = "https://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/raster/ortofoto_colore_12.map&service=WMS&version=1.3.0&request=GetMap&layers=OI.ORTOIMMAGINI.2012.32&styles=&crs=EPSG:32632&bbox=520650,5049620,524180,5053560&width=2048&height=2048&format=image/jpeg&transparent=false";
 const ELEVATION_ZOOM = 12;
+const HOSPITALITY_URL = "https://www.monzanet.it/wp-content/uploads/2026/01/Brochure_Hospitality_GP_2026F1.pdf";
 
 export async function downloadMonzaData({ force = false, sourceDirectory }) {
   await mkdir(sourceDirectory, { recursive: true });
   const manifestPath = path.join(sourceDirectory, "source-manifest.json");
+  let cachedManifest;
   if (!force) {
     try {
       const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
       await Promise.all(manifest.sources.map((source) => stat(path.join(sourceDirectory, source.file))));
       await verifySources(sourceDirectory, manifest.sources);
-      return manifest;
+      cachedManifest = manifest;
     } catch { /* Rebuild an incomplete or stale source cache. */ }
   }
+  if (cachedManifest) return ensureVenueReferences(sourceDirectory, cachedManifest, false);
 
   const bbox = `${MONZA_BOUNDS_WGS84.south},${MONZA_BOUNDS_WGS84.west},${MONZA_BOUNDS_WGS84.north},${MONZA_BOUNDS_WGS84.east}`;
   const query = `[out:json][timeout:120];(way[highway=raceway](${bbox});way[service=pit_lane](${bbox});way[building](${bbox});way[barrier](${bbox});node[natural=tree](${bbox}););out body geom;`;
@@ -80,7 +83,45 @@ export async function downloadMonzaData({ force = false, sourceDirectory }) {
     verticalDatum: "Terrarium DEM metres; no vertical exaggeration",
   };
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  return ensureVenueReferences(sourceDirectory, manifest, force);
+}
+
+async function ensureVenueReferences(directory, manifest, force) {
+  const additional = [
+    ...Object.entries({ nw: "520650,5051590,522415,5053560", ne: "522415,5051590,524180,5053560", sw: "520650,5049620,522415,5051590", se: "522415,5049620,524180,5051590" }).map(([quadrant, bbox]) => ({
+      file: `pcn-2012-${quadrant}.jpg`, url: orthophotoTileUrl(quadrant, bbox),
+      license: "Italian National Geoportal public WMS; attribution required", date: "2012", role: `${quadrant} quarter of the 4096 px ground mosaic`, resolution: "2048 px tile, about 0.9 m per pixel", crs: "EPSG:32632",
+    })),
+    { file: "hospitality-2026.pdf", url: HOSPITALITY_URL, license: "official promoter document; reference use", date: "2026 brochure", role: "photographic reconstruction of hospitality facades and north/south towers", resolution: "PDF photographs, not measured dimensions", crs: "document reference" },
+  ];
+  let changed = false;
+  for (const entry of additional) {
+    if (!force && manifest.sources.some((source) => source.file === entry.file)) continue;
+    let body;
+    try { body = !force ? await readFile(path.join(directory, entry.file)) : null; } catch { /* New reference. */ }
+    if (body && !isReferenceBody(entry.file, body)) body = null;
+    body ??= await fetchBinary(entry.url);
+    if (!isReferenceBody(entry.file, body)) throw new Error(`Invalid Monza reference response: ${entry.file}`);
+    await writeFile(path.join(directory, entry.file), body);
+    manifest.sources = manifest.sources.filter((source) => source.file !== entry.file);
+    manifest.sources.push({ ...entry, bbox: MONZA_BOUNDS_UTM32N, bytes: body.length, sha256: sha256(body), verticalDatum: null });
+    changed = true;
+  }
+  if (changed) await writeFile(path.join(directory, "source-manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
   return manifest;
+}
+
+function isReferenceBody(file, body) {
+  return file.endsWith(".jpg") ? body[0] === 0xff && body[1] === 0xd8 : body.subarray(0, 5).toString() === "%PDF-";
+}
+
+function orthophotoTileUrl(quadrant, bbox) {
+  const url = ORTHOPHOTO_URL.replace("bbox=520650,5049620,524180,5053560", `bbox=${bbox}`);
+  // Equivalent WMS requests avoid stale upstream exception responses observed
+  // on two of the original request URLs. All bounds remain exactly aligned.
+  if (quadrant === "sw") return url.replace("version=1.3.0", "version=1.1.1").replace("crs=", "srs=");
+  if (quadrant === "ne") return url.replace("?map=", "?service=WMS&request=GetMap&version=1.3.0&map=").replace("&service=WMS&version=1.3.0&request=GetMap", "");
+  return url;
 }
 
 async function downloadElevationTiles(sourceDirectory) {

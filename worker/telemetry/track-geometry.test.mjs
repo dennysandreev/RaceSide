@@ -142,3 +142,19 @@ test("Monza retains a closed two-dimensional circuit with all eleven corners", (
     ) < 1,
   );
 });
+
+test("refreshed Monza geometry replaces the old cached map without changing lap measurements", () => {
+  const model = verifiedTrack("Monza", 2026);
+  assert.notEqual(model.version, "raceside-2026-09-12-planar-v2");
+  const comparison = {
+    track: { ...model, version: "raceside-2026-09-12-planar-v2", points: [{ distance: 0, x: 0, y: 0 }] },
+    traces: [{ session: { circuit: "Monza", season: 2026 }, points: [], corners: model.corners }],
+    distance: [0, model.length],
+  };
+  const corrected = orientComparison(comparison);
+  assert.deepEqual(corrected.track.points, model.points);
+  assert.equal(corrected.track.version, model.version);
+  assert.equal(corrected.traces, comparison.traces);
+  assert.equal(corrected.distance, comparison.distance);
+  assert.equal(orientComparison(corrected), corrected);
+});

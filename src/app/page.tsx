@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/card";
 import { getCircuitAsset, getTeamAssetForMarketOutcome, getTeamProfileAsset } from "@/data/f1-assets";
 import { getGrandPrixReportAnalytics } from "@/data/grand-prix-report-analytics";
+import { getConfirmedSeasonChampion } from "@/data/season-champions";
 import {
   getConstructorChampionshipMatrix,
   getConstructorChampionOdds,
@@ -207,7 +208,7 @@ async function HomeStandingsPanel() {
 
 async function HomeMarketsPanel() {
   const [[championOdds, constructorOdds], [standings], polls] = await Promise.all([
-    withServerTtlCache("public:home:markets", 60_000,
+    withServerTtlCache("public:home:markets:v2", 60_000,
       () => Promise.all([getSeasonChampionOdds(), getConstructorChampionOdds()]), { staleWhileRevalidateMs: 5 * 60_000 }),
     getHomeStandings(),
     getSessionUser().then((user) => getPolls({ userId: user?.id })),
@@ -422,11 +423,14 @@ function buildMarketSlide({
   standings: StandingRow[];
   title: string;
 }): HomeMarketSlide {
+  const champion = id === "drivers" ? getConfirmedSeasonChampion(CURRENT_F1_SEASON) : null;
+
   return {
+    champion,
     emptyText,
     id,
     title,
-    odds: odds
+    odds: !champion && odds
       ? {
           ...odds,
           outcomes: odds.outcomes.map((outcome) => ({

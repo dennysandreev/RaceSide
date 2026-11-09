@@ -2,6 +2,8 @@
 
 import { Html, OrthographicCamera as DreiOrthographicCamera, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { TrackSceneLighting } from "@/components/racemate/track-scene-lighting";
+import { configureTrackShadows } from "@/lib/track-model-shadows";
 import Image from "next/image";
 import {
   Component,
@@ -320,11 +322,9 @@ export function RaceReplayTrack3D({
           gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
           onCreated={({ gl }) => gl.setClearAlpha(0)}
           orthographic
+          shadows
           performance={{ min: 0.5 }}
         >
-          <ambientLight intensity={1.35} />
-          <directionalLight intensity={2.1} position={[-900, 1_600, -1_100]} />
-          <directionalLight intensity={0.7} position={[1_000, 900, 700]} />
           <ReplayCameraRig
             cameraConfig={config.camera}
             frame={viewport ? { bounds: getTrackModelFrame(config.path.trackPoints, frameRotationDeg ?? 0, frameTiltDeg ?? 10, rotationDeg, tiltDeg), viewport } : undefined}
@@ -394,6 +394,7 @@ function TrackReplayScene({
   return (
     <>
       <primitive dispose={null} object={scene} />
+      <TrackSceneLighting scene={scene} moving night={/singapore|las-vegas/.test(config.assetPath)} />
       <TrackAnnotations anchors={anchors} />
       {cars.map((car) => (
         <ReplayCar
@@ -678,6 +679,7 @@ function normalizeProgress(progress: number) {
 
 function cloneScene(source: Object3D) {
   const cloned = source.clone(true);
+  configureTrackShadows(cloned);
 
   cloned.traverse((object) => {
     object.frustumCulled = true;

@@ -1,0 +1,38 @@
+.session-metrics { flex: 1 1 0; min-height: 0; }
+.session-metrics-heading, .session-metrics-tools { display: flex; align-items: center; gap: 12px; }
+.session-metrics-heading { justify-content: space-between; flex-shrink: 0; }
+.session-metrics-heading h3 { font-size: 18px; font-weight: 650; }
+.session-metrics-heading p { color: var(--muted-foreground); font-size: 12px; margin-top: 3px; }
+.session-metrics > [data-slot="tabs"] { flex-shrink: 0; }
+.session-metrics-tabs { background: transparent; height: auto; padding: 0; gap: 6px; flex-wrap: wrap; overflow: visible; }
+.session-metrics-tabs [data-slot="tabs-trigger"] { flex: none; height: 36px; border: 1px solid var(--border); padding: 6px 12px; }
+.session-metrics-tabs [data-slot="tabs-trigger"]::after { display: none; }
+.session-metrics-tabs [data-state="active"] { color: var(--foreground); background: var(--muted); border-color: var(--muted-foreground); }
+.session-metrics-scroll { flex: 1 1 0; min-height: 180px; overflow: auto; display: flex; }
+.session-metrics-chart { width: 100%; height: 100%; min-width: 760px; min-height: 280px; max-height: 600px; font-family: var(--font-geist-sans), sans-serif; }
+.session-metric-mark { cursor: pointer; outline: none; }
+.session-metric-mark:focus-visible { filter: drop-shadow(0 0 3px var(--foreground)); }
+.session-metrics-footer { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 16px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 12px; flex-shrink: 0; }
+.session-metrics-footer span, .session-metrics-footer small { color: var(--muted-foreground); }
+.session-metrics-footer small { margin-left: auto; }
+.session-metrics-footer b { font-family: var(--font-geist-mono), monospace; }
+.session-metrics-help { max-width: min(360px, calc(100vw - 32px)); line-height: 1.6; }
+.session-metrics-help p + p { margin-top: 8px; }
+.session-metrics-dialog { width: min(900px, calc(100vw - 32px)); max-width: 900px; }
+.session-metrics-table { max-height: 65dvh; overflow: auto; }
+.session-metrics-table small { display: block; color: var(--muted-foreground); }
+@media(max-width: 767px) {
+  .session-metrics { padding: 14px; }
+  .session-metrics-heading { align-items: flex-start; }
+  .session-metrics-heading h3 { font-size: 16px; }
+  .session-metrics-heading p { max-width: 210px; }
+  .session-metrics-tools { gap: 2px; }
+  .session-metrics-tools [data-slot="button"] { padding: 6px; }
+  .session-metrics-tools [data-slot="button"] span { display: none; }
+  .session-metrics-tabs { width: 100%; }
+  .session-metrics-tabs [data-slot="tabs-trigger"] { height: 44px; padding-inline: 6px; font-size: 11px; }
+  .session-metrics-scroll { flex: none; height: 450px; }
+  .session-metrics-chart { min-width: 1000px; height: 450px; }
+  .session-metrics-footer { flex-direction: column; align-items: flex-start; }
+  .session-metrics-footer small { margin-left: 0; }
+}

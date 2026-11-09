@@ -202,7 +202,6 @@ export function buildDriverRoundSnapshots(
 
     if (race.participated) {
       points += roundPoints;
-      pointsFinishes += roundPoints > 0 ? 1 : 0;
       poles += race.qualifyingPosition === 1 ? 1 : 0;
       q3Appearances += race.qualifyingPosition !== null && race.qualifyingPosition <= 10 ? 1 : 0;
       fastestLaps += race.hasFastestLap ? 1 : 0;
@@ -211,6 +210,7 @@ export function buildDriverRoundSnapshots(
     if (hasRaceStart) {
       starts += 1;
       dnfs += race.isDnf ? 1 : 0;
+      pointsFinishes += race.racePoints > 0 ? 1 : 0;
       wins += race.finishPosition === 1 ? 1 : 0;
       podiums += race.finishPosition !== null && race.finishPosition <= 3 ? 1 : 0;
 
@@ -218,7 +218,7 @@ export function buildDriverRoundSnapshots(
         startPositions.push(race.startPosition);
       }
 
-      if (race.finishPosition !== null && !race.isDnf) {
+      if (race.finishPosition !== null) {
         finishPositions.push(race.finishPosition);
 
         if (race.startPosition !== null) {
@@ -227,13 +227,20 @@ export function buildDriverRoundSnapshots(
       }
     }
 
-    lastStanding = standingByRound.get(race.round) ?? lastStanding;
+    const standing = standingByRound.get(race.round);
+
+    if (standing) {
+      // Official corrections may reduce totals; newer results extend this baseline.
+      points = standing.points;
+      wins = standing.wins;
+      lastStanding = standing;
+    }
 
     snapshots.push({
       round: race.round,
       championshipPosition: lastStanding?.position ?? null,
-      points: lastStanding ? Math.max(points, lastStanding.points) : points,
-      wins: lastStanding ? Math.max(wins, lastStanding.wins) : wins,
+      points,
+      wins,
       podiums,
       poles,
       fastestLaps,

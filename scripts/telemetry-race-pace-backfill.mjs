@@ -1,6 +1,6 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { OpenF1Provider, mapSession } from "../worker/telemetry/provider.mjs";
-import { TelemetryService, resultKey } from "../worker/telemetry/service.mjs";
+import { TelemetryService, resultKey, DISCOVERY_TTL_MS } from "../worker/telemetry/service.mjs";
 import {
   createTelemetryDb,
   TelemetryStore,
@@ -69,8 +69,8 @@ console.log(
 );
 // Refresh the navigation metadata as well as the compact race datasets.
 const meetings = await provider.getMeetings(season);
-await store.put(`meetings:${season}`, meetings, 86400000);
-await store.put(resultKey({ kind: "meetings", season }), meetings, 3600000);
+await store.put(resultKey({ kind: "meetings", season }), meetings,
+  season === new Date().getUTCFullYear() ? DISCOVERY_TTL_MS : 86400000);
 for (const race of races) {
   const list = sessions.filter(
     (s) =>
@@ -79,11 +79,10 @@ for (const race of races) {
       Date.parse(s.date_end) + 31 * 60000 < Date.now(),
   );
   const mapped = list.map(mapSession);
-  await store.put(`sessions:${race.meeting_key}`, mapped, 3600000);
   await store.put(
     resultKey({ kind: "sessions", meeting: race.meeting_key }),
     mapped,
-    3600000,
+    DISCOVERY_TTL_MS,
   );
 }
 const report = await backfillRacePace({

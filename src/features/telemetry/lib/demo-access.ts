@@ -30,11 +30,14 @@ async function loadTelemetryDemoScope(): Promise<TelemetryDemoScope | null> {
     return null;
   }
   const seasons = await Promise.all(
-    years.map(async (year) => ({
-      meetings: (await store.get<Meeting[]>(`meetings:${year}`)) ?? [],
-      year,
-    })),
+    years.map(async (year) => {
+      const task = { kind: "meetings" as const, season: year };
+      const meetings = await store.get<Meeting[]>(resultKey(task));
+      if (!meetings) await store.enqueue(task, resultKey(task));
+      return { meetings: meetings ?? [], year, pending: !meetings };
+    }),
   );
+  if (seasons.some((season) => season.pending)) return null;
 
   for (const meeting of selectTelemetryDemoCandidates(seasons)) {
     const sessions = (await store.get<Session[]>(`sessions:${meeting.id}`)) ?? [];

@@ -184,7 +184,7 @@ async function handle(
               "kind" in task.task ? task.task.kind : null;
             const data = kind === "compare"
                 ? present(result as Comparison)
-                : kind === "race-pace" ? presentRacePace(result as RacePace)
+                : (kind === "race-pace" || kind === "session-pace") ? presentRacePace(result as RacePace)
                 : kind === "meetings"
                   ? (result as Meeting[]).map(normalizeTelemetryMeeting)
                   : result;
@@ -218,11 +218,11 @@ async function handle(
           data: present(saved.comparison, { from, to, points: 1500 }),
         });
       }
-      if (route === "race-pace") {
+      if (route === "race-pace" || route === "session-pace" || route === "session-metrics") {
         if (demoScope && !demoScope.sessions.some((session) => session.id === get("session")))
-          return subscriptionResponse(403, "Эта гонка доступна с RaceSide Plus.");
+          return subscriptionResponse(403, "Эта сессия доступна с RaceSide Plus.");
         const result = await queryTelemetry({
-          kind: "race-pace",
+          kind: route,
           session: get("session"),
         });
         return Response.json(result, {
@@ -313,7 +313,7 @@ function subscriptionResponse(status: number, error: string) {
 function taskAllowedInDemo(task: unknown, scope: TelemetryDemoScope) {
   if (!task || typeof task !== "object" || !("kind" in task)) return false;
   if (task.kind === "compare" && "config" in task) return configUsesDemoSessions(task.config, scope);
-  if ((task.kind === "catalog" || task.kind === "race-pace") && "session" in task && typeof task.session === "number") return scope.sessions.some((session) => session.id === task.session);
+  if ((task.kind === "catalog" || task.kind === "race-pace" || task.kind === "session-pace" || task.kind === "session-metrics") && "session" in task && typeof task.session === "number") return scope.sessions.some((session) => session.id === task.session);
   if (task.kind === "sessions" && "meeting" in task) return task.meeting === scope.meeting.id;
   if (task.kind === "meetings" && "season" in task) return task.season === scope.meeting.season;
   return task.kind === "seasons";

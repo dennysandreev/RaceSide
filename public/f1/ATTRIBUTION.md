@@ -22,6 +22,21 @@ Singapore was refreshed on 2026-10-04 from its official Formula1.com 2026
 race-page asset, including the straight-mode and overtaking zones. Local WebP
 maps and 640x360 share previews preserve transparency.
 
+United States / COTA was refreshed on 2026-10-21 from its official Formula1.com
+2026 race-page asset, including the straight-mode and overtaking zones.
+Current-season and legacy local URLs use the same reviewed image; historical
+season maps remain unchanged.
+
+Mexico was refreshed on 2026-10-30 from its official Formula1.com 2026
+race-page asset, including the straight-mode and overtaking zones. Current-season
+and legacy local WebP maps and 640x360 share previews use the reviewed image;
+historical season maps remain unchanged.
+
+Brazil / Interlagos was refreshed on 2026-11-08 from its official Formula1.com
+2026 race-page asset, including the straight-mode and overtaking zones. The
+reviewed original WebP is kept unchanged across current-season and legacy local
+URLs; 640x360 PNG share previews preserve transparency. Historical maps are unchanged.
+
 Historical 2020–2025 circuit maps were refreshed on 2026-07-18 from the
 official Formula1.com race-page assets and their archived event versions. Each
 season manifest in `public/f1/circuits/{season}/manifest.json` records the race

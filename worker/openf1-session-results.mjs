@@ -42,6 +42,10 @@ export function isOpenF1TimedSessionType(value) {
   );
 }
 
+export function isOpenF1LapFallbackAllowed(value) {
+  return PRACTICE_SESSION_TYPES.has(String(value ?? "").toLowerCase());
+}
+
 export function isOpenF1ResultProbeDue({
   endAt,
   hasLiveAccess = false,
@@ -61,19 +65,29 @@ export function isOpenF1ResultProbeDue({
   return nowMs >= endMs + Math.max(0, Number(delayMinutes) || 0) * 60_000;
 }
 
-export function hasFinalOpenF1SessionSignal(controls) {
-  const latest = (Array.isArray(controls) ? controls : [])
+export function hasFinalOpenF1SessionSignal(controls, { sessionType, sessionKey, nowMs = Date.now() } = {}) {
+  const signals = (Array.isArray(controls) ? controls : [])
+    .filter((row) => {
+      const at = Date.parse(row?.date);
+      return Number.isFinite(at) && at <= nowMs &&
+        (sessionKey == null || row.session_key == null || Number(row.session_key) === Number(sessionKey));
+    })
     .filter((row) =>
-      row?.flag === "CHEQUERED" ||
-      /SESSION (?:STARTED|RESUMED|FINISHED|ABORTED|SUSPENDED)|GREEN LIGHT/i.test(
+      (row?.flag === "CHEQUERED" && row.scope !== "Driver") ||
+      /SESSION (?:STARTED|RESUMED|FINISHED|ABORTED|SUSPENDED|WILL BE TEMPORARILY STOPPED)|GREEN LIGHT/i.test(
         row?.message ?? "",
       ),
     )
-    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
-    .at(-1);
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  const latest = signals.at(-1);
+  const qualifying = /qualif|shootout/i.test(sessionType ?? "");
+  const phaseSignal = [...signals].reverse().find((row) => row.qualifying_phase != null || row.qualifying_part != null);
+  const phase = Number(latest?.qualifying_phase ?? latest?.qualifying_part ??
+    phaseSignal?.qualifying_phase ?? phaseSignal?.qualifying_part);
 
   return Boolean(
     latest &&
+      (!qualifying || phase === 3) &&
       (latest.flag === "CHEQUERED" ||
         /SESSION FINISHED/i.test(latest.message ?? "")),
   );

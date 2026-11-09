@@ -204,6 +204,9 @@ export function connectDifferentialHydraulics(car:T.Group,system:T.Group,mat:Mat
           }
           probe.material.dispose();
         }
+        // The short exhaust sleeve leaves the gearbox shoulders open. A hose
+        // that does not cross it needs no floating feedthrough or false hole.
+        if(!hits.length&&label==="heat shield")continue;
         if(!hits.length)throw new Error(`Missing ${label} passage for ${name}`);
         const centre=hits.reduce((p,h)=>p.add(h.point),new T.Vector3()).divideScalar(hits.length);
         const tangent=hits.reduce((p,h)=>p.add(h.tangent),new T.Vector3()).normalize();

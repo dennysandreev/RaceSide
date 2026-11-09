@@ -1,0 +1,602 @@
+{
+  "source": "OpenF1 and read-only cached catalogues",
+  "captured": "2026-10-31",
+  "report": [
+    {
+      "session": 11397,
+      "name": "Practice 1",
+      "drivers": 22,
+      "chosen": 22,
+      "officialBestMatches": 21,
+      "metricsReady": 2,
+      "values": [
+        {
+          "driver": "HAD",
+          "lap": 11,
+          "time": 79.545,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "GAS",
+          "lap": 16,
+          "time": 79.21,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "PER",
+          "lap": 17,
+          "time": 80.395,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "ANT",
+          "lap": 14,
+          "time": 78.787,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "ALO",
+          "lap": 21,
+          "time": 79.357,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "LEC",
+          "lap": 12,
+          "time": 78.128,
+          "topSpeed": 349,
+          "fullThrottle": 41.47936719229982,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "HER",
+          "lap": 19,
+          "time": 81.365,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "HUL",
+          "lap": 14,
+          "time": 79.608,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "CRA",
+          "lap": 13,
+          "time": 80.803,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "IWA",
+          "lap": 17,
+          "time": 79.113,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "LIN",
+          "lap": 20,
+          "time": 79.478,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "HAM",
+          "lap": 14,
+          "time": 78.866,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "BRO",
+          "lap": 22,
+          "time": 80.869,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "HIR",
+          "lap": 17,
+          "time": 79.982,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "SAI",
+          "lap": 28,
+          "time": 80.72,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "MIN",
+          "lap": 17,
+          "time": 79.946,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "FOR",
+          "lap": 16,
+          "time": 80.235,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "VES",
+          "lap": 17,
+          "time": 78.861,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "PIA",
+          "lap": 18,
+          "time": 79.376,
+          "topSpeed": 349,
+          "fullThrottle": 35.59892158838944,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "BEA",
+          "lap": 17,
+          "time": 79.412,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "TSO",
+          "lap": 22,
+          "time": 79.604,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        },
+        {
+          "driver": "SLA",
+          "lap": 12,
+          "time": 80.945,
+          "topSpeed": null,
+          "fullThrottle": null,
+          "speedCoverage": 0,
+          "throttleCoverage": 0
+        }
+      ],
+      "teams": [
+        {
+          "team": "Ferrari",
+          "driver": "LEC",
+          "lap": 12,
+          "fullThrottle": 41.47936719229982,
+          "topSpeed": 349,
+          "averageSpeed": 198.32070448494778
+        },
+        {
+          "team": "McLaren",
+          "driver": "PIA",
+          "lap": 18,
+          "fullThrottle": 35.59892158838944,
+          "topSpeed": 349,
+          "averageSpeed": 195.20258012497482
+        },
+        {
+          "team": "Aston Martin",
+          "driver": "ALO",
+          "lap": 21,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 195.24931638040755
+        },
+        {
+          "team": "Mercedes",
+          "driver": "ANT",
+          "lap": 14,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 196.66188584411134
+        },
+        {
+          "team": "Haas F1 Team",
+          "driver": "BEA",
+          "lap": 17,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 195.11408855084872
+        },
+        {
+          "team": "Alpine",
+          "driver": "GAS",
+          "lap": 16,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 195.61166519378867
+        },
+        {
+          "team": "Audi",
+          "driver": "HUL",
+          "lap": 14,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 194.63370515526077
+        },
+        {
+          "team": "Red Bull Racing",
+          "driver": "IWA",
+          "lap": 17,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 195.85150354556143
+        },
+        {
+          "team": "Racing Bulls",
+          "driver": "LIN",
+          "lap": 20,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 194.95206220589347
+        },
+        {
+          "team": "Cadillac",
+          "driver": "PER",
+          "lap": 17,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 192.72840350768084
+        },
+        {
+          "team": "Williams",
+          "driver": "SAI",
+          "lap": 28,
+          "fullThrottle": null,
+          "topSpeed": null,
+          "averageSpeed": 191.9524281466799
+        }
+      ]
+    },
+    {
+      "session": 11398,
+      "name": "Practice 2",
+      "drivers": 22,
+      "chosen": 22,
+      "officialBestMatches": 21,
+      "metricsReady": 22,
+      "values": [
+        {
+          "driver": "NOR",
+          "lap": 16,
+          "time": 77.93,
+          "topSpeed": 349,
+          "fullThrottle": 37.68638521750289,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "VER",
+          "lap": 13,
+          "time": 78.138,
+          "topSpeed": 351,
+          "fullThrottle": 38.59965701707236,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "BOR",
+          "lap": 6,
+          "time": 80.174,
+          "topSpeed": 352,
+          "fullThrottle": 35.78841020779804,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "HAD",
+          "lap": 13,
+          "time": 78.237,
+          "topSpeed": 351,
+          "fullThrottle": 37.727673607116834,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "GAS",
+          "lap": 17,
+          "time": 78.407,
+          "topSpeed": 351,
+          "fullThrottle": 38.62792862882141,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "PER",
+          "lap": 9,
+          "time": 79.406,
+          "topSpeed": 350,
+          "fullThrottle": 39.09906052439362,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "ANT",
+          "lap": 15,
+          "time": 78.044,
+          "topSpeed": 349,
+          "fullThrottle": 40.29137409666342,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "ALO",
+          "lap": 11,
+          "time": 78.858,
+          "topSpeed": 346,
+          "fullThrottle": 45.47160719267544,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "LEC",
+          "lap": 17,
+          "time": 77.827,
+          "topSpeed": 349,
+          "fullThrottle": 41.71559998458119,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "STR",
+          "lap": 18,
+          "time": 79.631,
+          "topSpeed": 346,
+          "fullThrottle": 45.24996546571059,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "ALB",
+          "lap": 18,
+          "time": 79.578,
+          "topSpeed": 349,
+          "fullThrottle": 38.829827339214354,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "HUL",
+          "lap": 13,
+          "time": 79.023,
+          "topSpeed": 351,
+          "fullThrottle": 36.976576439770696,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "LAW",
+          "lap": 15,
+          "time": 78.455,
+          "topSpeed": 350,
+          "fullThrottle": 40.446115607673185,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "OCO",
+          "lap": 18,
+          "time": 78.774,
+          "topSpeed": 349,
+          "fullThrottle": 36.93096707035316,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "LIN",
+          "lap": 16,
+          "time": 78.389,
+          "topSpeed": 348,
+          "fullThrottle": 41.20858793963439,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "COL",
+          "lap": 17,
+          "time": 79.132,
+          "topSpeed": 351,
+          "fullThrottle": 37.62068442602234,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "HAM",
+          "lap": 12,
+          "time": 78.512,
+          "topSpeed": 349,
+          "fullThrottle": 44.383024251069905,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "SAI",
+          "lap": 15,
+          "time": 79.248,
+          "topSpeed": 349,
+          "fullThrottle": 39.382697355138305,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "RUS",
+          "lap": 15,
+          "time": 77.933,
+          "topSpeed": 350,
+          "fullThrottle": 38.099393068404915,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "BOT",
+          "lap": 14,
+          "time": 80.165,
+          "topSpeed": 350,
+          "fullThrottle": 36.231522484874944,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "PIA",
+          "lap": 11,
+          "time": 78.469,
+          "topSpeed": 349,
+          "fullThrottle": 38.218914475780245,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        },
+        {
+          "driver": "BEA",
+          "lap": 15,
+          "time": 78.849,
+          "topSpeed": 349,
+          "fullThrottle": 38.6637750637294,
+          "speedCoverage": 1,
+          "throttleCoverage": 1
+        }
+      ],
+      "teams": [
+        {
+          "team": "Aston Martin",
+          "driver": "ALO",
+          "lap": 11,
+          "fullThrottle": 45.47160719267544,
+          "topSpeed": 346,
+          "averageSpeed": 196.48482081716503
+        },
+        {
+          "team": "Ferrari",
+          "driver": "LEC",
+          "lap": 17,
+          "fullThrottle": 41.71559998458119,
+          "topSpeed": 349,
+          "averageSpeed": 199.08772019993063
+        },
+        {
+          "team": "Racing Bulls",
+          "driver": "LIN",
+          "lap": 16,
+          "fullThrottle": 41.20858793963439,
+          "topSpeed": 348,
+          "averageSpeed": 197.66038602354925
+        },
+        {
+          "team": "Williams",
+          "driver": "SAI",
+          "lap": 15,
+          "fullThrottle": 39.382697355138305,
+          "topSpeed": 349,
+          "averageSpeed": 195.51786795881284
+        },
+        {
+          "team": "Cadillac",
+          "driver": "PER",
+          "lap": 9,
+          "fullThrottle": 39.09906052439362,
+          "topSpeed": 350,
+          "averageSpeed": 195.1288315744402
+        },
+        {
+          "team": "Alpine",
+          "driver": "GAS",
+          "lap": 17,
+          "fullThrottle": 38.62792862882141,
+          "topSpeed": 351,
+          "averageSpeed": 197.6150088640045
+        },
+        {
+          "team": "Red Bull Racing",
+          "driver": "VER",
+          "lap": 13,
+          "fullThrottle": 38.59965701707236,
+          "topSpeed": 351,
+          "averageSpeed": 198.29532365814327
+        },
+        {
+          "team": "Mercedes",
+          "driver": "RUS",
+          "lap": 15,
+          "fullThrottle": 38.099393068404915,
+          "topSpeed": 350,
+          "averageSpeed": 198.81693249329552
+        },
+        {
+          "team": "McLaren",
+          "driver": "NOR",
+          "lap": 16,
+          "fullThrottle": 37.68638521750289,
+          "topSpeed": 349,
+          "averageSpeed": 198.824586167073
+        },
+        {
+          "team": "Audi",
+          "driver": "HUL",
+          "lap": 13,
+          "fullThrottle": 36.976576439770696,
+          "topSpeed": 351,
+          "averageSpeed": 196.07456057097303
+        },
+        {
+          "team": "Haas F1 Team",
+          "driver": "OCO",
+          "lap": 18,
+          "fullThrottle": 36.93096707035316,
+          "topSpeed": 349,
+          "averageSpeed": 196.69434077233603
+        }
+      ]
+    }
+  ]
+}

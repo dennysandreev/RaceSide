@@ -23,6 +23,7 @@
 | Телеметрия | [Обзор](telemetry/README.md), [требования](../17_telemetry_hub_development_plan.md), [гоночный темп](../21_race_pace_analytics.md) |
 | Фентези | [Прогнозы и лиги](../14_fantasy_league_redesign.md) |
 | Безопасность | [Проверки перед запуском](../SECURITY_LAUNCH_GATE.md), [ручные сценарии](../SECURITY_MANUAL_TESTS.md), [исторический аудит](../SECURITY_AUDIT.md) |
+| Производительность | [Проверка 18 октября: worker и кеш картинок](performance-optimization-2026-10-18.md), [проверка 10 сентября](performance-optimization-2026-09-10.md) |
 
 ## Модели и ассеты
 

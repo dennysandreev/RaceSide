@@ -41,6 +41,7 @@ import {
   getWeekendSessions,
 } from "@/data/racemate-repository";
 import { getTeamAssetForMarketOutcome } from "@/data/f1-assets";
+import { getFantasyTrackVisual } from "@/data/fantasy-track-assets";
 import { getSessionUser } from "@/lib/auth";
 import { formatSessionName, splitSessionStart } from "@/lib/session-display";
 import { CURRENT_F1_SEASON, getSearchParam } from "@/lib/season-navigation";
@@ -376,6 +377,8 @@ function WeekendHero({
           <div className="p-4 lg:p-5">
             <CircuitStatsSection
               circuitName={currentRace?.circuit ?? nextRace}
+              trackMapSrc={currentRace?.trackMapUrl}
+              trackPhoto={getFantasyTrackVisual(currentRace?.season, currentRace?.round, currentRace?.race)}
               embedded
               footerAction={(
                 <div className="grid grid-cols-2 items-center gap-2">

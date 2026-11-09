@@ -7,6 +7,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as T from "three";
 import { airflowRadius, illustrativeFlowSpeed, sampleAirflowPoint, type AirflowLayer, type AirflowPath } from "./w17-airflow";
 import type { WingMotion } from "./w17-geometry";
+import type { LessonFrame } from "./monza-lesson";
 
 const radial=6;
 const palette=[new T.Color("#477de0"),new T.Color("#43c8dd"),new T.Color("#b9da85"),new T.Color("#f3b765")];
@@ -15,7 +16,7 @@ function flowColor(speed:number,target:T.Color) {
   return target.copy(palette[index]).lerp(palette[index+1],value-index);
 }
 
-export function AirflowVolume({paths,layer,playing,opening}:{paths:AirflowPath[];layer:AirflowLayer|"off";playing:boolean;opening:RefObject<WingMotion>}) {
+export function AirflowVolume({paths,layer,playing,opening,lessonClock,revision}:{paths:AirflowPath[];layer:AirflowLayer|"off";playing:boolean;opening:RefObject<WingMotion>;lessonClock?:RefObject<LessonFrame>;revision?:number}) {
   const {invalidate}=useThree();
   const reduced=useRef(false),time=useRef(0),built=useRef(Number.NaN);
   const graphics=useMemo(()=>{
@@ -62,11 +63,11 @@ export function AirflowVolume({paths,layer,playing,opening}:{paths:AirflowPath[]
     const update=()=>{reduced.current=media.matches;invalidate();};update();media.addEventListener("change",update);
     return()=>{media.removeEventListener("change",update);graphics.entries.forEach(e=>{e.geometry.dispose();e.dots.dispose();});graphics.material.dispose();graphics.particleMaterial.dispose();};
   },[graphics,invalidate]);
-  useEffect(()=>{invalidate();},[layer,playing,invalidate]);
+  useEffect(()=>{invalidate();},[layer,playing,revision,invalidate]);
   useFrame((_,delta)=>{
     graphics.root.visible=layer!=="off";if(layer==="off")return;
     const dt=Math.min(delta,.05),blend=opening.current.value;
-    const moving=playing&&!reduced.current;if(moving)time.current+=dt;
+    const moving=playing&&!reduced.current;if(lessonClock)time.current=lessonClock.current.mechanismTime;else if(moving)time.current+=dt;
     graphics.material.uniforms.time.value=time.current;
     const rebuild=!Number.isFinite(built.current)||Math.abs(built.current-blend)>.0001;
     const {point,tangent,normal,binormal,color}=graphics;

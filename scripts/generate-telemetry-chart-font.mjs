@@ -8,7 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Use the font parser already bundled with Next at generation time only.
 const createFont = require("next/dist/compiled/@next/font/dist/fontkit").default;
 const font = createFont(readFileSync(resolve(root, "node_modules/geist/dist/fonts/geist-sans/Geist-Medium.ttf")));
-const glyphs = Object.fromEntries([...new Set("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZм ВСЕ?+-,.:Круг гонкиВозраст шин, круговСреднее, сМедиана, сРазброс, с")].map((character) => {
+const glyphs = Object.fromEntries([...new Set("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz%/()м ВСЕ?+-,.:Круг гонкиВозраст шин, круговСреднее, сМедиана, сРазброс, с")].map((character) => {
   const glyph = font.layout(character, ["tnum"]).glyphs[0];
   if (!glyph.id) throw new Error(`Missing chart glyph: ${character}`);
   return [character, { advance: glyph.advanceWidth, path: glyph.path.toSVG() }];

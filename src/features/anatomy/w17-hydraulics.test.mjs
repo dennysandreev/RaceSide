@@ -146,7 +146,8 @@ test("LSD pressure and return galleries connect their supply ports while remaini
 
 test("the LSD feedthroughs have open passages through every crossed skin",()=>{
   const sleeves=system.children.filter(p=>p.userData.feedthrough);
-  assert.equal(sleeves.length,4);
+  assert.equal(sleeves.length,2);
+  assert.ok(sleeves.every(p=>p.userData.feedthrough.skins.every(name=>name==="Carbon gearbox casing")),"only the crossed gearbox skin needs a grommet");
   assert.ok(sleeves.every(p=>!p.name.includes("rear panel")),"a grommet floats across the open cooling tail");
   for(const sleeve of sleeves){
     const {centre,axis,length,skins}=sleeve.userData.feedthrough,direction=vector(axis),start=vector(centre).addScaledVector(direction,-length/2-.002);

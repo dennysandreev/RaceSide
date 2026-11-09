@@ -1,0 +1,13 @@
+{
+  "session": {"session_key":11408,"session_type":"Qualifying","session_name":"Qualifying","date_start":"2026-11-07T18:00:00Z","date_end":"2026-11-07T19:00:00Z"},
+  "controls": [
+    {"session_key":11408,"date":"2026-11-07T18:00:00Z","message":"GREEN LIGHT - PIT EXIT OPEN","flag":"GREEN","scope":"Track","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T18:00:00.145Z","message":"SESSION STARTED","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T18:02:23.309Z","message":"SESSION ABORTED","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T19:23:11Z","message":"Q1 WILL RESUME AT 16:26"},
+    {"session_key":11408,"date":"2026-11-07T19:26:00Z","message":"GREEN LIGHT - PIT EXIT OPEN","flag":"GREEN","scope":"Track","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T19:26:00.142Z","message":"SESSION STARTED","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T19:41:37Z","message":"CHEQUERED FLAG","flag":"CHEQUERED","scope":"Track","qualifying_phase":1},
+    {"session_key":11408,"date":"2026-11-07T19:41:37.143Z","message":"SESSION FINISHED","qualifying_phase":1}
+  ]
+}

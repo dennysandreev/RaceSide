@@ -911,6 +911,14 @@ export async function validateTrackAsset({
   }
 
   if (modelId === "monza") {
+    const { auditMonzaSurfaces } = await import("./audit-monza-surfaces.mjs");
+    const audit = metrics.decodedSurfaceAudit = await auditMonzaSurfaces(glbBuffer);
+    for (const layer of ["road", "edgePaint", "pitPaint"]) {
+      if (!audit[layer].triangles || audit[layer].intersections || audit[layer].missingSupport) failures.push(`Monza ${layer} fails decoded surface clearance`);
+    }
+    if (!audit.pitJoins.samples || audit.pitJoins.maximumStepMeters > .06) failures.push("Monza pit entry/exit has a vertical step");
+    if (audit.obstructions.triangles) failures.push(`Monza venue objects obstruct driving corridors: ${audit.obstructions.triangles} triangles`);
+    if (!audit.elevatedCrossings.samples || audit.elevatedCrossings.minimumHeadroomMeters < 4.5) failures.push("Monza reconstructed crossings require 4.5 m headroom");
     const requiredAnchors = [
       ...Array.from({ length: 11 }, (_, index) => `Turn_${String(index + 1).padStart(2, "0")}`),
       "SpeedTrap", "StartFinish", "SectorBoundary_02", "SectorBoundary_03", "HighPoint", "LowPoint",
@@ -928,8 +936,10 @@ export async function validateTrackAsset({
       if (!metrics.materialNames.includes(materialName)) failures.push(`missing Monza real-world material: ${materialName}`);
     }
     for (const meshName of [
-      "FIA_Monza_Centreline_12m_Mesh", "FIA_Pit_Lane_Markings_60_Boxes_Mesh",
+      "FIA_Monza_Centreline_12m_Mesh", "Monza_Pit_Fast_Lane_And_10_Working_Boxes_Mesh",
       "Monza_2026_60_Garage_Pit_Complex_Grandstand_Mesh", "Monza_Current_OSM_Official_Map_Grandstands_Mesh",
+      "Monza_Historic_Banked_Oval_Mesh", "Monza_Park_Broadleaf_Canopy_Mesh",
+      "Monza_OSM_Safety_Fences_And_Walls_Mesh",
     ]) {
       if (!metrics.meshNames.includes(meshName)) failures.push(`missing Monza circuit mesh: ${meshName}`);
     }
@@ -2103,11 +2113,14 @@ function validateMonzaMetadata(metadata, failures) {
   if (JSON.stringify(metadata.sectorBoundaryDistancesMeters) !== JSON.stringify([1_919, 3_745])) failures.push(`unexpected Monza sector boundaries: ${metadata.sectorBoundaryDistancesMeters}`);
   if ((metadata.objects?.grandstandSections ?? 0) < 19) failures.push(`expected current Monza grandstand sections, got ${metadata.objects?.grandstandSections}`);
   if ((metadata.objects?.raceMotorhomes ?? 0) < 8) failures.push(`expected Monza paddock motorhomes, got ${metadata.objects?.raceMotorhomes}`);
+  if ((metadata.objects?.reconstructedTrees ?? 0) < 1500) failures.push("Monza wooded venue context is missing");
+  if (!quality?.grandstands?.footprints?.length || !quality?.historicOval?.mappedBridges) failures.push("Monza mapped stands or historic oval are missing");
+  if (!metadata.limitations?.length || metadata.surfaceExport?.meshoptPositionBits !== 18) failures.push("Monza reconstruction limits or precise surface export are missing");
   if (quality?.motorhomes?.remainingTrackConflicts !== 0) failures.push("Monza motorhomes intersect a circuit ribbon");
   if (quality?.buildings?.remainingTrackConflicts !== 0) failures.push("Monza buildings intersect the circuit safety corridor");
   if (!(quality?.surfaceClearance?.minimumTrackTerrainClearanceMeters >= 0.15) || quality?.surfaceClearance?.terrainBreakthroughSamples !== 0) failures.push("Monza terrain breaks through the racing surface");
   if (quality?.surfaceSmoothing?.wholeLap?.applied !== true) failures.push("Monza full-lap surface smoothing is missing");
-  if (quality?.pitLane?.pitBoxes !== 60 || quality?.pitLane?.fastLaneSeparator !== true) failures.push("Monza pit lane is missing 60 box markings or its fast-lane separator");
+  if (quality?.pitLane?.pitBoxes !== 60 || quality?.pitLane?.fastLaneSeparator !== true) failures.push("Monza pit lane is missing its garage inventory or fast-lane separator");
   if (quality?.pitLane?.pitComplex?.garageBoxes !== 60) failures.push("Monza pit complex is missing its 60 FIA positions");
   if (!(quality?.pitLane?.pitWall?.wallHeightMeters >= 1) || !(quality?.pitLane?.pitWall?.fenceHeightMeters >= 2)) failures.push("Monza pit wall or debris fence is incomplete");
   if (!(quality?.terrainSurface?.textureWidth >= 2_000 && quality?.terrainSurface?.textureHeight >= 2_000)) failures.push("Monza terrain texture is below the 2K target");

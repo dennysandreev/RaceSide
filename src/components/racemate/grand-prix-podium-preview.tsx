@@ -187,6 +187,10 @@ function normalizeDriverName(value: string) {
 function getShortDriverName(fullName: string) {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
 
+  if (parts.at(-1)?.toLowerCase() === "antonelli") {
+    return "K. Antonelli";
+  }
+
   if (parts.length < 2) {
     return parts[0] ?? fullName;
   }

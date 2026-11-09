@@ -442,7 +442,7 @@ test("future and foreign-session Race Control cannot finish a current race", () 
   ];
   assert.equal(sessionStillOngoing(session, controls, Date.parse("2026-09-11T15:00:00Z")), true);
 });
-test("an aborted session is not restored as ongoing", () => {
+test("an aborted session remains ongoing because ABORTED is a resumable red-flag pause", () => {
   const practice = {
     ...session,
     date_end: "2026-09-11T13:00:00Z",
@@ -456,7 +456,7 @@ test("an aborted session is not restored as ongoing", () => {
       ],
       Date.parse("2026-09-11T13:05:00Z"),
     ),
-    false,
+    true,
   );
   assert.equal(
     sessionStillOngoing(

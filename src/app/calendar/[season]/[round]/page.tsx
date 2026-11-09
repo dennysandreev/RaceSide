@@ -18,6 +18,7 @@ import { AppShell } from "@/components/racemate/app-shell";
 import { CircuitStatsSection } from "@/components/racemate/circuit-stats-section";
 import { RaceSessionResultsPanel } from "@/components/racemate/race-session-results-panel";
 import { TrackMap } from "@/components/racemate/track-map";
+import { getFantasyTrackVisual } from "@/data/fantasy-track-assets";
 import { GrandPrixReportDialog } from "@/components/racemate/grand-prix-report-dialog";
 import { GrandPrixPodiumPreview } from "@/components/racemate/grand-prix-podium-preview";
 import { getGrandPrixReportAnalytics } from "@/data/grand-prix-report-analytics";
@@ -303,6 +304,8 @@ export default async function RaceCalendarPage({
                     className="w-auto"
                     mode="button"
                     stats={circuitStats}
+                    trackMapSrc={race.trackMapUrl ?? (isCurrentSeason ? undefined : null)}
+                    trackPhoto={getFantasyTrackVisual(seasonYear, raceRound, race.race)}
                   />
                 )}
                 unframed

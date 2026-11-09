@@ -8,6 +8,16 @@ import {
   Minimize,
   Wifi,
   CloudRain,
+  Sun,
+  Moon,
+  SunMoon,
+  CloudSun,
+  CloudMoon,
+  Cloud,
+  CloudFog,
+  CloudDrizzle,
+  CloudSnow,
+  CloudLightning,
   DropletOff,
   Droplets,
   Wind,
@@ -31,7 +41,7 @@ import {
   useLiveSeekRevision,
   useLiveNow,
 } from "./live-provider";
-import { LiveViewSwitch, LiveRewindControls } from "./live-rewind";
+import { LiveRewindControls } from "./live-rewind";
 import {
   TimingTower,
   SelectedDriver,
@@ -44,6 +54,7 @@ import { ChampionshipPoints } from "./live-points";
 import { Analytics, DriverPanel, EventFeed, RadioFeed } from "./live-panels";
 import { sessionCapabilities, sessionLabel } from "../lib/session";
 import { gapText, lapTime } from "../lib/format";
+import { liveWeatherLabel } from "../lib/weather";
 import type { RaceReplaySnapshot } from "@/types/racemate";
 import "./live.css";
 const flagLabels: Record<string, string> = {
@@ -300,7 +311,6 @@ function Hud({ returnUrl }: { returnUrl: string }) {
           {session?.race_name ?? session?.circuit_short_name ?? "Текущий этап"}
         </strong>
       </div>
-      {!replay ? <LiveViewSwitch /> : null}
       <div className="live-session-hud">
         <span className="live-indicator" data-active={status === "live" && !rewinding}>
           {replay
@@ -384,11 +394,18 @@ function Hud({ returnUrl }: { returnUrl: string }) {
   );
 }
 
+const weatherIcons = {
+  sun: Sun, moon: Moon, clear: SunMoon, cloudSun: CloudSun, cloudMoon: CloudMoon,
+  cloud: Cloud, fog: CloudFog, drizzle: CloudDrizzle, rain: CloudRain,
+  snow: CloudSnow, storm: CloudLightning, dry: DropletOff, unknown: null,
+};
 function HudWeather() {
   const weather = useLive("weather");
+  const now = useLiveNow();
   const wind = weather?.wind == null ? "—" : `${(weather.wind * 3.6).toFixed(1).replace(".", ",")} км/ч`;
   const humidity = weather?.humidity == null ? "—" : `${weather.humidity}%`;
-  const rain = weather?.rain === 1 ? "Дождь" : weather?.rain === 0 ? "Без дождя" : "Дождь —";
+  const conditions = liveWeatherLabel(weather, now);
+  const WeatherIcon = weatherIcons[conditions.icon];
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -398,8 +415,8 @@ function HudWeather() {
             <span title="Влажность"><Droplets aria-hidden="true" />{humidity}</span>
             <span title="Ветер"><Wind aria-hidden="true" />{wind}</span>
             <span>
-              {weather?.rain === 1 ? <CloudRain aria-hidden="true" /> : weather?.rain === 0 ? <DropletOff aria-hidden="true" /> : null}
-              {rain}
+              {WeatherIcon ? <WeatherIcon aria-hidden="true" /> : null}
+              {conditions.label}
             </span>
           </span>
           <ChevronDown className="live-weather-chevron" aria-hidden="true" />
@@ -413,9 +430,10 @@ function HudWeather() {
             <div><dt>Трасса</dt><dd>{weather?.track ?? "—"}°C</dd></div>
             <div><dt>Влажность</dt><dd>{humidity}</dd></div>
             <div><dt>Ветер</dt><dd>{wind}</dd></div>
-            <div><dt>Осадки</dt><dd>{rain}</dd></div>
+            <div><dt>Погода</dt><dd>{conditions.label}</dd></div>
           </dl>
           {weather && <p>Обновлено в {new Date(weather.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}</p>}
+          {conditions.condition && <p>Состояние погоды — <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>, {new Date(conditions.condition.observedAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}</p>}
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

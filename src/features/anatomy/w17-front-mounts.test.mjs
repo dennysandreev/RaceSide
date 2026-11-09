@@ -42,11 +42,10 @@ test("all eight front wishbone pivots have bolted clevises seated on the surviva
   }
 });
 
-test("rear upper front-wishbone joints and their fairings stay outside the cockpit shoulder",()=>{
+test("rear upper front-wishbone joints and their fairings stay outside the survival cell",()=>{
   for(const side of[-1,1]){
     const name=`Front ${side} upper wishbone 1`,arm=model.root.getObjectByName(name),pivot=new T.Vector3(...arm.userData.anchor);
-    const shoulder=model.root.getObjectByName(`Cockpit side ${side}`);
-    const outer=createSurfaceSampler([shoulder],"z");
+    const outer=cellSide;
     assert.ok(side*(pivot.z-outer(pivot.x,pivot.y,side))>.024,"bearing buried in the cockpit wall");
     const positions=arm.geometry.attributes.position;
     for(let i=0;i<positions.count;i++){
@@ -74,7 +73,7 @@ test("removing the body exposes both front dampers while their feet retain struc
   assert.ok(cover?.userData.cover,"no removable suspension access cover");
   const exposed=[];model.root.traverse(part=>{if(part.isMesh&&!(part.userData.cover&&!part.userData.structural))exposed.push(part);});
   for(const side of[-1,1]){
-    const ray=new T.Raycaster(new T.Vector3(1.01,1,side*.115),new T.Vector3(0,-1,0));
+    const ray=new T.Raycaster(new T.Vector3(1.28,1,side*.115),new T.Vector3(0,-1,0));
     const hit=ray.intersectObjects(exposed,false)[0];
     assert.match(hit?.object.name??"",new RegExp(`^Front ${side} (spring|damper)`),"monocoque hides damper in cutaway mode");
     for(const mount of["rocker","damper"]){

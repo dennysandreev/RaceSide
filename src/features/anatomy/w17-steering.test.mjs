@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import * as T from "three";
 import { createW17 } from "./w17-geometry.ts";
 import { createModelInstance } from "./w17-model-cache.ts";
+import { createSurfaceSampler } from "./w17-surface.ts";
 
 const model = createW17(); model.root.updateMatrixWorld(true);
 const part = name => model.root.getObjectByName(name);
@@ -47,6 +48,17 @@ test("rack and column mounts seat in the structural tub while tie-rod hardpoints
     const stay = part(`Steering column lower stay ${side}`), insert = part(`Steering column lower chassis insert ${side}`);
     assert.ok(bounds(stay).intersectsBox(bounds(insert)));
     assert.ok(bounds(stay).intersectsBox(bounds(part("Steering column bearing lower"))));
+  }
+});
+
+test("rack mounting feet and fixings stay above the curved outer tub underside",()=>{
+  const underside=createSurfaceSampler([part("Forward survival cell deck")],"y");
+  for(const side of[-1,1])for(const name of[`rack mount ${side}`,`rack pedestal ${side}`,...[-.024,.024].map(dx=>`rack fixing ${side} ${dx}`)]){
+    const mesh=part(`Steering ${name}`),p=mesh.geometry.attributes.position;
+    for(let i=0;i<p.count;i++){
+      const v=new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld),skin=underside(v.x,v.z,-1);
+      assert.ok(skin!==undefined&&v.y>=skin+.0005,`${name} protrudes below the outer carbon skin at ${v.toArray()}`);
+    }
   }
 });
 

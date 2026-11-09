@@ -451,20 +451,21 @@
       "file": "/f1/circuits/2026/18-united-states.webp",
       "pageUrl": "https://www.formula1.com/en/racing/2026/united-states",
       "sourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackaustindetailed.webp",
-      "sha256": "c8bfc295cc3b0de3ad0182fe9b1e2c07ccb4000b6be2036d044c1519ba588e69",
+      "sha256": "a5a3a52e80d69a752b32b55e92c44895240898620a631308fd48511fed79273d",
       "authority": "Formula1.com",
       "racePageUrl": "https://www.formula1.com/en/racing/2026/united-states",
       "sourceTitle": "United States Grand Prix official circuit map",
       "liveSourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackaustindetailed.webp",
-      "sourceImageSha256": "c8bfc295cc3b0de3ad0182fe9b1e2c07ccb4000b6be2036d044c1519ba588e69",
+      "sourceImageSha256": "a5a3a52e80d69a752b32b55e92c44895240898620a631308fd48511fed79273d",
+      "refreshedAt": "2026-10-21T00:00:00.000Z",
       "sourceSelection": "official-season-page-live-asset",
       "width": 1252,
       "height": 704,
       "manualReview": {
         "status": "approved",
-        "reviewedAt": "2026-08-02T00:00:00.000Z",
+        "reviewedAt": "2026-10-21T00:00:00.000Z",
         "reviewer": "RaceSide visual QA",
-        "note": "Checked against the official Formula1.com 2026 race-page map."
+        "note": "Refreshed from the official Formula1.com 2026 United States page, including straight-mode and overtaking zones."
       }
     },
     {
@@ -476,20 +477,21 @@
       "file": "/f1/circuits/2026/19-mexico.webp",
       "pageUrl": "https://www.formula1.com/en/racing/2026/mexico",
       "sourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackmexicocitydetailed.webp",
-      "sha256": "93900a37c2bfa9592f3b74c1bf403c61c4ee72b7826cbf91c7d3f579bae63fcf",
+      "sha256": "c5d6008a33a7c5b3d864f10cd2b3130cc0684ea9fca4239da87c52c0dfc4feff",
       "authority": "Formula1.com",
       "racePageUrl": "https://www.formula1.com/en/racing/2026/mexico",
       "sourceTitle": "Mexico City Grand Prix official circuit map",
       "liveSourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackmexicocitydetailed.webp",
-      "sourceImageSha256": "93900a37c2bfa9592f3b74c1bf403c61c4ee72b7826cbf91c7d3f579bae63fcf",
+      "sourceImageSha256": "c5d6008a33a7c5b3d864f10cd2b3130cc0684ea9fca4239da87c52c0dfc4feff",
+      "refreshedAt": "2026-10-30T19:38:50.000Z",
       "sourceSelection": "official-season-page-live-asset",
       "width": 1252,
       "height": 704,
       "manualReview": {
         "status": "approved",
-        "reviewedAt": "2026-08-02T00:00:00.000Z",
+        "reviewedAt": "2026-10-30T19:38:50.000Z",
         "reviewer": "RaceSide visual QA",
-        "note": "Checked against the official Formula1.com 2026 race-page map."
+        "note": "Refreshed from the official Formula1.com 2026 Mexico page, including straight-mode and overtaking zones."
       }
     },
     {
@@ -501,20 +503,21 @@
       "file": "/f1/circuits/2026/20-brazil.webp",
       "pageUrl": "https://www.formula1.com/en/racing/2026/brazil",
       "sourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackinterlagosdetailed.webp",
-      "sha256": "a82be8f44bc122f872c0b9adeca50018fc69d6c59fb826c5e54736e69af1e04b",
+      "sha256": "560141f6d73a7ac18f831e04861d0585790d1e2aa49d9263d8583bd99e295374",
       "authority": "Formula1.com",
       "racePageUrl": "https://www.formula1.com/en/racing/2026/brazil",
       "sourceTitle": "Brazilian Grand Prix official circuit map",
       "liveSourceUrl": "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/common/f1/2026/track/2026trackinterlagosdetailed.webp",
-      "sourceImageSha256": "a82be8f44bc122f872c0b9adeca50018fc69d6c59fb826c5e54736e69af1e04b",
+      "sourceImageSha256": "560141f6d73a7ac18f831e04861d0585790d1e2aa49d9263d8583bd99e295374",
       "sourceSelection": "official-season-page-live-asset",
       "width": 1252,
       "height": 704,
+      "downloadedAt": "2026-11-08T15:17:47.000Z",
       "manualReview": {
         "status": "approved",
-        "reviewedAt": "2026-08-02T00:00:00.000Z",
+        "reviewedAt": "2026-11-08T15:17:47.000Z",
         "reviewer": "RaceSide visual QA",
-        "note": "Checked against the official Formula1.com 2026 race-page map."
+        "note": "Refreshed from the official Formula1.com 2026 Brazil race-page map. Straight-mode and overtaking zones, complete framing and transparent background checked."
       }
     },
     {

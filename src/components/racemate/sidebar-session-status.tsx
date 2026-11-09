@@ -81,7 +81,6 @@ export function SidebarSessionStatus({
 
 function getRuntimeState({
   now,
-  sessionName,
   startsAtIso,
   status,
 }: SidebarSessionStatusProps & { now: number }): RuntimeState {
@@ -111,7 +110,7 @@ function getRuntimeState({
     };
   }
 
-  if (!isCompleted && now < startMs + getSidebarSessionDurationMs(sessionName)) {
+  if (!isCompleted) {
     return {
       label: "Live сейчас",
       live: true,

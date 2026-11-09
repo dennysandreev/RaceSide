@@ -39,6 +39,7 @@ import {
   getPublishedSeasons,
 } from "@/data/racemate-repository";
 import { getTeamProfileAsset } from "@/data/f1-assets";
+import { getConfirmedSeasonChampion } from "@/data/season-champions";
 import { getSessionUser } from "@/lib/auth";
 import {
   CURRENT_F1_SEASON,
@@ -236,7 +237,8 @@ function DriverHero({
     || getLocalDriverAvatarSrc(profile.slug, profile.season)
     || getHistoricalDriverFallbackSrc(profile.season);
   const teamColor = profile.team.color ?? "var(--primary)";
-  const isChampion = profile.season < CURRENT_F1_SEASON && profile.stats.championshipPosition === 1;
+  const isChampion = getConfirmedSeasonChampion(profile.season)?.driverSlug === profile.slug
+    || (profile.season < CURRENT_F1_SEASON && profile.stats.championshipPosition === 1);
 
   return (
     <section className="stitch-panel relative overflow-hidden p-0">

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +14,9 @@ export async function writeMonzaClientModel({
   outputPath = path.join(projectRoot, "src/data/monza-model.ts"),
 } = {}) {
   const preparedDirectory = path.join(projectRoot, ".track-model-build/monza-prepared");
+  const assetVersion = createHash("sha256")
+    .update(await readFile(path.join(path.dirname(metadataPath), "monza.glb")))
+    .digest("hex").slice(0, 12);
   const [config, metadata, rasterMetadata, dtmBuffer] = await Promise.all([
     readJson(configPath),
     readJson(metadataPath),
@@ -20,8 +24,8 @@ export async function writeMonzaClientModel({
     readFile(path.join(preparedDirectory, "monza-dtm.f32le")),
   ]);
   const osm = await readJson(path.join(config.sourceDirectory, "openstreetmap-raceway.json"));
-  const sourceCenterline = assembleMainCircuit(osm, config.model.mainCircuitWayIds);
-  const centerline = rotateClosedLine(sourceCenterline, config.model.sourceStartFinishOffsetMeters);
+  const centerline = metadata.drivingLine;
+  if (!centerline?.length) throw new Error("Rebuild Monza: the road-aligned driving line is missing");
   const cumulative = cumulativeDistances(centerline);
   const totalLength = cumulative.at(-1);
   const dtm = createHeightRasterSampler(
@@ -29,13 +33,13 @@ export async function writeMonzaClientModel({
     rasterMetadata.rasters.dtm,
     config.model.bounds,
   );
-  const pointCount = 180;
+  const pointCount = 720;
   const points = Array.from({ length: pointCount + 1 }, (_, index) => {
     const distanceAlongTrack = totalLength * index / pointCount;
     const point = index === pointCount
       ? centerline[0]
       : sampleLine(centerline, cumulative, distanceAlongTrack);
-    const elevation = dtm.sample(point[0], point[1]);
+    const elevation = point[2];
     return [
       round(index / pointCount, 6),
       round(point[0] - config.model.center.x, 3),
@@ -89,7 +93,7 @@ export async function writeMonzaClientModel({
 
 /**
  * Generated from the Monza Blender digital twin. Do not hand-edit.
- * Geometry: current OSM; elevations: Terrarium DEM; markers: latest FIA operational map.
+ * Geometry: current OSM; elevations: Terrarium DEM; markers: pinned FIA 2025 operational map.
  * Run \`pnpm track:3d:build monza\` to regenerate this controller metadata.
  */
 
@@ -154,10 +158,10 @@ export const MONZA_TRACK_MODEL = ${JSON.stringify({
     },
     terrain: "__TERRAIN__",
     webgl: {
-      assetPath: "/f1/tracks/3d/monza.glb",
+      assetPath: `/f1/tracks/3d/monza.glb?v=${assetVersion}`,
       camera: { fitHeight: 4_100, fitWidth: 3_700, lookAtY: 18, radius: 5_800 },
       elevationDatumLabel: "м DEM",
-      previewPath: "/f1/tracks/3d/monza-preview.webp",
+      previewPath: `/f1/tracks/3d/monza-preview.webp?v=${assetVersion}`,
       turnCount: 11,
     },
   }, null, 2)
@@ -169,36 +173,6 @@ export const MONZA_TRACK_MODEL = ${JSON.stringify({
 }
 
 const GRAVEL_TURNS = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11];
-
-function assembleMainCircuit(osm, wayIds) {
-  const ways = new Map(osm.elements.filter((element) => element.type === "way")
-    .map((way) => [way.id, way]));
-  const points = [];
-  for (const wayId of wayIds) {
-    const way = ways.get(wayId);
-    if (!way?.geometry?.length) throw new Error(`OSM way ${wayId} is missing or has no geometry`);
-    let geometry = way.geometry.map(({ lat, lon }) => utm32nFromWgs84(lat, lon));
-    if (points.length > 0) {
-      if (distance(points.at(-1), geometry.at(-1)) < distance(points.at(-1), geometry[0])) {
-        geometry = geometry.reverse();
-      }
-      if (distance(points.at(-1), geometry[0]) < 0.05) geometry = geometry.slice(1);
-    }
-    points.push(...geometry);
-  }
-  if (distance(points[0], points.at(-1)) > 0.05) points.push(points[0]);
-  return points;
-}
-
-function rotateClosedLine(points, requestedOffset) {
-  const cumulative = cumulativeDistances(points);
-  const total = cumulative.at(-1);
-  const offset = ((requestedOffset % total) + total) % total;
-  const splitIndex = cumulative.findIndex((value) => value >= offset);
-  const splitPoint = sampleLine(points, cumulative, offset);
-  const core = distance(points[0], points.at(-1)) < 0.05 ? points.slice(0, -1) : points;
-  return [splitPoint, ...core.slice(splitIndex), ...core.slice(0, splitIndex), splitPoint];
-}
 
 function cumulativeDistances(points) {
   const result = [0];

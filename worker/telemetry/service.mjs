@@ -12,16 +12,22 @@ import {
 import { hash, TelemetryStore } from "./store.mjs";
 import { OpenF1Provider } from "./provider.mjs";
 import { orientEstimatedTrack, verifiedTrack } from "./track-geometry.mjs";
-import { buildRacePace, raceControlLaps, raceTyreLaps, isRaceSession, RACE_PACE_VERSION } from "./race-pace.mjs";
+import { buildRacePace, buildSessionPace, raceControlLaps, raceTyreLaps, isRaceSession, RACE_PACE_VERSION } from "./race-pace.mjs";
+import { bestSessionLaps, sessionLapMetrics, SESSION_PACE_VERSION, SESSION_METRICS_VERSION } from "./session-metrics.mjs";
 import { ANALYSIS_VERSION, buildTelemetryAnalysis, repeatableLap } from "./analysis.mjs";
 import { REPORT_TIMING_VERSION, buildReportTiming, reportTimingTtl } from "./report-timing.mjs";
 export const resultKey = (task) =>
-  `${task.kind === "report-timing" ? REPORT_TIMING_VERSION : task.kind === "race-pace" ? RACE_PACE_VERSION : VERSION}:${hash(
+  task.kind === "meetings" ? `meetings:${task.season}`
+  : task.kind === "sessions" ? `sessions:${task.meeting}`
+  : `${task.kind === "session-pace" ? SESSION_PACE_VERSION : task.kind === "session-metrics" ? SESSION_METRICS_VERSION : task.kind === "report-timing" ? REPORT_TIMING_VERSION : task.kind === "race-pace" ? RACE_PACE_VERSION : VERSION}:${hash(
     ["catalog", "compare"].includes(task.kind)
       ? { ...task, raceAnalysisVersion: RACE_PACE_VERSION,
           ...(task.kind === "compare" ? { trackAnalysisVersion: ANALYSIS_VERSION } : {}) }
       : task,
   )}`;
+export const DISCOVERY_TTL_MS = 5 * 60_000;
+const meetingsTtl = (season) => season === new Date().getUTCFullYear()
+  ? DISCOVERY_TTL_MS : 24 * 3600000;
 const catalogTtl = (catalog) =>
   Date.now() - Date.parse(catalog.session.end) < 24 * 3600000
     ? 15 * 60000
@@ -29,7 +35,7 @@ const catalogTtl = (catalog) =>
 export function validateTask(task) {
   if (
     !task ||
-    !["seasons", "meetings", "sessions", "catalog", "compare", "race-pace", "report-timing"].includes(
+    !["seasons", "meetings", "sessions", "catalog", "compare", "race-pace", "session-pace", "session-metrics", "report-timing"].includes(
       task.kind,
     )
   )
@@ -110,6 +116,38 @@ export class TelemetryService {
         };
       },
     );
+  }
+  async carSamples(lap) {
+    const fingerprint = `${lap.id}:${hash([lap.start, lap.time]).slice(0, 16)}`;
+    const existing = await this.store.get(`raw:${VERSION}:${fingerprint}`);
+    if (existing) return existing.samples;
+    // A car-only result must not replace the comparison cache, which includes GPS.
+    return this.cached(`session-car:${VERSION}:${fingerprint}`, () => this.provider.getTelemetry(
+      lap.sessionId, lap.driverNumber,
+      new Date(Date.parse(lap.start) - 2000).toISOString(),
+      new Date(Date.parse(lap.start) + lap.time * 1000 + 2000).toISOString(),
+    ), samples => sessionLapMetrics(null, lap, samples).state === "ready" ? null : 5 * 60_000);
+  }
+  async sessionMetrics(session) {
+    const catalog = await this.catalog(session);
+    const choices = bestSessionLaps(catalog);
+    const circuitLength = verifiedTrack(catalog.session.circuit, catalog.session.season)?.length ?? null;
+    const laps = new Array(choices.length);
+    let next = 0, failures = 0;
+    await Promise.all([0, 1].map(async () => {
+      while (next < choices.length) {
+        const index = next++, { driver, lap } = choices[index];
+        let samples = [];
+        if (lap) {
+          try { samples = await this.carSamples(lap); }
+          catch { failures++; /* Partial failures remain visible; retry them later. */ }
+        }
+        laps[index] = sessionLapMetrics(driver, lap, samples, circuitLength);
+      }
+    }));
+    if (failures && failures === choices.filter(choice => choice.lap).length)
+      throw new Error("PROVIDER_UNAVAILABLE");
+    return { version: SESSION_METRICS_VERSION, session: catalog.session, circuitLength, laps };
   }
   async raceRaw(catalog, driverNumber, laps) {
     const fingerprint = laps.map((lap) => [lap.id, lap.start, lap.time]);
@@ -363,7 +401,7 @@ export class TelemetryService {
       const sessions = await this.cached(
         `sessions:${initial.session.meetingId}`,
         () => this.provider.getSessions(initial.session.meetingId),
-        3600000,
+        DISCOVERY_TTL_MS,
       );
       const samples = [];
       for (const session of config.window === "session"
@@ -458,27 +496,21 @@ export class TelemetryService {
             const meetings = await this.cached(
               `meetings:${y}`,
               () => this.provider.getMeetings(y),
-              86400000,
+              meetingsTtl(y),
             );
             if (meetings.length) years.push(y);
           }
           return years;
         }
-        if (task.kind === "meetings")
-          return this.cached(
-            `meetings:${task.season}`,
-            () => this.provider.getMeetings(task.season),
-            86400000,
-          );
-        if (task.kind === "sessions")
-          return this.cached(
-            `sessions:${task.meeting}`,
-            () => this.provider.getSessions(task.meeting),
-            3600000,
-          );
+        // Discovery has one cache entry: nesting a second TTL can extend stale lists.
+        if (task.kind === "meetings") return this.provider.getMeetings(task.season);
+        if (task.kind === "sessions") return this.provider.getSessions(task.meeting);
         if (task.kind === "catalog") return this.catalog(task.session);
         if (task.kind === "race-pace")
           return buildRacePace(await this.catalog(task.session));
+        if (task.kind === "session-pace")
+          return buildSessionPace(await this.catalog(task.session));
+        if (task.kind === "session-metrics") return this.sessionMetrics(task.session);
         if (task.kind === "report-timing") {
           const catalog = await this.catalog(task.session);
           if (String(catalog.session.name).toLowerCase() !== "race") throw new Error("REPORT_TIMING_ONLY");
@@ -492,9 +524,13 @@ export class TelemetryService {
       },
       task.kind === "compare"
         ? null
+        : task.kind === "meetings" ? meetingsTtl(task.season)
+        : task.kind === "sessions" ? DISCOVERY_TTL_MS
         : task.kind === "report-timing"
           ? reportTimingTtl
-        : task.kind === "race-pace"
+        : task.kind === "session-metrics"
+          ? (data) => data.laps.some(lap => lap.lap && lap.state !== "ready") ? 5 * 60_000 : 15 * 60_000
+        : task.kind === "race-pace" || task.kind === "session-pace"
           ? (data) => Date.now() - Date.parse(data.session.end) < 24 * 3600000
             ? 15 * 60000 : null
           : task.kind === "catalog" ? catalogTtl : 3600000,

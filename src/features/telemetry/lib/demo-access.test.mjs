@@ -13,9 +13,9 @@ const now = Date.parse("2026-04-20T12:00:00Z");
 const meetings = [1, 2, 3].map((id) => ({
   id, season: 2026, start: `2026-04-0${id}T12:00:00Z`,
 }));
-function demo(sessions) {
+function demo(sessions, cachedMeetings = meetings, extraCache = {}) {
   const queued = [];
-  const cache = { seasons: [2026], "meetings:2026": meetings, "sessions:1": sessions };
+  const cache = { seasons: [2026], "meetings:2026": cachedMeetings, "sessions:1": sessions, ...extraCache };
   const exports = {};
   const require = (name) => {
     if (name.endsWith("demo-selection")) return {
@@ -24,7 +24,7 @@ function demo(sessions) {
       selectTelemetryDemoSession: (sessions) => selection.selectTelemetryDemoSession(sessions, now),
     };
     if (name.endsWith("/server")) return {
-      resultKey: () => "seasons",
+      resultKey: (task) => task.kind === "meetings" ? `meetings:${task.season}` : "seasons",
       telemetryStore: () => ({
         get: async (key) => cache[key] ?? null,
         enqueue: async (task) => queued.push(task),
@@ -61,4 +61,20 @@ test("an unavailable or unfinished race never falls back to qualifying or sprint
     [{ id: 13, name: "Sprint", end: "2026-04-02T12:00:00Z" }],
     [{ id: 14, name: "Race", end: "2026-04-20T14:00:00Z" }],
   ]) assert.equal(await demo(sessions).load(), null);
+});
+test("an expired meetings list is requeued even while the seasons list is still cached", async () => {
+  const loader = demo(null, null);
+  assert.equal(await loader.load(), null);
+  assert.equal(loader.queued.length, 1);
+  assert.equal(loader.queued[0].kind, "meetings");
+  assert.equal(loader.queued[0].season, 2026);
+});
+test("refreshing current meetings never temporarily switches the demo to an older season", async () => {
+  const loader = demo(null, null, {
+    seasons: [2026, 2025],
+    "meetings:2025": [1, 2, 3].map((id) => ({ id: id + 10, season: 2025, start: `2025-04-0${id}T12:00:00Z` })),
+    "sessions:11": [{ id: 114, name: "Race", end: "2025-04-03T14:00:00Z" }],
+  });
+  assert.equal(await loader.load(), null);
+  assert.equal(loader.queued[0].kind, "meetings");
 });

@@ -30,8 +30,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ sess
   if (!limit.ok) return new Response(null, { status: 429, headers: { "Retry-After": getRetryAfterSeconds(limit.resetAt) } });
   try {
     const store = telemetryStore();
-    const data = await store.get<RacePace>(resultKey({ kind: "race-pace", session }));
-    if (!data) return new Response("Сначала откройте темп этой гонки.", { status: 409 });
+    const data = await store.get<RacePace>(resultKey({ kind: query.get("source") === "session" ? "session-pace" : "race-pace", session }))
+      ?? await store.get<RacePace>(resultKey({ kind: "race-pace", session }));
+    if (!data) return new Response("Сначала откройте телеметрию этой сессии.", { status: 409 });
     const drivers = [...new Set((query.get("drivers") ?? "").split(",").map(Number))]
       .filter((number) => data.drivers.some((driver) => driver.number === number)).slice(0, 6);
     const distribution = query.get("view") === "distribution";

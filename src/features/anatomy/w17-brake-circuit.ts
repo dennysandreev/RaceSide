@@ -99,12 +99,20 @@ export function connectFrontBrakes(car: T.Group, brakes: T.Group, mat: Materials
     const assembly = car.getObjectByName(`Front ${side} brake assembly`) as T.Group;
     const port = assembly.getObjectByName(`Front ${side} hydraulic port`)!;
     ports[`caliper ${side}`] = {point:assembly.localToWorld(v(port.userData.portPoint)).toArray() as V,axis:[0,0,-side],mesh:port.name};
-    const hose = line(`Front ${side} brake hose`,`bulkhead outside ${side}`,`caliper ${side}`,
-      [[1.345,.362,side*.235],[1.39,.38,side*.275],[1.52,.425,side*.32],
-        [1.61,.434,side*.40],[1.63,.432,side*.50],[1.62,.410,side*.535],[1.59,.385,side*.565]],.003);
-    // A retained saddle carries the flexible line beneath the wishbone; the
-    // final free loop allows relative upright/steering movement.
+    // Route the retained hose against the installed upper link. Its saddle
+    // must follow a hardpoint change instead of staying at an old XYZ guess.
     const arm = car.getObjectByName(`Front ${side} upper wishbone 0`) as T.Mesh;
+    arm.updateWorldMatrix(true,false);
+    const underside = createSurfaceSampler([arm],"y");
+    const armStart = v(arm.userData.anchor), armEnd = v(arm.userData.terminal);
+    const supported = [.32,.40,.45,.50].map(z => {
+      const p = armStart.clone().lerp(armEnd,(side*z-armStart.z)/(armEnd.z-armStart.z));
+      return [p.x,underside(p.x,p.z,-1)!-.012,p.z] as V;
+    });
+    const hose = line(`Front ${side} brake hose`,`bulkhead outside ${side}`,`caliper ${side}`,
+      [[1.345,.362,side*.235],[1.55,.38,side*.275],...supported,
+        [1.70,.410,side*.535],[1.65,.385,side*.565]],.003);
+    // The free loop after the saddle allows upright and steering movement.
     const samples = hose.getSpacedPoints(600);
     const p = samples.reduce((best,p) => Math.abs(p.z-side*.45)<Math.abs(best.z-side*.45)?p:best,samples[0]);
     const index = samples.indexOf(p), tangent = samples[index+1].clone().sub(samples[index-1]).normalize();

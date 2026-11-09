@@ -337,7 +337,7 @@ export function EventFeed({
               <time>{time(e.timestamp)}</time>
             </div>
             <p>{e.message}</p>
-            {driverNumbers.length > 0 && (
+            {(driverNumbers.length > 0 || ((e.type === "fastest_lap" || e.type === "pit") && e.duration != null)) && (
               <div className="live-event-drivers" aria-label="Пилоты события">
                 {driverNumbers.map((driverNumber) => {
                   const driver = drivers[driverNumber];
@@ -359,9 +359,14 @@ export function EventFeed({
                     </button>
                   );
                 })}
+                {(e.type === "fastest_lap" || e.type === "pit") && e.duration != null && (
+                  <strong className="live-event-lap-time">
+                    {e.type === "fastest_lap" ? lapTime(e.duration) : `${e.duration.toFixed(3)} с`}
+                  </strong>
+                )}
               </div>
             )}
-            {e.duration && <strong>{e.duration.toFixed(3)} с</strong>}
+            {e.type !== "fastest_lap" && e.type !== "pit" && e.duration && <strong>{e.duration.toFixed(3)} с</strong>}
           </article>
         ))}
         {!filtered.length && filter !== null && (

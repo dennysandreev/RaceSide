@@ -3,7 +3,7 @@
   "season": 2026,
   "promptVersion": "driver-avatar-seasonal-v1",
   "helmetReferencePolicy": "Exact visual reference for the driver's regular primary helmet in this season; one-off designs are not accepted.",
-  "generatedAt": "2026-07-15T22:12:23.986Z",
+  "generatedAt": "2026-11-08T11:41:02.000Z",
   "source": {
     "provider": "Jolpica F1",
     "resultsUrl": "https://api.jolpi.ca/ergast/f1/2026/results.json",
@@ -12,9 +12,9 @@
   },
   "complete": true,
   "stats": {
-    "drivers": 22,
+    "drivers": 23,
     "raceResultRows": 198,
-    "ready": 22,
+    "ready": 23,
     "pending": 0
   },
   "drivers": [
@@ -1016,6 +1016,62 @@
         "status": "approved",
         "reviewedAt": "2026-07-15T21:37:43.620Z",
         "note": "Imported from the accepted RaceSide 2026 production avatar set."
+      }
+    },
+    {
+      "externalId": "rafael_camara",
+      "slug": "rafael-camara",
+      "fullName": "Rafael Camara",
+      "givenName": "Rafael",
+      "familyName": "Camara",
+      "code": "CAM",
+      "permanentNumber": "51",
+      "nationality": "Brazilian",
+      "season": 2026,
+      "team": {
+        "externalId": "haas",
+        "name": "Haas F1 Team",
+        "referenceUrl": "https://www.haasf1team.com/"
+      },
+      "starts": 0,
+      "appearances": 1,
+      "lastStartRound": null,
+      "primaryTeamRule": "most race starts; tie broken by latest race start",
+      "teamStints": [
+        {
+          "externalId": "haas",
+          "name": "Haas F1 Team",
+          "nationality": "American",
+          "referenceUrl": "https://www.haasf1team.com/",
+          "appearances": 1,
+          "starts": 0,
+          "firstAppearanceRound": 20,
+          "lastAppearanceRound": 20,
+          "lastStartRound": null
+        }
+      ],
+      "file": "/drivers/avatars/2026/rafael-camara.webp",
+      "source": {
+        "kind": "generated",
+        "sourceFile": "/drivers/avatars/rafael-camara.png",
+        "sha256": "cea441886613aea67fee27014a457c3eb4b3e32d23a7d7518436856786eae13d",
+        "generator": "image_gen",
+        "referenceUrls": [
+          "https://www.formula1.com/en/drivers/rafael-camara",
+          "https://www.instagram.com/p/DfaJSZTFz3B/",
+          "https://helmetarchive.com/f1/2026/rafael-camara-season-design/"
+        ]
+      },
+      "identityReferenceUrl": "https://www.formula1.com/en/drivers/rafael-camara",
+      "helmetReferenceUrl": "https://www.instagram.com/p/DfaJSZTFz3B/",
+      "promptVersion": "driver-avatar-seasonal-v1",
+      "prompt": "Create ONE new square transparent PNG portrait avatar for Rafael Camara, Haas Formula 1 driver number 51 in 2026, matching this website's existing helmeted-driver avatar series. These inputs are references, NOT edit targets. Reference 1 is Rafael Camara's actual facial identity and 2026 Haas racing suit: use his own dark brown eyes, eyebrows and upper face, not Bearman's. Reference 2 is Rafael Camara's actual regular Haas 2026 helmet: faithfully use its glossy white and bright red shell, fine green/yellow/blue Brazilian stripes, slender metallic-gold outlines and Haas identity. Reconstruct a straight-on view from this helmet reference; do not copy Bearman's blue/yellow helmet. Reference 3 is Oliver Bearman's existing avatar and is ONLY a style, scale and framing reference. Make an original photorealistic clean studio cutout, centered exactly front-facing and symmetrical, helmet and upper shoulders filling most of a 1:1 frame, entire helmet completely visible with around 5% transparent clearance above and both sides. Open/raised visor so Rafael's eyes and eyebrows are clearly visible; balaclava covers the lower face inside the helmet. Black, white and red 2026 Haas F1 Team race suit with Toyota Gazoo Racing identity at the collar, number 51 (never 31, 50 or 87). Accurate glossy helmet materials and subtle natural studio highlights. A few faithful Haas and Bell sponsor marks are sufficient; do not invent extra text. Isolate the subject on GENUINELY FULLY TRANSPARENT alpha background. Absolutely NO baked-in checkerboard, white/gray background, backdrop, shadows outside subject, card, border, watermarks, car, track, extra people or captions. This is a generated illustrated avatar, not a claim to be an official photographic portrait.",
+      "sha256": "e36fa85a32acae62b0e29cac89aa61b900e5306e8ac57c07c40935a273522186",
+      "bytes": 328604,
+      "manualReview": {
+        "status": "approved",
+        "reviewedAt": "2026-11-08T11:41:02.000Z",
+        "note": "Generated illustration reviewed against the accepted RaceSide helmet-avatar framing and Camara references. Transparent background and full helmet verified. Source photographs are references only, not redistributed; this is not an official photograph or an exact team-verified reconstruction. Zero race starts: only the Brazil qualifying entry has been confirmed."
       }
     },
     {
